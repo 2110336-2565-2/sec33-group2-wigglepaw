@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  db:
+    # Use the official postgres:15 image
+    image: postgres:15
+    restart: always
+    environment:
+      # Set the password, username and database name
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: wiggle-paw
+    volumes:
+      # Map the local pgdata folder to the container's /var/lib/postgresql/data directory
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      # Expose port 5000 on the host to port 5432 in the container
+      - "5000:5432"
