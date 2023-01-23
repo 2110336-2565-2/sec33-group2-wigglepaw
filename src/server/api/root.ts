@@ -1,4 +1,4 @@
-import { createTRPCRouter } from "./trpc";
+import { createTRPCRouter, publicProcedure } from "./trpc";
 import { exampleRouter } from "./routers/example";
 import { petRouter } from "./routers/petRouter";
 
@@ -10,6 +10,8 @@ import { petRouter } from "./routers/petRouter";
 export const appRouter = createTRPCRouter({
   example: exampleRouter,
   pet: petRouter,
+  // Health check route, return 200 OK if server is up
+  healthcheck: publicProcedure.query(() => true),
 });
 
 // export type definition of API
