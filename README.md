@@ -1,3 +1,23 @@
+# WigglePaw
+
+## Dependency
+
+- [pnpm](https://pnpm.js.org/) -- a fast, disk space efficient package manager.
+- [docker](https://www.docker.com/) -- a platform for developers and sysadmins to develop, ship, and run applications.
+- [docker-compose](https://docs.docker.com/compose/) -- a tool for defining and running multi-container Docker applications.
+
+## Setting up a Development Environment
+
+1. Clone the repository
+2. Run `cp .env.example .env`: Copy the example environment file to a new file called `.env`
+3. Change the values in `.env` as needed
+4. Run `docker-compose up`: Start and run services defined in the docker-compose.yml file.
+   - Alternatively, you can use the [vscode devcontainer](https://code.visualstudio.com/docs/remote/containers)
+   - For now, it will start a PostgreSQL database
+5. Run `pnpm install`: Install project dependencies.
+6. Run `pnpm dev`: Run project in development mode with local web server and live reloading.
+7. Open [localhost:3000](http://localhost:3000) in your browser.
+
 # Create T3 App
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
