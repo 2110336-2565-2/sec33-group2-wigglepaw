@@ -18,6 +18,7 @@ export const exampleRouter = createTRPCRouter({
         n: z
           .number()
           .max(30, "you're not allow to compute more than 30th order"),
+        // Work 1
       })
     )
     .query(({ input }) => {
