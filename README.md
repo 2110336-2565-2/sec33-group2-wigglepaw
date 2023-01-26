@@ -15,8 +15,9 @@
    - Alternatively, you can use the [vscode devcontainer](https://code.visualstudio.com/docs/remote/containers)
    - For now, it will start a PostgreSQL database
 5. Run `pnpm install`: Install project dependencies.
-6. Run `pnpm dev`: Run project in development mode with local web server and live reloading.
-7. Open [localhost:3000](http://localhost:3000) in your browser.
+6. Run `npm prisma db push`: Push the Prisma schema to the database.
+7. Run `pnpm dev`: Run project in development mode with local web server and live reloading.
+8. Open [localhost:3000](http://localhost:3000) in your browser.
 
 # Create T3 App
 
