@@ -1,11 +1,18 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const Header = () => {
   const isLoggedIn = true;
   return (
-    <span className="flex h-fit w-full">
-      <nav className=" flex w-full bg-sky-900">
-        <div>WigglePaw</div>
+    <span className="flex h-fit w-full bg-sky-900">
+      <Image
+        src={"/../public/logo_w.png"}
+        alt={""}
+        width={80}
+        height={60}
+      ></Image>
+      <div>WigglePaw</div>
+      <nav className=" flex w-full">
         <ul className="ml-auto">
           <li className="header-li">
             <div className="header-li-div">
@@ -33,8 +40,10 @@ const Header = () => {
             </li>
           )}
         </ul>
-        <div>ICON</div>
       </nav>
+      <div className="relative ml-2">
+        <Image src={"/../public/profile_icon.png"} alt={"Icon"} fill></Image>
+      </div>
     </span>
   );
 };
