@@ -34,12 +34,13 @@ const registerPage: NextPage = () => {
             <h1 className="text-3xl font-bold">Register Pet Owner</h1>
             <h1 className="text-3xl font-bold">1/2</h1>
           </div>
-          <div className="mx-auto flex w-full flex-col gap-1">
+          <div className="mx-auto grid grid-rows-8 grid-cols-1 w-full gap-5">
             <div className="flex justify-between gap-12">
               <div className="flex w-full flex-col">
                 <Input
                   id="typed"
                   label="First Name*"
+                  placeholder="Mohnke"
                   register={register}
                   validationRules={{ required: true }}
                 />
@@ -48,6 +49,7 @@ const registerPage: NextPage = () => {
                 <Input
                   id="lastname"
                   label="Last Name*"
+                  placeholder="Jesus"
                   register={register}
                   validationRules={{ required: true }}
                 />
@@ -58,6 +60,7 @@ const registerPage: NextPage = () => {
                 id="email"
                 label="Email*"
                 register={register}
+                placeholder='someone@gmail.com'
                 validationRules={{ required: true }}
                 type="email"
               />
@@ -66,6 +69,7 @@ const registerPage: NextPage = () => {
               <Input
                 id="address"
                 label="Address*"
+                placeholder='xxxxxxxxxxxxxxxxx'
                 register={register}
                 validationRules={{ required: true }}
               />
@@ -74,6 +78,7 @@ const registerPage: NextPage = () => {
               <Input
                 id="phone"
                 label="Phone No.*"
+                placeholder='0123456789'
                 register={register}
                 validationRules={{ required: true }}
                 type="tel"
@@ -83,6 +88,7 @@ const registerPage: NextPage = () => {
               <Input
                 id="username"
                 label="Username"
+                placeholder='เจ้าแม่กวนตีน'
                 register={register}
                 validationRules={{ required: true }}
               />
@@ -110,6 +116,7 @@ const registerPage: NextPage = () => {
                 <Input
                   id="type"
                   label="Type of pet* :"
+                  placeholder='Dogs'
                   register={register}
                   validationRules={{ required: true }}
                 />
@@ -118,6 +125,7 @@ const registerPage: NextPage = () => {
                 <Input
                   id="breed"
                   label="Breed of pet* :"
+                  placeholder="Corgi"
                   register={register}
                   validationRules={{ required: true }}
                 />
@@ -126,6 +134,7 @@ const registerPage: NextPage = () => {
                 <Input
                   id="weight"
                   label="Weight of pet* :"
+                  placeholder='5-10 kg'
                   register={register}
                   validationRules={{ required: true }}
                   type="number"
@@ -164,7 +173,7 @@ const Input: React.FC<InputProps> = ({
 }) => (
   <>
     <label htmlFor={id}>{label}</label>
-    <br />
+    
     <input
       className="block w-full rounded border border-gray-100 bg-gray-100 p-1 px-2 text-sm text-gray-900 drop-shadow-md focus:border-blue-500 focus:bg-white focus:ring-blue-500"
       id={id}
