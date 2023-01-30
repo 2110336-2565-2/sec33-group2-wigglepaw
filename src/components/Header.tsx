@@ -28,8 +28,8 @@ const Header = () => {
           {isLoggedIn && (
             <li className="header-li">
               <div className="header-li-div">
-                <Link href="/register" className="header-a">
-                  Register
+                <Link href="/login" className="header-a">
+                  Login
                 </Link>
               </div>
             </li>
@@ -37,8 +37,17 @@ const Header = () => {
           {isLoggedIn && (
             <li className="header-li">
               <div className="header-li-div">
-                <Link href="/login" className="header-a">
-                  Login
+                <Link href="/register" className="header-a">
+                  Register
+                </Link>
+              </div>
+            </li>
+          )}
+          {!isLoggedIn && (
+            <li className="header-li">
+              <div className="header-li-div">
+                <Link href="/help" className="header-a">
+                  Help
                 </Link>
               </div>
             </li>
