@@ -22,15 +22,17 @@ const loginPage: NextPage = () => {
         <button>About</button>
         <button>Log in</button>
         <button>Register</button>
+        
       <form onSubmit={handleSubmit(onSubmit)}>
-        <h1>Username</h1>
-        <input {...register("username", { required: true })} type="email"/>
+        <div className="px-[200px] text-xl">
+        <h1>Username or email</h1>
+        <input {...register("username", { required: true })}placeholder="Tuchtham0869@gmail.com" />
         <h1>Password</h1>
-        <input {...register("password", { required: true })} type="password" />
+        <input {...register("password", { required: true })}placeholder="**********" type="password" />
         {errors.exampleRequired && <span>This field is required</span>}
-        <h1></h1>
-        <input type="submit"/>
+        </div>
       </form>
+      <button className="text-center">Login</button>
     </div>
   );
 };
