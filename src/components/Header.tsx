@@ -5,13 +5,17 @@ const Header = () => {
   const isLoggedIn = true;
   return (
     <span className="flex h-fit w-full bg-sky-900">
-      <Image
-        src={"/../public/logo_w.png"}
-        alt={""}
-        width={80}
-        height={60}
-      ></Image>
-      <div>WigglePaw</div>
+      <Link href={"/main"} className="flex">
+        <Image
+          src={"/../public/logo_w.png"}
+          alt={""}
+          width={80}
+          height={60}
+          className="p-2"
+        ></Image>
+        <h1 className="my-auto text-3xl font-semibold text-white">WigglePaw</h1>
+      </Link>
+
       <nav className=" flex w-full">
         <ul className="ml-auto">
           <li className="header-li">
@@ -24,8 +28,8 @@ const Header = () => {
           {isLoggedIn && (
             <li className="header-li">
               <div className="header-li-div">
-                <Link href="/login" className="header-a">
-                  Login
+                <Link href="/register" className="header-a">
+                  Register
                 </Link>
               </div>
             </li>
@@ -33,8 +37,8 @@ const Header = () => {
           {isLoggedIn && (
             <li className="header-li">
               <div className="header-li-div">
-                <Link href="/register" className="header-a">
-                  Register
+                <Link href="/login" className="header-a">
+                  Login
                 </Link>
               </div>
             </li>

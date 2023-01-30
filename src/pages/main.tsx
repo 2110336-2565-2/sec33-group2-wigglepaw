@@ -18,12 +18,14 @@ const MainPage: NextPage = () => {
         <h3>A matching platform for pet sitters and pet owners</h3>
         <br />
         {/* TODO Sent Link to matching pages */}
-        <Link href="/match=?pet_sitter" className="find-link">
-          Finding Pet Sitter
-        </Link>
-        <Link href="/match=?pet_hotel" className="find-link">
-          Finding Pet Hotel
-        </Link>
+        <div className="flex">
+          <Link href="/match=?pet_sitter" className="find-link">
+            Finding Pet Sitter
+          </Link>
+          <Link href="/match=?pet_hotel" className="find-link">
+            Finding Pet Hotel
+          </Link>
+        </div>
       </div>
     </div>
   );
