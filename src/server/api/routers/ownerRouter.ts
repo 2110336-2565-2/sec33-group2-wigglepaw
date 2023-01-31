@@ -6,12 +6,12 @@ import { TRPCError } from "@trpc/server";
 export const ownerRouter = createTRPCRouter({
   // public procedure that fetch all owner
   // duplicated from petRouter
-  getAllOwner: publicProcedure.query(({ ctx }) => {
+  getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.owner.findMany();
   }),
 
   // public procdure that fetch a pet by id
-  getOwnerById: publicProcedure
+  getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const owner = await ctx.prisma.owner.findUnique({
@@ -25,10 +25,11 @@ export const ownerRouter = createTRPCRouter({
           message: `No owner with id ${input.id}`,
         });
       }
+      return owner
     }),
 
   // create new user and the associated owner and credential record
-  createOwner: publicProcedure
+  create: publicProcedure
     .input(
       z.object({
         name: z.string(),
@@ -59,7 +60,13 @@ export const ownerRouter = createTRPCRouter({
         },
       });
 
-      return newUser;
+      const newOwner = await ctx.prisma.owner.findUnique({
+        where: {
+          userId: newUser.id
+        }
+      })
+
+      return newOwner;
     }),
 
     // updating owner information

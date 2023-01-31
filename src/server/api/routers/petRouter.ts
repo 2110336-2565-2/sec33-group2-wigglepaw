@@ -62,6 +62,11 @@ export const petRouter = createTRPCRouter({
                 id: input.ownerId,
                 name: `Name ${input.ownerId}`,
                 email: `Email ${input.ownerId}`,
+                user: { // dummy
+                  create: {
+                    name: input.name
+                  }
+                }
               },
             },
           },
