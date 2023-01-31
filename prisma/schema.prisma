@@ -74,6 +74,8 @@ model Session {
 model User {
     id            String    @id @default(cuid())
     name          String?
+    username      String    @unique
+    password      String /// yes, this is raw password, bad idea. But well, since there is no requirement to hash...
     email         String?   @unique
     emailVerified DateTime?
     image         String?
