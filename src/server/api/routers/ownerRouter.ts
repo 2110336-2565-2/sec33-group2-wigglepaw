@@ -10,7 +10,7 @@ export const ownerRouter = createTRPCRouter({
     return ctx.prisma.owner.findMany();
   }),
 
-  // public procdure that fetch a pet by id
+  // public procdure that fetch an owner by id
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
