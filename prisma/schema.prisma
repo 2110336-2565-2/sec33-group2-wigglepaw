@@ -72,15 +72,14 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String      @id @default(cuid())
     name          String?
-    username      String    @unique
-    password      String /// yes, this is raw password, bad idea. But well, since there is no requirement to hash...
-    email         String?   @unique
+    email         String?     @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     sessions      Session[]
+    credential    Credential?
 }
 
 model VerificationToken {
@@ -89,4 +88,14 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+// Extra stuff for authentication
+
+/// Credential are used to store username and password for authentication, It's a 1-1 weak entity of User..
+model Credential {
+    username String @id
+    password String
+    user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId   String @unique
 }

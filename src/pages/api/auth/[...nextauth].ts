@@ -1,5 +1,6 @@
-import NextAuth, { type NextAuthOptions } from "next-auth";
+import NextAuth, { User, type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import DiscordProvider from "next-auth/providers/discord";
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
@@ -7,45 +8,56 @@ import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db";
 
 export const authOptions: NextAuthOptions = {
-  // Include user.id on session
-  // Session is sent to the client, use it to pick what to send
+  session: {
+    // Must use jwt because we're using custom credentials provider:
+    // https://stackoverflow.com/questions/74299908/nextauth-not-generating-session-token-for-credential-provider
+    strategy: "jwt",
+  },
   callbacks: {
-    session({ session, user }) {
+    // JWT token is sent to the client as encrypted cookie.
+    jwt({ token, account, user, profile }) {
+      console.log("user:", user);
+      console.log("account:", account);
+      console.log("profile:", profile);
+      if (user) {
+        // Populate token with user data.
+        // Any data you want to send to the client, must be in the token.
+        // then you can access it in the session callback.
+        // If there any TS error, check or edit the type definition of JWT in next-auth.d.ts.
+        token.id = user.id;
+        token.username = user.username;
+      }
+      console.log("Token:", token);
+      return token;
+    },
+
+    // Session is sent to the client, use it to pick what to send.
+    // Token are populate in "jwt" callback.
+    // Do not use "user" argument, it is not populated and will break, I spent 6 hr fixing this shit.
+    session({ session, token }) {
+      console.log("Session.token:", token);
       if (session.user) {
-        // Include user.id on session
-        session.user.id = user.id;
-        // Include user.username on session
-        session.user.username = user.username;
-        // ! DON"T include user.password on session
+        // Populate session with user data.
+        // If there any TS error, check or edit the type definition of Session in next-auth.d.ts.
+        // DON'T include sensitive information such as user.password on session
+        session.user.id = token.id;
+        session.user.username = token.username;
       }
       console.log("Session:", session);
       return session;
     },
   },
-  // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
+  // Configure one or more authentication providers
   providers: [
-    // DiscordProvider({
-    //   clientId: env.DISCORD_CLIENT_ID,
-    //   clientSecret: env.DISCORD_CLIENT_SECRET,
-    // }),
-    /**
-     * ...add more providers here
-     *
-     * Most other providers require a bit more work than the Discord provider.
-     * For example, the GitHub provider requires you to add the
-     * `refresh_token_expires_in` field to the Account model. Refer to the
-     * NextAuth.js docs for the provider you want to use. Example:
-     * @see https://next-auth.js.org/providers/github
-     */
-    // Sign in with username and password
+    // Custom credentials provider, for signing in with username and password
     CredentialsProvider({
       id: "Credentials",
       name: "Credentials",
       credentials: {
         username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
-        isRegisteration: { label: "Register", type: "checkbox" },
+        isRegistration: { label: "Register", type: "checkbox" },
       },
       async authorize(credentials) {
         if (credentials === undefined) return null;
@@ -53,44 +65,91 @@ export const authOptions: NextAuthOptions = {
         // Get information from credentials
         const username = credentials.username;
         const password = credentials.password;
-        const isRegisteration = credentials.isRegisteration;
+        const isRegistration = Boolean(credentials.isRegistration);
 
-        // Get user with that username, if exists
-        const user = await prisma.user.findUnique({
-          where: { username },
-        });
+        // Authenticate user
+        const userDB = await authenticateUser(
+          username,
+          password,
+          isRegistration
+        );
+        if (userDB === null || userDB.credential === null) return null;
 
-        if (isRegisteration) {
-          // Case: Register
-
-          // User must not already exist
-          if (user !== null) return null;
-
-          // Create new user
-          console.log("Creating new user:", username);
-          const newUser = await prisma.user.create({
-            data: {
-              username,
-              password,
-            },
-          });
-          // Return user
-          return newUser;
-        } else {
-          // Case: Login
-
-          // User must exist
-          if (user === null) return null;
-          // Password must match
-          if (user.password !== password) return null;
-
-          console.log("User logged in:", user);
-          // Return user
-          return user;
-        }
+        // Map user in DB to user in NextAuth, then return it
+        const userNextAuth: User = {
+          id: userDB.id,
+          username: userDB.credential.username,
+          password: userDB.credential.password,
+        };
+        return userNextAuth;
       },
     }),
   ],
 };
+
+/**
+ * Authenticates a user by either registering a new user or logging in an existing user.
+ *
+ * @param {string} username - The username of the user to be authenticated.
+ * @param {string} password - The password of the user to be authenticated.
+ * @param {boolean} isRegistration - A flag indicating whether to register a new user or log in an existing user.
+ *
+ * @returns The authenticated user if authentication is successful, or `null` if authentication fails.
+ */
+async function authenticateUser(
+  username: string,
+  password: string,
+  isRegisteration: boolean
+) {
+  // Get user associated with that username, if exists
+  const user = await prisma.user.findFirst({
+    where: {
+      credential: {
+        username,
+      },
+    },
+    include: {
+      credential: true,
+    },
+  });
+
+  console.log("User Fetched:", user);
+
+  if (isRegisteration) {
+    // Case: Register
+
+    // User must not already exist
+    if (user !== null) return null;
+
+    // Create new user, with credentials
+    console.log("Creating new user:", username);
+    const newUser = await prisma.user.create({
+      data: {
+        credential: {
+          create: {
+            username,
+            password,
+          },
+        },
+      },
+      include: {
+        credential: true,
+      },
+    });
+    // Return user
+    return newUser;
+  } else {
+    // Case: Login
+
+    // User must exist, and have credentials
+    if (user === null || user.credential === null) return null;
+    // Password must match
+    if (user.credential.password !== password) return null;
+
+    console.log("User logged in:", user);
+    // Return user
+    return user;
+  }
+}
 
 export default NextAuth(authOptions);
