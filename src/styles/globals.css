@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  /* main */
+  .find-link {
+    @apply mx-4 block w-fit rounded bg-sky-900 py-2 px-5 text-xl text-white hover:bg-sky-700;
+  }
+}
+
+@layer components {
+  /* header */
+  .header-li {
+    @apply float-left;
+  }
+  .header-li-div {
+    @apply my-5 h-fit;
+  }
+  .header-a {
+    @apply py-2 px-4 text-lg font-semibold text-white hover:bg-sky-700;
+  }
+}
