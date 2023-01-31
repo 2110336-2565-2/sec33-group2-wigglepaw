@@ -15,7 +15,8 @@ const registerPage2: NextPage = () => {
         formState: { errors },
       } = useForm();
       const onSubmit = (data: any) => console.log(data);
-    return(<div>
+    return(
+    <div>
         <button>About</button>
         <button>Log in</button>
         <button>Register</button>
@@ -24,24 +25,26 @@ const registerPage2: NextPage = () => {
         <h1>Payment</h1>
         <h2>By card</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
-        <h2>Card No.*</h2>
-        <input {...register("cardno", { required: true })} type="text"/>
-        <h2>Expiration Date*</h2>
-        <input {...register("expdate", { required: true })} type="date"/>
-        <h2>CVV/CVN*</h2>
-        <input {...register("cvvcvn", { required: true })} type="text"/>
-      </form>
-      <h2>Mobile banking</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <h2>Bank No.*</h2>
-        <input {...register("bankno", { required: true })} type="text"/>
-        <h2>Bank Name*</h2>
-        <input {...register("bankname", { required: true })} type="text"/>
-      </form>
-      <h2>I agree to the terms,condirions and privacy policy</h2>
-      <button>Back</button>
-      {" "}
-      <button>Register</button>
-    </div>)
+          <h2>Card No.<span className="text-red-600">*</span> </h2>
+          <input {...register("cardno", { required: true })} placeholder="xxxx xxxx xxxx xxxx"type="text"/>
+          <div className="grid gap-4 grid-cols-2">
+            <div>Expiration Date<span className="text-red-600">*</span> </div><div>CVV/CVN<span className="text-red-600">*</span></div>
+            <input {...register("expdate", { required: true })} placeholder="MM / YY"type="date"/>
+            <input {...register("cvvcvn", { required: true })} placeholder="xxx"type="text"/>
+          </div>
+        </form>
+        <h2>Mobile banking</h2>
+        <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="grid gap-4 grid-cols-2">
+          <div>Bank No.<span className="text-red-600">*</span></div><div> Bank Name<span className="text-red-600">*</span></div>
+          <input {...register("bankno", { required: true })} placeholder="xxx-x-xxxxx-x"type="text"/> 
+          <input {...register("bankname", { required: true })}placeholder="SCB" type="text"/>
+          </div>
+        </form>
+        <h2>I agree to the terms,condirions and privacy policy</h2>
+        <button>Back</button>
+        {" "}
+        <button>Register</button>
+    </div>);
 }
 export default registerPage2;

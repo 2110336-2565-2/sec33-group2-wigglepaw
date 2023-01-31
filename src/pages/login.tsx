@@ -25,11 +25,14 @@ const loginPage: NextPage = () => {
         <h1>Username</h1>
         <input {...register("username", { required: true })} type="email" />
         <h1>Password</h1>
-        <input {...register("password", { required: true })} type="password" />
+        <input
+          {...register("password", { required: true })}
+          placeholder="**********"
+          type="password"
+        />
         {errors.exampleRequired && <span>This field is required</span>}
-        <h1></h1>
-        <input type="submit" />
       </form>
+      <button className="text-center">Login</button>
     </div>
   );
 };
