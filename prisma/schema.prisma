@@ -81,7 +81,7 @@ model User {
     petSitter     PetSitter?
     username      String     @unique
     email         String     @unique
-    emailVerified DateTime
+    emailVerified DateTime?
     address       String?
     imageUri      String?
     bankAccount   String? // Assume 1 per user
