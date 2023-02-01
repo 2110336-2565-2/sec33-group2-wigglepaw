@@ -6,7 +6,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { PetKind } from "@prisma/client";
-
+import Link from "next/link";
+import Header from "../components/Header";
 const registerPage: NextPage = () => {
   const {
     register,
@@ -17,9 +18,7 @@ const registerPage: NextPage = () => {
   const onSubmit = (data: any) => console.log(data);
   return (
     <div>
-      <button>About</button>
-      <button>Log in</button>
-      <button>Register</button>
+      <Header></Header>
       <div className="text-center text-3xl">
       <h1>Register Pet owner</h1>
       <h1>1/2</h1>
@@ -53,8 +52,12 @@ const registerPage: NextPage = () => {
         </div>
         <br/>
         <div className="text-2xl text-center grid gap-1 grid-cols-2 px-[200px]">
-        <button className="bg-sky-600">Back</button>{" "}
+        <Link href="/">
+        <button className="bg-sky-600">Back</button>
+        </Link>
+        <Link href="/registerPetOwner2">
         <button className="bg-sky-600">Next</button>
+        </Link>
         </div>
     </div>
   );
