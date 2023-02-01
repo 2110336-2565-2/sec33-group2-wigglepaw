@@ -9,22 +9,19 @@ const Home: NextPage = () => {
   return (
     <div>
       <Header></Header>
-      <div className="mx-auto w-fit">
-        <div className="mx-5 w-fit rounded-2xl bg-amber-100 p-4 ">
-          <h1 className="text-2xl">&quot;Let us take care your loves&quot;</h1>
-          <h2 className="w-full text-right text-xl">WigglePaw</h2>
-          <h3 className="">
-            A matching platform for pet sitters and pet owners
-          </h3>
-          <br />
-          <div className="flex">
-            <Link href="/match=?pet_sitter" className="find-link">
-              Finding Pet Sitter
-            </Link>
-            <Link href="/match=?pet_hotel" className="find-link">
-              Finding Pet Hotel
-            </Link>
-          </div>
+      <div className="mx-auto w-2/5">
+        <h1 className="text-2xl">&quot;Let us take care your loves&quot;</h1>
+        <h2 className="text-xl">WigglePaw</h2>
+        <h3>A matching platform for pet sitters and pet owners</h3>
+        <br />
+        {/* TODO Sent Link to matching pages */}
+        <div className="flex">
+          <Link href="/matching?petSitterType=pet_sitter" className="find-link">
+            Finding Pet Sitter
+          </Link>
+          <Link href="/matching?petSitterType=pet_hotel" className="find-link">
+            Finding Pet Hotel
+          </Link>
         </div>
       </div>
     </div>
