@@ -14,7 +14,9 @@ const Header = () => {
           height={60}
           className="p-2"
         ></Image>
-        <h1 className="my-auto text-3xl font-semibold text-white">WigglePaw</h1>
+        <h1 className="my-auto text-2xl font-semibold text-white sm:text-3xl">
+          WigglePaw
+        </h1>
       </Link>
 
       <nav className=" flex w-full">
