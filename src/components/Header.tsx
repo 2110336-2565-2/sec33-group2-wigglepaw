@@ -5,7 +5,7 @@ const Header = () => {
   const isLoggedIn = true;
   return (
     <span className="flex h-fit w-full bg-sky-900">
-      <Link href={"/"} className="flex">
+      <Link href={"/"} className="flex shrink-0">
         {/*TODO: <a> too small*/}
         <Image
           src={"/../public/logo_w.png"}
