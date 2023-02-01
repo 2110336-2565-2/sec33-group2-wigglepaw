@@ -15,9 +15,9 @@
     @apply float-left;
   }
   .header-li-div {
-    @apply my-5 h-fit;
+    @apply my-3 h-fit;
   }
   .header-a {
-    @apply py-2 px-4 text-lg font-semibold text-white hover:bg-sky-700 sm:text-xl;
+    @apply py-2 px-4 text-lg font-semibold text-white hover:bg-sky-700;
   }
 }

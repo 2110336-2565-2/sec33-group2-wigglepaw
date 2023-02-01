@@ -5,22 +5,17 @@ const Header = () => {
   const isLoggedIn = true;
   return (
     <span className="flex h-fit w-full bg-sky-900">
-      <Link href={"/"} className="flex shrink-0">
-        {/*TODO: <a> too small*/}
-        <Image
-          src={"/../public/logo_w.png"}
-          alt={""}
-          width={80}
-          height={60}
-          className="p-2"
-        ></Image>
-        <h1 className="my-auto text-2xl font-semibold text-white sm:text-3xl">
-          WigglePaw
-        </h1>
-      </Link>
-
       <nav className=" flex w-full">
-        <ul className="ml-auto">
+        <Link href={"/"} className="flex shrink-0">
+          <div className="relative m-2 flex h-[4rem] w-[5rem]">
+            <Image src={"/../public/logo_w.png"} alt={""} fill></Image>
+          </div>
+          <h1 className="my-auto text-2xl font-semibold text-white sm:text-3xl">
+            WigglePaw
+          </h1>
+        </Link>
+        {/* TODO Collapse buttons into user img if too small width */}
+        <ul className="my-auto ml-auto">
           <li className="header-li">
             <div className="header-li-div">
               <Link href="/about" className="header-a">
@@ -57,7 +52,7 @@ const Header = () => {
           )}
         </ul>
       </nav>
-      <div className="relative ml-2">
+      <div className="relative m-2 flex h-[4rem] w-[4rem]">
         <Image src={"/../public/profile_icon.png"} alt={"Icon"} fill></Image>
       </div>
     </span>
