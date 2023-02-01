@@ -17,6 +17,8 @@ export default function RegisterPetSitter() {
     businessLicense: "", //If PetHotel
     hotelName: "",
   });
+  const [type, setType] = useState("");
+  const [state, setState] = useState(0); //0=main info 1=freelance 2=hotelpet
 
   const sendProfileinfo = async (e: {
     target: any;
@@ -36,8 +38,48 @@ export default function RegisterPetSitter() {
   };
 
   const FirstPage = () => {
-    if (profile.type === "petfreelance") {
-      return <h1>FUCKKCKKCKC</h1>;
+    if (state === 1) {
+      return (
+        <>
+          <h1 className="py-2 text-3xl">Register Pet Sitter</h1>
+          <form className="w-4/5">
+            <div className="grid  grid-cols-1 grid-rows-6">
+              <div className="m-3">
+                <label className="mb-2 block text-sm font-medium text-gray-900 ">
+                  Firstname
+                </label>
+                <input
+                  type="text"
+                  id="username"
+                  className="block w-full rounded border border-gray-100 bg-gray-100 p-1 px-2 text-sm text-gray-900 drop-shadow-md focus:border-blue-500 focus:bg-white focus:ring-blue-500"
+                />
+              </div>
+              <div className="m-3">
+                <label className="mb-2 block text-sm font-medium text-gray-900 ">
+                  Lastname
+                </label>
+                <input
+                  type="text"
+                  id="username"
+                  className="block w-full rounded border border-gray-100 bg-gray-100 p-1 px-2 text-sm text-gray-900 drop-shadow-md focus:border-blue-500 focus:bg-white focus:ring-blue-500"
+                />
+              </div>
+            </div>
+
+            <div className="mx-3 flex flex-wrap content-end items-center justify-center">
+              <button
+                type="button"
+                onClick={(e: { target: any }) => {
+                  setState(0);
+                }}
+                className="rounded bg-[#98AAB4] px-6  py-2.5 text-center text-sm font-semibold text-[#213951] drop-shadow-md hover:bg-[#8b9ba3] focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto md:px-16"
+              >
+                <p>Next</p>
+              </button>
+            </div>
+          </form>
+        </>
+      );
     } else {
       return (
         <>
@@ -106,6 +148,9 @@ export default function RegisterPetSitter() {
                     name="choice"
                     className="block w-full rounded border border-gray-100 bg-gray-100 p-1 px-2 text-sm text-gray-900 drop-shadow-md focus:border-blue-500 focus:bg-white focus:ring-blue-500"
                     required
+                    onChange={(e) => {
+                      setType(e.target.value);
+                    }}
                   >
                     <option selected disabled>
                       <p>Choose here</p>
@@ -123,10 +168,10 @@ export default function RegisterPetSitter() {
               <div className="mx-3 flex flex-wrap content-end items-center justify-center">
                 <button
                   type="button"
-                  onClick={(e) => {
-                    setProfile({
-                      type: e.target.choice.value,
-                    });
+                  onClick={(e: { target: any }) => {
+                    if (type === "petfreelance") {
+                      setState(1);
+                    }
                   }}
                   className="rounded bg-[#98AAB4] px-6  py-2.5 text-center text-sm font-semibold text-[#213951] drop-shadow-md hover:bg-[#8b9ba3] focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto md:px-16"
                 >
