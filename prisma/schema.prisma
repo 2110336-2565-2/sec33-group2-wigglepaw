@@ -71,14 +71,45 @@ model Session {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+// ***************** IMPORTANT *******************
+// I changed "id" to "userId" for clearer meaning.
+// This can fuck up NextAuth, please fix the variable names after merging this.
+// ***************** IMPORTANT *******************
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
+    userId        String    @id @default(cuid())
+    username      String    @unique
+    email         String    @unique
+    emailVerified DateTime
+    address       String?
+    imageUri      String?
+    bankAccount   String? // Assume 1 per user
+    bankName      String? // Assume 1 per user
+    accounts      Account[] // Needed for Auth
+    sessions      Session[] // Needed for Auth
+}
+
+model PetOwner {
+    userId    String  @id @default(cuid())
+    firstName String?
+    lastName  String?
+}
+
+model PetSitter {
+    userId           String  @id @default(cuid())
+    verifystatus     Boolean
+    certificationUri String
+}
+
+model FreelancePetSitter {
+    userId    String  @id @default(cuid())
+    firstName String?
+    lastName  String?
+}
+
+model PetHotel {
+    userId             String @id @default(cuid())
+    businessLicenseUri String
+    hotelName          String
 }
 
 model VerificationToken {
