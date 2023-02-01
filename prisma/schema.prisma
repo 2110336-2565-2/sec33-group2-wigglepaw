@@ -76,9 +76,11 @@ model Session {
 // This can fuck up NextAuth, please fix the variable names after merging this.
 // ***************** IMPORTANT *******************
 model User {
-    userId        String    @id @default(cuid())
-    username      String    @unique
-    email         String    @unique
+    userId        String     @id @default(cuid())
+    petOwner      PetOwner?
+    petSitter     PetSitter?
+    username      String     @unique
+    email         String     @unique
     emailVerified DateTime
     address       String?
     imageUri      String?
@@ -90,24 +92,30 @@ model User {
 
 model PetOwner {
     userId    String  @id @default(cuid())
+    user      User    @relation(fields: [userId], references: [userId])
     firstName String?
     lastName  String?
 }
 
 model PetSitter {
-    userId           String  @id @default(cuid())
-    verifystatus     Boolean
-    certificationUri String
+    userId             String              @id @default(cuid())
+    user               User                @relation(fields: [userId], references: [userId])
+    freelancePetSitter FreelancePetSitter?
+    petHotel           PetHotel?
+    verifystatus       Boolean
+    certificationUri   String
 }
 
 model FreelancePetSitter {
-    userId    String  @id @default(cuid())
+    userId    String    @id @default(cuid())
+    petSitter PetSitter @relation(fields: [userId], references: [userId])
     firstName String?
     lastName  String?
 }
 
 model PetHotel {
-    userId             String @id @default(cuid())
+    userId             String    @id @default(cuid())
+    petSitter          PetSitter @relation(fields: [userId], references: [userId])
     businessLicenseUri String
     hotelName          String
 }
