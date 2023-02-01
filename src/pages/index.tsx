@@ -18,10 +18,10 @@ const Home: NextPage = () => {
         <br />
         {/* TODO Sent Link to matching pages */}
         <div className="flex">
-          <Link href="/match=?pet_sitter" className="find-link">
+          <Link href="/matching?petSitterType=pet_sitter" className="find-link">
             Finding Pet Sitter
           </Link>
-          <Link href="/match=?pet_hotel" className="find-link">
+          <Link href="/matching?petSitterType=pet_hotel" className="find-link">
             Finding Pet Hotel
           </Link>
         </div>
