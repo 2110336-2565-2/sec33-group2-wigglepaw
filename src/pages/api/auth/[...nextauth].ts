@@ -1,11 +1,12 @@
-import NextAuth, { User, type NextAuthOptions } from "next-auth";
+import NextAuth, { type User, type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import DiscordProvider from "next-auth/providers/discord";
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db";
+
+import type { User as UserDB } from "@prisma/client";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -26,6 +27,7 @@ export const authOptions: NextAuthOptions = {
         // If there any TS error, check or edit the type definition of JWT in next-auth.d.ts.
         token.id = user.id;
         token.username = user.username;
+        token.email = user.email;
       }
       console.log("Token:", token);
       return token;
@@ -42,6 +44,7 @@ export const authOptions: NextAuthOptions = {
         // DON'T include sensitive information such as user.password on session
         session.user.id = token.id;
         session.user.username = token.username;
+        session.user.email = token.email;
       }
       console.log("Session:", session);
       return session;
@@ -55,6 +58,7 @@ export const authOptions: NextAuthOptions = {
       id: "Credentials",
       name: "Credentials",
       credentials: {
+        email: { label: "Email", type: "email" },
         username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
         isRegistration: { label: "Register", type: "checkbox" },
@@ -63,12 +67,14 @@ export const authOptions: NextAuthOptions = {
         if (credentials === undefined) return null;
 
         // Get information from credentials
+        const email = credentials.email;
         const username = credentials.username;
         const password = credentials.password;
         const isRegistration = Boolean(credentials.isRegistration);
 
         // Authenticate user
         const userDB = await authenticateUser(
+          email,
           username,
           password,
           isRegistration
@@ -77,9 +83,10 @@ export const authOptions: NextAuthOptions = {
 
         // Map user in DB to user in NextAuth, then return it
         const userNextAuth: User = {
-          id: userDB.id,
+          id: userDB.userId,
           username: userDB.credential.username,
           password: userDB.credential.password,
+          email: userDB.email,
         };
         return userNextAuth;
       },
@@ -97,6 +104,7 @@ export const authOptions: NextAuthOptions = {
  * @returns The authenticated user if authentication is successful, or `null` if authentication fails.
  */
 async function authenticateUser(
+  email: string,
   username: string,
   password: string,
   isRegisteration: boolean
@@ -104,9 +112,7 @@ async function authenticateUser(
   // Get user associated with that username, if exists
   const user = await prisma.user.findFirst({
     where: {
-      credential: {
-        username,
-      },
+      OR: [{ email }, { credential: { username } }],
     },
     include: {
       credential: true,
@@ -125,6 +131,8 @@ async function authenticateUser(
     console.log("Creating new user:", username);
     const newUser = await prisma.user.create({
       data: {
+        email,
+        username,
         credential: {
           create: {
             username,
