@@ -34,7 +34,7 @@ const registerPage: NextPage = () => {
         <div className="absolute right-0 -z-10 ">
           <img src="/Ipage1-2.png" width={468} height={315} alt="cat" />
         </div>
-        <div className="bg-blue-500 text-right">Waiting for NavBar! susu!</div>
+        <Header></Header>
         <div className="flex h-full flex-col items-center">
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -170,7 +170,7 @@ const registerPage: NextPage = () => {
   else {
     return (
       <div className="flex h-screen flex-col">
-        <div className="bg-blue-500 text-right">Waiting for NavBar! susu!</div>
+        <Header></Header>
         <div className="absolute right-0 -z-10 ">
           <img src="/Ipage2-1.png" width={614} height={580} alt="cat" />
         </div>
