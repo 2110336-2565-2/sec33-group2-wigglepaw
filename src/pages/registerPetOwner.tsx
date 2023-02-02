@@ -10,8 +10,9 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { PetKind } from "@prisma/client";
+import Link from "next/link";
+import Header from "../components/Header";
 import { useState } from "react";
-
 const registerPage: NextPage = () => {
   const {
     register,
