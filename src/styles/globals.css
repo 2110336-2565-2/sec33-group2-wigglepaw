@@ -18,6 +18,9 @@
     @apply my-auto h-fit;
   }
   .header-a {
-    @apply h-2 py-2 px-4 text-lg font-semibold text-white hover:bg-sky-700;
+    @apply py-2 px-4 text-lg font-bold text-white hover:bg-sky-700;
+  }
+  .header-register-link {
+    @apply my-1 flex h-fit w-[11.5rem] rounded bg-sky-400 fill-sky-400 p-2 text-base font-semibold;
   }
 }

@@ -8,18 +8,18 @@ const Header = () => {
   const toggleMenu = () => setOpen(!openRegister);
 
   return (
-    <span className="flex h-fit w-full bg-sky-900">
+    <span className="flex h-fit w-full bg-sky-900 pr-2">
       <nav className=" flex w-full">
         <Link href={"/"} className="flex shrink-0">
           <div className="relative m-2 flex h-[4rem] w-[5rem]">
             <Image src={"/../public/logo_w.png"} alt={""} fill></Image>
           </div>
-          <h1 className="my-auto text-2xl font-semibold text-white sm:text-3xl">
+          <h1 className="my-auto mr-2 text-2xl font-bold text-white sm:text-3xl">
             WigglePaw
           </h1>
         </Link>
         {/* TODO Collapse buttons into user img if too small width */}
-        <ul className="my-auto ml-auto">
+        <ul className="invisible my-auto ml-auto sm:visible">
           <li className="header-li">
             <div className="header-li-div">
               <Link href="/about" className="header-a">
@@ -58,11 +58,14 @@ const Header = () => {
             Register
           </button>
           <div
-            className="absolute top-full right-0 h-fit w-[11rem] "
+            className=" absolute top-full right-0 rounded bg-slate-300 px-2 py-1"
             hidden={!openRegister}
           >
-            <Link href="/registerPetOwner" className="bg-sky-400">
+            <Link href="/registerPetOwner" className="header-register-link">
               Register Pet Owner
+            </Link>
+            <Link href="/registerPetSitter" className="header-register-link">
+              Register Pet Sitter
             </Link>
           </div>
         </div>
