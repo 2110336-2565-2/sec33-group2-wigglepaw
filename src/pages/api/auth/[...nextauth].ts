@@ -73,13 +73,13 @@ export const authOptions: NextAuthOptions = {
           password,
           isRegistration
         );
-        if (userDB === null || userDB.credential === null) return null;
+        if (userDB === null) return null;
 
         // Map user in DB to user in NextAuth, then return it
         const userNextAuth: User = {
           id: userDB.userId,
-          username: userDB.credential.username,
-          password: userDB.credential.password,
+          username: userDB.username,
+          password: userDB.password,
           email: userDB.email,
         };
         return userNextAuth;
@@ -106,10 +106,7 @@ async function authenticateUser(
   // Get user associated with that username, if exists
   const user = await prisma.user.findFirst({
     where: {
-      OR: [{ email }, { credential: { username } }],
-    },
-    include: {
-      credential: true,
+      OR: [{ email }, { username }],
     },
   });
 
@@ -124,15 +121,7 @@ async function authenticateUser(
       data: {
         email,
         username,
-        credential: {
-          create: {
-            username,
-            password,
-          },
-        },
-      },
-      include: {
-        credential: true,
+        password,
       },
     });
     // Return user
@@ -141,9 +130,9 @@ async function authenticateUser(
     // Case: Login
 
     // User must exist, and have credentials
-    if (user === null || user.credential === null) return null;
+    if (user === null) return null;
     // Password must match
-    if (user.credential.password !== password) return null;
+    if (user.password !== password) return null;
 
     // Return user
     return user;
