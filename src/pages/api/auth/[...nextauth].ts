@@ -17,9 +17,6 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     // JWT token is sent to the client as encrypted cookie.
     jwt({ token, account, user, profile }) {
-      console.log("user:", user);
-      console.log("account:", account);
-      console.log("profile:", profile);
       if (user) {
         // Populate token with user data.
         // Any data you want to send to the client, must be in the token.
@@ -29,7 +26,6 @@ export const authOptions: NextAuthOptions = {
         token.username = user.username;
         token.email = user.email;
       }
-      console.log("Token:", token);
       return token;
     },
 
@@ -37,7 +33,6 @@ export const authOptions: NextAuthOptions = {
     // Token are populate in "jwt" callback.
     // Do not use "user" argument, it is not populated and will break, I spent 6 hr fixing this shit.
     session({ session, token }) {
-      console.log("Session.token:", token);
       if (session.user) {
         // Populate session with user data.
         // If there any TS error, check or edit the type definition of Session in next-auth.d.ts.
@@ -46,7 +41,6 @@ export const authOptions: NextAuthOptions = {
         session.user.username = token.username;
         session.user.email = token.email;
       }
-      console.log("Session:", session);
       return session;
     },
   },
@@ -119,8 +113,6 @@ async function authenticateUser(
     },
   });
 
-  console.log("User Fetched:", user);
-
   if (isRegisteration) {
     // Case: Register
 
@@ -128,7 +120,6 @@ async function authenticateUser(
     if (user !== null) return null;
 
     // Create new user, with credentials
-    console.log("Creating new user:", username);
     const newUser = await prisma.user.create({
       data: {
         email,
@@ -154,7 +145,6 @@ async function authenticateUser(
     // Password must match
     if (user.credential.password !== password) return null;
 
-    console.log("User logged in:", user);
     // Return user
     return user;
   }
