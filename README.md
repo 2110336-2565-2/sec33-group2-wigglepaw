@@ -19,6 +19,13 @@
 7. Run `pnpm dev`: Run project in development mode with local web server and live reloading.
 8. Open [localhost:3000](http://localhost:3000) in your browser.
 
+## Useful Commands
+
+- `pnpm dev`: Run project in development mode with local web server and live reloading.
+- `pnpm build`: Build project for production.
+- `pnpm prisma db push`: Push the Prisma schema to the database.
+- `pnpm prisma studio`: Open Prisma Studio, a GUI for viewing and editing data in your database.
+
 # Create T3 App
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
