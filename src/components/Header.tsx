@@ -5,14 +5,19 @@ import { useState } from "react";
 const Header = () => {
   const isLoggedIn = false;
   const [openRegister, setOpen] = useState(false);
-  const toggleMenu = () => setOpen(!openRegister);
+  const toggleRegister = () => setOpen(!openRegister);
 
   return (
-    <span className="flex h-fit w-full bg-sky-900 pr-2">
+    <span className="mb-4 flex h-fit w-full bg-sky-900 pr-2">
       <nav className=" flex w-full">
         <Link href={"/"} className="flex shrink-0">
           <div className="relative m-2 flex h-[4rem] w-[5rem]">
-            <Image src={"/../public/logo_w.png"} alt={""} fill></Image>
+            <Image
+              src={"/logo_w.png"}
+              sizes="50vw,50vw,33vw"
+              alt={""}
+              fill
+            ></Image>
           </div>
           <h1 className="my-auto mr-2 text-2xl font-bold text-white sm:text-3xl">
             WigglePaw
@@ -47,18 +52,13 @@ const Header = () => {
           )}
         </ul>
       </nav>
-      {isLoggedIn && (
-        <div className="relative m-2 flex h-[4rem] w-[4rem]">
-          <Image src={"/../public/profile_icon.png"} alt={"Icon"} fill></Image>
-        </div>
-      )}
       {!isLoggedIn && (
         <div className="relative my-auto">
-          <button onClick={toggleMenu} className="header-a my-auto h-fit">
+          <button onClick={toggleRegister} className="header-a my-auto h-fit">
             Register
           </button>
           <div
-            className=" absolute top-full right-0 rounded bg-slate-300 px-2 py-1"
+            className="absolute top-full right-0 rounded bg-slate-300 px-2 py-1"
             hidden={!openRegister}
           >
             <Link href="/registerPetOwner" className="header-register-link">
@@ -68,6 +68,11 @@ const Header = () => {
               Register Pet Sitter
             </Link>
           </div>
+        </div>
+      )}
+      {isLoggedIn && (
+        <div className="relative m-2 flex h-[4rem] w-[4rem]">
+          <Image src={"/../public/profile_icon.png"} alt={"Icon"} fill></Image>
         </div>
       )}
     </span>

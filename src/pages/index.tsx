@@ -6,7 +6,7 @@ import { api } from "../utils/api";
 import Header from "../components/Header";
 // test est
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  //const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
   return (
     <div>
