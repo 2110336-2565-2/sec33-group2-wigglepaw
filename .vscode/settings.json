@@ -1,0 +1,6 @@
+{
+    "marquee.widgets.npm-stats.packageNames": [
+        "wiggle-muse"
+    ],
+    "vitest.commandLine": "pnpm test --"
+}

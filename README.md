@@ -23,10 +23,10 @@
 
 - `pnpm install`: Install project dependencies, will also run `pnpm prisma db push` and `pnpm prisma studio` after installation. Try this first if you are having weird trouble with the project.
 - `pnpm dev`: Run project in development mode with local web server and live reloading.
+- `pnpm test`: Run tests.
 - `pnpm build`: Build project for production.
 - `pnpm prisma db push`: Push the Prisma schema to the database.
 - `pnpm prisma studio`: Open Prisma Studio, a GUI for viewing and editing data in your database.
-
 
 ## Additional Dependencies
 
