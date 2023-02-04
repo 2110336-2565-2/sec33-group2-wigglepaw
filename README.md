@@ -27,6 +27,10 @@
 - `pnpm prisma db push`: Push the Prisma schema to the database.
 - `pnpm prisma studio`: Open Prisma Studio, a GUI for viewing and editing data in your database.
 
+## Additional tools
+
+- `/api/trpc/playground`: Sandbox for testing tRPC queries in the browser. (https://github.com/sachinraja/trpc-playground)
+- `/api/trpc/panel`: Automatically generated a UI for manually testing your tRPC backend. (https://github.com/iway1/trpc-panel)
 
 ## Additional Dependencies
 
