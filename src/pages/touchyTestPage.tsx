@@ -6,7 +6,7 @@ import { api } from "../utils/api";
 import Header from "../components/Header";
 const touchyTestPage = () => {
     const greet = api.touchy.greetings.useQuery({name:"Touchy69"});
-    const user = api.touchy.getByUsername.useQuery("touchy");
+    const user = api.user.getByUsername.useQuery({username:"touchy"});
 
     if (!greet.data) {
         return (
@@ -17,7 +17,7 @@ const touchyTestPage = () => {
     }
   return (
     <div style={styleCenter}>
-        <h1>{greet.data.text}<br></br>{user.data?.email}</h1>
+        <h1>{greet.data.text}<br></br>{JSON.stringify(user.data)}</h1>
     </div>
 );
 }

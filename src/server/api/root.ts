@@ -1,3 +1,4 @@
+import { userRouter } from './routers/userRouter';
 import { createTRPCRouter, publicProcedure } from "./trpc";
 import { exampleRouter } from "./routers/example";
 import { petRouter } from "./routers/petRouter";
@@ -12,6 +13,7 @@ export const appRouter = createTRPCRouter({
   example: exampleRouter,
   pet: petRouter,
   touchy: touchyTestRouter,
+  user: userRouter,
   // Health check route, return 200 OK if server is up
   healthcheck: publicProcedure.query(() => true),
 });

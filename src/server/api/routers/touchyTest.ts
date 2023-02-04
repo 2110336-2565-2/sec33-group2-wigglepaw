@@ -6,8 +6,6 @@ import { appRouter } from "../../../server/api/root";
 import { z } from 'zod';
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
-const t = initTRPC.create();
-
 export const touchyTestRouter = createTRPCRouter({
     getByUsername: publicProcedure.input(z.string()).query(({ ctx, input }) => {
       return ctx.prisma.user.findFirst({
@@ -17,7 +15,7 @@ export const touchyTestRouter = createTRPCRouter({
       });
     }),
     /* /api/trpc/greetings */
-  greetings: t.procedure
+  greetings: publicProcedure
   .input(
     z.object({
       name:z.string(),
