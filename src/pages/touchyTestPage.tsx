@@ -5,9 +5,10 @@ import { api } from "../utils/api";
 
 import Header from "../components/Header";
 const touchyTestPage = () => {
-    const result = api.touchy.greetings.useQuery({name:"Echidna"});
+    const greet = api.touchy.greetings.useQuery({name:"Touchy69"});
+    const user = api.touchy.getByUsername.useQuery("touchy");
 
-    if (!result.data) {
+    if (!greet.data) {
         return (
             <div style={styleCenter}>
                 <h1>Loading...</h1>
@@ -16,7 +17,7 @@ const touchyTestPage = () => {
     }
   return (
     <div style={styleCenter}>
-        <h1>{result.data.text}</h1>
+        <h1>{greet.data.text}<br></br>{user.data?.email}</h1>
     </div>
 );
 }
@@ -26,7 +27,7 @@ const styleCenter = {
     height: '100vh',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
 
 }
 
