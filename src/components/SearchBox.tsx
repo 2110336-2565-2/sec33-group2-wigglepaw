@@ -44,7 +44,7 @@ const SearchBox = () => {
   };
 
   return (
-    <div className="mx-auto w-3/5 min-w-fit bg-red-300">
+    <div className="border- mx-auto w-3/5 min-w-fit bg-sky-200 p-4">
       <h1>Search for {petSitterType}</h1>
       <div>
         <form onSubmit={handleSearch}>
@@ -65,7 +65,7 @@ const SearchBox = () => {
           <input
             type="submit"
             value="Submit"
-            className="rounded-full bg-sky-700 px-4 py-2 font-bold text-white hover:bg-sky-600"
+            className="rounded-full bg-sky-700 px-4 py-2 font-bold text-white transition-colors hover:bg-sky-600"
           ></input>
         </form>
       </div>

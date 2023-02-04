@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import SearchBox from "../components/SearchBox";
 
 import { PrismaClient } from "@prisma/client";
+import PetSitterCard from "../components/PetSitterCard";
 
 const prisma = new PrismaClient();
 
@@ -23,10 +24,12 @@ const matching: NextPage = (props: any) => {
     <div>
       <Header></Header>
       <SearchBox></SearchBox>
-      <div>
+      <div className="mx-auto mt-3 w-1/2">
+        <h1 className="font-bold">Results</h1>
         {users.map((user: any) => (
-          <div className="card">{user.name}</div>
+          <PetSitterCard pet_sitter={user}></PetSitterCard>
         ))}
+        <PetSitterCard pet_sitter={null}></PetSitterCard>
       </div>
     </div>
   );
