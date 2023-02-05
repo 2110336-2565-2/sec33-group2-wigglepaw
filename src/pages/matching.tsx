@@ -19,6 +19,7 @@ export async function getStaticProps() {
 
 const matching: NextPage = (props: any) => {
   const users = props.users;
+  const pageNum = 1;
 
   return (
     <div>
