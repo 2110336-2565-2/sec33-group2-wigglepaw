@@ -15,7 +15,7 @@ const Header = () => {
 
   return (
     <span className="mb-4 flex h-fit w-full bg-sky-900 pr-2">
-      <nav className=" flex w-full">
+      <nav className="flex w-full">
         <Link href={"/"} className="flex shrink-0">
           <div className="relative m-2 flex h-[4rem] w-[5rem]">
             <Image src={"/logo_w.png"} alt={""} fill></Image>
@@ -54,7 +54,7 @@ const Header = () => {
         </ul>
       </nav>
       {!isLoggedIn && (
-        <div className="relative my-auto">
+        <div className="relative my-auto hidden sm:flex">
           <button onClick={toggleRegister} className="header-a my-auto h-fit">
             Register
           </button>
@@ -71,25 +71,51 @@ const Header = () => {
           </div>
         </div>
       )}
+      {!isLoggedIn && (
+        <div className="relative my-auto sm:hidden">
+          <button onClick={toggleRegister} className="header-a my-auto h-fit">
+            Menu
+          </button>
+          <div
+            className="absolute top-full right-0 rounded bg-slate-300 px-2 py-1"
+            hidden={!openRegister}
+          >
+            <Link href="/registerPetSitter" className="header-menu-link">
+              About
+            </Link>
+            <Link href="/registerPetSitter" className="header-menu-link">
+              Login
+            </Link>
+            <Link href="/registerPetOwner" className="header-register-link">
+              Register Pet Owner
+            </Link>
+            <Link href="/registerPetSitter" className="header-register-link">
+              Register Pet Sitter
+            </Link>
+          </div>
+        </div>
+      )}
       {isLoggedIn && (
         <div className="relative my-auto">
           <div className="relative m-2 flex h-[4rem] w-[4rem]">
-            <button onClick={toggleProfile} className="header-a my-auto h-fit">
-              <Image
-                src={"/../public/profile_icon.png"}
-                alt={"Icon"}
-                fill
-              ></Image>
+            <button onClick={toggleProfile} className="my-auto h-fit">
+              <Image src={"/profile_icon.png"} alt={"Icon"} fill></Image>
             </button>
             <div
               className="absolute top-full right-0 rounded bg-slate-300 px-2 py-1"
               hidden={!openProfile}
             >
-              <Link href="/profile" className="header-register-link">
+              <Link href="/profile" className="header-menu-link">
                 Profile
               </Link>
+              <Link href="/about" className="header-menu-link sm:hidden">
+                About
+              </Link>
+              <Link href="/help" className="header-menu-link sm:hidden">
+                Help
+              </Link>
               <button onClick={logout}>
-                <Link href="/" className="header-register-link">
+                <Link href="/" className="header-menu-link">
                   Logout
                 </Link>
               </button>
