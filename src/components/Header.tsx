@@ -1,14 +1,18 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { signOut, useSession } from "next-auth/react";
 
 const Header = () => {
-  const [isLoggedIn,setLoggedIn] = useState(false);
+  const { data: session, status } = useSession();
+  const isLoggedIn = status === "authenticated";
+
   const [openRegister, setOpen] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
   const toggleRegister = () => setOpen(!openRegister);
-  const toggleProfile = ()=> setOpenProfile(!openProfile);
-  const logout = ()=> setLoggedIn(false);
+  const toggleProfile = () => setOpenProfile(!openProfile);
+  const logout = () => signOut();
+
   return (
     <span className="mb-4 flex h-fit w-full bg-sky-900 pr-2">
       <nav className=" flex w-full">
@@ -74,23 +78,28 @@ const Header = () => {
       )}
       {isLoggedIn && (
         <div className="relative my-auto">
-        <div className="relative m-2 flex h-[4rem] w-[4rem]">
-        <button onClick={toggleProfile} className="header-a my-auto h-fit">
-          <Image src={"/../public/profile_icon.png"} alt={"Icon"} fill></Image>
-        </button>
-        <div
-            className="absolute top-full right-0 rounded bg-slate-300 px-2 py-1"
-            hidden={!openProfile}
-          >
-            <Link href="/profile" className="header-register-link">
-              Profile
-            </Link>
-            <button onClick={logout}>
-            <Link href="/" className="header-register-link">
-              Logout
-            </Link></button>
+          <div className="relative m-2 flex h-[4rem] w-[4rem]">
+            <button onClick={toggleProfile} className="header-a my-auto h-fit">
+              <Image
+                src={"/../public/profile_icon.png"}
+                alt={"Icon"}
+                fill
+              ></Image>
+            </button>
+            <div
+              className="absolute top-full right-0 rounded bg-slate-300 px-2 py-1"
+              hidden={!openProfile}
+            >
+              <Link href="/profile" className="header-register-link">
+                Profile
+              </Link>
+              <button onClick={logout}>
+                <Link href="/" className="header-register-link">
+                  Logout
+                </Link>
+              </button>
+            </div>
           </div>
-        </div>
         </div>
       )}
     </span>
