@@ -4,19 +4,16 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { api } from "../utils/api";
 
 import Header from "../components/Header";
-// test est
-const Home: NextPage = () => {
-  //const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
+const Home: NextPage = () => {
   return (
     <div>
       <Header></Header>
-      <div className="mx-auto w-2/5">
+      <div className="mx-auto w-fit rounded-2xl bg-amber-100 p-4">
         <h1 className="text-2xl">&quot;Let us take care your loves&quot;</h1>
         <h2 className="text-xl">WigglePaw</h2>
         <h3>A matching platform for pet sitters and pet owners</h3>
         <br />
-        {/* TODO Sent Link to matching pages */}
         <div className="flex">
           <Link href="/match=?pet_sitter" className="find-link">
             Finding Pet Sitter

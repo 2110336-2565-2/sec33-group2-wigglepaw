@@ -24,7 +24,6 @@ const Header = () => {
             WigglePaw
           </h1>
         </Link>
-        {/* TODO Collapse buttons into user img if too small width */}
         <ul className="invisible my-auto ml-auto sm:visible">
           <li className="header-li">
             <div className="header-li-div">
@@ -80,10 +79,16 @@ const Header = () => {
             className="absolute top-full right-0 rounded bg-slate-300 px-2 py-1"
             hidden={!openRegister}
           >
-            <Link href="/registerPetSitter" className="header-menu-link">
+            <Link
+              href="/about"
+              className="header-register-link bg-sky-700 hover:bg-sky-600"
+            >
               About
             </Link>
-            <Link href="/registerPetSitter" className="header-menu-link">
+            <Link
+              href="/login"
+              className="header-register-link bg-sky-700 hover:bg-sky-600"
+            >
               Login
             </Link>
             <Link href="/registerPetOwner" className="header-register-link">
@@ -96,7 +101,7 @@ const Header = () => {
         </div>
       )}
       {isLoggedIn && (
-        <div className="relative my-auto">
+        <div className="relative my-auto ml-1">
           <div className="relative m-2 flex h-[4rem] w-[4rem]">
             <button onClick={toggleProfile} className="my-auto h-fit">
               <Image src={"/profile_icon.png"} alt={"Icon"} fill></Image>
