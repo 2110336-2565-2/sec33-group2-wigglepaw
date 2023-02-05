@@ -18,12 +18,7 @@ const Header = () => {
       <nav className=" flex w-full">
         <Link href={"/"} className="flex shrink-0">
           <div className="relative m-2 flex h-[4rem] w-[5rem]">
-            <Image
-              src={"/logo_w.png"}
-              sizes="50vw,50vw,33vw"
-              alt={""}
-              fill
-            ></Image>
+            <Image src={"/logo_w.png"} alt={""} fill></Image>
           </div>
           <h1 className="my-auto mr-2 text-2xl font-bold text-white sm:text-3xl">
             WigglePaw
