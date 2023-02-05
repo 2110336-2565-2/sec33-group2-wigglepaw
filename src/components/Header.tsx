@@ -2,16 +2,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const Header = () => {
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated";
+  const logout = () => signOut();
 
   const [openRegister, setOpen] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
   const toggleRegister = () => setOpen(!openRegister);
   const toggleProfile = () => setOpenProfile(!openProfile);
-  const logout = () => signOut();
+
+  const router = useRouter();
 
   return (
     <span className="mb-4 flex h-fit w-full bg-sky-900 pr-2">
@@ -27,7 +30,13 @@ const Header = () => {
         <ul className="invisible my-auto ml-auto sm:visible">
           <li className="header-li">
             <div className="header-li-div">
-              <Link href="/about" className="header-a">
+              <Link
+                href="/about"
+                className={
+                  "header-a" +
+                  `${router.pathname == "/about" ? " header-at-page" : ""}`
+                }
+              >
                 About
               </Link>
             </div>
@@ -35,7 +44,13 @@ const Header = () => {
           {!isLoggedIn && (
             <li className="header-li">
               <div className="header-li-div">
-                <Link href="/login" className="header-a">
+                <Link
+                  href="/login"
+                  className={
+                    "header-a" +
+                    `${router.pathname == "/login" ? " header-at-page" : ""}`
+                  }
+                >
                   Login
                 </Link>
               </div>
@@ -44,7 +59,13 @@ const Header = () => {
           {isLoggedIn && (
             <li className="header-li">
               <div className="header-li-div">
-                <Link href="/help" className="header-a">
+                <Link
+                  href="/help"
+                  className={
+                    "header-a" +
+                    `${router.pathname == "/help" ? " header-at-page" : ""}`
+                  }
+                >
                   Help
                 </Link>
               </div>
@@ -54,7 +75,19 @@ const Header = () => {
       </nav>
       {!isLoggedIn && (
         <div className="relative my-auto hidden sm:flex">
-          <button onClick={toggleRegister} className="header-a my-auto h-fit">
+          <button
+            onClick={toggleRegister}
+            className={
+              "header-a my-auto h-fit" +
+              `${
+                router.pathname.includes(
+                  "/registerPetOwner" || "/registerPetSitter"
+                )
+                  ? " header-at-page"
+                  : ""
+              }`
+            }
+          >
             Register
           </button>
           <div
@@ -81,20 +114,50 @@ const Header = () => {
           >
             <Link
               href="/about"
-              className="header-register-link bg-sky-700 hover:bg-sky-600"
+              className={
+                "header-register-link bg-sky-700 hover:bg-sky-600" +
+                `${router.pathname == "/about" ? " header-at-page" : ""}`
+              }
             >
               About
             </Link>
             <Link
               href="/login"
-              className="header-register-link bg-sky-700 hover:bg-sky-600"
+              className={
+                "header-register-link" +
+                `${
+                  router.pathname == "/login"
+                    ? " header-at-page"
+                    : " bg-sky-700 hover:bg-sky-600"
+                }`
+              }
             >
               Login
             </Link>
-            <Link href="/registerPetOwner" className="header-register-link">
+            <Link
+              href="/registerPetOwner"
+              className={
+                "header-register-link" +
+                `${
+                  router.pathname.includes("/registerPetOwner")
+                    ? " header-at-page text-green-700"
+                    : ""
+                }`
+              }
+            >
               Register Pet Owner
             </Link>
-            <Link href="/registerPetSitter" className="header-register-link">
+            <Link
+              href="/registerPetSitter"
+              className={
+                "header-register-link" +
+                `${
+                  router.pathname.includes("/registerPetSitter")
+                    ? " header-at-page text-green-700"
+                    : ""
+                }`
+              }
+            >
               Register Pet Sitter
             </Link>
           </div>
@@ -113,10 +176,22 @@ const Header = () => {
               <Link href="/profile" className="header-menu-link">
                 Profile
               </Link>
-              <Link href="/about" className="header-menu-link sm:hidden">
+              <Link
+                href="/about"
+                className={
+                  "header-menu-link sm:hidden" +
+                  `${router.pathname == "/about" ? " header-at-page" : ""}`
+                }
+              >
                 About
               </Link>
-              <Link href="/help" className="header-menu-link sm:hidden">
+              <Link
+                href="/help"
+                className={
+                  "header-menu-link sm:hidden" +
+                  `${router.pathname == "/help" ? " header-at-page" : ""}`
+                }
+              >
                 Help
               </Link>
               <button onClick={logout}>
