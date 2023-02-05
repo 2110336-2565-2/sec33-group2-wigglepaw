@@ -20,6 +20,12 @@
   .header-a {
     @apply rounded py-2 px-4 text-lg font-bold text-white transition-all hover:bg-sky-700;
   }
+
+
+  /* registerPerSitter */
+  .errorstyle{
+    @apply mt-1 text-xs italic text-red-500
+  }
   .header-register-link {
     @apply my-1 flex h-fit w-[11rem] rounded bg-green-700 p-2 text-base font-semibold text-white transition-all hover:bg-green-600;
   }
