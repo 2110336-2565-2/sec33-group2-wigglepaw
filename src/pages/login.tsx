@@ -47,22 +47,29 @@ const LoginPage: NextPage = () => {
   return (
     <div className="flex flex-col gap-2">
       <Header></Header>
-      <div className="px-[200px] text-xl">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <h1>Username</h1>
-          <input {...register("username", { required: true })} type="text" />
-          <p className="text-red-400">{errors.username?.message}</p>
+      <div className="my-[10vh] mx-auto flex rounded-xl bg-slate-300 p-6 text-xl ">
+        <form onSubmit={handleSubmit(onSubmit)} className="w-fit leading-10 ">
+          <h1 className="font-semibold">Username</h1>
+          <input
+            {...register("username", { required: true })}
+            placeholder="Username"
+            type="text"
+            className="w-full rounded px-1"
+          />
+          <p className="text-[1rem] text-red-400">{errors.username?.message}</p>
 
-          <h1>Password</h1>
+          <h1 className="font-semibold">Password</h1>
           <input
             {...register("password", { required: true })}
-            placeholder="**********"
+            placeholder="********"
             type="password"
+            className="w-full rounded p-1"
           />
-          <p className="text-red-400">{errors.password?.message}</p>
+          <p className="text-[1rem] text-red-400">{errors.password?.message}</p>
           {/*errors. && <span>This field is required</span>*/}
-
-          <button className="text-center">Login</button>
+          <button className="mx-auto mt-6 flex rounded-full bg-sky-900 px-4 py-2 text-base font-bold text-white transition-all hover:bg-sky-700">
+            Login
+          </button>
         </form>
       </div>
     </div>
