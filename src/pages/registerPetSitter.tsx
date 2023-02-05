@@ -298,6 +298,7 @@ export default function RegisterPetSitter() {
         </>
       );
     } else if (state === 3) {
+      //Currently offline
       return (
         <>
           <h1 className="py-2 text-3xl">Register Pet Sitter</h1>
@@ -559,6 +560,7 @@ export default function RegisterPetSitter() {
   );
 }
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  //this is TS stuff (atleast that is what I think)
   id: string;
   label: string;
   register: UseFormRegister<FieldValues>; // declare register props
