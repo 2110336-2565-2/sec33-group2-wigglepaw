@@ -116,10 +116,11 @@ export default function RegisterPetSitter() {
     };
 
     var real = {};
+    //not include data
     if (page1.type === "petfreelance") {
-      real = Object.assign({}, page1, page2free, data);
+      real = Object.assign({}, page1, page2free);
     } else {
-      real = Object.assign({}, page1, page2hotel, data);
+      real = Object.assign({}, page1, page2hotel);
     }
     alert(JSON.stringify(real)); //real data ready to be sent to backends
 
@@ -130,35 +131,67 @@ export default function RegisterPetSitter() {
 
   const FirstPage = () => {
     if (state === 1) {
+      const validationSchema = z.object({
+        // like a schema for register in form
+        firstname: z.string().min(1, { message: "please provide details" }),
+        lastname: z.string().min(1, { message: "please provide details" }),
+      });
+      type ValidationSchema = z.infer<typeof validationSchema>;
+
+      const {
+        register,
+        handleSubmit,
+        formState: { errors },
+      } = useForm<ValidationSchema>({
+        resolver: zodResolver(validationSchema), //using zod object above and link it with react hook
+      });
+
+      const onSubmit: SubmitHandler<ValidationSchema> = (data, e?: Event) => {
+        e?.preventDefault();
+
+        setPage2free({
+          firstname: data.firstname,
+          lastname: data.lastname,
+        });
+
+        //console.log(page2free, page2hotel);
+        setState(3);
+        console.log(JSON.stringify(data));
+      };
+
       return (
         <>
           <h1 className="py-2 text-3xl">Register Pet Sitter</h1>
           <h1 className="py-2 text-3xl">2/3</h1>
-          <form className="w-4/5" onSubmit={onSubmitpage2}>
+          <form className="w-4/5" onSubmit={handleSubmit(onSubmit)}>
             <div className="grid  grid-cols-1 grid-rows-6">
-              <div className="m-3">
-                <label className="mb-2 block text-sm font-medium text-gray-900 ">
-                  Firstname
-                </label>
-                <input
-                  type="text"
+              <div className="m-2">
+                <Input
                   id="firstname"
+                  label="Firstname"
                   defaultValue={page2free.firstname}
-                  placeholder="ทอมมี่"
-                  className="block w-full rounded border border-gray-100 bg-gray-100 p-1 px-2 text-sm text-gray-900 drop-shadow-md focus:border-blue-500 focus:bg-white focus:ring-blue-500"
-                />
-              </div>
-              <div className="m-3">
-                <label className="mb-2 block text-sm font-medium text-gray-900 ">
-                  Lastname
-                </label>
-                <input
+                  register={register}
+                  validationRules={{ required: true }}
+                  placeholder="John"
                   type="text"
-                  id="lastname"
-                  defaultValue={page2free.lastname}
-                  placeholder="มานาบุญ"
-                  className="block w-full rounded border border-gray-100 bg-gray-100 p-1 px-2 text-sm text-gray-900 drop-shadow-md focus:border-blue-500 focus:bg-white focus:ring-blue-500"
                 />
+                {errors.firstname && (
+                  <p className="errorstyle"> {errors.firstname?.message}</p>
+                )}
+              </div>
+              <div className="m-2">
+                <Input
+                  id="lastname"
+                  label="Lastname"
+                  defaultValue={page2free.lastname}
+                  register={register}
+                  validationRules={{ required: true }}
+                  placeholder="Wick"
+                  type="text"
+                />
+                {errors.lastname && (
+                  <p className="errorstyle"> {errors.lastname?.message}</p>
+                )}
               </div>
               <div className="mx-3 flex flex-wrap content-end items-center justify-evenly">
                 <button
@@ -166,14 +199,11 @@ export default function RegisterPetSitter() {
                   onClick={(e: { target: any }) => {
                     setState(0);
                   }}
-                  className="rounded bg-[#98AAB4] px-6  py-2.5 text-center text-sm font-semibold text-[#213951] drop-shadow-md hover:bg-[#8b9ba3] focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto md:px-16"
+                  className="buttonstyle"
                 >
                   <p>Back</p>
                 </button>
-                <button
-                  type="submit"
-                  className="rounded bg-[#98AAB4] px-6  py-2.5 text-center text-sm font-semibold text-[#213951] drop-shadow-md hover:bg-[#8b9ba3] focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto md:px-16"
-                >
+                <button type="submit" className="buttonstyle">
                   <p>Next</p>
                 </button>
               </div>
@@ -182,35 +212,72 @@ export default function RegisterPetSitter() {
         </>
       );
     } else if (state === 2) {
+      const validationSchema = z.object({
+        // like a schema for register in form
+        hotelname: z.string().min(1, { message: "please provide details" }),
+        businesslicense: z
+          .string()
+          .min(1, { message: "please provide details" }),
+      });
+      type ValidationSchema = z.infer<typeof validationSchema>;
+
+      const {
+        register,
+        handleSubmit,
+        formState: { errors },
+      } = useForm<ValidationSchema>({
+        resolver: zodResolver(validationSchema), //using zod object above and link it with react hook
+      });
+
+      const onSubmit: SubmitHandler<ValidationSchema> = (data, e?: Event) => {
+        e?.preventDefault();
+
+        setPage2hotel({
+          hotelName: data.hotelname,
+          businessLicense: data.businesslicense,
+        });
+
+        //console.log(page2free, page2hotel);
+        setState(3);
+        console.log(JSON.stringify(data));
+      };
+
       return (
         <>
           <h1 className="py-2 text-3xl">Register Pet Sitter</h1>
           <h1 className="py-2 text-3xl">2/3</h1>
-          <form className="w-4/5" onSubmit={onSubmitpage2}>
+          <form className="w-4/5" onSubmit={handleSubmit(onSubmit)}>
             <div className="grid  grid-cols-1 grid-rows-6">
               <div className="m-3">
-                <label className="mb-2 block text-sm font-medium text-gray-900 ">
-                  Hotel
-                </label>
-                <input
-                  type="text"
+                <Input
                   id="hotelname"
+                  label="Hotel Name"
                   defaultValue={page2hotel.hotelName}
-                  placeholder="Muse Hotel At Anatara Resort and Spa and Sport club and Therapy and University "
-                  className="block w-full rounded border border-gray-100 bg-gray-100 p-1 px-2 text-sm text-gray-900 drop-shadow-md focus:border-blue-500 focus:bg-white focus:ring-blue-500"
+                  register={register}
+                  validationRules={{ required: true }}
+                  placeholder="Letsingitout resort and spa"
+                  type="text"
                 />
+                {errors.hotelname && (
+                  <p className="errorstyle"> {errors.hotelname?.message}</p>
+                )}
               </div>
               <div className="m-3">
-                <label className="mb-2 block text-sm font-medium text-gray-900 ">
-                  Business License
-                </label>
-                <input
-                  type="text"
-                  id="blicense"
+                <Input
+                  id="businesslicense"
+                  label="Business License"
                   defaultValue={page2hotel.businessLicense}
-                  placeholder="WUT DA FUCK IS THIS SLOT DO :<"
-                  className="block w-full rounded border border-gray-100 bg-gray-100 p-1 px-2 text-sm text-gray-900 drop-shadow-md focus:border-blue-500 focus:bg-white focus:ring-blue-500"
+                  register={register}
+                  validationRules={{ required: true }}
+                  placeholder="I dont even know what to put here :<"
+                  type="text"
                 />
+                {errors.businesslicense && (
+                  <p className="errorstyle">
+                    {" "}
+                    {errors.businesslicense?.message}
+                  </p>
+                )}
               </div>
               <div className="mx-3 flex flex-wrap content-end items-center justify-evenly">
                 <button
@@ -218,14 +285,11 @@ export default function RegisterPetSitter() {
                   onClick={(e: { target: any }) => {
                     setState(0);
                   }}
-                  className="rounded bg-[#98AAB4] px-6  py-2.5 text-center text-sm font-semibold text-[#213951] drop-shadow-md hover:bg-[#8b9ba3] focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto md:px-16"
+                  className="buttonstyle"
                 >
                   <p>Back</p>
                 </button>
-                <button
-                  type="submit"
-                  className="rounded bg-[#98AAB4] px-6  py-2.5 text-center text-sm font-semibold text-[#213951] drop-shadow-md hover:bg-[#8b9ba3] focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto md:px-16"
-                >
+                <button type="submit" className="buttonstyle">
                   <p>Next</p>
                 </button>
               </div>
@@ -320,13 +384,11 @@ export default function RegisterPetSitter() {
                   onClick={() => {
                     setState(0);
                   }}
-                  className="rounded bg-[#98AAB4] px-6  py-2.5 text-center text-sm font-semibold text-[#213951] drop-shadow-md hover:bg-[#8b9ba3] focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto md:px-16"
+                  className="buttonstyle"
                 >
                   Back
                 </button>
-                <button className="rounded bg-[#98AAB4] px-6  py-2.5 text-center text-sm font-semibold text-[#213951] drop-shadow-md hover:bg-[#8b9ba3] focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto md:px-16">
-                  Register
-                </button>
+                <button className="buttonstyle">Register</button>
               </div>
             </form>
           </div>
@@ -365,14 +427,14 @@ export default function RegisterPetSitter() {
           email: data.email,
           address: data.address,
           type: data.type,
-        });
+        }); ///save data in page1, in case user want to go back and edit page 1,
         if (data.type === "petfreelance") {
           setState(1);
         } else {
           setState(2);
         }
 
-        alert(JSON.stringify(data));
+        console.log(JSON.stringify(data));
       };
 
       return (
@@ -470,13 +532,13 @@ export default function RegisterPetSitter() {
                   //   console.log("??");
                   //   setState(1);
                   // }}
-                  className=" rounded bg-[#98AAB4] px-6  py-2.5 text-center text-sm font-semibold text-[#213951] drop-shadow-md hover:bg-[#8b9ba3] focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto md:px-16"
+                  className=" buttonstyle"
                 >
                   <p>Next</p>
                 </button>
                 {/* <button
                   type="submit"
-                  className="rounded bg-[#98AAB4] px-6  py-2.5 text-center text-sm font-semibold text-[#213951] drop-shadow-md hover:bg-[#8b9ba3] focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto md:px-16"
+                  className="buttonstyle"
                 >
                   <p>Next As Freelance Pet</p>
                 </button> */}
