@@ -99,20 +99,20 @@ const PetList: React.FC = () => {
 };
 
 const PetShow: React.FC = () => {
-  type FormData = { name: string; kind: PetKind; ownerId: string };
+  const formDataSchema = z.object({
+    name: z.string().min(1),
+    kind: z.nativeEnum(PetKind),
+    ownerId: z.string().min(1),
+  });
+
+  type FormData = z.infer<typeof formDataSchema>;
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(
-      z.object({
-        name: z.string().min(1),
-        kind: z.nativeEnum(PetKind),
-        ownerId: z.string().min(1),
-      })
-    ),
+    resolver: zodResolver(formDataSchema),
   });
 
   const utils = api.useContext();
