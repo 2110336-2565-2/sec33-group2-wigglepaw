@@ -9,6 +9,9 @@ on:
       - "src/**"
 env:
   SKIP_ENV_VALIDATION: 1
+permissions:
+  checks: write
+  contents: write
 jobs:
   run-lint:
     runs-on: ubuntu-latest
@@ -27,5 +30,8 @@ jobs:
         run: pnpm install --frozen-lockfile --ignore-scripts
       # - name: Run tests
       #   run: pnpm test
-      - name: Run lint
-        run: pnpm lint
+      - name: Run linters
+        uses: wearerequired/lint-action@v2
+        with:
+          eslint: true
+          prettier: true
