@@ -82,6 +82,7 @@ model User {
     username      String     @unique
     email         String     @unique
     emailVerified DateTime?
+    phoneNumber   String?
     address       String?
     imageUri      String?
     bankAccount   String? // Assume 1 per user
