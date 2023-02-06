@@ -25,11 +25,12 @@ const matching: NextPage = (props: any) => {
     <div>
       <Header></Header>
       <SearchBox></SearchBox>
-      <div className="mx-auto mt-3 w-1/2">
+      <div className="mx-auto mt-3 w-fit max-w-md sm:w-1/2">
         <h1 className="font-bold">Results</h1>
         {users.map((user: any) => (
           <PetSitterCard pet_sitter={user}></PetSitterCard>
         ))}
+        <PetSitterCard pet_sitter={null}></PetSitterCard>
         <PetSitterCard pet_sitter={null}></PetSitterCard>
       </div>
     </div>
