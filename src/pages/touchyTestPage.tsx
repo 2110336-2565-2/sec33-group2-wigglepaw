@@ -9,7 +9,7 @@ const touchyTestPage = () => {
     const greet = api.touchy.greetings.useQuery({name:"Touchy69"});
     const user = api.user.getByUsername.useQuery({username:"touchy"});
     const user2 = api.user.getByUserId.useQuery({userId:"cldpsw73e0000u5usuvisdw23"});
-    const user3 = api.user.getByEmail.useQuery({email:"touch69@gmail.com"});
+    const user3 = api.user.getByEmail.useQuery({email:"kawin69@gmail.com"});
     const [x,setX] = useState(0);
     const postUserAPI = api.user.post.useMutation();
     if (!greet.data) {
@@ -20,25 +20,27 @@ const touchyTestPage = () => {
         );
     }
 
-    const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const buttonHandlerPostUser = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        setX(x+1);
-        console.log("CLICKED");
-        postUserAPI.mutate("test");
+        postUserAPI.mutate([{username:"touchy",email:"touch69@gmail.com"},
+                            {username:"Son",email:"kawin69@gmail.com"}
+                            ]);
       };
 
   return (
     <div style={styleCenter}>
         <h1>
-        {greet.data.text}<br></br>
+        get username<br></br>
         {JSON.stringify(user.data)}<br></br>
+        get id <br></br>
         {JSON.stringify(user2.data)}<br></br>
+        get email <br></br>
         {JSON.stringify(user3.data)}<br></br>
         {x}
         </h1>
 
         <div>
-        <button onClick={buttonHandler}>Click</button>
+        <button onClick={buttonHandlerPostUser}>Post</button>
             
         </div>
         

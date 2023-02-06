@@ -6,18 +6,18 @@ import { appRouter } from "../../../server/api/root";
 import { z } from 'zod';
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
-const userFields = {
+const zodUserFields = z.object({
     userId: z.string().cuid().optional(),
     username: z.string(),
     email: z.string().email(),
-    emailVerified: z.date(),
-    phoneNumber: z.string(),
-    address: z.string(),
-    imageUri: z.string(),
-    backAccount: z.string(),
-    backName: z.string(),
+    emailVerified: z.date().optional(),
+    phoneNumber: z.string().optional(),
+    address: z.string().optional(),
+    imageUri: z.string().optional(),
+    backAccount: z.string().optional(),
+    backName: z.string().optional(),
     // accounts: Account
-}
+});
 
 export const userRouter = createTRPCRouter({
     getByUserId: publicProcedure.input(z.object({userId:z.string()})).query(({ ctx, input }) => {
@@ -45,13 +45,9 @@ export const userRouter = createTRPCRouter({
     }),
 
     // post: publicProcedure.input(z.object(userFields)).query(({ ctx, input }) => {
-    post: publicProcedure.input(z.string()).mutation(({ ctx, input }) => {
+    post: publicProcedure.input(z.array(zodUserFields)).mutation(({ ctx, input }) => {
         return ctx.prisma.user.createMany({
-            data: [
-              { username: 'Sonali', email: 'sonali@prisma.io' },
-              { username: 'Alex', email: 'alex@prisma.io' },
-            ],
+            data: input
           });
         }),
-
 })
