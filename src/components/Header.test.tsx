@@ -1,5 +1,13 @@
 import { render } from "@testing-library/react";
+import { vi } from "vitest";
 import Header from "./Header";
+
+vi.mock("next-auth/react", () => ({
+  useSession: () => ({
+    data: null,
+    status: "unauthenticated",
+  }),
+}));
 
 describe("Header", () => {
   it.each(["About", "Login", "Register"])(
