@@ -12,6 +12,7 @@ const touchyTestPage = () => {
     const user3 = api.user.getByEmail.useQuery({email:"kawin69@gmail.com"});
     const [x,setX] = useState(0);
     const postUserAPI = api.user.post.useMutation();
+    const deleteUserAPI = api.user.deleteByUsername.useMutation();
     if (!greet.data) {
         return (
             <div style={styleCenter}>
@@ -25,6 +26,10 @@ const touchyTestPage = () => {
         postUserAPI.mutate([{username:"touchy",email:"touch69@gmail.com"},
                             {username:"Son",email:"kawin69@gmail.com"}
                             ]);
+      };
+      const buttonHandlerDeleteUser = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        deleteUserAPI.mutate({username:["touchy","Son"]});
       };
 
   return (
@@ -40,8 +45,8 @@ const touchyTestPage = () => {
         </h1>
 
         <div>
-        <button onClick={buttonHandlerPostUser}>Post</button>
-            
+        <button onClick={buttonHandlerPostUser}>Post</button> <br></br>
+        <button onClick={buttonHandlerDeleteUser}>Delete</button>  
         </div>
         
 

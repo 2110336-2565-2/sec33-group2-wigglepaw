@@ -50,4 +50,24 @@ export const userRouter = createTRPCRouter({
             data: input
           });
         }),
+
+    deleteById: publicProcedure.input(z.object({userId:z.array(z.string())})).mutation(({ ctx, input }) => {
+      return ctx.prisma.user.deleteMany({
+          where: {
+            userId: {
+              in: input.userId
+            }
+          }
+        });
+      }),
+
+      deleteByUsername: publicProcedure.input(z.object({username:z.array(z.string())})).mutation(({ ctx, input }) => {
+        return ctx.prisma.user.deleteMany({
+            where: {
+              username: {
+                in: input.username
+              }
+            }
+          });
+        }),
 })
