@@ -1,5 +1,4 @@
-import { render, screen } from "@testing-library/react";
-import { vi } from "vitest";
+import { render } from "@testing-library/react";
 import Header from "./Header";
 
 describe("Header", () => {
@@ -17,6 +16,16 @@ describe("Header", () => {
   it("should have WigglePaw heading", () => {
     const screen = render(<Header />);
 
-    expect(screen.getByText("WigglePaw")).toBeVisible();
+    expect(screen.getByRole("heading", { name: "WigglePaw" })).toBeVisible();
+  });
+
+  it("should have WigglePaw image", () => {
+    const screen = render(<Header />);
+
+    const image = screen
+      .getByRole("link", { name: "WigglePaw" })
+      .querySelector("img");
+    expect(image).toBeVisible();
+    expect(image?.src).toContain("logo_w.png");
   });
 });

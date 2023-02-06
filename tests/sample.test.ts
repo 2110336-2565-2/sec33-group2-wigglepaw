@@ -1,9 +1,8 @@
-import { type inferProcedureInput } from "@trpc/server";
 import { createInnerTRPCContext } from "../src/server/api/trpc";
-import { appRouter, type AppRouter } from "../src/server/api/root";
+import { appRouter } from "../src/server/api/root";
 import { beforeEach, describe, expect, test } from "vitest";
-import { DeepMockProxy, mockDeep, mockReset } from "vitest-mock-extended";
-import { PrismaClient } from "@prisma/client";
+import { type DeepMockProxy, mockDeep, mockReset } from "vitest-mock-extended";
+import { type PrismaClient } from "@prisma/client";
 
 const prisma: DeepMockProxy<PrismaClient> = mockDeep<PrismaClient>();
 beforeEach(() => {
