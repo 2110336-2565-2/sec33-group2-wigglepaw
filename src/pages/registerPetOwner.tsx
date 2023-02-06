@@ -9,10 +9,14 @@ import {
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { PetKind } from "@prisma/client";
+import { PetKind, User } from "@prisma/client";
 import Link from "next/link";
 import Header from "../components/Header";
 import { useState } from "react";
+import { useCallback } from "react";
+import { PrismaClient, Prisma } from '@prisma/client'
+import { signIn, useSession } from "next-auth/react";
+import Router, { useRouter } from "next/router";
 const registerPage: NextPage = () => {
   const {
     register,
@@ -20,10 +24,19 @@ const registerPage: NextPage = () => {
     watch,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data: FieldValues) => {
-    alert(JSON.stringify(data));
-    console.log(21);
-  };
+  const router=useRouter();
+  const onSubmit = async(data:any)=>{await signIn("credentials", {
+    redirect: false,
+    petOwner:{
+      firstName:data.firstname,
+      lastName:data.lastname
+    },
+    email: data.email,
+    username: data.username,
+    password: data.confirmpassword,
+    address:data.address,
+    isRegistration: true,
+  })};
   const [page, setPage] = useState(0);
   if (page === 0)
     return (
