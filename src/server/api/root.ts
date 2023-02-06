@@ -20,7 +20,9 @@ export const appRouter = createTRPCRouter({
   petOwner: petOwnerRouter,
   paiii: paiRouter,
   // Health check route, return 200 OK if server is up
-  healthcheck: publicProcedure.query(() => true),
+  healthcheck: publicProcedure
+    .meta({ description: "Health check route, return 200 OK if server is up" })
+    .query(() => true),
 });
 
 // export type definition of API

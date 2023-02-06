@@ -80,6 +80,7 @@ model User {
     petOwner      PetOwner?
     petSitter     PetSitter?
     username      String     @unique
+    password      String
     email         String     @unique
     emailVerified DateTime?
     phoneNumber   String?

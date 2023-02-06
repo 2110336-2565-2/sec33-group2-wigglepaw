@@ -21,9 +21,10 @@ const loginPage: NextPage = () => {
   return (
     <div className="flex flex-col gap-2">
       <Header></Header>
+      <div className="px-[200px] text-xl">
       <form onSubmit={handleSubmit(onSubmit)}>
         <h1>Username</h1>
-        <input {...register("username", { required: true })} type="email" />
+        <input {...register("username", { required: true })} type="text" />
         <h1>Password</h1>
         <input
           {...register("password", { required: true })}
@@ -32,6 +33,7 @@ const loginPage: NextPage = () => {
         />
         {errors.exampleRequired && <span>This field is required</span>}
       </form>
+      </div>
       <button className="text-center">Login</button>
     </div>
   );
