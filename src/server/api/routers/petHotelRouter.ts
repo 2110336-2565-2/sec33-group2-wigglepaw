@@ -6,4 +6,9 @@ import { appRouter } from "../../../server/api/root";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
-export const petOwnerRouter = createTRPCRouter({});
+const zodPetHotelFields = z.object({
+  businessLicenseUri: z.string().url(),
+  hotelName: z.string(),
+});
+
+export const petHotelRouter = createTRPCRouter({});

@@ -5,18 +5,11 @@ import { createTRPCContext } from "../../../server/api/trpc";
 import { appRouter } from "../../../server/api/root";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-
-const zodUserFields = z.object({
-  //userId: z.string().cuid().optional(),
-  username: z.string(),
-  email: z.string().email(),
-  phoneNumber: z.string().optional(),
-  address: z.string().optional(),
-  imageUri: z.string().optional(),
-  backAccount: z.string().optional(),
-  backName: z.string().optional(),
-  // accounts: Account
-});
+import {
+  freelancePetSitterFields,
+  petSitterFields,
+  userFields,
+} from "../../../schema/schema.ts";
 
 export const userRouter = createTRPCRouter({
   getByUserId: publicProcedure
@@ -50,12 +43,33 @@ export const userRouter = createTRPCRouter({
     }),
 
   // post: publicProcedure.input(z.object(userFields)).query(({ ctx, input }) => {
-  post: publicProcedure
-    .input(z.array(zodUserFields))
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.user.createMany({
-        data: input,
+  post: publicProcedure.input(userFields).mutation(({ ctx, input }) => {
+    return ctx.prisma.user.create({
+      data: input,
+    });
+  }),
+
+  createFreelancePetSitter: publicProcedure
+    .input(
+      z.object({
+        user: userFields,
+        petSitter: petSitterFields,
+        freelancePetSitter: freelancePetSitterFields,
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const postUser = await ctx.prisma.user.create({
+        data: input.user,
       });
+      const postPetSitter = await ctx.prisma.petSitter.create({
+        data: input.petSitter,
+      });
+      const postFreelancePetSitter = await ctx.prisma.freelancePetSitter.create(
+        {
+          data: input.freelancePetSitter,
+        }
+      );
+      return;
     }),
 
   deleteById: publicProcedure

@@ -15,7 +15,7 @@ const touchyTestPage = () => {
   const [x, setX] = useState(0);
   const postUserAPI = api.user.post.useMutation();
   const deleteUserAPI = api.user.deleteByUsername.useMutation();
-  const getPaiAPI = api.paiii.getByEmail.useQuery({ emailll: "pai@gmail.com" });
+
   if (!greet.data) {
     return (
       <div style={styleCenter}>
@@ -29,8 +29,8 @@ const touchyTestPage = () => {
   ) => {
     event.preventDefault();
     postUserAPI.mutate([
-      { username: "touchy", email: "touch69@gmail.com" },
-      { username: "Son", email: "kawin69@gmail.com" },
+      { username: "touchy", password: "123", email: "touch69@gmail.com" },
+      { username: "Son", password: "123", email: "kawin69@gmail.com" },
     ]);
   };
   const buttonHandlerDeleteUser = (
@@ -57,15 +57,11 @@ const touchyTestPage = () => {
         get email <br></br>
         {JSON.stringify(user3.data)}
         <br></br>
-        {JSON.stringify(getPaiAPI.data)}
-        <br></br>
         {x}
       </h1>
 
       <div>
         <button onClick={buttonHandlerPostUser}>Post</button> <br></br>
-        <button onClick={buttonHandlerDeleteUser}>Delete</button>
-        <br></br>
         <button onClick={buttonHandlerDeleteUser}>Delete</button>
       </div>
     </div>

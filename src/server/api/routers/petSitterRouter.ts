@@ -6,4 +6,37 @@ import { appRouter } from "../../../server/api/root";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
-export const petSitterRouter = createTRPCRouter({});
+const zodUserFields = z.object({
+  verifyStatus: z.boolean(),
+  certificationUri: z.string().url(),
+});
+
+export const petSitterRouter = createTRPCRouter({
+  getByUserId: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.user.findMany({
+        where: {
+          userId: input.userId,
+        },
+      });
+    }),
+  getByUsername: publicProcedure
+    .input(z.object({ username: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.user.findMany({
+        where: {
+          username: input.username,
+        },
+      });
+    }),
+  getByEmail: publicProcedure
+    .input(z.object({ username: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.user.findMany({
+        where: {
+          username: input.username,
+        },
+      });
+    }),
+});
