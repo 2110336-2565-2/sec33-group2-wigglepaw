@@ -11,6 +11,7 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.10",
     "@hookform/resolvers": "^2.9.10",
     "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "^4.8.0",
