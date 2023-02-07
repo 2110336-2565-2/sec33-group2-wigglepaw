@@ -26,6 +26,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.42.1",
+    "react-icons": "^4.7.1",
     "superjson": "1.9.1",
     "trpc-panel": "^1.2.8",
     "trpc-playground": "^1.0.4",
