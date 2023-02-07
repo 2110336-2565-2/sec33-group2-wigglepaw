@@ -10,15 +10,15 @@ export const userFields = z.object({
   phoneNumber: z.string().optional(),
   address: z.string().optional(),
   imageUri: z.string().optional(),
-  backAccount: z.string().optional(),
-  backName: z.string().optional(),
+  bankAccount: z.string().optional(),
+  bankName: z.string().optional(),
   // accounts: Account
 });
 
 export const petSitterFields = z.object({
   // user: userFields,
   verifyStatus: z.boolean(),
-  certificationUri: z.string().optional(),
+  certificationUri: z.string(),
 });
 
 export const petOwnerFields = z.object({

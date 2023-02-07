@@ -9,7 +9,7 @@ import {
   freelancePetSitterFields,
   petSitterFields,
   userFields,
-} from "../../../schema/schema.ts";
+} from "../../../schema/schema";
 
 export const userRouter = createTRPCRouter({
   getByUserId: publicProcedure
@@ -58,18 +58,26 @@ export const userRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const postUser = await ctx.prisma.user.create({
-        data: input.user,
+      return await ctx.prisma.freelancePetSitter.create({
+        data: {
+          petSitter: {
+            create: {
+              user: {
+                create: input.user,
+              },
+              ...input.petSitter,
+            },
+          },
+          ...input.freelancePetSitter,
+        },
+        include: {
+          petSitter: {
+            include: {
+              user: true,
+            },
+          },
+        },
       });
-      const postPetSitter = await ctx.prisma.petSitter.create({
-        data: input.petSitter,
-      });
-      const postFreelancePetSitter = await ctx.prisma.freelancePetSitter.create(
-        {
-          data: input.freelancePetSitter,
-        }
-      );
-      return;
     }),
 
   deleteById: publicProcedure
