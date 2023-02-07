@@ -44,61 +44,16 @@ export default function RegisterPetSitter() {
     firstname: "",
     lastname: "",
   });
-  const [page3, setPage3] = useState({
-    bankAccount: "",
-    bankName: "",
-    cvv: "",
-    exp: "",
-    cardno: "",
-  });
+  // const [page3, setPage3] = useState({
+  //   bankAccount: "",
+  //   bankName: "",
+  //   cvv: "",
+  //   exp: "",
+  //   cardno: "",
+  // });
 
   const [state, setState] = useState(0); //0=main info 1=freelance 2=hotelpet
 
-  const onSubmitpage1 = (e: {
-    target: any;
-    preventDefault(): unknown;
-    e: { preventDefault: any };
-    cat: string;
-  }) => {
-    e.preventDefault();
-    setPage1({
-      username: e.target.username.value,
-      password: e.target.password.value,
-      phoneNumber: e.target.phone.value,
-      email: e.target.email.value,
-      address: e.target.ads.value,
-      type: e.target.choice.value,
-    });
-
-    //console.log(page1);
-    if (e.target.choice.value === "petfreelance") {
-      setState(1);
-    } else {
-      setState(2);
-    }
-  };
-
-  const onSubmitpage2 = (e: {
-    target: any;
-    preventDefault(): unknown;
-    e: { preventDefault: any };
-    cat: string;
-  }) => {
-    e.preventDefault();
-    if (page1.type === "petfreelance") {
-      setPage2free({
-        firstname: e.target.firstname.value,
-        lastname: e.target.lastname.value,
-      });
-    } else {
-      setPage2hotel({
-        hotelName: e.target.hotelname.value,
-        businessLicense: e.target.blicense.value,
-      });
-    }
-    //console.log(page2free, page2hotel);
-    setState(3);
-  };
   const onSubmitpage3 = (e: {
     target: any;
     preventDefault(): unknown;
@@ -298,7 +253,7 @@ export default function RegisterPetSitter() {
         </>
       );
     } else if (state === 3) {
-      //Currently offline
+      z;
       return (
         <>
           <h1 className="py-2 text-3xl">Register Pet Sitter</h1>
