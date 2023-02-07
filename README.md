@@ -37,6 +37,8 @@
 In addition to the default T3 Stack dependencies, this project also uses the following:
 
 - [react-hook-form](https://react-hook-form.com/) -- Performant, flexible and extensible forms with easy-to-use validation.
+- [headless-ui](https://headlessui.dev/) -- Completely unstyled, fully accessible UI components, designed to integrate beautifully with Tailwind CSS.
+- [autoanimate](https://auto-animate.formkit.com) -- Auto-animate is a library that makes it easy to animate elements on the page when they enter or leave the viewport.
 
 # Create T3 App
 
