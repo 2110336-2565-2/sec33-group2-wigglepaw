@@ -2,6 +2,22 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
+function searchPetSitterByText(text: string): object{
+  const words = text.split(" ")
+  return {
+    AND: [
+      ...words.map(word => ({
+    OR: [
+      { freelancePetSitter: { firstName: { contains: word } } },
+      { freelancePetSitter: { lastName: { contains: word } } },
+      { freelancePetSitter: { lastName: { contains: word } } },
+      { petHotel: { hotelName: { contains: word } } },
+    ]
+  }))
+]
+  }
+}
+
 export const petSitterRouter = createTRPCRouter({
   
   searchPetSitter: publicProcedure
@@ -9,20 +25,8 @@ export const petSitterRouter = createTRPCRouter({
     searchText: z.string(),
   }))
     .query(({ ctx, input }) => {
-      const words = input.searchText.split(" ")
       return ctx.prisma.petSitter.findMany({
-        where: {
-          AND: [
-            ...words.map(word => ({
-          OR: [
-            { freelancePetSitter: { firstName: { contains: word } } },
-            { freelancePetSitter: { lastName: { contains: word } } },
-            { freelancePetSitter: { lastName: { contains: word } } },
-            { petHotel: { hotelName: { contains: word } } },
-          ]
-        }))
-      ]
-        }
+        where: searchPetSitterByText(input.searchText)
       });
     }),
 
