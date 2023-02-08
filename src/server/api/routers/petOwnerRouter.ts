@@ -41,26 +41,23 @@ export const petOwnerRouter = createTRPCRouter({
       });
     }),
 
-    //protected procedure that let the petOwner change his firstname-lastname given {firstname,lastname}
-   /* changePetOwnerFirstName: protectedProcedure
+    //update petOwner
+    update: publicProcedure
     .input(
-        z.object({
-            firstname: z.string(),
-            lastname: z.string()
-        })
+      z.object({ 
+        userId: z.string(), 
+        data: petOwnerFields 
+      })
     )
-    .mutation(({ ctx, input }) => {
-        return ctx.prisma.owner.update({
-            where:{
-                userId:
-            },
-            data:{
-                firstname: input.firstname
-            }
-        })
-    }
-    
-    )*/
+    .mutation(async ({ ctx, input }) => {
+      const update = await ctx.prisma.petOwner.update({
+        where: {
+          userId: input.userId,
+        },
+        data: { ...input.data },
+      });
+      return update;
+    }),
 
     //public procedure that create petOwner
     create: publicProcedure
