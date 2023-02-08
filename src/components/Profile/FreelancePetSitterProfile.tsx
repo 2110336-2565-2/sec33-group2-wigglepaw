@@ -2,6 +2,8 @@ import Header from "../Header";
 import Image from "next/image";
 import Link from "next/link";
 
+import { HiPencilAlt } from "react-icons/hi";
+
 const infomationSection = "flex flex-wrap";
 
 const FreelancePetSitterProfile = (props: any) => {
@@ -16,9 +18,9 @@ const FreelancePetSitterProfile = (props: any) => {
           <p className="mx-auto text-center">{props.username}</p>
           <Link
             href={`/user/${props.username}/edit`}
-            className="mx-auto text-center"
+            className="mx-auto flex text-center"
           >
-            Edit my profile
+            Edit my profile <HiPencilAlt />
           </Link>
         </div>
         <div className="justify-auto flex flex-wrap">
