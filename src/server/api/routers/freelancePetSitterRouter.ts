@@ -82,21 +82,23 @@ export const freelancePetSitterRouter = createTRPCRouter({
   getByUserId: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.findFirst({
-        where: {
-          userId: input.userId,
-        },
-      });
-      const sitter = await ctx.prisma.petSitter.findFirst({
-        where: {
-          userId: input.userId,
-        },
-      });
-      const freelancer = await ctx.prisma.freelancePetSitter.findFirst({
-        where: {
-          userId: input.userId,
-        },
-      });
+      const [user, sitter, freelancer] = await ctx.prisma.$transaction([
+        ctx.prisma.user.findFirst({
+          where: {
+            userId: input.userId,
+          },
+        }),
+        ctx.prisma.petSitter.findFirst({
+          where: {
+            userId: input.userId,
+          },
+        }),
+        ctx.prisma.freelancePetSitter.findFirst({
+          where: {
+            userId: input.userId,
+          },
+        }),
+      ]);
       const ans = { ...freelancer, petSitter: { ...sitter, user: user } };
       return freelancer == null ? null : ans;
     }),
