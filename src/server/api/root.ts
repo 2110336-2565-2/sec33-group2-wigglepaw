@@ -5,7 +5,6 @@ import { userRouter } from "./routers/userRouter";
 import { createTRPCRouter, publicProcedure } from "./trpc";
 import { exampleRouter } from "./routers/example";
 import { petRouter } from "./routers/petRouter";
-import { touchyTestRouter } from "./routers/touchyTest";
 import { petSitterRouter } from "./routers/petSitterRouter";
 
 /**
@@ -16,7 +15,6 @@ import { petSitterRouter } from "./routers/petSitterRouter";
 export const appRouter = createTRPCRouter({
   example: exampleRouter,
   pet: petRouter,
-  touchy: touchyTestRouter,
   user: userRouter,
   petSitter: petSitterRouter,
   petOwner: petOwnerRouter,
