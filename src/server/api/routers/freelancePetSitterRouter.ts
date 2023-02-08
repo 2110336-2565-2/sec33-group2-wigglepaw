@@ -43,6 +43,42 @@ export const freelancePetSitterRouter = createTRPCRouter({
       });
     }),
 
+  createDummy: publicProcedure
+    .input(
+      z.object({
+        code: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const code = input.code;
+      return await ctx.prisma.freelancePetSitter.create({
+        data: {
+          petSitter: {
+            create: {
+              user: {
+                create: {
+                  username: "username" + code,
+                  email: "email" + code + "@gmail.com",
+                  password: "password" + code,
+                },
+              },
+              verifyStatus: true,
+              certificationUri: "uri" + code,
+            },
+          },
+          firstName: "firstname" + code,
+          lastName: "lastname" + code,
+        },
+        include: {
+          petSitter: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+    }),
+
   getByUserId: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -109,5 +145,17 @@ export const freelancePetSitterRouter = createTRPCRouter({
       });
       const ans = { ...freelancer, petSitter: { ...sitter, user: user } };
       return freelancer == null ? null : ans;
+    }),
+
+  update: publicProcedure
+    .input(z.object({ userId: z.string(), data: freelancePetSitterFields }))
+    .query(async ({ ctx, input }) => {
+      const update = await prisma?.freelancePetSitter.update({
+        where: {
+          userId: input.userId,
+        },
+        data: { ...input.data },
+      });
+      return update;
     }),
 });

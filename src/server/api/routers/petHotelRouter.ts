@@ -48,6 +48,43 @@ export const petHotelRouter = createTRPCRouter({
         },
       });
     }),
+
+  createDummy: publicProcedure
+    .input(
+      z.object({
+        code: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const code = input.code;
+      return await ctx.prisma.petHotel.create({
+        data: {
+          petSitter: {
+            create: {
+              user: {
+                create: {
+                  username: "username" + code,
+                  email: "email" + code + "@gmail.com",
+                  password: "password" + code,
+                },
+              },
+              verifyStatus: true,
+              certificationUri: "uri" + code,
+            },
+          },
+          businessLicenseUri: "uri" + code,
+          hotelName: "hotelName" + code,
+        },
+        include: {
+          petSitter: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+    }),
+
   getByUserId: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
