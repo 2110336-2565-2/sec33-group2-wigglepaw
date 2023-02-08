@@ -5,6 +5,11 @@ import { createTRPCContext } from "../../../server/api/trpc";
 import { appRouter } from "../../../server/api/root";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+import {
+  freelancePetSitterFields,
+  petSitterFields,
+  userFields,
+} from "../../../schema/schema";
 
 const zodUserFields = z.object({
   verifyStatus: z.boolean(),
@@ -12,31 +17,15 @@ const zodUserFields = z.object({
 });
 
 export const petSitterRouter = createTRPCRouter({
-  getByUserId: publicProcedure
-    .input(z.object({ userId: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.prisma.user.findMany({
+  update: publicProcedure
+    .input(z.object({ userId: z.string(), data: petSitterFields }))
+    .query(async ({ ctx, input }) => {
+      const update = await prisma?.petSitter.update({
         where: {
           userId: input.userId,
         },
+        data: { ...input.data },
       });
-    }),
-  getByUsername: publicProcedure
-    .input(z.object({ username: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.prisma.user.findMany({
-        where: {
-          username: input.username,
-        },
-      });
-    }),
-  getByEmail: publicProcedure
-    .input(z.object({ username: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.prisma.user.findMany({
-        where: {
-          username: input.username,
-        },
-      });
+      return update;
     }),
 });
