@@ -13,21 +13,9 @@ import { z } from "zod";
 import { PetKind } from "@prisma/client";
 
 export default function RegisterPetSitter() {
-  const [editmode, setEditmode] = useState(false);
-  const [profile, setProfile] = useState({
-    username: "",
-    password: "",
-    phoneNumber: "",
-    email: "",
-    address: "",
-    bankAccount: "",
-    bankName: "",
-    type: "",
-    firstname: "", //if Freelancer
-    lastname: "",
-    businessLicense: "", //If PetHotel
-    hotelName: "",
-  });
+  const createFreelancePetSitter = api.freelancePetSitter.create.useMutation();
+  const createPetHotel = api.petHotel.create.useMutation();
+
   const [page1, setPage1] = useState({
     username: "",
     password: "",
@@ -38,11 +26,11 @@ export default function RegisterPetSitter() {
   });
   const [page2hotel, setPage2hotel] = useState({
     hotelName: "",
-    businessLicense: "",
+    businessLicenseUri: "",
   });
   const [page2free, setPage2free] = useState({
-    firstname: "",
-    lastname: "",
+    firstName: "",
+    lastName: "",
   });
   // const [page3, setPage3] = useState({
   //   bankAccount: "",
@@ -54,7 +42,7 @@ export default function RegisterPetSitter() {
 
   const [state, setState] = useState(0); //0=main info 1=freelance 2=hotelpet
 
-  const onSubmitpage3 = (e: {
+  const onSubmitpage3 = async (e: {
     target: any;
     preventDefault(): unknown;
     e: { preventDefault: any };
@@ -70,26 +58,53 @@ export default function RegisterPetSitter() {
       cardno: e.target.cardno.value,
     };
 
-    var real = {};
-    //not include data
+    // registering to the backend
     if (page1.type === "petfreelance") {
-      real = Object.assign({}, page1, page2free);
+      const newFreelancePetsitter = await createFreelancePetSitter.mutateAsync({
+        user: {
+          username: page1.username,
+          password: page1.password,
+          email: page1.email,
+          phoneNumber: page1.phoneNumber,
+          address: page1.address,
+          bankAccount: data.bankAccount,
+          bankName: data.bankName,
+        },
+        petSitter: {
+          petTypes: ["dog", "cats"], // temporary for now
+          verifyStatus: false,
+          certificationUri: "testCertURI",
+        },
+        freelancePetSitter: page2free,
+      })
     } else {
-      real = Object.assign({}, page1, page2hotel);
+      const newPetHotel = await createPetHotel.mutateAsync({
+        user: {
+          username: page1.username,
+          password: page1.password,
+          email: page1.email,
+          phoneNumber: page1.phoneNumber,
+          address: page1.address,
+          bankAccount: data.bankAccount,
+          bankName: data.bankName,
+        },
+        petSitter: {
+          petTypes: ["dog", "cats"], // temporary for now
+          verifyStatus: false,
+          certificationUri: "testCertURI",
+        },
+        petHotel: page2hotel,
+      })
     }
-    alert(JSON.stringify(real)); //real data ready to be sent to backends
-
     setState(3);
   };
-
-  const printData = () => {};
 
   const FirstPage = () => {
     if (state === 1) {
       const validationSchema = z.object({
         // like a schema for register in form
-        firstname: z.string().min(1, { message: "please provide details" }),
-        lastname: z.string().min(1, { message: "please provide details" }),
+        firstName: z.string().min(1, { message: "please provide details" }),
+        lastName: z.string().min(1, { message: "please provide details" }),
       });
       type ValidationSchema = z.infer<typeof validationSchema>;
 
@@ -105,8 +120,8 @@ export default function RegisterPetSitter() {
         e?.preventDefault();
 
         setPage2free({
-          firstname: data.firstname,
-          lastname: data.lastname,
+          firstName: data.firstName,
+          lastName: data.lastName,
         });
 
         //console.log(page2free, page2hotel);
@@ -122,30 +137,30 @@ export default function RegisterPetSitter() {
             <div className="grid  grid-cols-1 grid-rows-6">
               <div className="m-2">
                 <Input
-                  id="firstname"
-                  label="Firstname"
-                  defaultValue={page2free.firstname}
+                  id="firstName"
+                  label="firstName"
+                  defaultValue={page2free.firstName}
                   register={register}
                   validationRules={{ required: true }}
                   placeholder="John"
                   type="text"
                 />
-                {errors.firstname && (
-                  <p className="errorstyle"> {errors.firstname?.message}</p>
+                {errors.firstName && (
+                  <p className="errorstyle"> {errors.firstName?.message}</p>
                 )}
               </div>
               <div className="m-2">
                 <Input
-                  id="lastname"
-                  label="Lastname"
-                  defaultValue={page2free.lastname}
+                  id="lastName"
+                  label="lastName"
+                  defaultValue={page2free.lastName}
                   register={register}
                   validationRules={{ required: true }}
                   placeholder="Wick"
                   type="text"
                 />
-                {errors.lastname && (
-                  <p className="errorstyle"> {errors.lastname?.message}</p>
+                {errors.lastName && (
+                  <p className="errorstyle"> {errors.lastName?.message}</p>
                 )}
               </div>
               <div className="mx-3 flex flex-wrap content-end items-center justify-evenly">
@@ -170,7 +185,7 @@ export default function RegisterPetSitter() {
       const validationSchema = z.object({
         // like a schema for register in form
         hotelname: z.string().min(1, { message: "please provide details" }),
-        businesslicense: z
+        businessLicenseUri: z
           .string()
           .min(1, { message: "please provide details" }),
       });
@@ -189,7 +204,7 @@ export default function RegisterPetSitter() {
 
         setPage2hotel({
           hotelName: data.hotelname,
-          businessLicense: data.businesslicense,
+          businessLicenseUri: data.businessLicenseUri,
         });
 
         //console.log(page2free, page2hotel);
@@ -219,18 +234,18 @@ export default function RegisterPetSitter() {
               </div>
               <div className="m-3">
                 <Input
-                  id="businesslicense"
+                  id="businessLicenseUri"
                   label="Business License"
-                  defaultValue={page2hotel.businessLicense}
+                  defaultValue={page2hotel.businessLicenseUri}
                   register={register}
                   validationRules={{ required: true }}
                   placeholder="I dont even know what to put here :<"
                   type="text"
                 />
-                {errors.businesslicense && (
+                {errors.businessLicenseUri && (
                   <p className="errorstyle">
                     {" "}
-                    {errors.businesslicense?.message}
+                    {errors.businessLicenseUri?.message}
                   </p>
                 )}
               </div>
@@ -357,7 +372,7 @@ export default function RegisterPetSitter() {
         email: z
           .string()
           .min(2, { message: "longer" })
-          .max(12, { message: "shorter" }),
+          .max(30, { message: "shorter" }),
         password: z.string().min(1, { message: "Don't leave it blank" }),
         phonenumber: z.string(),
         // .length(10, { message: "phoenumber must have a fix length of 10" }),   For the sake of the tester, for real case don't forget to remove comment
