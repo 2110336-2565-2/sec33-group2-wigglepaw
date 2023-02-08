@@ -62,7 +62,7 @@ export const freelancePetSitterRouter = createTRPCRouter({
         },
       });
       const ans = { ...freelancer, petSitter: { ...sitter, user: user } };
-      return ans;
+      return freelancer == null ? null : ans;
     }),
 
   getByUsername: publicProcedure
@@ -85,7 +85,7 @@ export const freelancePetSitterRouter = createTRPCRouter({
         },
       });
       const ans = { ...freelancer, petSitter: { ...sitter, user: user } };
-      return ans;
+      return freelancer == null ? null : ans;
     }),
 
   getByEmail: publicProcedure
@@ -108,6 +108,6 @@ export const freelancePetSitterRouter = createTRPCRouter({
         },
       });
       const ans = { ...freelancer, petSitter: { ...sitter, user: user } };
-      return ans;
+      return freelancer == null ? null : ans;
     }),
 });
