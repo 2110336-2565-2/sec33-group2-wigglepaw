@@ -91,7 +91,7 @@ const Header = () => {
             Register
           </button>
           <div
-            className="absolute top-full right-0 rounded bg-slate-300 px-2 py-1"
+            className="absolute top-full right-0 z-30 rounded bg-slate-300 px-2 py-1"
             hidden={!openRegister}
           >
             <Link href="/registerPetOwner" className="header-register-link">
@@ -109,7 +109,7 @@ const Header = () => {
             Menu
           </button>
           <div
-            className="absolute top-full right-0 rounded bg-slate-300 px-2 py-1"
+            className="absolute top-full right-0 z-30 rounded bg-slate-300 px-2 py-1"
             hidden={!openRegister}
           >
             <Link
@@ -170,7 +170,7 @@ const Header = () => {
               <Image src={"/profile_icon.png"} alt={"Icon"} fill></Image>
             </button>
             <div
-              className="absolute top-full right-0 rounded bg-slate-300 px-2 py-1"
+              className="absolute top-full right-0 z-30 rounded bg-slate-300 px-2 py-1"
               hidden={!openProfile}
             >
               <Link href="/profile" className="header-menu-link">
