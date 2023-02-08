@@ -11,7 +11,7 @@ const FreelancePetSitterProfile = (props: any) => {
     <div>
       <Header></Header>
       <div className={infomationSection}>
-        <div className="flex w-screen flex-col">
+        <div className="flex w-screen flex-col md:w-1/5">
           <div className="relative mx-auto flex h-[6rem] w-[6rem]">
             <Image src={"/profile_icon.png"} alt={"Icon"} fill></Image>
           </div>
@@ -26,15 +26,16 @@ const FreelancePetSitterProfile = (props: any) => {
             <HiPencilAlt className="mt-auto mb-[0.2rem] ml-1 fill-white" />
           </Link>
         </div>
-        <div className="justify-auto mt-2 flex w-screen flex-wrap">
-          <p className="w-fit">Name: Jhon Swogvagen</p>
-          <p>Pet type</p>
-          <p className="w-fit">Phone: 0123456789</p>
+
+        <div className="justify-auto mt-2 flex w-screen flex-wrap md:w-3/5">
+          <p className="w-full">Name: Jhon Swogvagen</p>
+          <p>Pet types: </p>
+          <p className="w-full">Phone: 0123456789</p>
           <p className="w-full">
             Address: 254 Phaya Thai Rd, Wang Mai, Khet Pathum Wan, Krung Thep
             Maha Nakhon 10330
           </p>
-          <p className="w-fit">Email: wiggle-paw@chula.ac.th</p>
+          <p className="w-full">Email: wiggle-paw@chula.ac.th</p>
         </div>
       </div>
       <div className="mx-auto mt-3 w-screen max-w-md sm:w-1/2">
