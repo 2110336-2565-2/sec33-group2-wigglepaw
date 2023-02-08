@@ -12,7 +12,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
 export const freelancePetSitterRouter = createTRPCRouter({
-  createFreelancePetSitter: publicProcedure
+  create: publicProcedure
     .input(
       z.object({
         user: userFields,

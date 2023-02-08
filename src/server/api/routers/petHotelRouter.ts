@@ -18,7 +18,7 @@ const zodPetHotelFields = z.object({
 });
 
 export const petHotelRouter = createTRPCRouter({
-  createPetHotel: publicProcedure
+  create: publicProcedure
     .input(
       z.object({
         user: userFields,
