@@ -12,11 +12,6 @@ import { appRouter } from "../../../server/api/root";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
-const zodPetHotelFields = z.object({
-  businessLicenseUri: z.string().url(),
-  hotelName: z.string(),
-});
-
 export const petHotelRouter = createTRPCRouter({
   create: publicProcedure
     .input(
@@ -88,21 +83,23 @@ export const petHotelRouter = createTRPCRouter({
   getByUserId: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.findFirst({
-        where: {
-          userId: input.userId,
-        },
-      });
-      const sitter = await ctx.prisma.petSitter.findFirst({
-        where: {
-          userId: input.userId,
-        },
-      });
-      const petHotel = await ctx.prisma.petHotel.findFirst({
-        where: {
-          userId: input.userId,
-        },
-      });
+      const [user, sitter, petHotel] = await ctx.prisma.$transaction([
+        ctx.prisma.user.findFirst({
+          where: {
+            userId: input.userId,
+          },
+        }),
+        ctx.prisma.petSitter.findFirst({
+          where: {
+            userId: input.userId,
+          },
+        }),
+        ctx.prisma.petHotel.findFirst({
+          where: {
+            userId: input.userId,
+          },
+        }),
+      ]);
       const ans = { ...petHotel, petSitter: { ...sitter, user: user } };
       return petHotel == null ? null : ans;
     }),
