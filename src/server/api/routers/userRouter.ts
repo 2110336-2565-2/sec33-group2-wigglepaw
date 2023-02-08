@@ -47,4 +47,16 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+
+  update: publicProcedure
+    .input(z.object({ userId: z.string(), data: userFields }))
+    .query(async ({ ctx, input }) => {
+      const update = await prisma?.user.update({
+        where: {
+          userId: input.userId,
+        },
+        data: { ...input.data },
+      });
+      return update;
+    }),
 });
