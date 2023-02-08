@@ -14,34 +14,17 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
-
-model Owner {
-    id    String @id @default(cuid())
-    name  String
-    email String @unique
-
-    Pet Pet[]
-}
-
 model Pet {
     id        String   @id @default(cuid())
     name      String
-    kind      PetKind
+    kind      String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    owner   Owner  @relation(fields: [ownerId], references: [id])
-    ownerId String
-}
-
-enum PetKind {
-    DOGGO
-    NEKO
+    PetOwner        PetOwner?  @relation(fields: [petOwnerUserId], references: [userId])
+    petOwnerUserId  String?
+    PetSitter       PetSitter? @relation(fields: [petSitterUserId], references: [userId])
+    petSitterUserId String?
 }
 
 // Necessary for Next auth
@@ -97,6 +80,7 @@ model PetOwner {
     user      User    @relation(fields: [userId], references: [userId], onDelete: Cascade)
     firstName String?
     lastName  String?
+    pet       Pet[]
 }
 
 model PetSitter {
@@ -106,6 +90,7 @@ model PetSitter {
     petHotel           PetHotel?
     verifyStatus       Boolean
     certificationUri   String
+    pet                Pet[]
 }
 
 model FreelancePetSitter {
