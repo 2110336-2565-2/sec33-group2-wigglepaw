@@ -1,3 +1,9 @@
+import {
+  userFields,
+  freelancePetSitterFields,
+  petSitterFields,
+  petHotelFields,
+} from "./../../../schema/schema";
 import { initTRPC } from "@trpc/server";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
 import { env } from "../../../env/server.mjs";
@@ -11,4 +17,35 @@ const zodPetHotelFields = z.object({
   hotelName: z.string(),
 });
 
-export const petHotelRouter = createTRPCRouter({});
+export const petHotelRouter = createTRPCRouter({
+  createPetHotel: publicProcedure
+    .input(
+      z.object({
+        user: userFields,
+        petSitter: petSitterFields,
+        petHotel: petHotelFields,
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.petHotel.create({
+        data: {
+          petSitter: {
+            create: {
+              user: {
+                create: input.user,
+              },
+              ...input.petSitter,
+            },
+          },
+          ...input.petHotel,
+        },
+        include: {
+          petSitter: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+    }),
+});
