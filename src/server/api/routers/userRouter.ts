@@ -27,4 +27,24 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+
+  deleteByUsername: publicProcedure
+    .input(z.object({ username: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.user.delete({
+        where: {
+          username: input.username,
+        },
+      });
+    }),
+
+  deleteByEmail: publicProcedure
+    .input(z.object({ email: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.user.delete({
+        where: {
+          email: input.email,
+        },
+      });
+    }),
 });
