@@ -94,14 +94,14 @@ model User {
 
 model PetOwner {
     userId    String  @id @default(cuid())
-    user      User    @relation(fields: [userId], references: [userId])
+    user      User    @relation(fields: [userId], references: [userId], onDelete: Cascade)
     firstName String?
     lastName  String?
 }
 
 model PetSitter {
     userId             String              @id @default(cuid())
-    user               User                @relation(fields: [userId], references: [userId])
+    user               User                @relation(fields: [userId], references: [userId], onDelete: Cascade)
     freelancePetSitter FreelancePetSitter?
     petHotel           PetHotel?
     verifyStatus       Boolean
@@ -110,14 +110,14 @@ model PetSitter {
 
 model FreelancePetSitter {
     userId    String    @id @default(cuid())
-    petSitter PetSitter @relation(fields: [userId], references: [userId])
+    petSitter PetSitter @relation(fields: [userId], references: [userId], onDelete: Cascade)
     firstName String?
     lastName  String?
 }
 
 model PetHotel {
     userId             String    @id @default(cuid())
-    petSitter          PetSitter @relation(fields: [userId], references: [userId])
+    petSitter          PetSitter @relation(fields: [userId], references: [userId], onDelete: Cascade)
     businessLicenseUri String
     hotelName          String
 }
