@@ -103,7 +103,7 @@ const Header = () => {
           </div>
         </div>
       )}
-      {!isLoggedIn && (
+      {!isLoggedIn && status != "loading" && (
         <div className="relative my-auto sm:hidden">
           <button onClick={toggleRegister} className="header-a my-auto h-fit">
             Menu
