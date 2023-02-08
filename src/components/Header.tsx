@@ -17,7 +17,7 @@ const Header = () => {
   const router = useRouter();
 
   return (
-    <span className="absolute top-0 mb-0 flex h-fit w-screen bg-sky-900 pr-2">
+    <span className=" mb-0 flex h-fit w-screen bg-sky-900 pr-2">
       <nav className="flex w-full">
         <Link href={"/"} className="flex shrink-0">
           <div className="relative m-2 flex h-[4rem] w-[5rem]">

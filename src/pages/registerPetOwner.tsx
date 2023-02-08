@@ -50,7 +50,7 @@ const registerPage: NextPage = () => {
           <img src="/Ipage1-2.png" width={468} height={315} alt="cat" />
         </div>
         <Header></Header>
-        <div className="mt-16 flex h-full flex-col items-center">
+        <div className="mt-4 flex h-full flex-col items-center">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex h-full w-1/2 flex-col items-center justify-evenly"
@@ -192,7 +192,7 @@ const registerPage: NextPage = () => {
         <div className="absolute top-[20%] right-0 -z-10 ">
           <img src="/Ipage2-2.png" width={200} height={315} alt="cat" />
         </div>
-        <div className="mt-16 h-full items-center">
+        <div className="mt-4 h-full items-center">
           <div className="w-full items-center ">
             <h1 className="mt-8 flex justify-center text-3xl font-bold">
               Register Pet Owner

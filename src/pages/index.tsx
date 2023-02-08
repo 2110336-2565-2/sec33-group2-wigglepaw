@@ -8,7 +8,10 @@ import Header from "../components/Header";
 const Home: NextPage = () => {
   return (
     <div className="w-screen h-screen bg-bg-main -z-10">
-    <div className="mx-auto bg-bg-main flex h-screen w-fit items-center justify-center">
+    
+      <Header></Header>
+    
+      <div className="center-thing h-[80%]" >
       <div className="absolute right-[-5%] bottom-0 -z-0 ">
           <img src="/dogwalking.png" width={560} height={560}  className="invisible md:visible" alt="cat" />
         </div>
@@ -25,10 +28,9 @@ const Home: NextPage = () => {
           <img src="/dogpaw3.png" width={120} height={120}  className="invisible md:visible" alt="cat" />
         </div>
         
-      <Header></Header>
-      <div className="mx-auto flex h-screen items-center justify-center">
-        <div></div>
-        <div className="mx-5 grid h-[50%]  w-[80%] grid-cols-3 grid-rows-5 shadow-2xl rounded-2xl bg-bg-box-main px-6 py-4 ">
+      
+    
+        <div className="mx-5 grid h-[60%]  w-[55%] grid-cols-3 grid-rows-5 shadow-2xl rounded-2xl bg-bg-box-main px-6 py-4 ">
           <h1 className="center-thing col-span-3 row-span-2 text-[3rem]">
             &quot;Let us take care your loves&quot;
           </h1>
@@ -56,10 +58,12 @@ const Home: NextPage = () => {
               Register Pet Owner (temp)
             </Link>
           </div>
-        </div>
+          </div>
+   
       </div>
     </div>
-    </div>
+    
+   
   );
 };
 
