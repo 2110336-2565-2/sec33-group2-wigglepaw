@@ -1,14 +1,15 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import FreelancePetSitterProfile from "../../components/FreelancePetSitterProfile";
+
 import Header from "../../components/Header";
-import PetHotelProfile from "../../components/PetHotelProfile";
-import PetOwnerProfile from "../../components/PetOwnerProfile";
+import FreelancePetSitterProfile from "../../components/Profile/FreelancePetSitterProfile";
+import PetHotelProfile from "../../components/Profile/PetHotelProfile";
+import PetOwnerProfile from "../../components/Profile/PetOwnerProfile";
 
 const Profile: NextPage = () => {
   const router = useRouter();
   const { username } = router.query;
-  const userType: number = 0; //TODO: get user type
+  const userType: number = 1; //TODO: get user type
 
   switch (userType) {
     case 0:
