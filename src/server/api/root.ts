@@ -1,6 +1,6 @@
 import { petHotelRouter } from "./routers/petHotelRouter";
 import { freelancePetSitterRouter } from "./routers/freelancePetSitterRouter";
-import { petOwnerRouter } from "./routers/petOwner";
+import { petOwnerRouter } from "./routers/petOwnerRouter";
 import { userRouter } from "./routers/userRouter";
 import { createTRPCRouter, publicProcedure } from "./trpc";
 import { exampleRouter } from "./routers/example";
@@ -19,7 +19,7 @@ export const appRouter = createTRPCRouter({
   touchy: touchyTestRouter,
   user: userRouter,
   petSitter: petSitterRouter,
-  // petOwner: petOwnerRouter,
+  petOwner: petOwnerRouter,
   freelancePetSitter: freelancePetSitterRouter,
   petHotel: petHotelRouter,
   // Health check route, return 200 OK if server is up
