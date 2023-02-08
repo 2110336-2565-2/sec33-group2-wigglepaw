@@ -49,37 +49,6 @@ export const userRouter = createTRPCRouter({
     });
   }),
 
-  createFreelancePetSitter: publicProcedure
-    .input(
-      z.object({
-        user: userFields,
-        petSitter: petSitterFields,
-        freelancePetSitter: freelancePetSitterFields,
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      return await ctx.prisma.freelancePetSitter.create({
-        data: {
-          petSitter: {
-            create: {
-              user: {
-                create: input.user,
-              },
-              ...input.petSitter,
-            },
-          },
-          ...input.freelancePetSitter,
-        },
-        include: {
-          petSitter: {
-            include: {
-              user: true,
-            },
-          },
-        },
-      });
-    }),
-
   deleteById: publicProcedure
     .input(z.object({ userIds: z.array(z.string()) }))
     .mutation(({ ctx, input }) => {

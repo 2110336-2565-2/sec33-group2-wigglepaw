@@ -20,7 +20,7 @@ export const appRouter = createTRPCRouter({
   user: userRouter,
   petSitter: petSitterRouter,
   // petOwner: petOwnerRouter,
-  // freelancePetSitter: freelancePetSitterRouter,
+  freelancePetSitter: freelancePetSitterRouter,
   // petHotel: petHotelRouter,
   // Health check route, return 200 OK if server is up
   healthcheck: publicProcedure
