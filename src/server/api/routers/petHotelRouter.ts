@@ -12,11 +12,6 @@ import { appRouter } from "../../../server/api/root";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
-const zodPetHotelFields = z.object({
-  businessLicenseUri: z.string().url(),
-  hotelName: z.string(),
-});
-
 export const petHotelRouter = createTRPCRouter({
   create: publicProcedure
     .input(
