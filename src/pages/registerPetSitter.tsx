@@ -11,10 +11,13 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { PetKind } from "@prisma/client";
+import Header from "../components/Header";
+import { useRouter } from "next/router";
 
 export default function RegisterPetSitter() {
   const createFreelancePetSitter = api.freelancePetSitter.create.useMutation();
   const createPetHotel = api.petHotel.create.useMutation();
+  const router = useRouter();
 
   const [page1, setPage1] = useState({
     username: "",
@@ -59,8 +62,10 @@ export default function RegisterPetSitter() {
     };
 
     // registering to the backend
-    if (page1.type === "petfreelance") {
-      const newFreelancePetsitter = await createFreelancePetSitter.mutateAsync({
+    try {
+
+      if (page1.type === "petfreelance") {
+        const newFreelancePetsitter = await createFreelancePetSitter.mutateAsync({
         user: {
           username: page1.username,
           password: page1.password,
@@ -96,6 +101,12 @@ export default function RegisterPetSitter() {
         petHotel: page2hotel,
       })
     }
+
+    
+    router.push('/');
+  } catch(error) {
+    console.log(error);
+  }
     setState(3);
   };
 
@@ -131,6 +142,7 @@ export default function RegisterPetSitter() {
 
       return (
         <>
+        <Header/>
           <h1 className="py-2 text-3xl">Register Pet Sitter</h1>
           <h1 className="py-2 text-3xl">2/3</h1>
           <form className="w-4/5" onSubmit={handleSubmit(onSubmit)}>
@@ -214,6 +226,7 @@ export default function RegisterPetSitter() {
 
       return (
         <>
+          <Header/>
           <h1 className="py-2 text-3xl">Register Pet Sitter</h1>
           <h1 className="py-2 text-3xl">2/3</h1>
           <form className="w-4/5" onSubmit={handleSubmit(onSubmit)}>
@@ -271,6 +284,7 @@ export default function RegisterPetSitter() {
       z;
       return (
         <>
+          <Header/>
           <h1 className="py-2 text-3xl">Register Pet Sitter</h1>
           <h1 className="py-2 text-3xl">3/3</h1>
           <div className="flex w-2/3 justify-center">
@@ -353,7 +367,11 @@ export default function RegisterPetSitter() {
                 <button
                   type="button"
                   onClick={() => {
-                    setState(0);
+                    if (page1.type === "petfreelance") {
+                      setState(1);
+                    } else {
+                      setState(2);
+                    }
                   }}
                   className="buttonstyle"
                 >
@@ -410,6 +428,7 @@ export default function RegisterPetSitter() {
 
       return (
         <>
+          <Header/>
           <h1 className="py-2 text-3xl">Register Pet Sitter</h1>
           <h1 className="py-2 text-3xl">1/3</h1>
           <form className="w-4/5" onSubmit={handleSubmit(onSubmit)}>
