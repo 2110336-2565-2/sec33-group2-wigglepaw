@@ -17,24 +17,25 @@ export const userFields = z.object({
 
 export const petSitterFields = z.object({
   // user: userFields,
+  petTypes: z.array(z.string()),
   verifyStatus: z.boolean(),
-  certificationUri: z.string(),
+  certificationUri: z.string().optional(),
 });
 
 export const petOwnerFields = z.object({
   // user: userFields,
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
+  firstName: z.string(),
+  lastName: z.string(),
 });
 
 export const petHotelFields = z.object({
   // petSitter: petSitterFields,
-  businessLicenseUri: z.string(),
+  businessLicenseUri: z.string().optional(),
   hotelName: z.string(),
 });
 
 export const freelancePetSitterFields = z.object({
   //petSitter: petSitterFields,
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
+  firstName: z.string(),
+  lastName: z.string(),
 });
