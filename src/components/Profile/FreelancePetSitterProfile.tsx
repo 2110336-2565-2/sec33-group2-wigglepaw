@@ -12,26 +12,29 @@ const FreelancePetSitterProfile = (props: any) => {
       <Header></Header>
       <div className={infomationSection}>
         <div className="flex w-screen flex-col">
-          <div className="relative mx-auto flex h-[4rem] w-[4rem]">
+          <div className="relative mx-auto flex h-[6rem] w-[6rem]">
             <Image src={"/profile_icon.png"} alt={"Icon"} fill></Image>
           </div>
-          <p className="mx-auto text-center">{props.username}</p>
+          <p className="mx-auto my-1 text-center text-xl font-semibold">
+            {props.username}
+          </p>
           <Link
             href={`/user/${props.username}/edit`}
-            className="mx-auto flex text-center"
+            className="mx-auto flex rounded-2xl bg-sky-700 px-3 py-1 text-center text-white hover:bg-sky-600"
           >
-            Edit my profile <HiPencilAlt />
+            Edit my profile{" "}
+            <HiPencilAlt className="mt-auto mb-[0.2rem] ml-1 fill-white" />
           </Link>
         </div>
-        <div className="justify-auto flex flex-wrap">
-          <p>Name: Jhon Swogvagen</p>
+        <div className="justify-auto mt-2 flex w-screen flex-wrap">
+          <p className="w-fit">Name: Jhon Swogvagen</p>
           <p>Pet type</p>
-          <p>Phone: 0123456789</p>
-          <p>
+          <p className="w-fit">Phone: 0123456789</p>
+          <p className="w-full">
             Address: 254 Phaya Thai Rd, Wang Mai, Khet Pathum Wan, Krung Thep
             Maha Nakhon 10330
           </p>
-          <p>Email: wiggle-paw@chula.ac.th</p>
+          <p className="w-fit">Email: wiggle-paw@chula.ac.th</p>
         </div>
       </div>
       <div className="mx-auto mt-3 w-screen max-w-md sm:w-1/2">
