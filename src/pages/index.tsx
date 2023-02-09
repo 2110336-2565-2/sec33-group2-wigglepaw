@@ -7,22 +7,82 @@ import Header from "../components/Header";
 
 const Home: NextPage = () => {
   return (
-    <div>
+    <div className="-z-10 h-screen w-screen bg-bg-main">
       <Header></Header>
-      <div className="mx-auto w-fit">
-        <div className="mx-5 w-fit rounded-2xl bg-amber-100 p-4 ">
-          <h1 className="text-2xl">&quot;Let us take care your loves&quot;</h1>
-          <h2 className="w-full text-right text-xl">WigglePaw</h2>
-          <h3 className="">
+
+      <div className="center-thing h-[80%]">
+        <div className="absolute right-[-5%] bottom-0 -z-0 ">
+          <img
+            src="/dogwalking.png"
+            width={560}
+            height={560}
+            className="invisible md:visible"
+            alt="cat"
+          />
+        </div>
+        <div className="absolute left-[10%] top-[20%] -z-0 ">
+          <img
+            src="/dogpaw1.png"
+            width={160}
+            height={160}
+            className="invisible md:visible"
+            alt="cat"
+          />
+        </div>
+        <div className="absolute right-[5%] bottom-[30%] -z-0 ">
+          <img
+            src="/dogpaw1.png"
+            width={140}
+            height={140}
+            className="invisible md:visible"
+            alt="cat"
+          />
+        </div>
+        <div className="absolute right-[0%] top-[40%] -z-0 ">
+          <img
+            src="/dogpaw2.png"
+            width={80}
+            height={80}
+            className="invisible md:visible"
+            alt="cat"
+          />
+        </div>
+        <div className="absolute left-[0%] top-[30%] -z-0 ">
+          <img
+            src="/dogpaw3.png"
+            width={120}
+            height={120}
+            className="invisible md:visible"
+            alt="cat"
+          />
+        </div>
+
+        <div className="mx-5 grid h-[60%]  w-[55%] grid-cols-3 grid-rows-5 rounded-2xl bg-bg-box-main px-6 py-4 shadow-2xl ">
+          <h1 className="center-thing col-span-3 row-span-2 text-[3rem]">
+            &quot;Let us take care your loves&quot;
+          </h1>
+          <hr className="center-thing testt h-1 w-full rounded border-0 bg-gray-100 dark:bg-gray-700 md:my-10" />
+          <h2 className="center-thing col-span-1 mb-4 w-full text-[2.2rem]">
+            WigglePaw
+          </h2>
+          <hr className="center-thing testt h-1 w-full rounded border-0 bg-gray-100 dark:bg-gray-700 md:my-10" />
+          <h3 className="items-top col-span-3 flex w-full justify-center text-[1.5rem]">
             A matching platform for pet sitters and pet owners
           </h3>
-          <br />
-          <div className="flex">
-            <Link href="/match=?pet_sitter" className="find-link">
-              Finding Pet Sitter
+
+          <div className="center-thing w-full">
+            <Link href="/match=?pet_freelance" className="find-link rounded-xl">
+              Finding Pet Sitter &gt;
             </Link>
-            <Link href="/match=?pet_hotel" className="find-link">
-              Finding Pet Hotel
+          </div>
+          <div className="center-thing w-full">
+            <Link href="/match=?pet_hotel" className="find-link rounded-xl">
+              Finding Pet Hotel &gt;
+            </Link>
+          </div>
+          <div className="center-thing w-full">
+            <Link href="/registerPetOwner" className="find-link rounded-xl">
+              Register Pet Owner (temp)
             </Link>
           </div>
         </div>
