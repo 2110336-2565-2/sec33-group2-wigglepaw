@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import RangeSlider from "./RangeSlider";
 
 const SearchBox = () => {
   var router = useRouter();
@@ -48,6 +49,10 @@ const SearchBox = () => {
       <h1>Search for {petSitterType}</h1>
       <div>
         <form onSubmit={handleSearch}>
+          <label htmlFor="name">Name</label>
+          <br />
+          <input type="text" id="name" />
+          <br />
           <label htmlFor="location">Location</label>
           <br />
           <input type="text" id="location" />
@@ -61,6 +66,10 @@ const SearchBox = () => {
             <option value="Bird">Bird</option>
           </datalist>
           <br />
+          <div>
+            <label htmlFor="priceRange">Price Range</label>
+            <RangeSlider />
+          </div>
 
           <input
             type="submit"
