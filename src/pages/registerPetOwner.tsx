@@ -2,6 +2,7 @@ import * as React from "react";
 import type { NextPage } from "next";
 import { api } from "../utils/api";
 import {
+  FieldErrorsImpl,
   FieldValues,
   useForm,
   UseFormRegister,
@@ -17,18 +18,45 @@ import { useCallback } from "react";
 import { PrismaClient, Prisma } from "@prisma/client";
 import { signIn, useSession } from "next-auth/react";
 import Router, { useRouter } from "next/router";
+
+const formDataSchema = z.object({
+  firstname: z.string().min(1),
+  lastname: z.string().min(1),
+  email: z.string().email(),
+  address: z.string().min(1),
+  phone: z.string().regex(/^\d{10}$/),
+  username: z.string().min(1),
+  confirmpassword: z.string().min(1),
+  type: z.string().min(1),
+  breed: z.string().min(1),
+  weight: z.string().min(1),
+  cardno: z.string().regex(/^\d{16}$/),
+  expdate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  cvv: z.string().regex(/^\d{3}$/),
+  bankno: z.string().regex(/^\d{12}$/),
+  bankname: z.string(),
+});
+type FormData = z.infer<typeof formDataSchema>;
+
 const RegisterPage: NextPage = () => {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormData>({
+    resolver: zodResolver(formDataSchema),
+  });
+
+  React.useEffect(() => {
+    console.error(errors);
+  }, [errors]);
+
   const router = useRouter();
   const mutation = api.petOwner.create.useMutation();
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormData) => {
     // TODO: Switch to use create pet owner (with backend API), then sign in if sucess.
-    await mutation.mutate({
+    mutation.mutate({
       user: {
         username: data.username,
         password: data.confirmpassword,
@@ -83,6 +111,7 @@ const RegisterPage: NextPage = () => {
                     label="First Name*"
                     placeholder="Mohnke"
                     register={register}
+                    errors={errors}
                     validationRules={{ required: true }}
                   />
                 </div>
@@ -92,6 +121,7 @@ const RegisterPage: NextPage = () => {
                     label="Last Name*"
                     placeholder="Jesus"
                     register={register}
+                    errors={errors}
                     validationRules={{ required: true }}
                   />
                 </div>
@@ -101,6 +131,7 @@ const RegisterPage: NextPage = () => {
                   id="email"
                   label="Email*"
                   register={register}
+                  errors={errors}
                   placeholder="someone@gmail.com"
                   validationRules={{ required: true }}
                   type="email"
@@ -112,6 +143,7 @@ const RegisterPage: NextPage = () => {
                   label="Address*"
                   placeholder="xxxxxxxxxxxxxxxxx"
                   register={register}
+                  errors={errors}
                   validationRules={{ required: true }}
                 />
               </div>
@@ -121,6 +153,7 @@ const RegisterPage: NextPage = () => {
                   label="Phone No.*"
                   placeholder="0123456789"
                   register={register}
+                  errors={errors}
                   validationRules={{ required: true }}
                   type="tel"
                 />
@@ -131,6 +164,7 @@ const RegisterPage: NextPage = () => {
                   label="Username"
                   placeholder="เจ้าแม่กวนตีน"
                   register={register}
+                  errors={errors}
                   validationRules={{ required: true }}
                 />
               </div>
@@ -139,6 +173,7 @@ const RegisterPage: NextPage = () => {
                   id="confirmpassword"
                   label="Password"
                   register={register}
+                  errors={errors}
                   validationRules={{ required: true }}
                   type="password"
                 />
@@ -148,6 +183,7 @@ const RegisterPage: NextPage = () => {
                   id="confirmpassword"
                   label="Confirm Password"
                   register={register}
+                  errors={errors}
                   validationRules={{ required: true }}
                   type="password"
                 />
@@ -159,6 +195,7 @@ const RegisterPage: NextPage = () => {
                     label="Type of pet* :"
                     placeholder="Dogs"
                     register={register}
+                    errors={errors}
                     validationRules={{ required: true }}
                   />
                 </div>
@@ -168,6 +205,7 @@ const RegisterPage: NextPage = () => {
                     label="Breed of pet* :"
                     placeholder="Corgi"
                     register={register}
+                    errors={errors}
                     validationRules={{ required: true }}
                   />
                 </div>
@@ -177,6 +215,7 @@ const RegisterPage: NextPage = () => {
                     label="Weight of pet* :"
                     placeholder="5-10 kg"
                     register={register}
+                    errors={errors}
                     validationRules={{ required: true }}
                     type="number"
                   />
@@ -234,6 +273,7 @@ const RegisterPage: NextPage = () => {
                     label="Card No.*"
                     placeholder="xxxx xxxx xxxx xxxx"
                     register={register}
+                    errors={errors}
                     validationRules={{ required: true }}
                     type="number"
                   />
@@ -245,6 +285,7 @@ const RegisterPage: NextPage = () => {
                     id="expdate"
                     label="Expiration Date*"
                     register={register}
+                    errors={errors}
                     validationRules={{ required: true }}
                     type="date"
                   />
@@ -254,6 +295,7 @@ const RegisterPage: NextPage = () => {
                     id="cvv"
                     label="CVV / CVN*"
                     register={register}
+                    errors={errors}
                     validationRules={{ required: true }}
                     type="number"
                   />
@@ -273,6 +315,7 @@ const RegisterPage: NextPage = () => {
                     label="Bank No.*"
                     placeholder="xxx-x-xxxxx-x"
                     register={register}
+                    errors={errors}
                     type="number"
                     validationRules={{ required: true }}
                   />
@@ -282,6 +325,7 @@ const RegisterPage: NextPage = () => {
                     id="bankname"
                     label="Bank Name*"
                     register={register}
+                    errors={errors}
                     validationRules={{ required: true }}
                     placeholder="ABC"
                   />
@@ -330,9 +374,10 @@ const RegisterPage: NextPage = () => {
 };
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  id: string;
+  id: keyof FormData;
   label: string;
-  register: UseFormRegister<FieldValues>; // declare register props
+  register: UseFormRegister<FormData>; // declare register props
+  errors: FieldErrorsImpl<FormData>; // declare errors props
   validationRules?: object;
 }
 
@@ -344,6 +389,7 @@ const Input: React.FC<InputProps> = ({
   id,
   label,
   register,
+  errors,
   validationRules,
   type = "text",
   ...rest
@@ -358,6 +404,8 @@ const Input: React.FC<InputProps> = ({
       {...rest}
       {...register(id, validationRules)}
     />
+
+    <span className="text-sm text-red-500">{errors[id]?.message}</span>
   </>
 );
 
