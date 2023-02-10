@@ -19,7 +19,7 @@ const Header = () => {
   const asPath = router.asPath;
 
   return (
-    <span className="mb-4 flex h-fit w-screen bg-sky-900 pr-2">
+    <span className="mb-4 flex h-fit w-screen bg-sky-900 md:pr-2">
       <nav className="flex w-full">
         <Link href={"/"} className="flex shrink-0">
           <div className="relative m-2 flex h-[4rem] w-[5rem]">
@@ -29,7 +29,7 @@ const Header = () => {
             WigglePaw
           </h1>
         </Link>
-        <ul className="invisible my-auto ml-auto sm:visible">
+        <ul className="my-auto ml-auto hidden sm:block">
           <li className="header-li">
             <div className="header-li-div">
               <Link
