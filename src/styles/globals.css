@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 @layer base {
   /* main */
   .find-link {
@@ -29,7 +30,37 @@
   .header-at-page {
     @apply bg-white text-sky-700 hover:bg-white;
   }
+
+  .center-thing {
+    @apply flex items-center justify-center
+  }
 }
+/* nice color */
+.testt{  
+  background: linear-gradient(90deg, #ffb2fa 0%, #5999fe 34%, #70e2d6 70%, #fdff77 87%, #ffb2fa 100%);
+}
+html{
+  font-size: 10px;
+  /* font-family: 'Ubuntu', sans-serif; */
+}
+@media  screen and (min-width: 600px) {
+  html{
+    font-size: 12px;
+  }
+}
+/* sss */
+@media  screen and (min-width: 1200px) {
+  html{
+    font-size: 16px;
+  }
+}
+@media screen and (min-width: 1600px) {
+  html{
+    font-size: 18px;
+  }
+}
+
+
 
 * {
   -ms-overflow-style: none;
