@@ -1,10 +1,15 @@
+import { PetSitter, User } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 
-const PetSitterCard = (props: any) => {
-  const name = props.pet_sitter ? props.pet_sitter.username : "NAME";
-  const profile_link = props.pet_sitter
-    ? "/profile/" + props.pet_sitter.username
+interface PetSitterCardProps {
+  pet_sitter: PetSitter & { user: User };
+}
+
+const PetSitterCard = ({ pet_sitter }: PetSitterCardProps) => {
+  const name = pet_sitter ? pet_sitter.user.username : "NAME";
+  const profile_link = pet_sitter
+    ? "/profile/" + pet_sitter.user.username
     : "/profile/lmao";
   return (
     <Link
@@ -21,7 +26,7 @@ const PetSitterCard = (props: any) => {
       </div>
       <div className="mx-3 w-fit leading-6">
         <p>Pet Sitter: {name} </p>
-        <p>Pet Type</p>
+        <p>Pet Type: {pet_sitter.petTypes.map((petType) => `${petType} `)}</p>
         <p>Rating</p>
       </div>
       <div className="my-auto ml-auto w-fit text-center md:mr-4">

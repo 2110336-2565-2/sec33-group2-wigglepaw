@@ -6,7 +6,8 @@ import SearchBox from "../components/SearchBox";
 
 import { PrismaClient, User } from "@prisma/client";
 import PetSitterCard from "../components/PetSitterCard";
-import { useForm } from "react-hook-form/dist/useForm";
+import { useForm } from "react-hook-form";
+import SearchResult from "../components/SearchResult";
 
 const prisma = new PrismaClient();
 
@@ -26,18 +27,19 @@ const matching: NextPage = (props: any) => {
 
   const [petSitters, setPetSitters] = useState(props.users);
 
+  const useFormReturn = useForm({
+    defaultValues: {
+      name: "lnwJoZa",
+      priceRange: 50.0,
+    },
+    // resolver: zodResolver(formDataSchema),
+  });
+
   return (
     <div>
       <Header></Header>
-      <SearchBox></SearchBox>
-      <div className="mx-auto mt-3 w-fit max-w-md sm:w-1/2">
-        <h1 className="font-bold">Results</h1>
-        {petSitters.map((user: any) => (
-          <PetSitterCard pet_sitter={user}></PetSitterCard>
-        ))}
-        <PetSitterCard pet_sitter={null}></PetSitterCard>
-        <PetSitterCard pet_sitter={null}></PetSitterCard>
-      </div>
+      <SearchBox useFormReturn={useFormReturn}></SearchBox>
+      <SearchResult useFormReturn={useFormReturn} />
     </div>
   );
 };

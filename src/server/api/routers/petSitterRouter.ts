@@ -29,25 +29,32 @@ export const petSitterRouter = createTRPCRouter({
       return update;
     }),
 
-  // searchPetSitter: publicProcedure
-  // .input(z.object({
-  //   searchText: z.string(),
-  // }))
-  //   .query(({ ctx, input }) => {
-  //     const words = input.searchText.split(" ")
-  //     return ctx.prisma.petSitter.findMany({
-  //       where: {
-  //           [...words.map(word => ({
-  //         AND: [
-  //         OR: [
-  //           { freelancePetSitter: { firstName: { contains: word } } },
-  //           { freelancePetSitter: { lastName: { contains: word } } },
-  //           { freelancePetSitter: { lastName: { contains: word } } },
-  //           { petHotel: { hotelName: { contains: word } } },
-  //         ]
-  //     ]
-  //     }))]
+  dummySearchPetSitter: publicProcedure.query(({ ctx }) =>
+    ctx.prisma.petSitter.findMany({ include: { user: true } })
+  ),
 
-  //       }
-  //   }),
+  searchPetSitter: publicProcedure
+    .input(
+      z.object({
+        searchText: z.string(),
+      })
+    )
+    .query(({ ctx, input }) => {
+      const words = input.searchText.split(" ");
+      return ctx.prisma.petSitter.findMany({
+        where: {
+          AND: words.map((word) => ({
+            OR: [
+              { freelancePetSitter: { firstName: { contains: word } } },
+              { freelancePetSitter: { lastName: { contains: word } } },
+              { freelancePetSitter: { lastName: { contains: word } } },
+              { petHotel: { hotelName: { contains: word } } },
+            ],
+          })),
+        },
+        include: {
+          user: true,
+        },
+      });
+    }),
 });
