@@ -21,10 +21,24 @@
 
 ## Useful Commands
 
+- `pnpm install`: Install project dependencies, will also run `pnpm prisma db push` and `pnpm prisma studio` after installation. Try this first if you are having weird trouble with the project.
 - `pnpm dev`: Run project in development mode with local web server and live reloading.
 - `pnpm build`: Build project for production.
 - `pnpm prisma db push`: Push the Prisma schema to the database.
 - `pnpm prisma studio`: Open Prisma Studio, a GUI for viewing and editing data in your database.
+
+## Additional tools
+
+- `/api/trpc/playground`: Sandbox for testing tRPC queries in the browser. (https://github.com/sachinraja/trpc-playground)
+- `/api/trpc/panel`: Automatically generated a UI for manually testing your tRPC backend. (https://github.com/iway1/trpc-panel)
+
+## Additional Dependencies
+
+In addition to the default T3 Stack dependencies, this project also uses the following:
+
+- [react-hook-form](https://react-hook-form.com/) -- Performant, flexible and extensible forms with easy-to-use validation.
+- [headless-ui](https://headlessui.dev/) -- Completely unstyled, fully accessible UI components, designed to integrate beautifully with Tailwind CSS.
+- [autoanimate](https://auto-animate.formkit.com) -- Auto-animate is a library that makes it easy to animate elements on the page when they enter or leave the viewport.
 
 # Create T3 App
 

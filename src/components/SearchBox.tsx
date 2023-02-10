@@ -1,53 +1,78 @@
 import { useRouter } from "next/router";
+import { FieldValues, useForm } from "react-hook-form";
+import { api } from "../utils/api";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import RangeSlider from "./RangeSlider";
+import TmpRangeSlider from "./TmpRangeSlider";
+import { useState } from "react";
 
-const SearchBox = () => {
-  var router = useRouter();
-  var petSitterType = router.query["petSitterType"];
+const SearchBox: React.FC = () => {
+  // const formDataSchema = z.object({
+  //   name: z.string().min(1),
+  // });
 
-  //TODO: Search Pet Sitter
-  // Handles the submit event on form submit.
-  const handleSearch = async (event: any) => {
-    // Stop the form from submitting and refreshing the page.
-    event.preventDefault();
+  // type FormData = z.infer<typeof formDataSchema>;
 
-    // Get data from the form.
-    const data = {
-      petType: event.target.petType.value,
-      location: event.target.location.value,
-    };
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      name: "gg",
+      priceRange: 30.0,
+    },
+    // resolver: zodResolver(formDataSchema),
+  });
 
-    // Send the data to the server in JSON format.
-    const JSONdata = JSON.stringify(data);
+  // // TODO: how to get the params from the form and send it as a params to the useQuery ?
+  // const petSitters = api.petSitter.searchPetSitter.useQuery({
+  const petHotels = api.petHotel.getByUsername.useQuery({
+    username: watch("name") as string,
+  });
 
-    // API endpoint where we send form data.
-    const endpoint = "/api/form";
+  const router = useRouter();
+  const petSitterType = router.query["petSitterType"];
 
-    // Form the request for sending data to the server.
-    const options = {
-      // The method is POST because we are sending data.
-      method: "POST",
-      // Tell the server we're sending JSON.
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // Body of the request is the JSON data we created above.
-      body: JSONdata,
-    };
+  const [test, setTest] = useState(Array<number>());
 
-    // Send the form data to our forms API on Vercel and get a response.
-    const response = await fetch(endpoint, options);
+  const onSubmit = async (data: FieldValues) => {
+    // TODO: call the back end router in here
 
-    // Get the response data from server as JSON.
-    // If server returns the name submitted, that means the form works.
-    const result = await response.json();
-    alert(`Data: ${result.data}`);
+    console.log("ewoafj;oiwe");
+
+    console.log(watch("priceRange"));
+
+    data.priceRange = test[0]; // way of the CURSE
+
+    const hotels = petHotels.data;
+    console.log(hotels);
+    // console.log(data);
+    console.log(watch("name"));
+    alert(JSON.stringify(data));
+
+    // TODO: once retrieved data from the back end
+    // set the result in the matching page to that
+    // setResult(result);
   };
 
   return (
     <div className="border- mx-auto w-3/5 min-w-fit bg-sky-200 p-4">
       <h1>Search for {petSitterType}</h1>
       <div>
-        <form onSubmit={handleSearch}>
+        {/* <form> */}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <label htmlFor="name">Name</label>
+          <br />
+          <input
+            placeholder="BaanMaewMaa"
+            {...register("name", { required: true })}
+          />
+          <br />
+          {/* check into required true*/}
+
           <label htmlFor="location">Location</label>
           <br />
           <input type="text" id="location" />
@@ -62,11 +87,44 @@ const SearchBox = () => {
           </datalist>
           <br />
 
-          <input
+          {/* TODO: passed a state onto the inner component of the range slider*/}
+
+          {/* slider is work in progress */}
+          {/* <div> */}
+          {/* <label htmlFor="priceRange">Price Range</label>
+
+            <input type="range"
+              min="0"
+              max="100"
+              value={50}
+              onChange={e => {
+                setPriceValue(e.target.value);
+              }}
+            /> */}
+
+          {/* <RangeSlider/> */}
+          {/* <TmpRangeSlider/> */}
+          {/* </div> */}
+
+          <label>Price Range</label>
+          {/* <input type="range"
+          {...(register("priceRange", {required: true})) }
+
+          >
+
+          </input> */}
+
+          <RangeSlider setTest={setTest} register={register} />
+
+          <button
             type="submit"
+            // type='button'
             value="Submit"
             className="rounded-full bg-sky-700 px-4 py-2 font-bold text-white transition-colors hover:bg-sky-600"
-          ></input>
+            // onClick={handleSubmit(onSubmit)}
+          >
+            test
+          </button>
         </form>
       </div>
     </div>
