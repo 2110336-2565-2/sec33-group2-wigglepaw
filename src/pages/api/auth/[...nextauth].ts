@@ -94,6 +94,7 @@ export const authOptions: NextAuthOptions = {
 
         if (userDB.petOwner) {
           const userSubInfo: UserSubType = {
+            userId: userDB.userId,
             usertype: UserType.PetOwner,
             firstName: userDB.petOwner.firstName,
             lastName: userDB.petOwner.lastName,
@@ -103,22 +104,26 @@ export const authOptions: NextAuthOptions = {
           return user;
         } else if (userDB.petSitter && userDB.petSitter.freelancePetSitter) {
           const userSubInfo: UserSubType = {
+            userId: userDB.userId,
             usertype: UserType.FreelancePetSitter,
             verifyStatus: userDB.petSitter.verifyStatus,
             certificationUri: userDB.petSitter.certificationUri,
             firstName: userDB.petSitter.freelancePetSitter.firstName,
             lastName: userDB.petSitter.freelancePetSitter.lastName,
+            petTypes: userDB.petSitter.petTypes,
           };
 
           const user: User = { ...userSubInfo, ...userCommonInfo };
           return user;
         } else if (userDB.petSitter && userDB.petSitter.petHotel) {
           const userSubInfo: UserSubType = {
+            userId: userDB.userId,
             usertype: UserType.PetHotel,
             verifyStatus: userDB.petSitter.verifyStatus,
             certificationUri: userDB.petSitter.certificationUri,
             hotelName: userDB.petSitter.petHotel.hotelName,
             businessLicenseUri: userDB.petSitter.petHotel.businessLicenseUri,
+            petTypes: userDB.petSitter.petTypes,
           };
 
           const user: User = { ...userSubInfo, ...userCommonInfo };

@@ -1,3 +1,10 @@
+import {
+  type PetOwner,
+  type PetSitter,
+  type FreelancePetSitter,
+  type PetHotel,
+} from "@prisma/client";
+
 /**
  * Used in {@link UserSubType} to identify the type of user.
  */
@@ -15,22 +22,14 @@ export enum UserType {
  * @see {@link https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions|Discriminated Unions}
  */
 export type UserSubType =
-  | {
+  | ({
       usertype: UserType.PetOwner;
-      firstName: string | null;
-      lastName: string | null;
-    }
-  | {
+    } & PetOwner)
+  | ({
       usertype: UserType.FreelancePetSitter;
-      verifyStatus: boolean;
-      certificationUri: string | null;
-      firstName: string | null;
-      lastName: string | null;
-    }
-  | {
+    } & PetSitter &
+      FreelancePetSitter)
+  | ({
       usertype: UserType.PetHotel;
-      verifyStatus: boolean;
-      certificationUri: string | null;
-      businessLicenseUri: string;
-      hotelName: string;
-    };
+    } & PetSitter &
+      PetHotel);
