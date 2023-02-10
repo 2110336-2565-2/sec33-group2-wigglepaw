@@ -47,7 +47,6 @@ export const petSitterRouter = createTRPCRouter({
             OR: [
               { freelancePetSitter: { firstName: { contains: word } } },
               { freelancePetSitter: { lastName: { contains: word } } },
-              { freelancePetSitter: { lastName: { contains: word } } },
               { petHotel: { hotelName: { contains: word } } },
             ],
           })),
