@@ -108,7 +108,7 @@ const RegisterPage: NextPage = () => {
         <div className="mt-4 flex h-full flex-col items-center">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex h-full w-1/2 flex-col items-center justify-evenly"
+            className="flex h-full w-3/4 flex-col items-center md:w-1/2 "
           >
             <div className="flex w-full flex-col items-center">
               <h1 className="text-3xl font-bold">Register Pet Owner</h1>
@@ -233,7 +233,7 @@ const RegisterPage: NextPage = () => {
                 </div>
               </div>
             </div>
-            <div className="flex w-full justify-evenly">
+            <div className="my-5 flex w-full justify-evenly">
               <Button>Back</Button>
               <Button
                 type="button"
@@ -424,7 +424,7 @@ const Input: React.FC<InputProps> = ({
       {...register(id, validationRules)}
     />
 
-    <span className="text-sm text-red-500">{errors[id]?.message}</span>
+    <span className=" text-sm text-red-500">{errors[id]?.message}</span>
   </>
 );
 
