@@ -1,3 +1,4 @@
+import { FreelancePetSitter, PetSitter, User } from "@prisma/client";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -5,7 +6,7 @@ import { useRouter } from "next/router";
 import FreelancePetSitterProfile from "../../components/Profile/FreelancePetSitterProfile";
 import PetHotelProfile from "../../components/Profile/PetHotelProfile";
 import PetOwnerProfile from "../../components/Profile/PetOwnerProfile";
-import { UserType } from "../../types/user";
+import { UserSubType, UserType } from "../../types/user";
 import { api } from "../../utils/api";
 
 const Profile: NextPage = () => {
@@ -16,39 +17,38 @@ const Profile: NextPage = () => {
     ? session?.user?.username == username
     : false;
 
-  const { data } = api.user.getByUsername.useQuery(
-    { username: typeof username == "string" ? username : "" },
+  const { data, error: userError } = api.user.getByUsername.useQuery(
+    { username: typeof username === "string" ? username : "" },
     {
       enabled: typeof username === "string",
     }
   );
 
+  if (userError) return <div>Error จ้า: {userError.message}</div>;
   if (data === undefined) return <div>Loading...</div>;
   if (data === null) return <div>Not found</div>;
+
+  if (data.userType === UserType.FreelancePetSitter) {
+    console.log(data.firstName);
+  }
 
   switch (data.userType) {
     case UserType.PetOwner:
       return (
-        <PetOwnerProfile
-          username={username}
-          editable={editable}
-        ></PetOwnerProfile>
+        <PetOwnerProfile user={data} editable={editable}></PetOwnerProfile>
       );
 
     case UserType.FreelancePetSitter:
       return (
         <FreelancePetSitterProfile
-          username={username}
+          user={data}
           editable={editable}
         ></FreelancePetSitterProfile>
       );
 
     case UserType.PetHotel:
       return (
-        <PetHotelProfile
-          username={username}
-          editable={editable}
-        ></PetHotelProfile>
+        <PetHotelProfile user={data} editable={editable}></PetHotelProfile>
       );
 
     default:

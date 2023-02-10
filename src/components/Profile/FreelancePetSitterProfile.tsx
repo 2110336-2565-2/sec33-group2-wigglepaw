@@ -10,10 +10,16 @@ import {
   HiUserCircle,
 } from "react-icons/hi";
 import { IoPaw } from "react-icons/io5";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import type { User, PetSitter, FreelancePetSitter } from "@prisma/client";
 
-const FreelancePetSitterProfile = (props: any) => {
+type FreelancePetSitterProfileProps = {
+  editable: boolean;
+  user: User & PetSitter & FreelancePetSitter;
+};
+
+const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
   const [editing, setEditing] = useState(false);
 
   const {
@@ -26,6 +32,12 @@ const FreelancePetSitterProfile = (props: any) => {
 
   console.log(watch("example"));
 
+  // TODO: Remove once done
+  // Show the user data, for dev and debug
+  useEffect(() => {
+    console.log(props.user);
+  }, [props.user]);
+
   return (
     <div>
       <Header></Header>
@@ -35,7 +47,7 @@ const FreelancePetSitterProfile = (props: any) => {
             <Image src={"/profile_icon.png"} alt={"Icon"} fill></Image>
           </div>
           <h1 className="mx-auto my-1 text-center text-2xl font-semibold">
-            {props.username}
+            {props.user.username}
           </h1>
           {props.editable && (
             <button
