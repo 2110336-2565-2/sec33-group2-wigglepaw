@@ -1,18 +1,38 @@
 import { faPaw } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";
+import type { FieldValues, UseFormRegister } from "react-hook-form/dist/types";
 import { Range } from "react-range";
+interface RangeSliderProps {
+  setTest: (value: React.SetStateAction<number[]>) => void;
+  register: UseFormRegister<FieldValues>; // declare register props
+}
 
-const RangeSlider = () => {
+const RangeSlider = ({ setTest, register }: RangeSliderProps) => {
   const [value, setValue] = React.useState([50]);
+
+  React.useEffect(() => {}, [value]);
+  // const { onChange, onBlur, name, ref } = register('priceRange', {required: true})
   return (
     <div className="py-4">
+      <input
+        autoFocus
+        id={"jesus"}
+        value={value[0]?.toFixed(1)}
+        {...register("priceRange", { required: true })}
+        onChange={() => {
+          setTest((prev) => prev);
+        }}
+      ></input>
       <Range
         step={0.1}
         min={0}
         max={100}
         values={value}
-        onChange={(values) => setValue(values)}
+        onChange={(values) => {
+          setValue(values);
+          setTest(values);
+        }}
         renderTrack={({ props, children }) => (
           <div
             {...props}
