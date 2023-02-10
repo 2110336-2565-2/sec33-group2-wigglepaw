@@ -1,39 +1,63 @@
 import { PetSitter, User } from "@prisma/client";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
+import {
+  faAddressCard,
+  faMap,
+  faPaw,
+  faStar,
+  faW,
+} from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 
 interface PetSitterCardProps {
-  pet_sitter: PetSitter & { user: User };
+  pet_sitter: (PetSitter & { user: User }) | null;
 }
 
 const PetSitterCard = ({ pet_sitter }: PetSitterCardProps) => {
   const name = pet_sitter ? pet_sitter.user.username : "NAME";
+  const petTypes = pet_sitter ? pet_sitter.petTypes : ["Husky"];
   const profile_link = pet_sitter
     ? "/profile/" + pet_sitter.user.username
     : "/profile/lmao";
   return (
-    <Link
-      href={profile_link} // TODO: Link to correct user
-      className="m-2 flex h-fit rounded-2xl bg-amber-200 p-3 transition-colors hover:bg-amber-100 md:p-5"
-    >
-      <div className="relative flex w-[4rem] md:w-[5rem]">
-        <Image
-          src={"/profile_icon.png"}
-          alt={"Profile Pic"}
-          fill
-          className="object-contain"
-        ></Image>
-      </div>
-      <div className="mx-3 w-fit leading-6">
-        <p>Pet Sitter: {name} </p>
-        <p>Pet Type: {pet_sitter.petTypes.map((petType) => `${petType} `)}</p>
-        <p>Rating</p>
-      </div>
-      <div className="my-auto ml-auto w-fit text-center md:mr-4">
-        <p>Distance:</p>
-        <p>5.0 km</p>
-      </div>
-    </Link>
+    <div className="drop-shadow-md hover:scale-[1.03] ">
+      <Link
+        href={profile_link} // TODO: Link to correct user
+        className="m-3 flex h-fit rounded-2xl border border-2 border-solid border-black bg-yellow-50 p-3  transition-colors hover:bg-yellow-200  md:p-5"
+      >
+        <div className="relative flex w-[4rem] md:w-[5rem]">
+          <Image
+            src={"/profiledummy.png"}
+            alt={"Profile Pic"}
+            fill
+            className="rounded-2xl object-contain"
+          ></Image>
+        </div>
+
+        <div className="mx-3 w-fit leading-6">
+          <div className="flex items-center">
+            <FontAwesomeIcon icon={faAddressCard} />
+            <p className="ml-2"> {name}</p>
+          </div>
+          <div className="flex items-center">
+            <FontAwesomeIcon icon={faPaw} />
+            <p className=" ml-[0.7rem]">
+              {petTypes.map((petType) => `${petType} `)}
+            </p>
+          </div>
+          <div className="flex items-center">
+            <FontAwesomeIcon icon={faStar} />
+            <p className="ml-2"> 3 Stars</p>
+          </div>
+        </div>
+        <div className="my-auto ml-auto w-fit text-center md:mr-4">
+          <FontAwesomeIcon icon={faMap} />
+
+          <p>5.0 km</p>
+        </div>
+      </Link>
+    </div>
   );
 };
 

@@ -21,13 +21,25 @@ export default function SearchResult({ useFormReturn }: SearchResultProps) {
     searchText: watch("name") as string,
   });
 
-  if (!petSitters.data) return <>Loading...</>;
+  if (!petSitters.data) return <></>;
   return (
-    <div className="mx-auto mt-3 w-fit max-w-md sm:w-1/2">
-      <h1 className="font-bold">Results</h1>
-      {petSitters.data.map((petSitter) => (
-        <PetSitterCard pet_sitter={petSitter}></PetSitterCard>
-      ))}
+    <div className="flex justify-center pt-5">
+      <div className=" w-[60%]    ">
+        <div className="flex justify-center ">
+          <h1 className="text-2xl font-bold">Results</h1>
+        </div>
+        <div className="mt-5 md:grid md:grid-cols-2">
+          {petSitters.data.map((petSitter) => (
+            <PetSitterCard pet_sitter={petSitter}></PetSitterCard>
+          ))}
+
+          <PetSitterCard pet_sitter={null}></PetSitterCard>
+          <PetSitterCard pet_sitter={null}></PetSitterCard>
+          <PetSitterCard pet_sitter={null}></PetSitterCard>
+          <PetSitterCard pet_sitter={null}></PetSitterCard>
+          <PetSitterCard pet_sitter={null}></PetSitterCard>
+        </div>
+      </div>
     </div>
   );
 }
