@@ -1,4 +1,4 @@
-import { initTRPC } from "@trpc/server";
+import { TRPCError, initTRPC } from "@trpc/server";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
 import { env } from "../../../env/server.mjs";
 import { createTRPCContext } from "../../../server/api/trpc";
@@ -10,6 +10,7 @@ import {
   petSitterFields,
   userFields,
 } from "../../../schema/schema";
+import Trpc from "../../../pages/api/trpc/[trpc].js";
 
 export const userRouter = createTRPCRouter({
   getByUsername: publicProcedure
@@ -19,39 +20,42 @@ export const userRouter = createTRPCRouter({
         where: {
           username: input.username,
         },
-      });
-      if (!user) return {};
-      const userId = user?.userId;
-      const owner = await ctx.prisma.petOwner.findFirst({
-        where: {
-          userId: userId,
+        include: {
+          petOwner: true,
+          petSitter: {
+            include: {
+              freelancePetSitter: true,
+              petHotel: true,
+            },
+          },
         },
       });
-      const sitter = await ctx.prisma.petSitter.findFirst({
-        where: {
-          userId: userId,
-        },
-      });
-      const freelancer = await ctx.prisma.freelancePetSitter.findFirst({
-        where: {
-          userId: userId,
-        },
-      });
-      const hotel = await ctx.prisma.petHotel.findFirst({
-        where: {
-          userId: userId,
-        },
-      });
-      if (owner) return { userType: "PetOwner", ...user, ...owner };
-      if (freelancer)
+
+      if (!user) return null;
+      const { petOwner, petSitter, ...userData } = user;
+
+      if (petOwner) return { userType: "PetOwner", ...userData, ...petOwner };
+
+      if (petSitter) {
+        const { freelancePetSitter, petHotel, ...petSitterData } = petSitter;
+        if (freelancePetSitter)
+          return {
+            userType: "FreelancePetSitter",
+            ...userData,
+            ...petSitterData,
+            ...freelancePetSitter,
+          };
         return {
-          userType: "FreelancePetSitter",
-          ...user,
-          ...sitter,
-          ...freelancer,
+          userType: "PetHotel",
+          ...userData,
+          ...petSitterData,
+          ...petHotel,
         };
-      if (hotel) return { userType: "PetHotel", ...user, ...sitter, ...hotel };
-      return "Something went wrong.";
+      }
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "userRouter fucked up",
+      });
     }),
 
   getByUserId: publicProcedure
@@ -61,39 +65,42 @@ export const userRouter = createTRPCRouter({
         where: {
           userId: input.userId,
         },
-      });
-      if (!user) return {};
-      const userId = input?.userId;
-      const owner = await ctx.prisma.petOwner.findFirst({
-        where: {
-          userId: userId,
+        include: {
+          petOwner: true,
+          petSitter: {
+            include: {
+              freelancePetSitter: true,
+              petHotel: true,
+            },
+          },
         },
       });
-      const sitter = await ctx.prisma.petSitter.findFirst({
-        where: {
-          userId: userId,
-        },
-      });
-      const freelancer = await ctx.prisma.freelancePetSitter.findFirst({
-        where: {
-          userId: userId,
-        },
-      });
-      const hotel = await ctx.prisma.petHotel.findFirst({
-        where: {
-          userId: userId,
-        },
-      });
-      if (owner) return { userType: "PetOwner", ...user, ...owner };
-      if (freelancer)
+
+      if (!user) return null;
+      const { petOwner, petSitter, ...userData } = user;
+
+      if (petOwner) return { userType: "PetOwner", ...userData, ...petOwner };
+
+      if (petSitter) {
+        const { freelancePetSitter, petHotel, ...petSitterData } = petSitter;
+        if (freelancePetSitter)
+          return {
+            userType: "FreelancePetSitter",
+            ...userData,
+            ...petSitterData,
+            ...freelancePetSitter,
+          };
         return {
-          userType: "FreelancePetSitter",
-          ...user,
-          ...sitter,
-          ...freelancer,
+          userType: "PetHotel",
+          ...userData,
+          ...petSitterData,
+          ...petHotel,
         };
-      if (hotel) return { userType: "PetHotel", ...user, ...sitter, ...hotel };
-      return "Something went wrong.";
+      }
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "userRouter fucked up",
+      });
     }),
 
   getByEmail: publicProcedure
@@ -103,39 +110,42 @@ export const userRouter = createTRPCRouter({
         where: {
           email: input.email,
         },
-      });
-      if (!user) return {};
-      const userId = user?.userId;
-      const owner = await ctx.prisma.petOwner.findFirst({
-        where: {
-          userId: userId,
+        include: {
+          petOwner: true,
+          petSitter: {
+            include: {
+              freelancePetSitter: true,
+              petHotel: true,
+            },
+          },
         },
       });
-      const sitter = await ctx.prisma.petSitter.findFirst({
-        where: {
-          userId: userId,
-        },
-      });
-      const freelancer = await ctx.prisma.freelancePetSitter.findFirst({
-        where: {
-          userId: userId,
-        },
-      });
-      const hotel = await ctx.prisma.petHotel.findFirst({
-        where: {
-          userId: userId,
-        },
-      });
-      if (owner) return { userType: "PetOwner", ...user, ...owner };
-      if (freelancer)
+
+      if (!user) return null;
+      const { petOwner, petSitter, ...userData } = user;
+
+      if (petOwner) return { userType: "PetOwner", ...userData, ...petOwner };
+
+      if (petSitter) {
+        const { freelancePetSitter, petHotel, ...petSitterData } = petSitter;
+        if (freelancePetSitter)
+          return {
+            userType: "FreelancePetSitter",
+            ...userData,
+            ...petSitterData,
+            ...freelancePetSitter,
+          };
         return {
-          userType: "FreelancePetSitter",
-          ...user,
-          ...sitter,
-          ...freelancer,
+          userType: "PetHotel",
+          ...userData,
+          ...petSitterData,
+          ...petHotel,
         };
-      if (hotel) return { userType: "PetHotel", ...user, ...sitter, ...hotel };
-      return "Something went wrong.";
+      }
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "userRouter fucked up",
+      });
     }),
 
   post: publicProcedure.input(userFields).mutation(({ ctx, input }) => {
