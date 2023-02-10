@@ -5,7 +5,7 @@
 @layer base {
   /* main */
   .find-link {
-    @apply mx-4 block w-fit rounded bg-sky-900 py-2 px-5 text-xl text-white transition-colors hover:bg-sky-700;
+    @apply mx-2 md:mx-4 block w-fit rounded bg-sky-900 py-2 px-2 md:px-5 text-xl text-white transition-colors hover:bg-sky-700;
   }
 }
 
