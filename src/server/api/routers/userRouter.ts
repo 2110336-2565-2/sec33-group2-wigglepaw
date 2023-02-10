@@ -11,7 +11,7 @@ import {
   userFields,
 } from "../../../schema/schema";
 import Trpc from "../../../pages/api/trpc/[trpc].js";
-import { UserType } from "../../../types/user.js";
+import { UserType } from "../../../types/user";
 
 export const userRouter = createTRPCRouter({
   getByUsername: publicProcedure
