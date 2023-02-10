@@ -29,12 +29,10 @@ export const petHotelRouter = createTRPCRouter({
               user: {
                 create: input.user,
               },
-              verifyStatus: input.petSitter.verifyStatus,
-              certificationUri: input.petSitter.certificationUri,
+              ...input.petSitter,
             },
           },
           ...input.petHotel,
-          businessLicenseUri: input.petHotel.businessLicenseUri,
         },
         include: {
           petSitter: {
