@@ -35,7 +35,7 @@
     @apply my-auto mb-[.4rem] inline w-full items-center text-xl;
   }
   .profile-icon {
-    @apply inline;
+    @apply my-auto inline;
   }
 
   .center-thing {
