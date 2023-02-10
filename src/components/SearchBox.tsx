@@ -6,23 +6,26 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import RangeSlider from "./RangeSlider";
 import TmpRangeSlider from "./TmpRangeSlider";
 import { useState } from "react";
+import { SearchValues } from "../common/interfaces";
 
 const SearchBox: React.FC = () => {
   // const formDataSchema = z.object({
-  //   name: z.string().min(1),
+  //   name: z.string().trim().min(1),
+  //   priceRange: z.number(),
   // });
 
   // type FormData = z.infer<typeof formDataSchema>;
 
   const {
     register,
+    setValue,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: "gg",
-      priceRange: 30.0,
+      name: "lnwJoZa",
+      priceRange: 50.0,
     },
     // resolver: zodResolver(formDataSchema),
   });
@@ -36,21 +39,15 @@ const SearchBox: React.FC = () => {
   const router = useRouter();
   const petSitterType = router.query["petSitterType"];
 
-  const [test, setTest] = useState(Array<number>());
-
   const onSubmit = async (data: FieldValues) => {
     // TODO: call the back end router in here
 
-    console.log("ewoafj;oiwe");
-
-    console.log(watch("priceRange"));
-
-    data.priceRange = test[0]; // way of the CURSE
+    // data.priceRange = test[0]; // way of the CURSE --FIXED
 
     const hotels = petHotels.data;
     console.log(hotels);
-    // console.log(data);
-    console.log(watch("name"));
+
+    // alert data
     alert(JSON.stringify(data));
 
     // TODO: once retrieved data from the back end
@@ -114,7 +111,8 @@ const SearchBox: React.FC = () => {
 
           </input> */}
 
-          <RangeSlider setTest={setTest} register={register} />
+          <RangeSlider register={register} setValue={setValue} />
+          <>{watch("priceRange")}</>
 
           <button
             type="submit"
