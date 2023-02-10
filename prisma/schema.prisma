@@ -83,6 +83,7 @@ model User {
     password      String
     email         String     @unique
     emailVerified DateTime?
+    phoneNumber   String?
     address       String?
     imageUri      String?
     bankAccount   String? // Assume 1 per user
@@ -92,32 +93,33 @@ model User {
 }
 
 model PetOwner {
-    userId    String  @id @default(cuid())
-    user      User    @relation(fields: [userId], references: [userId])
-    firstName String?
-    lastName  String?
+    userId    String @id @default(cuid())
+    user      User   @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    firstName String
+    lastName  String
 }
 
 model PetSitter {
     userId             String              @id @default(cuid())
-    user               User                @relation(fields: [userId], references: [userId])
+    user               User                @relation(fields: [userId], references: [userId], onDelete: Cascade)
     freelancePetSitter FreelancePetSitter?
     petHotel           PetHotel?
-    verifystatus       Boolean
-    certificationUri   String
+    petTypes           String[]
+    verifyStatus       Boolean
+    certificationUri   String?
 }
 
 model FreelancePetSitter {
     userId    String    @id @default(cuid())
-    petSitter PetSitter @relation(fields: [userId], references: [userId])
-    firstName String?
-    lastName  String?
+    petSitter PetSitter @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    firstName String
+    lastName  String
 }
 
 model PetHotel {
     userId             String    @id @default(cuid())
-    petSitter          PetSitter @relation(fields: [userId], references: [userId])
-    businessLicenseUri String
+    petSitter          PetSitter @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    businessLicenseUri String?
     hotelName          String
 }
 
