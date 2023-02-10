@@ -25,20 +25,35 @@ const RegisterPage: NextPage = () => {
     formState: { errors },
   } = useForm();
   const router = useRouter();
+  const mutation = api.petOwner.create.useMutation();
   const onSubmit = async (data: any) => {
     // TODO: Switch to use create pet owner (with backend API), then sign in if sucess.
-    await signIn("credentials", {
-      redirect: false,
+    await mutation.mutate({
+      user: {
+        username: data.username,
+        password: data.confirmpassword,
+        email: data.email,
+        phoneNumber: data.phone,
+        address: data.address,
+        bankAccount: data.bankno,
+        bankName: data.bankname,
+      },
       petOwner: {
         firstName: data.firstname,
         lastName: data.lastname,
       },
-      email: data.email,
+    });
+    const result = await signIn("credentials", {
+      redirect: false,
       username: data.username,
       password: data.confirmpassword,
-      address: data.address,
-      isRegistration: true,
     });
+    if (result?.ok) {
+      // redict to home page
+      await router.push("/");
+    } else {
+      alert(`Login failed: ${result?.error ?? "unknown error"}`);
+    }
   };
   const [page, setPage] = useState(0);
   if (page === 0)
