@@ -19,23 +19,43 @@ import { PrismaClient, Prisma } from "@prisma/client";
 import { signIn, useSession } from "next-auth/react";
 import Router, { useRouter } from "next/router";
 
-const formDataSchema = z.object({
-  firstname: z.string().min(1),
-  lastname: z.string().min(1),
+// Schema for first page of form
+const formDataSchema1 = z.object({
+  firstname: z.string().min(1, { message: "Required" }),
+  lastname: z.string().min(1, { message: "Required" }),
   email: z.string().email(),
-  address: z.string().min(1),
-  phone: z.string().regex(/^\d{10}$/),
-  username: z.string().min(1),
-  confirmpassword: z.string().min(1),
-  type: z.string().min(1),
-  breed: z.string().min(1),
-  weight: z.string().min(1),
+  address: z.string().min(1, { message: "Required" }),
+  phone: z.string().regex(/^\d{10}$/, { message: "Invalid phone number" }),
+  username: z.string().min(1, { message: "Required" }),
+  password: z.string().min(1, { message: "Required" }),
+  confirmpassword: z.string().min(1, { message: "Required" }),
+  type: z.string().min(1, { message: "Required" }),
+  breed: z.string().min(1, { message: "Required" }),
+  weight: z
+    .string()
+    .trim()
+    .regex(/^\d+/, { message: "Invalid number" })
+    .transform((val) => parseInt(val)),
+});
+// Schema for second page of form
+const formDataSchema2 = z.object({
   cardno: z.string().regex(/^\d{16}$/),
   expdate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   cvv: z.string().regex(/^\d{3}$/),
   bankno: z.string().regex(/^\d{12}$/),
   bankname: z.string(),
 });
+// Schema for entire form, includes validation for password confirmation
+const formDataSchema = formDataSchema1.merge(formDataSchema2).refine(
+  (data) => {
+    return data.password === data.confirmpassword;
+  },
+  {
+    message: "Passwords do not match",
+    path: ["confirmpassword"],
+  }
+);
+// Type for entire form
 type FormData = z.infer<typeof formDataSchema>;
 
 const RegisterPage: NextPage = () => {
@@ -43,19 +63,17 @@ const RegisterPage: NextPage = () => {
     register,
     handleSubmit,
     watch,
+    trigger,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(formDataSchema),
+    mode: "onChange",
   });
-
-  React.useEffect(() => {
-    console.error(errors);
-  }, [errors]);
 
   const router = useRouter();
   const mutation = api.petOwner.create.useMutation();
   const onSubmit = async (data: FormData) => {
-    // TODO: Switch to use create pet owner (with backend API), then sign in if sucess.
+    console.assert(data.password === data.confirmpassword);
     mutation.mutate({
       user: {
         username: data.username,
@@ -170,7 +188,7 @@ const RegisterPage: NextPage = () => {
               </div>
               <div className="flex w-full flex-col">
                 <Input
-                  id="confirmpassword"
+                  id="password"
                   label="Password"
                   register={register}
                   errors={errors}
@@ -226,8 +244,16 @@ const RegisterPage: NextPage = () => {
               <Button>Back</Button>
               <Button
                 type="button"
-                onClick={() => {
-                  setPage(1);
+                onClick={async () => {
+                  // Trigger validation only for field in the first page
+                  const validationResult = await trigger(
+                    formDataSchema1.keyof().options,
+                    { shouldFocus: true }
+                  );
+                  // If validation passes, go to the next page
+                  if (validationResult) {
+                    setPage(1);
+                  }
                 }}
               >
                 Next
