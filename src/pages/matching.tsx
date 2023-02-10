@@ -7,6 +7,7 @@ import SearchBox from "../components/SearchBox";
 import { PrismaClient, User } from "@prisma/client";
 import PetSitterCard from "../components/PetSitterCard";
 import { useForm } from "react-hook-form/dist/useForm";
+import { number } from "zod";
 
 const prisma = new PrismaClient();
 
@@ -26,14 +27,55 @@ const matching: NextPage = (props: any) => {
 
   const [petSitters, setPetSitters] = useState(props.users);
 
+  let apage = [1, 2, 3, 4, 5];
+  const [cpage, setCpage] = useState(0);
+  const Pagelay = () => {
+    const hi = apage.map((element) => {
+      return (
+        <>
+          <div
+            className={
+              "mx-4 mb-5 flex items-center justify-evenly rounded-full text-white transition-all hover:scale-[1.15] " +
+              (element === cpage
+                ? " h-10 w-10 bg-yellow-200 text-sm text-black"
+                : " h-7 w-7 bg-yellow-100 text-sm text-black")
+            }
+            onClick={() => {
+              setCpage(element);
+            }}
+          >
+            <p>{element}</p>
+          </div>
+        </>
+      );
+    });
+    return <>{hi}</>;
+  };
+
+  const onSubmitpage = (e) => {
+    e.preventDefault();
+    setCpage(parseInt(e.target.page.value));
+  };
+
   return (
     <div>
       <Header></Header>
       <SearchBox></SearchBox>
       <div className="flex justify-center pt-5">
         <div className=" w-[60%]    ">
-          <div className="flex justify-center ">
+          <div className="relative flex items-center justify-center ">
             <h1 className="text-2xl font-bold">Results</h1>
+            <form className="absolute right-0 " onSubmit={onSubmitpage}>
+              <label className="mr-2"></label>
+              <input
+                className="absolute right-[5rem] w-[5rem] rounded bg-zinc-100 px-2 py-1 text-center text-sm font-semibold text-[#213951]  hover:bg-white focus:outline-none focus:ring-2 focus:ring-blue-300 "
+                id="page"
+                type="number"
+                min={1}
+                max={5}
+              />
+              <button className="rounded-xl bg-yellow-200 px-2 ">Search</button>
+            </form>
           </div>
           <div className="mt-5 md:grid md:grid-cols-2">
             {petSitters.map((user: any) => (
@@ -45,6 +87,9 @@ const matching: NextPage = (props: any) => {
             <PetSitterCard pet_sitter={null}></PetSitterCard>
             <PetSitterCard pet_sitter={null}></PetSitterCard>
             <PetSitterCard pet_sitter={null}></PetSitterCard>
+          </div>
+          <div className="mt-5 flex items-center  justify-center">
+            <Pagelay />
           </div>
         </div>
       </div>

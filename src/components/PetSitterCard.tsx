@@ -8,6 +8,7 @@ import {
   faW,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import { useState } from "react";
 
 const PetSitterCard = (props: any) => {
   const name = props.pet_sitter ? props.pet_sitter.username : "NAME";
@@ -15,7 +16,7 @@ const PetSitterCard = (props: any) => {
     ? "/profile/" + props.pet_sitter.username
     : "/profile/lmao";
   return (
-    <div className="drop-shadow-md hover:scale-[1.03] ">
+    <div className="drop-shadow-md transition-all hover:scale-[1.03] ">
       <Link
         href={profile_link} // TODO: Link to correct user
         className="m-3 flex h-fit rounded-2xl border border-2 border-solid border-black bg-yellow-50 p-3  transition-colors hover:bg-yellow-200  md:p-5"
