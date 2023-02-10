@@ -12,6 +12,46 @@ import {
 } from "../../../schema/schema";
 
 export const userRouter = createTRPCRouter({
+  getByUsername: publicProcedure
+    .input(z.object({ username: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findFirst({
+        where: {
+          username: input.username,
+        },
+      });
+      const userId = user?.userId;
+      const owner = await ctx.prisma.petOwner.findFirst({
+        where: {
+          userId: userId,
+        },
+      });
+      const sitter = await ctx.prisma.petSitter.findFirst({
+        where: {
+          userId: userId,
+        },
+      });
+      const freelancer = await ctx.prisma.freelancePetSitter.findFirst({
+        where: {
+          userId: userId,
+        },
+      });
+      const hotel = await ctx.prisma.petHotel.findFirst({
+        where: {
+          userId: userId,
+        },
+      });
+      if (owner) return { userType: "PetOwner", ...user, ...owner };
+      if (freelancer)
+        return {
+          userType: "FreelancePetSitter",
+          ...user,
+          ...sitter,
+          ...freelancer,
+        };
+      if (hotel) return { userType: "PetHotel", ...user, ...sitter, ...hotel };
+      return "Something went wrong.";
+    }),
   post: publicProcedure.input(userFields).mutation(({ ctx, input }) => {
     return ctx.prisma.user.create({
       data: input,
