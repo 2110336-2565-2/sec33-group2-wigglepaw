@@ -16,12 +16,14 @@ export const petOwnerRouter = createTRPCRouter({
     }),
 
   //public procedure that get petOwner by name
-  getByFirstName: publicProcedure
-    .input(z.object({ firstname: z.string() }))
+  getByUsername: publicProcedure
+    .input(z.object({ username: z.string() }))
     .query(({ ctx, input }) => {
-      return ctx.prisma.petOwner.findMany({
+      return ctx.prisma.petOwner.findFirst({
         where: {
-          firstName: input.firstname,
+          user: {
+            username: input.username,
+          },
         },
         include: {
           user: true,
