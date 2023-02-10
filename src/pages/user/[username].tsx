@@ -5,20 +5,29 @@ import { useRouter } from "next/router";
 import FreelancePetSitterProfile from "../../components/Profile/FreelancePetSitterProfile";
 import PetHotelProfile from "../../components/Profile/PetHotelProfile";
 import PetOwnerProfile from "../../components/Profile/PetOwnerProfile";
+import { UserType } from "../../types/user";
+import { api } from "../../utils/api";
 
 const Profile: NextPage = () => {
   const router = useRouter();
   const { username } = router.query;
-
   const { data: session, status } = useSession();
   const editable = session?.user?.username
     ? session?.user?.username == username
     : false;
 
-  const userType: number = 1; //TODO: get user type
+  const { data } = api.user.getByUsername.useQuery(
+    { username: typeof username == "string" ? username : "" },
+    {
+      enabled: typeof username === "string",
+    }
+  );
 
-  switch (userType) {
-    case 0:
+  if (data === undefined) return <div>Loading...</div>;
+  if (data === null) return <div>Not found</div>;
+
+  switch (data.userType) {
+    case UserType.PetOwner:
       return (
         <PetOwnerProfile
           username={username}
@@ -26,7 +35,7 @@ const Profile: NextPage = () => {
         ></PetOwnerProfile>
       );
 
-    case 1:
+    case UserType.FreelancePetSitter:
       return (
         <FreelancePetSitterProfile
           username={username}
@@ -34,7 +43,7 @@ const Profile: NextPage = () => {
         ></FreelancePetSitterProfile>
       );
 
-    case 2:
+    case UserType.PetHotel:
       return (
         <PetHotelProfile
           username={username}
