@@ -30,13 +30,23 @@ const matching: NextPage = (props: any) => {
     <div>
       <Header></Header>
       <SearchBox></SearchBox>
-      <div className="mx-auto mt-3 w-fit max-w-md sm:w-1/2">
-        <h1 className="font-bold">Results</h1>
-        {petSitters.map((user: any) => (
-          <PetSitterCard pet_sitter={user}></PetSitterCard>
-        ))}
-        <PetSitterCard pet_sitter={null}></PetSitterCard>
-        <PetSitterCard pet_sitter={null}></PetSitterCard>
+      <div className="flex justify-center pt-5">
+        <div className=" w-[60%]    ">
+          <div className="flex justify-center ">
+            <h1 className="text-2xl font-bold">Results</h1>
+          </div>
+          <div className="mt-5 md:grid md:grid-cols-2">
+            {petSitters.map((user: any) => (
+              <PetSitterCard pet_sitter={user}></PetSitterCard>
+            ))}
+
+            <PetSitterCard pet_sitter={null}></PetSitterCard>
+            <PetSitterCard pet_sitter={null}></PetSitterCard>
+            <PetSitterCard pet_sitter={null}></PetSitterCard>
+            <PetSitterCard pet_sitter={null}></PetSitterCard>
+            <PetSitterCard pet_sitter={null}></PetSitterCard>
+          </div>
+        </div>
       </div>
     </div>
   );
