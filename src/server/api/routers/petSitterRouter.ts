@@ -10,7 +10,6 @@ function searchPetSitterByText(text: string): object{
     OR: [
       { freelancePetSitter: { firstName: { contains: word } } },
       { freelancePetSitter: { lastName: { contains: word } } },
-      { freelancePetSitter: { lastName: { contains: word } } },
       { petHotel: { hotelName: { contains: word } } },
     ]
   }))
@@ -22,11 +21,19 @@ export const petSitterRouter = createTRPCRouter({
   
   searchPetSitter: publicProcedure
   .input(z.object({
-    searchText: z.string(),
+    searchText:       z.string(),
+    searchPriceMin:   z.number(),
+    searchPriceMax:   z.number(),
+    searchLocation:   z.string(),
+    searchTypeOfPet:  z.string(),
   }))
     .query(({ ctx, input }) => {
       return ctx.prisma.petSitter.findMany({
-        where: searchPetSitterByText(input.searchText)
+        where: {
+          AND: [
+            searchPetSitterByText(input.searchText),
+          ]
+    }
       });
     }),
 
