@@ -2,22 +2,16 @@ import * as React from "react";
 import type { NextPage } from "next";
 import { api } from "../utils/api";
 import {
-  FieldErrorsImpl,
-  FieldValues,
+  type FieldErrorsImpl,
   useForm,
-  UseFormRegister,
-  ValidationRule,
+  type UseFormRegister,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { PetKind, User } from "@prisma/client";
-import Link from "next/link";
 import Header from "../components/Header";
 import { useState } from "react";
-import { useCallback } from "react";
-import { PrismaClient, Prisma } from "@prisma/client";
-import { signIn, useSession } from "next-auth/react";
-import Router, { useRouter } from "next/router";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 
 // Schema for first page of form
 const formDataSchema1 = z.object({
@@ -62,7 +56,6 @@ const RegisterPage: NextPage = () => {
   const {
     register,
     handleSubmit,
-    watch,
     trigger,
     formState: { errors },
   } = useForm<FormData>({
