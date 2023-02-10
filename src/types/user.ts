@@ -8,7 +8,7 @@ import {
 /**
  * Used in {@link UserSubType} to identify the type of user.
  */
-export enum UserType {
+export const enum UserType {
   PetOwner = "PetOwner",
   FreelancePetSitter = "FreelancePetSitter",
   PetHotel = "PetHotel",
@@ -23,13 +23,13 @@ export enum UserType {
  */
 export type UserSubType =
   | ({
-      usertype: UserType.PetOwner;
+      userType: UserType.PetOwner;
     } & PetOwner)
   | ({
-      usertype: UserType.FreelancePetSitter;
+      userType: UserType.FreelancePetSitter;
     } & PetSitter &
       FreelancePetSitter)
   | ({
-      usertype: UserType.PetHotel;
+      userType: UserType.PetHotel;
     } & PetSitter &
       PetHotel);
