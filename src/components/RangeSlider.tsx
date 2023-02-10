@@ -11,7 +11,10 @@ interface RangeSliderProps {
 const RangeSlider = ({ setTest, register }: RangeSliderProps) => {
   const [value, setValue] = React.useState([50]);
 
-  React.useEffect(() => {}, [value]);
+  React.useEffect(() => {
+    console.log("ddd");
+    register("priceRange", value[0]);
+  }, [value]);
   // const { onChange, onBlur, name, ref } = register('priceRange', {required: true})
   return (
     <div className="py-4">
@@ -19,7 +22,7 @@ const RangeSlider = ({ setTest, register }: RangeSliderProps) => {
         autoFocus
         id={"jesus"}
         value={value[0]?.toFixed(1)}
-        {...register("priceRange", { required: true })}
+        // {...register("priceRange", { required: true })}
         onChange={() => {
           setTest((prev) => prev);
         }}

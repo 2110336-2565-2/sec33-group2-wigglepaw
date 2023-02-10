@@ -20,6 +20,10 @@ const SearchBox: React.FC = () => {
     watch,
     formState: { errors },
   } = useForm({
+    defaultValues: {
+      name: "gg",
+      priceRange: 30.0,
+    },
     // resolver: zodResolver(formDataSchema),
   });
 
@@ -40,6 +44,9 @@ const SearchBox: React.FC = () => {
     console.log("ewoafj;oiwe");
 
     console.log(watch("priceRange"));
+
+    data.priceRange = test[0]; // way of the CURSE
+
     const hotels = petHotels.data;
     console.log(hotels);
     // console.log(data);
