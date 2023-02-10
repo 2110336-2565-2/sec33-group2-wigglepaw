@@ -11,6 +11,7 @@ import {
   userFields,
 } from "../../../schema/schema";
 import Trpc from "../../../pages/api/trpc/[trpc].js";
+import { UserType } from "../../../types/user.js";
 
 export const userRouter = createTRPCRouter({
   getByUsername: publicProcedure
@@ -34,19 +35,20 @@ export const userRouter = createTRPCRouter({
       if (!user) return null;
       const { petOwner, petSitter, ...userData } = user;
 
-      if (petOwner) return { userType: "PetOwner", ...userData, ...petOwner };
+      if (petOwner)
+        return { userType: UserType.PetOwner, ...userData, ...petOwner };
 
       if (petSitter) {
         const { freelancePetSitter, petHotel, ...petSitterData } = petSitter;
         if (freelancePetSitter)
           return {
-            userType: "FreelancePetSitter",
+            userType: UserType.FreelancePetSitter,
             ...userData,
             ...petSitterData,
             ...freelancePetSitter,
           };
         return {
-          userType: "PetHotel",
+          userType: UserType.PetHotel,
           ...userData,
           ...petSitterData,
           ...petHotel,
@@ -79,19 +81,20 @@ export const userRouter = createTRPCRouter({
       if (!user) return null;
       const { petOwner, petSitter, ...userData } = user;
 
-      if (petOwner) return { userType: "PetOwner", ...userData, ...petOwner };
+      if (petOwner)
+        return { userType: UserType.PetOwner, ...userData, ...petOwner };
 
       if (petSitter) {
         const { freelancePetSitter, petHotel, ...petSitterData } = petSitter;
         if (freelancePetSitter)
           return {
-            userType: "FreelancePetSitter",
+            userType: UserType.FreelancePetSitter,
             ...userData,
             ...petSitterData,
             ...freelancePetSitter,
           };
         return {
-          userType: "PetHotel",
+          userType: UserType.PetHotel,
           ...userData,
           ...petSitterData,
           ...petHotel,
@@ -124,19 +127,20 @@ export const userRouter = createTRPCRouter({
       if (!user) return null;
       const { petOwner, petSitter, ...userData } = user;
 
-      if (petOwner) return { userType: "PetOwner", ...userData, ...petOwner };
+      if (petOwner)
+        return { userType: UserType.PetOwner, ...userData, ...petOwner };
 
       if (petSitter) {
         const { freelancePetSitter, petHotel, ...petSitterData } = petSitter;
         if (freelancePetSitter)
           return {
-            userType: "FreelancePetSitter",
+            userType: UserType.FreelancePetSitter,
             ...userData,
             ...petSitterData,
             ...freelancePetSitter,
           };
         return {
-          userType: "PetHotel",
+          userType: UserType.PetHotel,
           ...userData,
           ...petSitterData,
           ...petHotel,
