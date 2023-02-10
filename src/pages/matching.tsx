@@ -6,8 +6,10 @@ import SearchBox from "../components/SearchBox";
 
 import { PrismaClient, User } from "@prisma/client";
 import PetSitterCard from "../components/PetSitterCard";
-import { useForm } from "react-hook-form/dist/useForm";
+
 import { number } from "zod";
+import { useForm } from "react-hook-form";
+import SearchResult from "../components/SearchResult";
 
 const prisma = new PrismaClient();
 
@@ -56,6 +58,13 @@ const matching: NextPage = (props: any) => {
     e.preventDefault();
     setCpage(parseInt(e.target.page.value));
   };
+  const useFormReturn = useForm({
+    defaultValues: {
+      name: "lnwJoZa",
+      priceRange: 50.0,
+    },
+    // resolver: zodResolver(formDataSchema),
+  });
 
   return (
     <div>
@@ -93,6 +102,8 @@ const matching: NextPage = (props: any) => {
           </div>
         </div>
       </div>
+      <SearchBox useFormReturn={useFormReturn}></SearchBox>
+      <SearchResult useFormReturn={useFormReturn} />
     </div>
   );
 };

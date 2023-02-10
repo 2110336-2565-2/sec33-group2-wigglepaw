@@ -1,34 +1,31 @@
 import { useRouter } from "next/router";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, useForm, UseFormReturn } from "react-hook-form";
 import { api } from "../utils/api";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import RangeSlider from "./RangeSlider";
 import TmpRangeSlider from "./TmpRangeSlider";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { SearchValues } from "../common/interfaces";
 
-const SearchBox: React.FC = () => {
+interface SearchBoxProps {
+  useFormReturn: UseFormReturn<SearchValues>;
+}
+
+const SearchBox: React.FC<SearchBoxProps> = ({ useFormReturn }) => {
   // const formDataSchema = z.object({
   //   name: z.string().trim().min(1),
   //   priceRange: z.number(),
   // });
 
   // type FormData = z.infer<typeof formDataSchema>;
-
   const {
     register,
     setValue,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      name: "lnwJoZa",
-      priceRange: 50.0,
-    },
-    // resolver: zodResolver(formDataSchema),
-  });
+  } = useFormReturn;
 
   // // TODO: how to get the params from the form and send it as a params to the useQuery ?
   // const petSitters = api.petSitter.searchPetSitter.useQuery({
@@ -112,7 +109,6 @@ const SearchBox: React.FC = () => {
           </input> */}
 
           <RangeSlider register={register} setValue={setValue} />
-          <>{watch("priceRange")}</>
 
           <button
             type="submit"

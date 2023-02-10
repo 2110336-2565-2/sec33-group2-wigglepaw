@@ -1,3 +1,4 @@
+import { PetSitter, User } from "@prisma/client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import {
@@ -10,10 +11,15 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 
-const PetSitterCard = (props: any) => {
-  const name = props.pet_sitter ? props.pet_sitter.username : "NAME";
-  const profile_link = props.pet_sitter
-    ? "/profile/" + props.pet_sitter.username
+interface PetSitterCardProps {
+  pet_sitter: (PetSitter & { user: User }) | null;
+}
+
+const PetSitterCard = ({ pet_sitter }: PetSitterCardProps) => {
+  const name = pet_sitter ? pet_sitter.user.username : "NAME";
+  const petTypes = pet_sitter ? pet_sitter.petTypes : ["Husky"];
+  const profile_link = pet_sitter
+    ? "/profile/" + pet_sitter.user.username
     : "/profile/lmao";
   return (
     <div className="drop-shadow-md transition-all hover:scale-[1.03] ">
@@ -37,7 +43,9 @@ const PetSitterCard = (props: any) => {
           </div>
           <div className="flex items-center">
             <FontAwesomeIcon icon={faPaw} />
-            <p className=" ml-[0.7rem]"> Husky</p>
+            <p className=" ml-[0.7rem]">
+              {petTypes.map((petType) => `${petType} `)}
+            </p>
           </div>
           <div className="flex items-center">
             <FontAwesomeIcon icon={faStar} />
