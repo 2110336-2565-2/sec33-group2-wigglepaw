@@ -2,41 +2,98 @@ import * as React from "react";
 import type { NextPage } from "next";
 import { api } from "../utils/api";
 import {
-  FieldValues,
+  type FieldErrorsImpl,
   useForm,
-  UseFormRegister,
-  ValidationRule,
+  type UseFormRegister,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { PetKind, User } from "@prisma/client";
-import Link from "next/link";
 import Header from "../components/Header";
 import { useState } from "react";
-import { useCallback } from "react";
-import { PrismaClient, Prisma } from '@prisma/client'
-import { signIn, useSession } from "next-auth/react";
-import Router, { useRouter } from "next/router";
-const registerPage: NextPage = () => {
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
+
+// Schema for first page of form
+const formDataSchema1 = z.object({
+  firstname: z.string().min(1, { message: "Required" }),
+  lastname: z.string().min(1, { message: "Required" }),
+  email: z.string().email(),
+  address: z.string().min(1, { message: "Required" }),
+  phone: z.string().regex(/^\d{10}$/, { message: "Invalid phone number" }),
+  username: z.string().min(1, { message: "Required" }),
+  password: z.string().min(1, { message: "Required" }),
+  confirmpassword: z.string().min(1, { message: "Required" }),
+  type: z.string().min(1, { message: "Required" }),
+  breed: z.string().min(1, { message: "Required" }),
+  weight: z
+    .string()
+    .trim()
+    .regex(/^\d+/, { message: "Invalid number" })
+    .transform((val) => parseInt(val)),
+});
+// Schema for second page of form
+const formDataSchema2 = z.object({
+  cardno: z.string().regex(/^\d{16}$/),
+  expdate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  cvv: z.string().regex(/^\d{3}$/),
+  bankno: z.string().regex(/^\d{12}$/),
+  bankname: z.string(),
+});
+// Schema for entire form, includes validation for password confirmation
+const formDataSchema = formDataSchema1.merge(formDataSchema2).refine(
+  (data) => {
+    return data.password === data.confirmpassword;
+  },
+  {
+    message: "Passwords do not match",
+    path: ["confirmpassword"],
+  }
+);
+// Type for entire form
+type FormData = z.infer<typeof formDataSchema>;
+
+const RegisterPage: NextPage = () => {
   const {
     register,
     handleSubmit,
-    watch,
+    trigger,
     formState: { errors },
-  } = useForm();
-  const router=useRouter();
-  const onSubmit = async(data:any)=>{await signIn("credentials", {
-    redirect: false,
-    petOwner:{
-      firstName:data.firstname,
-      lastName:data.lastname
-    },
-    email: data.email,
-    username: data.username,
-    password: data.confirmpassword,
-    address:data.address,
-    isRegistration: true,
-  })};
+  } = useForm<FormData>({
+    resolver: zodResolver(formDataSchema),
+    mode: "onChange",
+  });
+
+  const router = useRouter();
+  const mutation = api.petOwner.create.useMutation();
+  const onSubmit = async (data: FormData) => {
+    console.assert(data.password === data.confirmpassword);
+    mutation.mutate({
+      user: {
+        username: data.username,
+        password: data.confirmpassword,
+        email: data.email,
+        phoneNumber: data.phone,
+        address: data.address,
+        bankAccount: data.bankno,
+        bankName: data.bankname,
+      },
+      petOwner: {
+        firstName: data.firstname,
+        lastName: data.lastname,
+      },
+    });
+    const result = await signIn("credentials", {
+      redirect: false,
+      username: data.username,
+      password: data.confirmpassword,
+    });
+    if (result?.ok) {
+      // redict to home page
+      await router.push("/");
+    } else {
+      alert(`Login failed: ${result?.error ?? "unknown error"}`);
+    }
+  };
   const [page, setPage] = useState(0);
   if (page === 0)
     return (
@@ -48,7 +105,7 @@ const registerPage: NextPage = () => {
           <img src="/Ipage1-2.png" width={468} height={315} alt="cat" />
         </div>
         <Header></Header>
-        <div className="flex h-full flex-col items-center">
+        <div className="mt-4 flex h-full flex-col items-center">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex h-full w-1/2 flex-col items-center justify-evenly"
@@ -65,6 +122,7 @@ const registerPage: NextPage = () => {
                     label="First Name*"
                     placeholder="Mohnke"
                     register={register}
+                    errors={errors}
                     validationRules={{ required: true }}
                   />
                 </div>
@@ -74,6 +132,7 @@ const registerPage: NextPage = () => {
                     label="Last Name*"
                     placeholder="Jesus"
                     register={register}
+                    errors={errors}
                     validationRules={{ required: true }}
                   />
                 </div>
@@ -83,6 +142,7 @@ const registerPage: NextPage = () => {
                   id="email"
                   label="Email*"
                   register={register}
+                  errors={errors}
                   placeholder="someone@gmail.com"
                   validationRules={{ required: true }}
                   type="email"
@@ -94,6 +154,7 @@ const registerPage: NextPage = () => {
                   label="Address*"
                   placeholder="xxxxxxxxxxxxxxxxx"
                   register={register}
+                  errors={errors}
                   validationRules={{ required: true }}
                 />
               </div>
@@ -103,6 +164,7 @@ const registerPage: NextPage = () => {
                   label="Phone No.*"
                   placeholder="0123456789"
                   register={register}
+                  errors={errors}
                   validationRules={{ required: true }}
                   type="tel"
                 />
@@ -113,14 +175,16 @@ const registerPage: NextPage = () => {
                   label="Username"
                   placeholder="เจ้าแม่กวนตีน"
                   register={register}
+                  errors={errors}
                   validationRules={{ required: true }}
                 />
               </div>
               <div className="flex w-full flex-col">
                 <Input
-                  id="confirmpassword"
+                  id="password"
                   label="Password"
                   register={register}
+                  errors={errors}
                   validationRules={{ required: true }}
                   type="password"
                 />
@@ -130,6 +194,7 @@ const registerPage: NextPage = () => {
                   id="confirmpassword"
                   label="Confirm Password"
                   register={register}
+                  errors={errors}
                   validationRules={{ required: true }}
                   type="password"
                 />
@@ -141,6 +206,7 @@ const registerPage: NextPage = () => {
                     label="Type of pet* :"
                     placeholder="Dogs"
                     register={register}
+                    errors={errors}
                     validationRules={{ required: true }}
                   />
                 </div>
@@ -150,6 +216,7 @@ const registerPage: NextPage = () => {
                     label="Breed of pet* :"
                     placeholder="Corgi"
                     register={register}
+                    errors={errors}
                     validationRules={{ required: true }}
                   />
                 </div>
@@ -159,6 +226,7 @@ const registerPage: NextPage = () => {
                     label="Weight of pet* :"
                     placeholder="5-10 kg"
                     register={register}
+                    errors={errors}
                     validationRules={{ required: true }}
                     type="number"
                   />
@@ -169,8 +237,16 @@ const registerPage: NextPage = () => {
               <Button>Back</Button>
               <Button
                 type="button"
-                onClick={() => {
-                  setPage(1);
+                onClick={async () => {
+                  // Trigger validation only for field in the first page
+                  const validationResult = await trigger(
+                    formDataSchema1.keyof().options,
+                    { shouldFocus: true }
+                  );
+                  // If validation passes, go to the next page
+                  if (validationResult) {
+                    setPage(1);
+                  }
                 }}
               >
                 Next
@@ -190,7 +266,7 @@ const registerPage: NextPage = () => {
         <div className="absolute top-[20%] right-0 -z-10 ">
           <img src="/Ipage2-2.png" width={200} height={315} alt="cat" />
         </div>
-        <div className="h-full items-center">
+        <div className="mt-4 h-full items-center">
           <div className="w-full items-center ">
             <h1 className="mt-8 flex justify-center text-3xl font-bold">
               Register Pet Owner
@@ -216,6 +292,7 @@ const registerPage: NextPage = () => {
                     label="Card No.*"
                     placeholder="xxxx xxxx xxxx xxxx"
                     register={register}
+                    errors={errors}
                     validationRules={{ required: true }}
                     type="number"
                   />
@@ -227,6 +304,7 @@ const registerPage: NextPage = () => {
                     id="expdate"
                     label="Expiration Date*"
                     register={register}
+                    errors={errors}
                     validationRules={{ required: true }}
                     type="date"
                   />
@@ -236,6 +314,7 @@ const registerPage: NextPage = () => {
                     id="cvv"
                     label="CVV / CVN*"
                     register={register}
+                    errors={errors}
                     validationRules={{ required: true }}
                     type="number"
                   />
@@ -255,6 +334,7 @@ const registerPage: NextPage = () => {
                     label="Bank No.*"
                     placeholder="xxx-x-xxxxx-x"
                     register={register}
+                    errors={errors}
                     type="number"
                     validationRules={{ required: true }}
                   />
@@ -264,6 +344,7 @@ const registerPage: NextPage = () => {
                     id="bankname"
                     label="Bank Name*"
                     register={register}
+                    errors={errors}
                     validationRules={{ required: true }}
                     placeholder="ABC"
                   />
@@ -312,9 +393,10 @@ const registerPage: NextPage = () => {
 };
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  id: string;
+  id: keyof FormData;
   label: string;
-  register: UseFormRegister<FieldValues>; // declare register props
+  register: UseFormRegister<FormData>; // declare register props
+  errors: FieldErrorsImpl<FormData>; // declare errors props
   validationRules?: object;
 }
 
@@ -326,6 +408,7 @@ const Input: React.FC<InputProps> = ({
   id,
   label,
   register,
+  errors,
   validationRules,
   type = "text",
   ...rest
@@ -340,6 +423,8 @@ const Input: React.FC<InputProps> = ({
       {...rest}
       {...register(id, validationRules)}
     />
+
+    <span className="text-sm text-red-500">{errors[id]?.message}</span>
   </>
 );
 
@@ -352,4 +437,4 @@ const Button: React.FC<ButtonProps> = ({ children, ...props }) => (
   </button>
 );
 
-export default registerPage;
+export default RegisterPage;

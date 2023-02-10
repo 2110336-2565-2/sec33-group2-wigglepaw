@@ -57,7 +57,6 @@ const LoginPage: NextPage = () => {
             className="w-full rounded px-1"
           />
           <p className="text-[1rem] text-red-400">{errors.username?.message}</p>
-
           <h1 className="font-semibold">Password</h1>
           <input
             {...register("password", { required: true })}
