@@ -7,30 +7,57 @@ import Header from "../components/Header";
 
 const Home: NextPage = () => {
   return (
-    <div className="w-screen h-screen bg-bg-main -z-10">
-    
+    <div className="-z-10 h-screen w-screen bg-bg-main">
       <Header></Header>
-    
-      <div className="center-thing h-[80%]" >
-      <div className="absolute right-[-5%] bottom-0 -z-0 ">
-          <img src="/dogwalking.png" width={560} height={560}  className="invisible md:visible" alt="cat" />
+
+      <div className="center-thing h-[80%]">
+        <div className="absolute right-[-5%] bottom-0 -z-0 ">
+          <img
+            src="/dogwalking.png"
+            width={560}
+            height={560}
+            className="invisible md:visible"
+            alt="cat"
+          />
         </div>
         <div className="absolute left-[10%] top-[20%] -z-0 ">
-          <img src="/dogpaw1.png" width={160} height={160}  className="invisible md:visible" alt="cat" />
+          <img
+            src="/dogpaw1.png"
+            width={160}
+            height={160}
+            className="invisible md:visible"
+            alt="cat"
+          />
         </div>
         <div className="absolute right-[5%] bottom-[30%] -z-0 ">
-          <img src="/dogpaw1.png" width={140} height={140}  className="invisible md:visible" alt="cat" />
+          <img
+            src="/dogpaw1.png"
+            width={140}
+            height={140}
+            className="invisible md:visible"
+            alt="cat"
+          />
         </div>
         <div className="absolute right-[0%] top-[40%] -z-0 ">
-          <img src="/dogpaw2.png" width={80} height={80}  className="invisible md:visible" alt="cat" />
+          <img
+            src="/dogpaw2.png"
+            width={80}
+            height={80}
+            className="invisible md:visible"
+            alt="cat"
+          />
         </div>
         <div className="absolute left-[0%] top-[30%] -z-0 ">
-          <img src="/dogpaw3.png" width={120} height={120}  className="invisible md:visible" alt="cat" />
+          <img
+            src="/dogpaw3.png"
+            width={120}
+            height={120}
+            className="invisible md:visible"
+            alt="cat"
+          />
         </div>
-        
-      
-    
-        <div className="mx-5 grid h-[60%]  w-[55%] grid-cols-3 grid-rows-5 shadow-2xl rounded-2xl bg-bg-box-main px-6 py-4 ">
+
+        <div className="mx-5 grid h-[60%]  w-[55%] grid-cols-3 grid-rows-5 rounded-2xl bg-bg-box-main px-6 py-4 shadow-2xl ">
           <h1 className="center-thing col-span-3 row-span-2 text-[3rem]">
             &quot;Let us take care your loves&quot;
           </h1>
@@ -45,12 +72,12 @@ const Home: NextPage = () => {
 
           <div className="center-thing w-full">
             <Link href="/match=?pet_freelance" className="find-link rounded-xl">
-              Finding Pet Sitter >
+              Finding Pet Sitter &gt;
             </Link>
           </div>
           <div className="center-thing w-full">
             <Link href="/match=?pet_hotel" className="find-link rounded-xl">
-              Finding Pet Hotel >
+              Finding Pet Hotel &gt;
             </Link>
           </div>
           <div className="center-thing w-full">
@@ -58,12 +85,9 @@ const Home: NextPage = () => {
               Register Pet Owner (temp)
             </Link>
           </div>
-          </div>
-   
+        </div>
       </div>
     </div>
-    
-   
   );
 };
 
