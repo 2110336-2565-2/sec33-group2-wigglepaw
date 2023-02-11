@@ -139,7 +139,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
                   defaultValue={`${props.user.phoneNumber}`}
                   placeholder="Phone Number"
                   className="profile-input"
-                  {...register("phoenNumber", { required: true })}
+                  {...register("phoneNumber", { required: true })}
                 />
               </p>
               <p className="data-field">
