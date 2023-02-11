@@ -49,12 +49,13 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
           <h1 className="mx-auto my-1 text-center text-2xl font-semibold">
             {props.user.username}
           </h1>
+          {/* TODO: Only display for owner of profile */}
           {props.editable && (
             <button
-              onClick={() => setEditing(!editing)}
-              className="mx-auto flex whitespace-nowrap rounded-2xl bg-sky-700 px-3 py-1 text-center font-semibold text-white hover:bg-sky-600"
+              onClick={() => setEditing(true)}
+              className="profile-edit-button"
             >
-              Edit my profile{" "}
+              Edit my profile&nbsp;
               <HiPencilAlt className="mt-auto mb-[0.2rem] ml-1 fill-white" />
             </button>
           )}
@@ -63,64 +64,99 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
         {!editing && (
           <div className="justify-auto mt-2 flex w-screen flex-wrap rounded-md border-[3px] border-sky-500 p-2 md:mt-0 md:w-3/5">
             <p className="data-field">
-              <HiUserCircle className="profile-icon" /> Name: Jhon Swogvagen
+              <HiUserCircle className="profile-icon" />
+              &nbsp;Name: {props.user.firstName} {props.user.lastName}
             </p>
             <p className="data-field">
-              <HiPhone className="profile-icon" /> Phone: 0123456789
+              <HiPhone className="profile-icon" />
+              &nbsp;Phone: {props.user.phoneNumber}
             </p>
             <p className="data-field">
               <HiMap className="profile-icon" />
-              &nbsp;Address: 254 Phaya Thai Rd, Wang Mai, Khet Pathum Wan, Krung
-              Thep Maha Nakhon 10330
+              &nbsp;Address: {props.user.address}
             </p>
             <p className="data-field">
               <HiAtSymbol className="profile-icon" />
-              &nbsp;Email: wiggle-paw@chula.ac.th
+              &nbsp;Email: {props.user.email}
             </p>
             <p className="data-field">
-              <IoPaw className="profile-icon" /> Pet Types:{" "}
+              <IoPaw className="profile-icon" />
+              &nbsp;Pet Types:{" "}
+              {props.user.petTypes.map((petType) => `${petType} `)}
             </p>
           </div>
         )}
         {editing && (
           <div className="justify-auto mt-2 flex w-screen flex-wrap rounded-md border-[3px] border-sky-500 p-2 md:mt-0 md:w-3/5">
-            {/* <div >
+            <form onSubmit={handleSubmit(onSubmit)}>
+              {/* register your input into the hook by invoking the "register" function */}
               <p className="data-field">
-                <HiUserCircle className="profile-icon" /> Name: Jhon Swogvagen
+                <HiUserCircle className="profile-icon" />
+                &nbsp;Name:&nbsp;
+                <input
+                  defaultValue={`${props.user.firstName} ${props.user.lastName}`}
+                  placeholder="Name"
+                  className="profile-input"
+                  {...register("firstNameLastName", { required: true })}
+                />
               </p>
               <p className="data-field">
-                <HiPhone className="profile-icon" /> Phone: 0123456789
+                <HiPhone className="profile-icon" />
+                &nbsp;Phone:&nbsp;
+                <input
+                  defaultValue={`${props.user.phoneNumber}`}
+                  placeholder="Phone Number"
+                  className="profile-input"
+                  {...register("phoenNumber", { required: true })}
+                />
               </p>
               <p className="data-field">
                 <HiMap className="profile-icon" />
-                &nbsp;Address: 254 Phaya Thai Rd, Wang Mai, Khet Pathum Wan,
-                Krung Thep Maha Nakhon 10330
+                &nbsp;Address:&nbsp;
+                <textarea
+                  defaultValue={`${props.user.address}`}
+                  placeholder="Address"
+                  className="profile-input max-h-40 min-h-[2rem]"
+                  {...register("address", { required: true })}
+                />
               </p>
               <p className="data-field">
                 <HiAtSymbol className="profile-icon" />
-                &nbsp;Email: wiggle-paw@chula.ac.th
+                &nbsp;Email:&nbsp;
+                <input
+                  defaultValue={`${props.user.email}`}
+                  placeholder="Email"
+                  className="profile-input"
+                  {...register("email", { required: true })}
+                />
               </p>
               <p className="data-field">
-                <IoPaw className="profile-icon" /> Pet Types:{" "}
-              </p>
-            </div> */}
-            <form onSubmit={handleSubmit(onSubmit)}>
-              {/* register your input into the hook by invoking the "register" function */}
-
-              <p className="data-field flex">
-                <HiUserCircle className="profile-icon" /> Name:&nbsp;
+                <IoPaw className="profile-icon" />
+                &nbsp;Pet Types:&nbsp;
                 <input
-                  defaultValue="Jhon Swogvagen"
-                  placeholder="Name"
-                  className="inline w-full"
-                  {...register("firstName", { required: true })}
+                  defaultValue={`${props.user.petTypes}`}
+                  placeholder="Pet Types"
+                  className="profile-input"
+                  {...register("petTypes", { required: true })}
                 />
               </p>
 
               {/* errors will return when field validation fails  */}
               {errors.exampleRequired && <span>This field is required</span>}
 
-              <input type="submit" />
+              <div className="mt-3 flex">
+                <button
+                  onClick={() => setEditing(false)}
+                  className="profile-edit-button bg-red-600 hover:bg-red-500"
+                >
+                  Cancel
+                </button>
+                <input
+                  className="profile-edit-button"
+                  type="submit"
+                  value="Save profile"
+                />
+              </div>
             </form>
           </div>
         )}
