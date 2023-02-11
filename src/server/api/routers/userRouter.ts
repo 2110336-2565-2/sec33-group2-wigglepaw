@@ -190,7 +190,7 @@ export const userRouter = createTRPCRouter({
 
   update: publicProcedure
     .input(z.object({ userId: z.string(), data: userFields }))
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const update = ctx.prisma.user.update({
         where: {
           userId: input.userId,
