@@ -74,7 +74,7 @@ export const petOwnerRouter = createTRPCRouter({
     .input(
       z.object({
         userId: z.string(),
-        data: petOwnerFields,
+        data: petOwnerFields.partial(),
       })
     )
     .mutation(async ({ ctx, input }) => {

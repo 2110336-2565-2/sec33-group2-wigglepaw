@@ -146,7 +146,7 @@ export const userRouter = createTRPCRouter({
     }),
 
   update: publicProcedure
-    .input(z.object({ userId: z.string(), data: userFields }))
+    .input(z.object({ userId: z.string(), data: userFields.partial() }))
     .mutation(async ({ ctx, input }) => {
       const update = ctx.prisma.user.update({
         where: {
