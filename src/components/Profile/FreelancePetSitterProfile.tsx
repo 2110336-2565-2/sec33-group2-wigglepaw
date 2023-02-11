@@ -50,7 +50,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
             {props.user.username}
           </h1>
           {/* TODO: Only display for owner of profile */}
-          {props.editable && (
+          {props.editable && !editing && (
             <button
               onClick={() => setEditing(true)}
               className="profile-edit-button"
