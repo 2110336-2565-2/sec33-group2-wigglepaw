@@ -5,12 +5,14 @@ import { createTRPCContext } from "../../../server/api/trpc";
 import { appRouter } from "../../../server/api/root";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+
 import {
   freelancePetSitterFields,
   petSitterFields,
   userFields,
+  searchField,
 } from "../../../schema/schema";
-import * as logic from "../logic/petSitterRouter";
+import * as searchLogic from "../logic/search";
 
 const zodUserFields = z.object({
   verifyStatus: z.boolean(),
@@ -30,27 +32,19 @@ export const petSitterRouter = createTRPCRouter({
       return update;
     }),
   searchPetSitter: publicProcedure
-    .input(
-      z.object({
-        searchName: z.string().default(""),
-        searchRating: z.number().nullable().default(null),
-        searchPriceMin: z.number().nullable().default(null),
-        searchPriceMax: z.number().nullable().default(null),
-        searchLocation: z.string().default(""),
-        searchPetTypes: z.string().default(""),
-        searchStartSchedule: z.string().default(""),
-        searchEndSchedule: z.string().default(""),
-      })
-    )
-    .query(({ ctx, input }) => {
-      return ctx.prisma.petSitter.findMany({
+    .input(searchField)
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.petSitter.findMany({
         where: {
           AND: [
-            logic.searchPetSitterByText(input.searchName),
-            logic.searchPetSitterByPriceMin(input.searchPriceMin),
-            logic.searchPetSitterByPriceMax(input.searchPriceMax),
-            logic.searchPetSitterByPetTypes(input.searchPetTypes),
+            searchLogic.searchByName(input.searchName),
+            searchLogic.searchByPriceMin(input.searchPriceMin),
+            searchLogic.searchByPriceMax(input.searchPriceMax),
+            searchLogic.searchBySinglePetType(input.searchPetType),
           ],
+        },
+        select: {
+          userId: true,
         },
       });
     }),

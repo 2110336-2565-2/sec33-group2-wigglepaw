@@ -1,5 +1,5 @@
 // search by first name, last name, hotel name
-export function searchPetSitterByText(text: string): object {
+export function searchByName(text: string): object {
   if (text == "") return {};
   const words = text.split(" ");
   return {
@@ -16,7 +16,7 @@ export function searchPetSitterByText(text: string): object {
 }
 // only show if petsitter endPrice is greater than input price(Min)
 // null endPrice will be exclude if searchPriceMin isn't null
-export function searchPetSitterByPriceMin(searchPriceMin: number): object {
+export function searchByPriceMin(searchPriceMin: number | null): object {
   if (searchPriceMin == null) return {};
   return {
     endPrice: {
@@ -26,9 +26,7 @@ export function searchPetSitterByPriceMin(searchPriceMin: number): object {
 }
 // only show if petsitter startPrice is less than input price(Max)
 // null startPrice will be exclude if searchPriceMax isn't null
-export function searchPetSitterByPriceMax(
-  searchPriceMax: number | null
-): object {
+export function searchByPriceMax(searchPriceMax: number | null): object {
   if (searchPriceMax == null) return {};
   return {
     startPrice: {
@@ -37,7 +35,7 @@ export function searchPetSitterByPriceMax(
   };
 }
 // input as "cat dog bird", uncomplete string input like "ca do ird" won't be able to get expected result
-export function searchPetSitterByPetTypes(text: string): object {
+export function searchByPetTypes(text: string): object {
   if (text == "") return {};
   const petTypes = text.split(" ");
   return {
@@ -47,7 +45,7 @@ export function searchPetSitterByPetTypes(text: string): object {
   };
 }
 // search by single name "cat", "dog" etc.
-export function searchPetSitterByPetTypesSingle(petType: string): object {
+export function searchBySinglePetType(petType: string): object {
   if (petType == "") return {};
   return {
     petTypes: {
