@@ -16,6 +16,8 @@ interface PetSitterCardProps {
 }
 
 const PetSitterCard = ({ pet_sitter }: PetSitterCardProps) => {
+  console.log("yoyo");
+  console.log(pet_sitter);
   const name = pet_sitter ? pet_sitter.user.username : "NAME";
   const petTypes = pet_sitter ? pet_sitter.petTypes : ["Husky"];
   const profile_link = pet_sitter

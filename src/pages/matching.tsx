@@ -27,7 +27,7 @@ const matching: NextPage = (props: any) => {
   // const users = props.users;
   const pageNum = 1;
 
-  const [petSitters, setPetSitters] = useState(props.users);
+  const [petSitters, setPetSitters] = useState();
 
   let apage = [1, 2, 3, 4, 5];
   const [cpage, setCpage] = useState(0);
@@ -62,6 +62,7 @@ const matching: NextPage = (props: any) => {
     defaultValues: {
       name: "lnwJoZa",
       priceRange: 50.0,
+      sortby: "",
     },
     // resolver: zodResolver(formDataSchema),
   });
@@ -69,7 +70,12 @@ const matching: NextPage = (props: any) => {
   return (
     <div>
       <Header></Header>
-      <SearchBox></SearchBox>
+      <div className="flex justify-center">
+        <SearchBox
+          useFormReturn={useFormReturn}
+          setPetSitters={setPetSitters}
+        ></SearchBox>
+      </div>
       <div className="flex justify-center pt-5">
         <div className=" w-[60%]    ">
           <div className="relative flex items-center justify-center ">
@@ -87,7 +93,7 @@ const matching: NextPage = (props: any) => {
             </form>
           </div>
           <div className="mt-5 md:grid md:grid-cols-2">
-            {petSitters.map((user: any) => (
+            {petSitters?.map((user: any) => (
               <PetSitterCard pet_sitter={user}></PetSitterCard>
             ))}
 
@@ -102,8 +108,6 @@ const matching: NextPage = (props: any) => {
           </div>
         </div>
       </div>
-      <SearchBox useFormReturn={useFormReturn}></SearchBox>
-      <SearchResult useFormReturn={useFormReturn} />
     </div>
   );
 };

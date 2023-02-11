@@ -7,12 +7,15 @@ import RangeSlider from "./RangeSlider";
 import TmpRangeSlider from "./TmpRangeSlider";
 import { SetStateAction, useState } from "react";
 import { SearchValues } from "../common/interfaces";
-
 interface SearchBoxProps {
   useFormReturn: UseFormReturn<SearchValues>;
+  setPetSitters: React.Dispatch<any>;
 }
 
-const SearchBox: React.FC<SearchBoxProps> = ({ useFormReturn }) => {
+const SearchBox: React.FC<SearchBoxProps> = ({
+  useFormReturn,
+  setPetSitters,
+}) => {
   // const formDataSchema = z.object({
   //   name: z.string().trim().min(1),
   //   priceRange: z.number(),
@@ -33,6 +36,11 @@ const SearchBox: React.FC<SearchBoxProps> = ({ useFormReturn }) => {
     username: watch("name") as string,
   });
 
+  const petHotelsSort = api.petHotel.getByUsernameSortby.useQuery({
+    username: watch("name") as string,
+    sortby: watch("sortby") as string,
+  });
+
   const router = useRouter();
   const petSitterType = router.query["petSitterType"];
 
@@ -42,7 +50,11 @@ const SearchBox: React.FC<SearchBoxProps> = ({ useFormReturn }) => {
     // data.priceRange = test[0]; // way of the CURSE --FIXED
 
     const hotels = petHotels.data;
-    console.log(hotels);
+    //console.log(hotels);
+
+    //กุเครียด  DATA คืออะไรไปดูที่ back ด้วยโว้ย  หยุดจำทุกอย่าง .data แล้วหวังว่ามันจะมีผลลัพธ์
+    console.log(petHotelsSort.data?.petSitter.user?.username);
+    setPetSitters(petHotelsSort.data);
 
     // alert data
     alert(JSON.stringify(data));
@@ -53,39 +65,41 @@ const SearchBox: React.FC<SearchBoxProps> = ({ useFormReturn }) => {
   };
 
   return (
-    <div className="border- mx-auto w-3/5 min-w-fit bg-sky-200 p-4">
-      <h1>Search for {petSitterType}</h1>
-      <div>
-        {/* <form> */}
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <label htmlFor="name">Name</label>
-          <br />
-          <input
-            placeholder="BaanMaewMaa"
-            {...register("name", { required: true })}
-          />
-          <br />
-          {/* check into required true*/}
+    <form className="w-[60%]" onSubmit={handleSubmit(onSubmit)}>
+      <div className="grid  grid-cols-2">
+        <div className="border- flex w-full  min-w-fit justify-start bg-sky-200 p-4">
+          <div>
+            <h1>Search for {petSitterType}</h1>
+            {/* <form> */}
 
-          <label htmlFor="location">Location</label>
-          <br />
-          <input type="text" id="location" />
-          <br />
-          <label htmlFor="petType">Pet Type</label>
-          <br />
-          <input type="text" id="petType" list="petName" />
-          <datalist id="petName">
-            <option value="Cat">Cat</option>
-            <option value="Dog">Dog</option>
-            <option value="Bird">Bird</option>
-          </datalist>
-          <br />
+            <label htmlFor="name">Name</label>
+            <br />
+            <input
+              placeholder="BaanMaewMaa"
+              {...register("name", { required: true })}
+            />
+            <br />
+            {/* check into required true*/}
 
-          {/* TODO: passed a state onto the inner component of the range slider*/}
+            <label htmlFor="location">Location</label>
+            <br />
+            <input type="text" id="location" />
+            <br />
+            <label htmlFor="petType">Pet Type</label>
+            <br />
+            <input type="text" id="petType" list="petName" />
+            <datalist id="petName">
+              <option value="Cat">Cat</option>
+              <option value="Dog">Dog</option>
+              <option value="Bird">Bird</option>
+            </datalist>
+            <br />
 
-          {/* slider is work in progress */}
-          {/* <div> */}
-          {/* <label htmlFor="priceRange">Price Range</label>
+            {/* TODO: passed a state onto the inner component of the range slider*/}
+
+            {/* slider is work in progress */}
+            {/* <div> */}
+            {/* <label htmlFor="priceRange">Price Range</label>
 
             <input type="range"
               min="0"
@@ -96,32 +110,46 @@ const SearchBox: React.FC<SearchBoxProps> = ({ useFormReturn }) => {
               }}
             /> */}
 
-          {/* <RangeSlider/> */}
-          {/* <TmpRangeSlider/> */}
-          {/* </div> */}
+            {/* <RangeSlider/> */}
+            {/* <TmpRangeSlider/> */}
+            {/* </div> */}
 
-          <label>Price Range</label>
-          {/* <input type="range"
+            <label>Price Range</label>
+            {/* <input type="range"
           {...(register("priceRange", {required: true})) }
 
           >
 
           </input> */}
 
-          <RangeSlider register={register} setValue={setValue} />
+            <RangeSlider register={register} setValue={setValue} />
 
-          <button
-            type="submit"
-            // type='button'
-            value="Submit"
-            className="rounded-full bg-sky-700 px-4 py-2 font-bold text-white transition-colors hover:bg-sky-600"
-            // onClick={handleSubmit(onSubmit)}
-          >
-            test
-          </button>
-        </form>
+            <button
+              type="submit"
+              // type='button'
+              value="Submit"
+              className="rounded-full bg-sky-700 px-4 py-2 font-bold text-white transition-colors hover:bg-sky-600"
+              // onClick={handleSubmit(onSubmit)}
+            >
+              test
+            </button>
+          </div>
+        </div>
+        <div className="border- mx-auto w-full min-w-fit bg-sky-200 p-4">
+          <h1>Sort By</h1>
+          <div className="flex items-center">
+            <select
+              className="mr-2 w-3/5"
+              {...register("sortby", { required: true })}
+            >
+              <option value="name">Name</option>
+              <option value="pettype">Rating</option>
+              <option value="price">Price</option>
+            </select>
+          </div>
+        </div>
       </div>
-    </div>
+    </form>
   );
 };
 
