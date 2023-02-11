@@ -13,13 +13,16 @@ import { IoPaw } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { User, PetSitter, FreelancePetSitter } from "@prisma/client";
-
+import { api } from "../../utils/api";
 type FreelancePetSitterProfileProps = {
   editable: boolean;
   user: User & PetSitter & FreelancePetSitter;
 };
 
 const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
+  const updateFreelancePetSitter = api.freelancePetSitter.update.useMutation();
+  const updatePetSitter = api.petSitter.update.useMutation();
+  const updateUser = api.user.update.useMutation();
   const [editing, setEditing] = useState(false);
 
   const {
@@ -28,9 +31,32 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
     watch,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = async (data: any) => {
+    console.log(data);
+    const [firstName, lastName] = data.firstNameLastName.split(" ");
+    const petTypesArray = data.petTypes.split(",");
+    updateFreelancePetSitter.mutate({
+      userId: props.user.userId,
+      data: { firstName: firstName, lastName: lastName },
+    });
+    updatePetSitter.mutate({
+      userId: props.user.userId,
+      data: {
+        petTypes: petTypesArray,
+        verifyStatus: props.user.verifyStatus,
+      },
+    });
+    updateUser.mutate({
+      userId: props.user.userId,
+      data: {
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        address: data.address,
+      },
+    });
 
-  console.log(watch("example"));
+    setEditing(false);
+  };
 
   // TODO: Remove once done
   // Show the user data, for dev and debug
@@ -81,7 +107,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
             </p>
             <p className="data-field">
               <IoPaw className="profile-icon" />
-              &nbsp;Pet Types:{" "}
+              &nbsp;Pet Types:&nbsp;
               {props.user.petTypes.map((petType) => `${petType} `)}
             </p>
           </div>
