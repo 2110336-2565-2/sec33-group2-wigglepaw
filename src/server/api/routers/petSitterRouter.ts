@@ -33,17 +33,39 @@ export const petSitterRouter = createTRPCRouter({
     }),
   // searchPetSitter
   // input:
+  // note that all args default value will act as those fields are not in search criteria
+  // read more about default value on searchField
   //   searchName: @string name such as "john smith"
   //   searchRating: @number not implement yet
-  //   searchPriceMin: @number minimum price that user is ok with
-  //   searchPriceMax: @number maximum price that user is ok with
-  //   searchLocation: @string not implement yet
-  //   searchPetType: @string pet types such as "cat dog" it will return petsitter that have both cat and dog
+  //   searchPriceMin:  @number minimum price that user is ok with
+  // searchPriceMin can be null and default is null   ( also endPrice )
+  // table below show when petsitter will be in search result (✓ mean show in result)
+  // +---------------+------+---------------+
+  // | input  \   db | null | num(endPrice) |
+  // +---------------+------+---------------+
+  // | null          | ✓    | ✓            |
+  // +---------------+------+---------------+
+  // | num(priceMin) | x    |  if endPrice  |
+  // |               |      |  >  priceMin  |
+  // +---------------+------+---------------+
+  //   searchPriceMax:  @number maximum price that user is ok with
+  //   searchLocation:  @string not implement yet
+  //   searchPetType:   @string pet types such as "cat dog" it will return petsitter that have both cat and dog
   //   searchStartSchedule: @string not implement yet
-  //   searchEndSchedule: @string not implement yet
-  //   searchIncludePetHotelFlag: @boolean if you want to inclde pet hotel in search result then set it to true
+  //   searchEndSchedule:   @string not implement yet
+  //   searchIncludePetHotelFlag: @boolean if you want to include pet hotel in search result then set it to true
   //   searchIncludeFreelancePetSitterFlag: @boolean if you want to inclde FreelancePetSitter in search result then set it to true
-    
+  // table to show how to set value of searchIncludePetHotelFlag and searchIncludeFreelancePetSitterFlag
+  // +-------------------------------+---------------------------+-------------------------------------+
+  // | want to seach for \ args name | searchIncludePetHotelFlag | searchIncludeFreelancePetSitterFlag |
+  // +-------------------------------+---------------------------+-------------------------------------+
+  // | pet hotel                     | true                      | false                               |
+  // +-------------------------------+---------------------------+-------------------------------------+
+  // | freelance                     | false                     | true                                |
+  // +-------------------------------+---------------------------+-------------------------------------+
+  // | all                           | true                      | true                                |
+  // +-------------------------------+---------------------------+-------------------------------------+
+
   // output:
   //   list of object that only contain user id that match search input
   //   example:
