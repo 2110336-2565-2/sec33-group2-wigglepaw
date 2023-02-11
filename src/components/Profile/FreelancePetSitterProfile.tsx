@@ -20,6 +20,7 @@ type FreelancePetSitterProfileProps = {
 };
 
 const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
+  const utils = api.useContext();
   const updateFreelancePetSitter = api.freelancePetSitter.update.useMutation();
   const updatePetSitter = api.petSitter.update.useMutation();
   const updateUser = api.user.update.useMutation();
@@ -34,25 +35,30 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
   const onSubmit = async (data: any) => {
     console.log(data);
     const [firstName, lastName] = data.firstNameLastName.split(" ");
-    const petTypesArray = data.petTypes.split(",");
-    updateFreelancePetSitter.mutate({
+    const petTypesArray: string[] = data.petTypes.split(",");
+    await updateFreelancePetSitter.mutateAsync({
       userId: props.user.userId,
       data: { firstName: firstName, lastName: lastName },
     });
-    updatePetSitter.mutate({
+    await updatePetSitter.mutateAsync({
       userId: props.user.userId,
       data: {
         petTypes: petTypesArray,
         verifyStatus: props.user.verifyStatus,
       },
     });
-    updateUser.mutate({
+    await updateUser.mutateAsync({
       userId: props.user.userId,
       data: {
         email: data.email,
         phoneNumber: data.phoneNumber,
         address: data.address,
       },
+    });
+    // Refetch user data
+    console.log("Invalidating cache");
+    await utils.user.getByUsername.invalidate({
+      username: props.user.username,
     });
 
     setEditing(false);
