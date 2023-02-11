@@ -51,4 +51,6 @@ export const searchField = z.object({
   searchPetType: z.string().default(""),
   searchStartSchedule: z.string().default(""),
   searchEndSchedule: z.string().default(""),
+  searchIncludePetHotelFlag: z.boolean().default(true),
+  searchIncludeFreelancePetSitterFlag: z.boolean().default(true),
 });
