@@ -31,6 +31,26 @@ export const petSitterRouter = createTRPCRouter({
       });
       return update;
     }),
+  // searchPetSitter
+  // input:
+  //   searchName: @string name such as "john smith"
+  //   searchRating: @number not implement yet
+  //   searchPriceMin: @number minimum price that user is ok with
+  //   searchPriceMax: @number maximum price that user is ok with
+  //   searchLocation: @string not implement yet
+  //   searchPetType: @string pet types such as "cat dog" it will return petsitter that have both cat and dog
+  //   searchStartSchedule: @string not implement yet
+  //   searchEndSchedule: @string not implement yet
+  //   searchIncludePetHotelFlag: @boolean if you want to inclde pet hotel in search result then set it to true
+  //   searchIncludeFreelancePetSitterFlag: @boolean if you want to inclde FreelancePetSitter in search result then set it to true
+    
+  // output:
+  //   list of object that only contain user id that match search input
+  //   example:
+  //   [
+  //     { "userId": "cldzsm2n6000z7k083zwda6b1" },
+  //     { "userId": "cldzsm3tt00137k08lt9r3rfs" },
+  //   ]
   searchPetSitter: publicProcedure
     .input(searchField)
     .query(async ({ ctx, input }) => {
