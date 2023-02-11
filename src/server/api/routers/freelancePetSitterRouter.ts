@@ -151,7 +151,7 @@ export const freelancePetSitterRouter = createTRPCRouter({
 
   update: publicProcedure
     .input(z.object({ userId: z.string(), data: freelancePetSitterFields }))
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const update = await prisma?.freelancePetSitter.update({
         where: {
           userId: input.userId,

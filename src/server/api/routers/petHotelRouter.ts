@@ -152,7 +152,7 @@ export const petHotelRouter = createTRPCRouter({
 
   update: publicProcedure
     .input(z.object({ userId: z.string(), data: petHotelFields }))
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const update = await prisma?.petHotel.update({
         where: {
           userId: input.userId,
