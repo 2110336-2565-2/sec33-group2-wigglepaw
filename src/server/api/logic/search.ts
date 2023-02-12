@@ -1,7 +1,6 @@
 // search by first name, last name, hotel name
-export function searchByName(text: string): object {
-  if (text == "") return {};
-  const words = text.split(" ");
+export function searchByName(words: string[]): object {
+  if (words === undefined || words.length == 0) return {};
   return {
     AND: [
       ...words.map((word) => ({
@@ -34,6 +33,7 @@ export function searchByPriceMax(searchPriceMax: number | null): object {
     },
   };
 }
+// searchByPetTypes isn't used
 // input as "cat dog bird", uncomplete string input like "ca do ird" won't be able to get expected result
 export function searchByPetTypes(text: string): object {
   if (text == "") return {};

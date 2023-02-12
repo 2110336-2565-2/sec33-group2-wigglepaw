@@ -43,7 +43,7 @@ export const freelancePetSitterFields = z.object({
 });
 
 export const searchField = z.object({
-  searchName: z.string().default(""),
+  searchNameList: z.array(z.string()).default([]),
   searchRating: z.number().nullable().default(null),
   searchPriceMin: z.number().nullable().default(null),
   searchPriceMax: z.number().nullable().default(null),
@@ -53,4 +53,5 @@ export const searchField = z.object({
   searchEndSchedule: z.string().default(""),
   searchIncludePetHotelFlag: z.boolean().default(true),
   searchIncludeFreelancePetSitterFlag: z.boolean().default(true),
+  searchSortBy: z.string().default(""),
 });

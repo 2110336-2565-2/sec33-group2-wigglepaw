@@ -35,7 +35,7 @@ export const petSitterRouter = createTRPCRouter({
   // input:
   // note that all args default value will act as those fields are not in search criteria
   // read more about default value on searchField
-  //   searchName: @string name such as "john smith"
+  //   searchNameList: @string list of name such as ["john", "smith"]
   //   searchRating: @number not implement yet
   //   searchPriceMin:  @number minimum price that user is ok with
   // searchPriceMin can be null and default is null   ( also endPrice )
@@ -50,7 +50,7 @@ export const petSitterRouter = createTRPCRouter({
   // +---------------+------+---------------+
   //   searchPriceMax:  @number maximum price that user is ok with
   //   searchLocation:  @string not implement yet
-  //   searchPetType:   @string pet types such as "cat dog" it will return petsitter that have both cat and dog
+  //   searchPetType:   @string pet type such as "cat" it will return petsitter that have cat inp pet types
   //   searchStartSchedule: @string not implement yet
   //   searchEndSchedule:   @string not implement yet
   //   searchIncludePetHotelFlag: @boolean if you want to include pet hotel in search result then set it to true
@@ -79,7 +79,7 @@ export const petSitterRouter = createTRPCRouter({
       return await ctx.prisma.petSitter.findMany({
         where: {
           AND: [
-            searchLogic.searchByName(input.searchName),
+            searchLogic.searchByName(input.searchNameList),
             searchLogic.searchByPriceMin(input.searchPriceMin),
             searchLogic.searchByPriceMax(input.searchPriceMax),
             searchLogic.searchBySinglePetType(input.searchPetType),
@@ -89,8 +89,13 @@ export const petSitterRouter = createTRPCRouter({
             ),
           ],
         },
-        select: {
-          userId: true,
+        // select: {
+        //   userId: true,
+        // },
+        include: {
+          user: true,
+          petHotel: true,
+          freelancePetSitter: true,
         },
       });
     }),
