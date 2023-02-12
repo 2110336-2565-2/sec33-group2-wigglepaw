@@ -89,13 +89,8 @@ export const petSitterRouter = createTRPCRouter({
             ),
           ],
         },
-        // select: {
-        //   userId: true,
-        // },
-        include: {
-          user: true,
-          petHotel: true,
-          freelancePetSitter: true,
+        select: {
+          userId: true,
         },
       });
     }),
