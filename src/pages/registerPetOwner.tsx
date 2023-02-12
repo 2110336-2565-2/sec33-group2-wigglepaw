@@ -36,7 +36,7 @@ const formDataSchema2 = z.object({
   cardno: z.string().regex(/^\d{16}$/),
   expdate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   cvv: z.string().regex(/^\d{3}$/),
-  bankno: z.string().regex(/^\d{12}$/),
+  bankno: z.string(), //.regex(/^\d{12}$/),
   bankname: z.string(),
 });
 // Schema for entire form, includes validation for password confirmation
