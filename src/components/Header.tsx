@@ -29,7 +29,7 @@ const Header = () => {
             WigglePaw
           </h1>
         </Link>
-        <ul className="invisible my-auto ml-auto sm:visible">
+        <ul className="my-auto ml-auto hidden sm:block">
           <li className="header-li">
             <div className="header-li-div">
               <Link
