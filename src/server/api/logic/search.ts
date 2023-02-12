@@ -49,7 +49,7 @@ export function searchBySinglePetType(petType: string): object {
   if (petType == "") return {};
   return {
     petTypes: {
-      contains: petType,
+      has: petType,
     },
   };
 }
