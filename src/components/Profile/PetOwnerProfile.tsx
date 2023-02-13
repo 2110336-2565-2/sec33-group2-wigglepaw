@@ -20,7 +20,7 @@ type PetOwnerProfileProps = {
   user: User & PetOwner;
 };
 
-const formDataSchema1 = z.object({
+const formDataSchema = z.object({
   firstNameLastName: z.string().min(1),
   phoneNumber: z
     .string()
@@ -29,7 +29,7 @@ const formDataSchema1 = z.object({
   email: z.string().email(),
 });
 
-type FormData = z.infer<typeof formDataSchema1>;
+type FormData = z.infer<typeof formDataSchema>;
 
 const PetOwnerProfile = (props: PetOwnerProfileProps) => {
   const updatePetOwner = api.petOwner.update.useMutation();
@@ -43,7 +43,7 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
     watch,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(formDataSchema1),
+    resolver: zodResolver(formDataSchema),
     mode: "onSubmit",
   });
   const onSubmit = async (data: FormData) => {

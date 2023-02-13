@@ -21,7 +21,7 @@ type FreelancePetSitterProfileProps = {
   user: User & PetSitter & FreelancePetSitter;
 };
 
-const formDataSchemaFreelancePetSitter = z.object({
+const formDataSchema = z.object({
   firstNameLastName: z.string().min(1),
   phoneNumber: z
     .string()
@@ -31,7 +31,7 @@ const formDataSchemaFreelancePetSitter = z.object({
   petTypes: z.string(),
 });
 
-type FormData = z.infer<typeof formDataSchemaFreelancePetSitter>;
+type FormData = z.infer<typeof formDataSchema>;
 
 const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
   const utils = api.useContext();
@@ -46,7 +46,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
     watch,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(formDataSchemaFreelancePetSitter),
+    resolver: zodResolver(formDataSchema),
     mode: "onSubmit",
   });
   const onSubmit = async (data: any) => {
