@@ -60,9 +60,10 @@ const matching: NextPage = (props: any) => {
   };
   const useFormReturn = useForm({
     defaultValues: {
-      name: "lnwJoZa",
+      name: "lnwThutZa",
       priceRange: 50.0,
       sortby: "",
+      petSitterType: "",
     },
     // resolver: zodResolver(formDataSchema),
   });

@@ -56,4 +56,35 @@ export const petSitterRouter = createTRPCRouter({
         },
       });
     }),
+  getByUsernameSortby: publicProcedure
+    .input(
+      z.object({
+        username: z.string(),
+        sortby: z.string(),
+        petSitterType: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      console.log("gg:   ", input);
+
+      //PAI JOBS
+      const user = await ctx.prisma.user.findMany({
+        where: {
+          username: input.username,
+        },
+      });
+      const userId = user?.userId;
+      const sitter = await ctx.prisma.petSitter.findMany({
+        where: {
+          userId: userId,
+        },
+      });
+      const petHotel = await ctx.prisma.petHotel.findMany({
+        where: {
+          userId: userId,
+        },
+      });
+      const ans = { ...petHotel, petSitter: { ...sitter, user: user } };
+      return petHotel == null ? null : ans;
+    }),
 });

@@ -36,9 +36,10 @@ const SearchBox: React.FC<SearchBoxProps> = ({
     username: watch("name") as string,
   });
 
-  const petHotelsSort = api.petHotel.getByUsernameSortby.useQuery({
+  const petSitterSort = api.petSitter.getByUsernameSortby.useQuery({
     username: watch("name") as string,
     sortby: watch("sortby") as string,
+    petSitterType: watch("petSitterType") as string,
   });
 
   const router = useRouter();
@@ -53,8 +54,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
     //console.log(hotels);
 
     //กุเครียด  DATA คืออะไรไปดูที่ back ด้วยโว้ย  หยุดจำทุกอย่าง .data แล้วหวังว่ามันจะมีผลลัพธ์
-    console.log(petHotelsSort.data?.petSitter.user?.username);
-    setPetSitters(petHotelsSort.data);
+    //console.log(petHotelsSort.data?.petSitter.user?.username);
+    //setPetSitters(petHotelsSort.data);
 
     // alert data
     alert(JSON.stringify(data));
@@ -138,13 +139,19 @@ const SearchBox: React.FC<SearchBoxProps> = ({
         <div className="border- mx-auto w-full min-w-fit bg-sky-200 p-4">
           <h1>Sort By</h1>
           <div className="flex items-center">
-            <select
-              className="mr-2 w-3/5"
-              {...register("sortby", { required: true })}
-            >
+            <select className="mr-2 w-3/5" {...register("sortby")}>
               <option value="name">Name</option>
               <option value="pettype">Rating</option>
               <option value="price">Price</option>
+            </select>
+          </div>
+        </div>
+        <div className="border- mx-auto w-full min-w-fit bg-sky-200 p-4">
+          <h1>Sort By2</h1>
+          <div className="flex items-center">
+            <select className="mr-2 w-3/5" {...register("petSitterType")}>
+              <option value="hotel">Pet Hotel</option>
+              <option value="freelance">Freelance</option>
             </select>
           </div>
         </div>

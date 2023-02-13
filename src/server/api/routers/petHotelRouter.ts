@@ -111,18 +111,18 @@ export const petHotelRouter = createTRPCRouter({
       console.log("gg:   ", input);
 
       //PAI JOBS
-      const user = await ctx.prisma.user.findFirst({
+      const user = await ctx.prisma.user.findMany({
         where: {
           username: input.username,
         },
       });
       const userId = user?.userId;
-      const sitter = await ctx.prisma.petSitter.findFirst({
+      const sitter = await ctx.prisma.petSitter.findMany({
         where: {
           userId: userId,
         },
       });
-      const petHotel = await ctx.prisma.petHotel.findFirst({
+      const petHotel = await ctx.prisma.petHotel.findMany({
         where: {
           userId: userId,
         },
