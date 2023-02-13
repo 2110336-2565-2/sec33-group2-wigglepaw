@@ -57,33 +57,28 @@ const Home: NextPage = () => {
           />
         </div>
 
-        <div className="mx-5 grid h-[60%]  w-[55%] grid-cols-3 grid-rows-5 rounded-2xl bg-bg-box-main px-6 py-4 shadow-2xl ">
-          <h1 className="center-thing col-span-3 row-span-2 text-[3rem]">
+        <div className="mx-5 grid h-[60%]  w-[75%] grid-cols-3 grid-rows-5 rounded-2xl bg-bg-box-main px-6 py-4 shadow-2xl md:w-[50%] ">
+          <h1 className="center-thing col-span-3 row-span-2 text-[2rem]">
             &quot;Let us take care your loves&quot;
           </h1>
-          <hr className="center-thing testt h-1 w-full rounded border-0 bg-gray-100 dark:bg-gray-700 md:my-10" />
-          <h2 className="center-thing col-span-1 mb-4 w-full text-[2.2rem]">
+
+          <hr className="center-thing testt invisible h-1 w-full rounded md:visible  md:my-10" />
+          <h2 className="center-thing col-span-1 mt-3 w-full text-[1.3rem]">
             WigglePaw
           </h2>
-          <hr className="center-thing testt h-1 w-full rounded border-0 bg-gray-100 dark:bg-gray-700 md:my-10" />
-          <h3 className="items-top col-span-3 flex w-full justify-center text-[1.5rem]">
+          <hr className="center-thing testt invisible h-1 w-full rounded md:visible md:my-10" />
+          <h3 className="items-top col-span-3 flex w-full justify-center text-[1rem]">
             A matching platform for pet sitters and pet owners
           </h3>
-
-          <div className="center-thing w-full">
-            <Link href="/match=?pet_freelance" className="find-link rounded-xl">
-              Finding Pet Sitter &gt;
-            </Link>
-          </div>
-          <div className="center-thing w-full">
-            <Link href="/match=?pet_hotel" className="find-link rounded-xl">
-              Finding Pet Hotel &gt;
-            </Link>
-          </div>
-          <div className="center-thing w-full">
-            <Link href="/registerPetOwner" className="find-link rounded-xl">
-              Register Pet Owner (temp)
-            </Link>
+          <div className="col-span-3 grid grid-cols-1">
+            <div className="center-thing  w-full ">
+              <Link
+                href="/match=?pet_freelance"
+                className="find-link rounded-xl"
+              >
+                Finding Pet Sitter &gt;
+              </Link>
+            </div>
           </div>
         </div>
       </div>

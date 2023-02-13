@@ -9,6 +9,7 @@ import { PetKind } from "@prisma/client";
 import Header from "../components/Header";
 import { signIn, useSession } from "next-auth/react";
 import Router, { useRouter } from "next/router";
+import Link from "next/link";
 
 const LoginPage: NextPage = () => {
   const router = useRouter();
@@ -47,8 +48,11 @@ const LoginPage: NextPage = () => {
   return (
     <div className="flex flex-col gap-2">
       <Header></Header>
-      <div className="my-[10vh] mx-auto flex rounded-xl bg-slate-300 p-6 text-xl ">
-        <form onSubmit={handleSubmit(onSubmit)} className="w-fit leading-10 ">
+      <div className="my-[10vh] mx-auto rounded-xl bg-slate-300 px-6 py-3 text-xl ">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="w-fit border-b-2 border-b-gray-400 pb-3 leading-10"
+        >
           <h1 className="font-semibold">Username</h1>
           <input
             {...register("username", { required: true })}
@@ -62,7 +66,7 @@ const LoginPage: NextPage = () => {
             {...register("password", { required: true })}
             placeholder="********"
             type="password"
-            className="w-full rounded p-1"
+            className="w-full rounded px-1"
           />
           <p className="text-[1rem] text-red-400">{errors.password?.message}</p>
           {/*errors. && <span>This field is required</span>*/}
@@ -70,6 +74,20 @@ const LoginPage: NextPage = () => {
             Login
           </button>
         </form>
+        <div className="wrap mx-auto mt-3 flex w-[10rem] flex-wrap items-center">
+          <Link
+            href="/registerPetOwner"
+            className="my-1 flex h-fit w-[10rem] justify-center rounded-lg bg-green-700 p-2 text-base font-semibold text-white transition-all hover:bg-green-600"
+          >
+            Register Pet Owner
+          </Link>
+          <Link
+            href="/registerPetSitter"
+            className="my-1 flex h-fit w-[10rem] justify-center rounded-lg bg-green-700 p-2 text-base font-semibold text-white transition-all hover:bg-green-600"
+          >
+            Register Pet Sitter
+          </Link>
+        </div>
       </div>
     </div>
   );
