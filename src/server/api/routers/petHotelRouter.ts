@@ -29,12 +29,10 @@ export const petHotelRouter = createTRPCRouter({
               user: {
                 create: input.user,
               },
-              verifyStatus: input.petSitter.verifyStatus,
-              certificationUri: input.petSitter.certificationUri,
+              ...input.petSitter,
             },
           },
           ...input.petHotel,
-          businessLicenseUri: input.petHotel.businessLicenseUri,
         },
         include: {
           petSitter: {
@@ -178,8 +176,8 @@ export const petHotelRouter = createTRPCRouter({
     }),
 
   update: publicProcedure
-    .input(z.object({ userId: z.string(), data: petHotelFields }))
-    .query(async ({ ctx, input }) => {
+    .input(z.object({ userId: z.string(), data: petHotelFields.partial() }))
+    .mutation(async ({ ctx, input }) => {
       const update = await prisma?.petHotel.update({
         where: {
           userId: input.userId,

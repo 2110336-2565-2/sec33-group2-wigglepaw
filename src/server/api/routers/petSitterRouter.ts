@@ -19,7 +19,7 @@ const zodUserFields = z.object({
 export const petSitterRouter = createTRPCRouter({
   update: publicProcedure
     .input(z.object({ userId: z.string(), data: petSitterFields }))
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const update = await prisma?.petSitter.update({
         where: {
           userId: input.userId,
@@ -27,64 +27,5 @@ export const petSitterRouter = createTRPCRouter({
         data: { ...input.data },
       });
       return update;
-    }),
-
-  dummySearchPetSitter: publicProcedure.query(({ ctx }) =>
-    ctx.prisma.petSitter.findMany({ include: { user: true } })
-  ),
-
-  searchPetSitter: publicProcedure
-    .input(
-      z.object({
-        searchText: z.string(),
-      })
-    )
-    .query(({ ctx, input }) => {
-      const words = input.searchText.split(" ");
-      return ctx.prisma.petSitter.findMany({
-        where: {
-          AND: words.map((word) => ({
-            OR: [
-              { freelancePetSitter: { firstName: { contains: word } } },
-              { freelancePetSitter: { lastName: { contains: word } } },
-              { petHotel: { hotelName: { contains: word } } },
-            ],
-          })),
-        },
-        include: {
-          user: true,
-        },
-      });
-    }),
-  getByUsernameSortby: publicProcedure
-    .input(
-      z.object({
-        username: z.string(),
-        sortby: z.string(),
-        petSitterType: z.string(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      console.log("gg:   ", input);
-
-      //PAI JOBS
-      const user = await ctx.prisma.user.findMany({
-        where: {
-          username: input.username,
-        },
-      });
-      const userId = user?.userId;
-      const sitter = await ctx.prisma.petSitter.findMany({
-        where: {
-          userId: userId,
-        },
-      });
-      const petHotel = await ctx.prisma.petHotel.findMany({
-        where: {
-          userId: userId,
-        },
-      });
-      const ans = { ...petHotel, petSitter: { ...sitter, user: user } };
-      return petHotel == null ? null : ans;
     }),
 });

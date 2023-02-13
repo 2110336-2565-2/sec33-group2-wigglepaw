@@ -8,6 +8,7 @@ const Header = () => {
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated";
   const logout = () => signOut();
+  const username = session?.user?.username;
 
   const [openRegister, setOpen] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
@@ -15,9 +16,10 @@ const Header = () => {
   const toggleProfile = () => setOpenProfile(!openProfile);
 
   const router = useRouter();
+  const asPath = router.asPath;
 
   return (
-    <span className="mb-4 flex h-fit w-full bg-sky-900 pr-2">
+    <span className="mb-4 flex h-fit w-screen bg-sky-900 pr-2">
       <nav className="flex w-full">
         <Link href={"/"} className="flex shrink-0">
           <div className="relative m-2 flex h-[4rem] w-[5rem]">
@@ -27,14 +29,14 @@ const Header = () => {
             WigglePaw
           </h1>
         </Link>
-        <ul className="invisible my-auto ml-auto sm:visible">
+        <ul className="my-auto ml-auto hidden sm:block">
           <li className="header-li">
             <div className="header-li-div">
               <Link
                 href="/about"
                 className={
                   "header-a" +
-                  `${router.pathname == "/about" ? " header-at-page" : ""}`
+                  `${asPath.includes("/about") ? " header-at-page" : ""}`
                 }
               >
                 About
@@ -48,7 +50,7 @@ const Header = () => {
                   href="/login"
                   className={
                     "header-a" +
-                    `${router.pathname == "/login" ? " header-at-page" : ""}`
+                    `${asPath.includes("/login") ? " header-at-page" : ""}`
                   }
                 >
                   Login
@@ -63,7 +65,7 @@ const Header = () => {
                   href="/help"
                   className={
                     "header-a" +
-                    `${router.pathname == "/help" ? " header-at-page" : ""}`
+                    `${asPath.includes("/help") ? " header-at-page" : ""}`
                   }
                 >
                   Help
@@ -80,9 +82,7 @@ const Header = () => {
             className={
               "header-a my-auto h-fit" +
               `${
-                router.pathname.includes(
-                  "/registerPetOwner" || "/registerPetSitter"
-                )
+                asPath.includes("/registerPetOwner" || "/registerPetSitter")
                   ? " header-at-page"
                   : ""
               }`
@@ -91,7 +91,7 @@ const Header = () => {
             Register
           </button>
           <div
-            className="absolute top-full right-0 rounded bg-slate-300 px-2 py-1"
+            className="absolute top-full right-0 z-30 rounded bg-slate-300 px-2 py-1"
             hidden={!openRegister}
           >
             <Link href="/registerPetOwner" className="header-register-link">
@@ -103,20 +103,20 @@ const Header = () => {
           </div>
         </div>
       )}
-      {!isLoggedIn && (
+      {!isLoggedIn && status != "loading" && (
         <div className="relative my-auto sm:hidden">
           <button onClick={toggleRegister} className="header-a my-auto h-fit">
             Menu
           </button>
           <div
-            className="absolute top-full right-0 rounded bg-slate-300 px-2 py-1"
+            className="absolute top-full right-0 z-30 rounded bg-slate-300 px-2 py-1"
             hidden={!openRegister}
           >
             <Link
               href="/about"
               className={
                 "header-register-link bg-sky-700 hover:bg-sky-600" +
-                `${router.pathname == "/about" ? " header-at-page" : ""}`
+                `${asPath.includes("/about") ? " header-at-page" : ""}`
               }
             >
               About
@@ -126,7 +126,7 @@ const Header = () => {
               className={
                 "header-register-link" +
                 `${
-                  router.pathname == "/login"
+                  asPath == "/login"
                     ? " header-at-page"
                     : " bg-sky-700 hover:bg-sky-600"
                 }`
@@ -139,7 +139,7 @@ const Header = () => {
               className={
                 "header-register-link" +
                 `${
-                  router.pathname.includes("/registerPetOwner")
+                  asPath.includes("/registerPetOwner")
                     ? " header-at-page text-green-700"
                     : ""
                 }`
@@ -152,7 +152,7 @@ const Header = () => {
               className={
                 "header-register-link" +
                 `${
-                  router.pathname.includes("/registerPetSitter")
+                  asPath.includes("/registerPetSitter")
                     ? " header-at-page text-green-700"
                     : ""
                 }`
@@ -170,17 +170,27 @@ const Header = () => {
               <Image src={"/profile_icon.png"} alt={"Icon"} fill></Image>
             </button>
             <div
-              className="absolute top-full right-0 rounded bg-slate-300 px-2 py-1"
+              className="absolute top-full right-0 z-30 rounded bg-slate-300 px-2 py-1"
               hidden={!openProfile}
             >
-              <Link href="/profile" className="header-menu-link">
+              <Link
+                href={`/user/${username}`}
+                className={
+                  "header-menu-link" +
+                  `${
+                    asPath.includes("/user/" + username)
+                      ? " header-at-page"
+                      : ""
+                  }`
+                }
+              >
                 Profile
               </Link>
               <Link
                 href="/about"
                 className={
                   "header-menu-link sm:hidden" +
-                  `${router.pathname == "/about" ? " header-at-page" : ""}`
+                  `${asPath.includes("/about") ? " header-at-page" : ""}`
                 }
               >
                 About
@@ -189,7 +199,7 @@ const Header = () => {
                 href="/help"
                 className={
                   "header-menu-link sm:hidden" +
-                  `${router.pathname == "/help" ? " header-at-page" : ""}`
+                  `${asPath.includes("/help") ? " header-at-page" : ""}`
                 }
               >
                 Help

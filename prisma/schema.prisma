@@ -107,6 +107,8 @@ model PetSitter {
     petTypes           String[]
     verifyStatus       Boolean
     certificationUri   String?
+    startPrice         Float?
+    endPrice           Float?
 }
 
 model FreelancePetSitter {

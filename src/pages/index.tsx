@@ -7,21 +7,79 @@ import Header from "../components/Header";
 
 const Home: NextPage = () => {
   return (
-    <div>
+    <div className="-z-10 h-screen w-screen bg-bg-main">
       <Header></Header>
-      <div className="mx-auto w-2/5">
-        <h1 className="text-2xl">&quot;Let us take care your loves&quot;</h1>
-        <h2 className="text-xl">WigglePaw</h2>
-        <h3>A matching platform for pet sitters and pet owners</h3>
-        <br />
-        {/* TODO Sent Link to matching pages */}
-        <div className="flex">
-          <Link href="/matching?petSitterType=pet_sitter" className="find-link">
-            Finding Pet Sitter
-          </Link>
-          <Link href="/matching?petSitterType=pet_hotel" className="find-link">
-            Finding Pet Hotel
-          </Link>
+
+      <div className="center-thing h-[80%]">
+        <div className="absolute right-[-5%] bottom-0 -z-0 ">
+          <img
+            src="/dogwalking.png"
+            width={560}
+            height={560}
+            className="invisible md:visible"
+            alt="cat"
+          />
+        </div>
+        <div className="absolute left-[10%] top-[20%] -z-0 ">
+          <img
+            src="/dogpaw1.png"
+            width={160}
+            height={160}
+            className="invisible md:visible"
+            alt="cat"
+          />
+        </div>
+        <div className="absolute right-[5%] bottom-[30%] -z-0 ">
+          <img
+            src="/dogpaw1.png"
+            width={140}
+            height={140}
+            className="invisible md:visible"
+            alt="cat"
+          />
+        </div>
+        <div className="absolute right-[0%] top-[40%] -z-0 ">
+          <img
+            src="/dogpaw2.png"
+            width={80}
+            height={80}
+            className="invisible md:visible"
+            alt="cat"
+          />
+        </div>
+        <div className="absolute left-[0%] top-[30%] -z-0 ">
+          <img
+            src="/dogpaw3.png"
+            width={120}
+            height={120}
+            className="invisible md:visible"
+            alt="cat"
+          />
+        </div>
+
+        <div className="mx-5 grid h-[60%]  w-[75%] grid-cols-3 grid-rows-5 rounded-2xl bg-bg-box-main px-6 py-4 shadow-2xl md:w-[50%] ">
+          <h1 className="center-thing col-span-3 row-span-2 text-[2rem]">
+            &quot;Let us take care your loves&quot;
+          </h1>
+
+          <hr className="center-thing testt invisible h-1 w-full rounded md:visible  md:my-10" />
+          <h2 className="center-thing col-span-1 mt-3 w-full text-[1.3rem]">
+            WigglePaw
+          </h2>
+          <hr className="center-thing testt invisible h-1 w-full rounded md:visible md:my-10" />
+          <h3 className="items-top col-span-3 flex w-full justify-center text-[1rem]">
+            A matching platform for pet sitters and pet owners
+          </h3>
+          <div className="col-span-3 grid grid-cols-1">
+            <div className="center-thing  w-full ">
+              <Link
+                href="/match=?pet_freelance"
+                className="find-link rounded-xl"
+              >
+                Finding Pet Sitter &gt;
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>
