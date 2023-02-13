@@ -207,13 +207,6 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
           </div>
         )}
       </div>
-      <div className="mx-3 mt-2 flex max-w-md justify-center sm:w-1/2">
-        <h1 className="text-xl font-bold">Posts</h1>
-        {/* TODO: Posts display */}
-        {/* {users.map((user: any) => (
-          <PetSitterCard pet_sitter={user}></PetSitterCard>
-        ))} */}
-      </div>
     </div>
   );
 };
