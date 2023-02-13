@@ -49,7 +49,8 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
     resolver: zodResolver(formDataSchema),
     mode: "onSubmit",
   });
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormData) => {
+    console.log("SUBMITTED");
     const petTypesArray: string[] = data.petTypes.split(",");
     await updatePetHotel.mutateAsync({
       userId: props.user.userId,
@@ -71,7 +72,7 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
       },
     });
     // Refetch user data
-    console.log("Invalidating cache");
+    // console.log("Invalidating cache");
     await utils.user.getByUsername.invalidate({
       username: props.user.username,
     });
@@ -150,7 +151,7 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
                   }`}
                   placeholder="Phone Number"
                   className="profile-input"
-                  {...(register("phoneNumber"), { required: true })}
+                  {...register("phoneNumber", { required: true })}
                 />
               </p>
               <p className="data-field">
@@ -162,7 +163,7 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
                   }`}
                   placeholder="Address"
                   className="profile-input max-h-40 min-h-[2rem]"
-                  {...(register("address"), { required: true })}
+                  {...register("address", { required: true })}
                 />
               </p>
               <p className="data-field">

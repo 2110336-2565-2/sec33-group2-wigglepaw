@@ -69,7 +69,7 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
       },
     });
     // Refetch user data
-    console.log("Invalidating cache");
+    // console.log("Invalidating cache");
     await utils.user.getByUsername.invalidate({
       username: props.user.username,
     });

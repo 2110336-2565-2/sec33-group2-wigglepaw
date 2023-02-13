@@ -49,7 +49,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
     resolver: zodResolver(formDataSchema),
     mode: "onSubmit",
   });
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormData) => {
     const [firstName, lastName] = data.firstNameLastName.split(" ");
     const petTypesArray: string[] = data.petTypes.split(",");
     await updateFreelancePetSitter.mutateAsync({
@@ -72,7 +72,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
       },
     });
     // Refetch user data
-    console.log("Invalidating cache");
+    // console.log("Invalidating cache");
     await utils.user.getByUsername.invalidate({
       username: props.user.username,
     });
@@ -151,7 +151,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
                   }`}
                   placeholder="Phone Number"
                   className="profile-input"
-                  {...(register("phoneNumber"), { required: true })}
+                  {...register("phoneNumber", { required: true })}
                 />
               </p>
               <p className="data-field">
@@ -163,7 +163,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
                   }`}
                   placeholder="Address"
                   className="profile-input max-h-40 min-h-[2rem]"
-                  {...(register("address"), { required: true })}
+                  {...register("address", { required: true })}
                 />
               </p>
               <p className="data-field">
