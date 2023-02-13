@@ -1,7 +1,5 @@
 import Header from "../Header";
 import Image from "next/image";
-import Link from "next/link";
-
 import {
   HiAtSymbol,
   HiMap,
@@ -10,14 +8,30 @@ import {
   HiUserCircle,
 } from "react-icons/hi";
 import { IoPaw } from "react-icons/io5";
-import { useEffect, useState } from "react";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import type { User, PetSitter, FreelancePetSitter } from "@prisma/client";
 import { api } from "../../utils/api";
+import type { User, PetSitter, FreelancePetSitter } from "@prisma/client";
+
 type FreelancePetSitterProfileProps = {
   editable: boolean;
   user: User & PetSitter & FreelancePetSitter;
 };
+
+const formDataSchemaFreelancePetSitter = z.object({
+  firstNameLastName: z.string().min(1),
+  phoneNumber: z
+    .string()
+    .regex(/^\d{10}$/, { message: "Invalid phone number" }),
+  address: z.string().min(1, { message: "Required" }),
+  email: z.string().email(),
+  petTypes: z.string(),
+});
+
+type FormData = z.infer<typeof formDataSchemaFreelancePetSitter>;
 
 const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
   const utils = api.useContext();
@@ -31,9 +45,11 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormData>({
+    resolver: zodResolver(formDataSchemaFreelancePetSitter),
+    mode: "onSubmit",
+  });
   const onSubmit = async (data: any) => {
-    console.log(data);
     const [firstName, lastName] = data.firstNameLastName.split(" ");
     const petTypesArray: string[] = data.petTypes.split(",");
     await updateFreelancePetSitter.mutateAsync({
@@ -64,12 +80,6 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
     setEditing(false);
   };
 
-  // TODO: Remove once done
-  // Show the user data, for dev and debug
-  useEffect(() => {
-    console.log(props.user);
-  }, [props.user]);
-
   return (
     <div>
       <Header></Header>
@@ -81,7 +91,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
           <h1 className="mx-auto my-1 text-center text-2xl font-semibold">
             {props.user.username}
           </h1>
-          {/* TODO: Only display for owner of profile */}
+
           {props.editable && !editing && (
             <button
               onClick={() => setEditing(true)}
@@ -136,27 +146,31 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
                 <HiPhone className="profile-icon" />
                 &nbsp;Phone:&nbsp;
                 <input
-                  defaultValue={`${props.user.phoneNumber}`}
+                  defaultValue={`${
+                    props.user.phoneNumber ? props.user.phoneNumber : ""
+                  }`}
                   placeholder="Phone Number"
                   className="profile-input"
-                  {...register("phoneNumber", { required: true })}
+                  {...(register("phoneNumber"), { required: true })}
                 />
               </p>
               <p className="data-field">
                 <HiMap className="profile-icon" />
                 &nbsp;Address:&nbsp;
                 <textarea
-                  defaultValue={`${props.user.address}`}
+                  defaultValue={`${
+                    props.user.address ? props.user.address : ""
+                  }`}
                   placeholder="Address"
                   className="profile-input max-h-40 min-h-[2rem]"
-                  {...register("address", { required: true })}
+                  {...(register("address"), { required: true })}
                 />
               </p>
               <p className="data-field">
                 <HiAtSymbol className="profile-icon" />
                 &nbsp;Email:&nbsp;
                 <input
-                  defaultValue={`${props.user.email}`}
+                  defaultValue={`${props.user.email ? props.user.email : ""}`}
                   placeholder="Email"
                   className="profile-input"
                   {...register("email", { required: true })}
@@ -166,15 +180,14 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
                 <IoPaw className="profile-icon" />
                 &nbsp;Pet Types:&nbsp;
                 <input
-                  defaultValue={`${props.user.petTypes}`}
-                  placeholder="Pet Types"
+                  defaultValue={`${
+                    props.user.petTypes ? props.user.petTypes : ""
+                  }`}
+                  placeholder="Seprate with ,"
                   className="profile-input"
-                  {...register("petTypes", { required: true })}
+                  {...register("petTypes")}
                 />
               </p>
-
-              {/* errors will return when field validation fails  */}
-              {errors.exampleRequired && <span>This field is required</span>}
 
               <div className="mt-3 flex">
                 <button

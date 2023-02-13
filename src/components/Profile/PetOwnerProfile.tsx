@@ -1,10 +1,5 @@
 import Header from "../Header";
-import type { User, PetSitter, PetOwner } from "@prisma/client";
-import { useEffect } from "react";
-
 import Image from "next/image";
-import Link from "next/link";
-
 import {
   HiAtSymbol,
   HiMap,
@@ -17,8 +12,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-
 import { api } from "../../utils/api";
+import type { User, PetOwner } from "@prisma/client";
 
 type PetOwnerProfileProps = {
   editable: boolean;
@@ -27,11 +22,11 @@ type PetOwnerProfileProps = {
 
 const formDataSchema1 = z.object({
   firstNameLastName: z.string().min(1),
-  email: z.string().email(),
-  address: z.string().min(1, { message: "Required" }),
   phoneNumber: z
     .string()
     .regex(/^\d{10}$/, { message: "Invalid phone number" }),
+  address: z.string().min(1, { message: "Required" }),
+  email: z.string().email(),
 });
 
 type FormData = z.infer<typeof formDataSchema1>;
@@ -41,11 +36,7 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
   const utils = api.useContext();
   const updateUser = api.user.update.useMutation();
   const [editing, setEditing] = useState(false);
-  // TODO: Remove once done
-  // Show the user data, for dev and debug
-  useEffect(() => {
-    console.log(props.user);
-  }, [props.user]);
+
   const {
     register,
     handleSubmit,
@@ -56,7 +47,6 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
     mode: "onSubmit",
   });
   const onSubmit = async (data: FormData) => {
-    console.log(data);
     const [firstName, lastName] = data.firstNameLastName.split(" ");
 
     await updatePetOwner.mutateAsync({
@@ -87,12 +77,6 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
     setEditing(false);
   };
 
-  // TODO: Remove once done
-  // Show the user data, for dev and debug
-  useEffect(() => {
-    console.log(props.user);
-  }, [props.user]);
-
   return (
     <div>
       <Header></Header>
@@ -104,8 +88,8 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
           <h1 className="mx-auto my-1 text-center text-2xl font-semibold">
             {props.user.username}
           </h1>
-          {/* TODO: Only display for owner of profile */}
-          {!editing && (
+
+          {props.editable && !editing && (
             <button
               onClick={() => setEditing(true)}
               className="profile-edit-button"
@@ -159,7 +143,9 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
                 <HiPhone className="profile-icon" />
                 &nbsp;Phone:&nbsp;
                 <input
-                  defaultValue={`${props.user.phoneNumber}`}
+                  defaultValue={`${
+                    props.user.phoneNumber ? props.user.phoneNumber : ""
+                  }`}
                   placeholder="Phone Number"
                   className="profile-input"
                   {...register("phoneNumber", { required: true })}
@@ -174,7 +160,9 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
                 <HiMap className="profile-icon" />
                 &nbsp;Address:&nbsp;
                 <textarea
-                  defaultValue={`${props.user.address}`}
+                  defaultValue={`${
+                    props.user.address ? props.user.address : ""
+                  }`}
                   placeholder="Address"
                   className="profile-input max-h-40 min-h-[2rem]"
                   {...register("address", { required: true })}
@@ -201,8 +189,6 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
                   </p>
                 )}
               </p>
-
-              {/* errors will return when field validation fails  */}
 
               <div className="mt-3 flex">
                 <button

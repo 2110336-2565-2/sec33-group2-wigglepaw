@@ -28,10 +28,6 @@ const Profile: NextPage = () => {
   if (data === undefined) return <div>Loading...</div>;
   if (data === null) return <div>Not found</div>;
 
-  if (data.userType === UserType.FreelancePetSitter) {
-    console.log(data.firstName);
-  }
-
   switch (data.userType) {
     case UserType.PetOwner:
       return (
