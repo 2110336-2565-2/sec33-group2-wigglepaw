@@ -97,7 +97,7 @@ const RegisterPage: NextPage = () => {
   const [page, setPage] = useState(0);
   if (page === 0)
     return (
-      <div className="flex h-screen flex-col">
+      <div className="flex min-h-screen flex-col">
         <div className="absolute top-[-4rem] -z-10 ">
           <img src="/Ipage1-1.png" width={468} height={315} alt="cat" />
         </div>
@@ -105,16 +105,16 @@ const RegisterPage: NextPage = () => {
           <img src="/Ipage1-2.png" width={468} height={315} alt="cat" />
         </div>
         <Header></Header>
-        <div className="flex h-full flex-col items-center">
+        <div className="mb-6 flex h-full flex-col items-center">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex h-full w-1/2 flex-col items-center justify-evenly"
+            className="flex h-full w-full min-w-[50%] max-w-[512px] flex-col items-center justify-evenly max-sm:px-6"
           >
             <div className="flex w-full flex-col items-center">
               <h1 className="text-3xl font-bold">Register Pet Owner</h1>
               <h1 className="text-3xl font-bold">1/2</h1>
             </div>
-            <div className="grid-rows-8 mx-auto grid w-full grid-cols-1 gap-5">
+            <div className="grid-rows-8 mx-auto grid w-full grid-cols-1 gap-5 pt-2 pb-8">
               <div className="flex justify-between gap-12">
                 <div className="flex w-full flex-col">
                   <Input
@@ -200,7 +200,7 @@ const RegisterPage: NextPage = () => {
                 />
               </div>
               <div className="flex gap-6">
-                <div className="flex w-full flex-col">
+                <div className="flex h-full w-full flex-col justify-end">
                   <Input
                     id="type"
                     label="Type of pet* :"
@@ -210,7 +210,7 @@ const RegisterPage: NextPage = () => {
                     validationRules={{ required: true }}
                   />
                 </div>
-                <div className="flex w-full flex-col">
+                <div className="flex h-full w-full flex-col justify-end">
                   <Input
                     id="breed"
                     label="Breed of pet* :"
@@ -220,7 +220,7 @@ const RegisterPage: NextPage = () => {
                     validationRules={{ required: true }}
                   />
                 </div>
-                <div className="flex w-full flex-col">
+                <div className="flex h-full w-full flex-col justify-end">
                   <Input
                     id="weight"
                     label="Weight of pet* :"
@@ -277,7 +277,7 @@ const RegisterPage: NextPage = () => {
             <h1 className=" ml-[15%] text-2xl font-bold">Payment</h1>
           </div>
           <div className="flex justify-center">
-            <form onSubmit={handleSubmit(onSubmit)} className=" h-full w-2/3 ">
+            <form onSubmit={handleSubmit(onSubmit)} className=" h-full w-2/3">
               <div className="mx-auto grid w-full grid-cols-2 grid-rows-6 gap-5 md:grid-cols-4 md:gap-2">
                 <div className="col-span-4 flex items-center">
                   <input className="mr-2" type="checkbox"></input>
@@ -359,7 +359,7 @@ const RegisterPage: NextPage = () => {
                     </label>
                   </div>
                 </div>
-
+                <div className="col-span-2"></div>
                 <div className="flex gap-6"></div>
               </div>
               <div className="flex w-full justify-evenly">
@@ -424,7 +424,9 @@ const Input: React.FC<InputProps> = ({
       {...register(id, validationRules)}
     />
 
-    <span className="text-sm text-red-500">{errors[id]?.message}</span>
+    {errors && (
+      <span className="text-sm text-red-500">{errors[id]?.message}</span>
+    )}
   </>
 );
 
