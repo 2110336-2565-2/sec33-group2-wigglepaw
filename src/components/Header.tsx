@@ -174,11 +174,11 @@ const Header = () => {
               hidden={!openProfile}
             >
               <Link
-                href={`/user/${username}`}
+                href={`/user/${username!}`}
                 className={
                   "header-menu-link" +
                   `${
-                    asPath.includes("/user/" + username)
+                    asPath.includes("/user/" + username!)
                       ? " header-at-page"
                       : ""
                   }`

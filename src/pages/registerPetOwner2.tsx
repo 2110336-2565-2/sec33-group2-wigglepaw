@@ -12,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { PetKind } from "@prisma/client";
 
-const registerPage: NextPage = () => {
+const RegisterPage: NextPage = () => {
   const {
     register,
     handleSubmit,
@@ -172,4 +172,4 @@ const Button: React.FC<ButtonProps> = ({ children, ...props }) => (
   </button>
 );
 
-export default registerPage;
+export default RegisterPage;
