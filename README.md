@@ -1,5 +1,10 @@
 # WigglePaw
 
+## Deployment
+
+Main: https://frontend-production-0c02.up.railway.app
+Dev: https://frontend-dev-a13f.up.railway.app/
+
 ## Dependency
 
 - [pnpm](https://pnpm.js.org/) -- a fast, disk space efficient package manager.
