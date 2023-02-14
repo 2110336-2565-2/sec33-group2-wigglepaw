@@ -5,7 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import RangeSlider from "./RangeSlider";
 import TmpRangeSlider from "./TmpRangeSlider";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { SearchValues } from "../common/interfaces";
 interface SearchBoxProps {
   useFormReturn: UseFormReturn<SearchValues>;
@@ -41,6 +41,9 @@ const SearchBox: React.FC<SearchBoxProps> = ({
     searchSortBy: watch("sortby") as string,
     searchIncludePetSitterType: watch("petSitterType") as string,
   });
+  useEffect(() => {
+    setPetSitters(petSitterSort.data);
+  }, [petSitterSort]);
 
   const router = useRouter();
   const petSitterType = router.query["petSitterType"];
@@ -50,12 +53,9 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
     // data.priceRange = test[0]; // way of the CURSE --FIXED
 
-    const hotels = petHotels.data;
     //console.log(hotels);
 
-    //กุเครียด  DATA คืออะไรไปดูที่ back ด้วยโว้ย  หยุดจำทุกอย่าง .data แล้วหวังว่ามันจะมีผลลัพธ์
     //console.log(petHotelsSort.data?.petSitter.user?.username);
-    //setPetSitters(petHotelsSort.data);
 
     // alert data
     alert(JSON.stringify(data));

@@ -16,8 +16,8 @@ interface PetSitterCardProps {
 }
 
 const PetSitterCard = ({ pet_sitter }: PetSitterCardProps) => {
-  //console.log("yoyo");
-  //console.log(pet_sitter);
+  // console.log("yoyo");
+  // console.log(pet_sitter);
   const name = pet_sitter ? pet_sitter.user.username : "NAME";
   const petTypes = pet_sitter ? pet_sitter.petTypes : ["Husky"];
   const profile_link = pet_sitter
@@ -38,7 +38,7 @@ const PetSitterCard = ({ pet_sitter }: PetSitterCardProps) => {
           ></Image>
         </div>
 
-        <div className="mx-3 w-fit leading-6">
+        <div className="mx-3 w-[100%] leading-6">
           <div className="flex items-center">
             <FontAwesomeIcon icon={faAddressCard} />
             <p className="ml-2"> {name}</p>

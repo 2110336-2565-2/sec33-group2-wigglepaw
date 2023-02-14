@@ -29,6 +29,10 @@ const matching: NextPage = (props: any) => {
 
   const [petSitters, setPetSitters] = useState();
 
+  React.useEffect(() => {
+    //console.log("hhh ", petSitters);
+  }, [petSitters]);
+
   let apage = [1, 2, 3, 4, 5];
   const [cpage, setCpage] = useState(0);
   const Pagelay = () => {
@@ -98,11 +102,11 @@ const matching: NextPage = (props: any) => {
               <PetSitterCard pet_sitter={user}></PetSitterCard>
             ))}
 
+            {/* <PetSitterCard pet_sitter={null}></PetSitterCard>
             <PetSitterCard pet_sitter={null}></PetSitterCard>
             <PetSitterCard pet_sitter={null}></PetSitterCard>
             <PetSitterCard pet_sitter={null}></PetSitterCard>
-            <PetSitterCard pet_sitter={null}></PetSitterCard>
-            <PetSitterCard pet_sitter={null}></PetSitterCard>
+            <PetSitterCard pet_sitter={null}></PetSitterCard> */}
           </div>
           <div className="mt-5 flex items-center  justify-center">
             <Pagelay />
