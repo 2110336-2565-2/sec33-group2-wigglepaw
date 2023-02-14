@@ -6,15 +6,18 @@ import {
   HiPencilAlt,
   HiPhone,
   HiUserCircle,
+  HiX,
 } from "react-icons/hi";
 import { IoPaw } from "react-icons/io5";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
+import { InputHTMLAttributes, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../utils/api";
 import type { User, PetSitter, FreelancePetSitter } from "@prisma/client";
+import { Popover } from "@headlessui/react";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 type FreelancePetSitterProfileProps = {
   editable: boolean;
@@ -28,10 +31,14 @@ const formDataSchema = z.object({
     .regex(/^\d{10}$/, { message: "Invalid phone number" }),
   address: z.string().min(1, { message: "Required" }),
   email: z.string().email(),
-  petTypes: z.string(),
+  petTypes: z.string().array(),
 });
 
 type FormData = z.infer<typeof formDataSchema>;
+
+// A list of pet types
+// TODO: Get this from somewhere else, instead of hardcoding here.
+const petTypesList = ["Dog", "Cat", "Bird", "Fish"].sort();
 
 const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
   const utils = api.useContext();
@@ -44,6 +51,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(formDataSchema),
@@ -51,7 +59,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
   });
   const onSubmit = async (data: FormData) => {
     const [firstName, lastName] = data.firstNameLastName.split(" ");
-    const petTypesArray: string[] = data.petTypes.split(",");
+    const petTypesArray: string[] = data.petTypes;
     await updateFreelancePetSitter.mutateAsync({
       userId: props.user.userId,
       data: { firstName: firstName, lastName: lastName },
@@ -124,7 +132,16 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
             <p className="data-field">
               <IoPaw className="profile-icon" />
               &nbsp;Pet Types:&nbsp;
-              {props.user.petTypes.map((petType) => `${petType} `)}
+              <span className="inline-flex gap-2">
+                {props.user.petTypes.map((petType) => (
+                  <span
+                    key={petType}
+                    className="rounded-xl bg-slate-200 pl-2 pr-2"
+                  >
+                    {petType}
+                  </span>
+                ))}
+              </span>
             </p>
           </div>
         )}
@@ -179,14 +196,18 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
               <p className="data-field">
                 <IoPaw className="profile-icon" />
                 &nbsp;Pet Types:&nbsp;
-                <input
+                <TagInput
+                  defaultValue={props.user.petTypes}
+                  onChange={(val) => setValue("petTypes", val)}
+                />
+                {/* <input
                   defaultValue={`${
                     props.user.petTypes ? props.user.petTypes : ""
                   }`}
                   placeholder="Seprate with ,"
                   className="profile-input"
                   {...register("petTypes")}
-                />
+                /> */}
               </p>
 
               <div className="mt-3 flex">
@@ -214,6 +235,83 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
         ))} */}
       </div>
     </div>
+  );
+};
+
+type TagInputProps = {
+  defaultValue?: string[];
+  onChange?: (newValue: string[]) => void;
+};
+
+const TagInput = (props: TagInputProps) => {
+  const [animationParent] = useAutoAnimate();
+  // A list of pet types that user has selected
+  const [editingPetTypes, setEditingPetTypes] = useState<string[]>(
+    props.defaultValue ?? []
+  );
+  // A list of pet types that user hasn't selected
+  const unusedPetTypes = petTypesList.filter(
+    (petType) => !editingPetTypes.includes(petType)
+  );
+
+  // Notify parent component of the change
+  const { onChange } = props;
+  useEffect(() => {
+    onChange?.(editingPetTypes);
+  }, [onChange, editingPetTypes]);
+
+  return (
+    <span className="inline-flex gap-2" ref={animationParent}>
+      {editingPetTypes.map((petType) => (
+        <span
+          key={petType}
+          className="inline-flex items-center rounded-xl bg-slate-200 pl-2 pr-2"
+        >
+          {petType}
+          {/* small close/delete button */}
+          <button
+            type="button"
+            className="duration-250 ml-1 rounded-xl ring-slate-500 transition-all ease-in-out hover:bg-slate-300 hover:ring-1"
+            onClick={() =>
+              setEditingPetTypes(
+                editingPetTypes.filter((type) => type !== petType)
+              )
+            }
+          >
+            <HiX className="fill-slate-500" />
+          </button>
+        </span>
+      ))}
+      {unusedPetTypes.length > 0 && (
+        <Popover className="relative">
+          <Popover.Button className="duration-250 rounded-3xl bg-slate-200 pl-2 pr-2 ring-slate-500 transition-all ease-in-out hover:bg-slate-300 ">
+            +
+          </Popover.Button>
+
+          <Popover.Panel className="absolute z-10 rounded-md bg-white p-4 shadow-lg">
+            {/* 
+      List of buttons to select a pet type.
+      Only shows pet types that are not already selected.
+      Each button adds the pet type to the (editing) petTypes array, in sorted ordering.
+      */}
+            <div className="space-y-2">
+              {unusedPetTypes.map((petType) => (
+                <button
+                  key={petType}
+                  type="button"
+                  className="rounded-xl bg-slate-200 pl-2 pr-2 transition-all hover:bg-blue-100 hover:pl-3 hover:pr-3"
+                  onClick={() => {
+                    setEditingPetTypes(editingPetTypes.concat(petType).sort());
+                  }}
+                >
+                  {petType}
+                </button>
+              ))}
+            </div>
+          </Popover.Panel>
+        </Popover>
+      )}
+    </span>
   );
 };
 
