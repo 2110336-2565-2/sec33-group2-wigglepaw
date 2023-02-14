@@ -65,6 +65,8 @@ export const petSitterRouter = createTRPCRouter({
   // +-------------------------------+---------------------------+-------------------------------------+
   // | all                           | true                      | true                                |
   // +-------------------------------+---------------------------+-------------------------------------+
+  //  searchSortBy: @string for sorting. support "name", "username", "price", "startPrice", "endPrice" default is username
+  //  will implement sort by firstname lastname hotel name if needed
 
   // output:
   //   list of object that only contain user id that match search input
@@ -88,16 +90,7 @@ export const petSitterRouter = createTRPCRouter({
             ),
           ],
         },
-        orderBy: [
-          {
-            user: {
-              username: "desc",
-            },
-          },
-        ],
-        /*select: {
-          userId: true,
-        },*/
+        orderBy: [searchLogic.searchOrderBy(input.searchSortBy)],
         include: {
           user: true,
           petHotel: true,

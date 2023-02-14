@@ -63,3 +63,38 @@ export function searchByPetSitterTypes(text: string): object {
     },
   };
 }
+
+export function searchOrderBy(sortName: string): object {
+  switch (sortName) {
+    case "name": {
+      return {
+        user: { username: "asc" },
+      };
+    }
+    case "username": {
+      return {
+        user: { username: "asc" },
+      };
+    }
+    case "price": {
+      return {
+        startPrice: "asc",
+      };
+    }
+    case "startPrice": {
+      return {
+        startPrice: "asc",
+      };
+    }
+    case "endPrice": {
+      return {
+        endPrice: "asc",
+      };
+    }
+    default: {
+      console.log(`sortName ${sortName} not support for sorting`);
+      return { startPrice: "asc" };
+    }
+  }
+  return {};
+}
