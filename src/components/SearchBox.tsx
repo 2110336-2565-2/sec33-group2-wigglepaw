@@ -36,10 +36,10 @@ const SearchBox: React.FC<SearchBoxProps> = ({
     username: watch("name") as string,
   });
 
-  const petSitterSort = api.petSitter.getByUsernameSortby.useQuery({
-    username: watch("name") as string,
-    sortby: watch("sortby") as string,
-    petSitterType: watch("petSitterType") as string,
+  const petSitterSort = api.petSitter.searchPetSitter.useQuery({
+    searchName: watch("name") as string,
+    searchSortBy: watch("sortby") as string,
+    searchIncludePetSitterType: watch("petSitterType") as string,
   });
 
   const router = useRouter();
@@ -76,8 +76,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
             <label htmlFor="name">Name</label>
             <br />
             <input
-              placeholder="BaanMaewMaa"
-              {...register("name", { required: true })}
+              //placeholder="BaanMaewMaa"
+              {...register("name")}
             />
             <br />
             {/* check into required true*/}
@@ -116,28 +116,32 @@ const SearchBox: React.FC<SearchBoxProps> = ({
             {/* </div> */}
 
             <label>Price Range</label>
+            <br></br>
             {/* <input type="range"
           {...(register("priceRange", {required: true})) }
 
           >
 
           </input> */}
-
+            <br></br>
             <RangeSlider register={register} setValue={setValue} />
 
-            <button
-              type="submit"
-              // type='button'
-              value="Submit"
-              className="rounded-full bg-sky-700 px-4 py-2 font-bold text-white transition-colors hover:bg-sky-600"
-              // onClick={handleSubmit(onSubmit)}
-            >
-              test
-            </button>
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                // type='button'
+                value="Submit"
+                className="justify-self-center rounded-full bg-sky-700 px-4 py-2 font-bold text-white transition-colors hover:bg-sky-600"
+                // onClick={handleSubmit(onSubmit)}
+              >
+                search
+              </button>
+            </div>
           </div>
         </div>
         <div className="border- mx-auto w-full min-w-fit bg-sky-200 p-4">
-          <h1>Sort By</h1>
+          <br></br>
+          <h2>Sort By</h2>
           <div className="flex items-center">
             <select className="mr-2 w-3/5" {...register("sortby")}>
               <option value="name">Name</option>
@@ -145,9 +149,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
               <option value="price">Price</option>
             </select>
           </div>
-        </div>
-        <div className="border- mx-auto w-full min-w-fit bg-sky-200 p-4">
-          <h1>Sort By2</h1>
+          <h3>Sort By2</h3>
           <div className="flex items-center">
             <select className="mr-2 w-3/5" {...register("petSitterType")}>
               <option value="hotel">Pet Hotel</option>
@@ -155,6 +157,15 @@ const SearchBox: React.FC<SearchBoxProps> = ({
             </select>
           </div>
         </div>
+        {/* <div className="border- mx-auto w-full min-w-fit bg-sky-200 p-4">
+          <h1>Sort By2</h1>
+          <div className="flex items-center">
+            <select className="mr-2 w-2/5" {...register("petSitterType")}>
+              <option value="hotel">Pet Hotel</option>
+              <option value="freelance">Freelance</option>
+            </select>
+          </div>
+        </div> */}
       </div>
     </form>
   );

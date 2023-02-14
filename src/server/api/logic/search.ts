@@ -54,24 +54,12 @@ export function searchBySinglePetType(petType: string): object {
   };
 }
 // search by pet sitter type
-export function searchByPetSitterType(
-  includePetHotel: boolean,
-  includeFreelancePetSitter: boolean
-): object {
-  const result: object[] = [];
-  if (includePetHotel)
-    result.push({
-      NOT: {
-        petHotel: null,
-      },
-    });
-  if (includeFreelancePetSitter)
-    result.push({
-      NOT: {
-        freelancePetSitter: null,
-      },
-    });
+export function searchByPetSitterTypes(text: string): object {
+  if (text == "") return {};
+  const petSitterTypes = text.split(" ");
   return {
-    OR: result,
+    petSitter: {
+      hasEvery: petSitterTypes,
+    },
   };
 }

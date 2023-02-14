@@ -83,14 +83,25 @@ export const petSitterRouter = createTRPCRouter({
             searchLogic.searchByPriceMin(input.searchPriceMin),
             searchLogic.searchByPriceMax(input.searchPriceMax),
             searchLogic.searchBySinglePetType(input.searchPetType),
-            searchLogic.searchByPetSitterType(
-              input.searchIncludePetHotelFlag,
-              input.searchIncludeFreelancePetSitterFlag
+            searchLogic.searchByPetSitterTypes(
+              input.searchIncludePetSitterType
             ),
           ],
         },
-        select: {
+        orderBy: [
+          {
+            user: {
+              username: "desc",
+            },
+          },
+        ],
+        /*select: {
           userId: true,
+        },*/
+        include: {
+          user: true,
+          petHotel: true,
+          freelancePetSitter: true,
         },
       });
     }),

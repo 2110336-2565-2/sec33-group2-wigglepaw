@@ -60,7 +60,7 @@ const matching: NextPage = (props: any) => {
   };
   const useFormReturn = useForm({
     defaultValues: {
-      name: "lnwThutZa",
+      name: "",
       priceRange: 50.0,
       sortby: "",
       petSitterType: "",
