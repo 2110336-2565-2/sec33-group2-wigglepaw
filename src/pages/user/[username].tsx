@@ -17,7 +17,7 @@ const Profile: NextPage = () => {
     ? session?.user?.username == username
     : false;
 
-  const { data, error: userError } = api.user.getByUsername.useQuery(
+  const { data, error: userError } = api.user.getForProfilePage.useQuery(
     { username: typeof username === "string" ? username : "" },
     {
       enabled: typeof username === "string",

@@ -6,7 +6,12 @@ import {
   petSitterFields,
   userFields,
 } from "../../../schema/schema";
-import { type UserSubType, UserType } from "../../../types/user";
+import {
+  type UserSubType,
+  UserType,
+  UserProfile,
+  UserProfileSubType,
+} from "../../../types/user";
 import type {
   FreelancePetSitter,
   PetHotel,
@@ -109,6 +114,38 @@ export const userRouter = createTRPCRouter({
       }
     }),
 
+  getForProfilePage: publicProcedure
+    .input(z.object({ username: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findFirst({
+        where: {
+          username: input.username,
+        },
+        include: {
+          petOwner: true,
+          petSitter: {
+            include: {
+              freelancePetSitter: true,
+              petHotel: true,
+            },
+          },
+        },
+      });
+
+      if (!user) return null;
+
+      // NEED SOME TRY CATCH EXCEPTION HERE
+      try {
+        return flattenUserForProfilePage(user);
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "userRouter fucked up",
+          cause: error,
+        });
+      }
+    }),
+
   post: publicProcedure.input(userFields).mutation(({ ctx, input }) => {
     return ctx.prisma.user.create({
       data: input,
@@ -190,6 +227,70 @@ function flattenUser(
         ...petSitterData,
         ...petHotel,
       };
+    }
+  }
+
+  throw new Error("Cannot determine user type");
+}
+
+// I HAVE SOME INSPIRATION
+function flattenUserForProfilePage(
+  user: User & {
+    petOwner: PetOwner | null;
+    petSitter:
+      | (PetSitter & {
+          freelancePetSitter: FreelancePetSitter | null;
+          petHotel: PetHotel | null;
+        })
+      | null;
+  }
+): UserProfile & UserProfileSubType {
+  const { petOwner, petSitter, ...userData } = user;
+
+  if (petOwner) {
+    const { password, emailVerified, bankAccount, bankName, ...result } = {
+      userType: UserType.PetOwner as UserType.PetOwner, // I HAVE TO PUT THIS, IDK WHY IT HAS BUG
+      ...userData,
+      ...petOwner,
+    };
+    return result;
+  }
+
+  if (petSitter) {
+    const { freelancePetSitter, petHotel, ...petSitterData } = petSitter;
+    if (freelancePetSitter) {
+      const {
+        password,
+        emailVerified,
+        bankAccount,
+        bankName,
+        startPrice,
+        endPrice,
+        ...result
+      } = {
+        userType: UserType.FreelancePetSitter as UserType.FreelancePetSitter,
+        ...userData,
+        ...petSitterData,
+        ...freelancePetSitter,
+      };
+      return result;
+    }
+    if (petHotel) {
+      const {
+        password,
+        emailVerified,
+        bankAccount,
+        bankName,
+        startPrice,
+        endPrice,
+        ...result
+      } = {
+        userType: UserType.PetHotel as UserType.PetHotel,
+        ...userData,
+        ...petSitterData,
+        ...petHotel,
+      };
+      return result;
     }
   }
 
