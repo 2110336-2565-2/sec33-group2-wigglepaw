@@ -38,7 +38,17 @@ type FormData = z.infer<typeof formDataSchema>;
 
 // A list of pet types
 // TODO: Get this from somewhere else, instead of hardcoding here.
-const petTypesList = ["Dog", "Cat", "Bird", "Fish"].sort();
+const petTypesList = [
+  "Dog",
+  "Cat",
+  "Hamster",
+  "Fish",
+  "Mouse",
+  "Bird",
+  "Snake",
+  "Iguana",
+  "Ferret",
+].sort();
 
 const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
   const utils = api.useContext();
@@ -132,7 +142,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
             <p className="data-field">
               <IoPaw className="profile-icon" />
               &nbsp;Pet Types:&nbsp;
-              <span className="inline-flex gap-2">
+              <span className="inline-flex flex-wrap gap-2">
                 {props.user.petTypes.map((petType) => (
                   <span
                     key={petType}
@@ -261,7 +271,7 @@ const TagInput = (props: TagInputProps) => {
   }, [onChange, editingPetTypes]);
 
   return (
-    <span className="inline-flex gap-2" ref={animationParent}>
+    <div className="flex flex-wrap gap-2" ref={animationParent}>
       {editingPetTypes.map((petType) => (
         <span
           key={petType}
@@ -283,23 +293,23 @@ const TagInput = (props: TagInputProps) => {
         </span>
       ))}
       {unusedPetTypes.length > 0 && (
-        <Popover className="relative">
+        <Popover className="container relative">
           <Popover.Button className="duration-250 rounded-3xl bg-slate-200 pl-2 pr-2 ring-slate-500 transition-all ease-in-out hover:bg-slate-300 ">
             +
           </Popover.Button>
 
-          <Popover.Panel className="absolute z-10 rounded-md bg-white p-4 shadow-lg">
-            {/* 
+          <Popover.Panel className="absolute z-10 rounded-md border-2 bg-orange-50 p-4 shadow-lg">
+            {/* hadow-lg ring-2
       List of buttons to select a pet type.
       Only shows pet types that are not already selected.
       Each button adds the pet type to the (editing) petTypes array, in sorted ordering.
       */}
-            <div className="space-y-2">
+            <div className="flex flex-wrap gap-2">
               {unusedPetTypes.map((petType) => (
                 <button
                   key={petType}
                   type="button"
-                  className="rounded-xl bg-slate-200 pl-2 pr-2 transition-all hover:bg-blue-100 hover:pl-3 hover:pr-3"
+                  className="inline rounded-xl bg-slate-200 pl-2 pr-2 transition-all hover:bg-blue-100 hover:pl-3 hover:pr-3"
                   onClick={() => {
                     setEditingPetTypes(editingPetTypes.concat(petType).sort());
                   }}
@@ -311,7 +321,7 @@ const TagInput = (props: TagInputProps) => {
           </Popover.Panel>
         </Popover>
       )}
-    </span>
+    </div>
   );
 };
 
