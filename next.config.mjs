@@ -10,9 +10,9 @@ const config = {
   images: {
     remotePatterns: [
       {
-        hostname: '*',
-      }
-    ]
+        hostname: "*",
+      },
+    ],
   },
   reactStrictMode: true,
   /* If trying out the experimental appDir, comment the i18n config out
@@ -21,8 +21,11 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  typescript: {
+    ignoreBuildErrors: !!process.env.SKIP_TYPESCRIPT,
+  },
   eslint: {
-    ignoreDuringBuilds: !!process.env.SKIP_ESLINT
-  }
+    ignoreDuringBuilds: !!process.env.SKIP_ESLINT,
+  },
 };
 export default config;
