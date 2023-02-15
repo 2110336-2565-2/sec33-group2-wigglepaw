@@ -147,13 +147,15 @@ const SearchBox: React.FC<SearchBoxProps> = ({
               <option value="name">Name</option>
               <option value="pettype">Rating</option>
               <option value="price">Price</option>
+              <option value="">None</option>
             </select>
           </div>
-          <h3>Sort By2</h3>
+          <h3>Pet Sitter Type</h3>
           <div className="flex items-center">
             <select className="mr-2 w-3/5" {...register("petSitterType")}>
               <option value="hotel">Pet Hotel</option>
               <option value="freelance">Freelance</option>
+              <option value="">Both</option>
             </select>
           </div>
         </div>
