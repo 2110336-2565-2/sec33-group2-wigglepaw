@@ -181,7 +181,7 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
                 &nbsp;Pet Types:&nbsp;
                 <input
                   defaultValue={`${
-                    props.user.petTypes ? props.user.petTypes : ""
+                    props.user.petTypes ? props.user.petTypes.toString() : ""
                   }`}
                   placeholder="Seprate with ,"
                   className="profile-input"
