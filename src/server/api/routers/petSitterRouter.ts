@@ -19,7 +19,7 @@ const zodUserFields = z.object({
 export const petSitterRouter = createTRPCRouter({
   update: publicProcedure
     .input(z.object({ userId: z.string(), data: petSitterFields }))
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const update = await prisma?.petSitter.update({
         where: {
           userId: input.userId,

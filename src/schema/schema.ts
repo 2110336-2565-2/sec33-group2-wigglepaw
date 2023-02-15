@@ -20,6 +20,8 @@ export const petSitterFields = z.object({
   petTypes: z.array(z.string()),
   verifyStatus: z.boolean(),
   certificationUri: z.string().optional(),
+  startPrice: z.number().optional(),
+  endPrice: z.number().optional(),
 });
 
 export const petOwnerFields = z.object({

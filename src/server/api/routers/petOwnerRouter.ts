@@ -1,12 +1,11 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-import { userFields, petOwnerFields} from "../../../schema/schema";
-
+import { userFields, petOwnerFields } from "../../../schema/schema";
 
 export const petOwnerRouter = createTRPCRouter({
-    //public procedure that get petOwner by ID
-    getById: publicProcedure
+  //public procedure that get petOwner by ID
+  getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.petOwner.findUnique({
@@ -15,38 +14,67 @@ export const petOwnerRouter = createTRPCRouter({
         },
       });
     }),
-    
-    //public procedure that get petOwner by name
-    getByFirstName: publicProcedure
-    .input(z.object({ firstname: z.string() }))
+
+  //public procedure that get petOwner by name
+  getByUsername: publicProcedure
+    .input(z.object({ username: z.string() }))
     .query(({ ctx, input }) => {
-      return ctx.prisma.petOwner.findMany({
+      return ctx.prisma.petOwner.findFirst({
         where: {
-          firstName: input.firstname,
+          user: {
+            username: input.username,
+          },
         },
-        include:{
-          user: true
-        }
+        include: {
+          user: true,
+        },
       });
     }),
 
-    //public procedure that get petOwner by email
-    getByEmail: publicProcedure
+  //public procedure that get petOwner by email
+  getByEmail: publicProcedure
     .input(z.object({ email: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.petOwner.findFirst({
         where: {
-          user: {email:input.email}
+          user: { email: input.email },
         },
       });
     }),
 
-    //update petOwner
-    update: publicProcedure
+  createDummy: publicProcedure
     .input(
-      z.object({ 
-        userId: z.string(), 
-        data: petOwnerFields 
+      z.object({
+        code: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const code = input.code;
+      return await ctx.prisma.petOwner.create({
+        data: {
+          user: {
+            create: {
+              username: "username" + code,
+              email: "email" + code + "@gmail.com",
+              password: "password" + code,
+            },
+          },
+
+          firstName: "firstname" + code,
+          lastName: "lastname" + code,
+        },
+        include: {
+          user: true,
+        },
+      });
+    }),
+
+  //update petOwner
+  update: publicProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        data: petOwnerFields.partial(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -59,25 +87,25 @@ export const petOwnerRouter = createTRPCRouter({
       return update;
     }),
 
-    //public procedure that create petOwner
-    create: publicProcedure
+  //public procedure that create petOwner
+  create: publicProcedure
     .input(
       z.object({
         user: userFields,
-        petOwner: petOwnerFields
+        petOwner: petOwnerFields,
       })
     )
     .mutation(async ({ ctx, input }) => {
       return await ctx.prisma.petOwner.create({
         data: {
-              user: {
-                create: input.user,
-              },
-              ...input.petOwner,
-            },
-            include: {
-              user: true,
-            },
+          user: {
+            create: input.user,
+          },
+          ...input.petOwner,
+        },
+        include: {
+          user: true,
+        },
       });
     }),
 });
