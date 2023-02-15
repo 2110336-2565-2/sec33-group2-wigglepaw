@@ -541,7 +541,7 @@ export default function RegisterPetSitter() {
 
   return (
     <>
-      <div className="content-star flex h-screen flex-col items-center  px-20 pt-20">
+      <div className="content-star flex h-screen flex-col items-center px-20">
         <FirstPage />
       </div>
     </>
