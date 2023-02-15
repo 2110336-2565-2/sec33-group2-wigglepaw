@@ -6,9 +6,17 @@ export function searchByName(text: string): object {
     AND: [
       ...words.map((word) => ({
         OR: [
-          { freelancePetSitter: { firstName: { contains: word } } },
-          { freelancePetSitter: { lastName: { contains: word } } },
-          { petHotel: { hotelName: { contains: word } } },
+          {
+            freelancePetSitter: {
+              firstName: { contains: word, mode: "insensitive" },
+            },
+          },
+          {
+            freelancePetSitter: {
+              lastName: { contains: word, mode: "insensitive" },
+            },
+          },
+          { petHotel: { hotelName: { contains: word, mode: "insensitive" } } },
         ],
       })),
     ],
