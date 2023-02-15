@@ -37,6 +37,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
   const petSitterSort = api.petSitter.searchPetSitter.useQuery({
     searchName: watch("name") as string,
+    searchPetType: watch("petType") as string,
+    searchLocation: watch("location") as string,
     searchSortBy: watch("sortby") as string,
     searchIncludePetSitterType: watch("petSitterType") as string,
   });
@@ -85,7 +87,12 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
             <label htmlFor="location">Location</label>
             <br />
-            <input className="search-input" type="text" id="location" />
+            <input
+              className="search-input"
+              type="text"
+              id="location"
+              {...register("location")}
+            />
             <br />
             <label htmlFor="petType">Pet Type</label>
             <br />
@@ -94,6 +101,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
               type="text"
               id="petType"
               list="petName"
+              {...register("petType")}
             />
             <datalist id="petName">
               <option value="Cat">Cat</option>
