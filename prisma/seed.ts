@@ -9,7 +9,8 @@ async function makeFree(
   address: string,
   petTypes: string[],
   startPrice: number,
-  endPrice: number
+  endPrice: number,
+  imageUri: string
 ) {
   return await prisma.freelancePetSitter.create({
     data: {
@@ -22,6 +23,7 @@ async function makeFree(
               password: "p" + code,
               address: address,
               phoneNumber: phone,
+              imageUri: imageUri,
             },
           },
           verifyStatus: true,
@@ -51,7 +53,8 @@ async function makeHotel(
   address: string,
   petTypes: string[],
   startPrice: number,
-  endPrice: number
+  endPrice: number,
+  imageUri: string
 ) {
   return await prisma.petHotel.create({
     data: {
@@ -64,6 +67,7 @@ async function makeHotel(
               password: "p" + code,
               address: address,
               phoneNumber: phone,
+              imageUri: imageUri,
             },
           },
           verifyStatus: true,
@@ -90,7 +94,8 @@ async function makeOwner(
   firstName: string,
   lastName: string,
   phone: string,
-  address: string
+  address: string,
+  imageUri: string
 ) {
   return await prisma.petOwner.create({
     data: {
@@ -101,6 +106,7 @@ async function makeOwner(
           password: "p" + code,
           address: address,
           phoneNumber: phone,
+          imageUri: imageUri,
         },
       },
       firstName: firstName,
@@ -127,7 +133,7 @@ export async function main() {
   // EDIT HERE **********************************************
 
   await prisma.user.deleteMany({});
-  var dataCount = 20;
+  var dataCount = 5;
 
   // EDIT HERE **********************************************
   var firstNames: string[] = [
@@ -178,10 +184,11 @@ export async function main() {
     var petType = getMultipleRandom(petTypes, randomIntFromInterval(1, 3));
     var startPrice = randomIntFromInterval(100, 300);
     var endPrice = startPrice + randomIntFromInterval(100, 3000);
+    var imageUri = "https://picsum.photos/200";
     switch (randomIntFromInterval(1, 3)) {
       case 1: {
         var code = "Owner" + randomIntFromInterval(100, 999);
-        makeOwner(code, firstName, lastName, phoneNumber, address);
+        makeOwner(code, firstName, lastName, phoneNumber, address, imageUri);
         break;
       }
       case 2: {
@@ -194,7 +201,8 @@ export async function main() {
           address,
           petType,
           startPrice,
-          endPrice
+          endPrice,
+          imageUri
         );
         break;
       }
@@ -207,7 +215,8 @@ export async function main() {
           address,
           petType,
           startPrice,
-          endPrice
+          endPrice,
+          imageUri
         );
         break;
       }
