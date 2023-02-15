@@ -25,6 +25,8 @@ const PetSitterCard = ({ pet_sitter }: PetSitterCardProps) => {
   const profileImageUri = pet_sitter
     ? pet_sitter.user
       ? pet_sitter.user.imageUri
+        ? pet_sitter.user.imageUri
+        : "/profiledummy.png"
       : "/profiledummy.png"
     : "/profiledummy.png";
   return (
