@@ -120,7 +120,7 @@ const RegisterPage: NextPage = () => {
                   <Input
                     id="firstname"
                     label="First Name*"
-                    placeholder="Mohnke"
+                    placeholder="John"
                     register={register}
                     errors={errors}
                     validationRules={{ required: true }}
@@ -130,7 +130,7 @@ const RegisterPage: NextPage = () => {
                   <Input
                     id="lastname"
                     label="Last Name*"
-                    placeholder="Jesus"
+                    placeholder="Greenwood"
                     register={register}
                     errors={errors}
                     validationRules={{ required: true }}
@@ -173,7 +173,7 @@ const RegisterPage: NextPage = () => {
                 <Input
                   id="username"
                   label="Username"
-                  placeholder="เจ้าแม่กวนตีน"
+                  placeholder="username"
                   register={register}
                   errors={errors}
                   validationRules={{ required: true }}
