@@ -72,11 +72,8 @@ const Home: NextPage = () => {
           </h3>
           <div className="col-span-3 grid grid-cols-1">
             <div className="center-thing  w-full ">
-              <Link
-                href="/match=?pet_freelance"
-                className="find-link rounded-xl"
-              >
-                Finding Pet Sitter &gt;
+              <Link href="/matching" className="find-link rounded-xl">
+                Find Pet Sitters &gt;
               </Link>
             </div>
           </div>
