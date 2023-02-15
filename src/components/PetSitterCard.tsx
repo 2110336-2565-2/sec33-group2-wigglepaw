@@ -23,6 +23,11 @@ const PetSitterCard = ({ pet_sitter }: PetSitterCardProps) => {
   const profile_link = pet_sitter
     ? "/user/" + pet_sitter.user.username
     : "/user/lmao";
+  const profileImageUri = pet_sitter
+    ? pet_sitter.user
+      ? pet_sitter.user.imageUri
+      : "/profiledummy.png"
+    : "/profiledummy.png";
   return (
     <div className="drop-shadow-md transition-all hover:scale-[1.03] ">
       <Link
@@ -31,7 +36,7 @@ const PetSitterCard = ({ pet_sitter }: PetSitterCardProps) => {
       >
         <div className="relative flex w-[4rem] md:w-[5rem]">
           <Image
-            src={"/profiledummy.png"}
+            src={profileImageUri}
             alt={"Profile Pic"}
             fill
             className="rounded-2xl object-contain"
