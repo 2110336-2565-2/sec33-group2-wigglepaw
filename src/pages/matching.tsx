@@ -4,25 +4,12 @@ import { NextPage } from "next";
 import Header from "../components/Header";
 import SearchBox from "../components/SearchBox";
 
-import { PrismaClient, User } from "@prisma/client";
 import PetSitterCard from "../components/PetSitterCard";
 
 import { number } from "zod";
 import { useForm } from "react-hook-form";
 
-const prisma = new PrismaClient();
-
-export async function getStaticProps() {
-  const allusers = await prisma.user.findMany();
-
-  return {
-    props: {
-      users: allusers,
-    },
-  };
-}
-
-const matching: NextPage = (props: any) => {
+const matching: NextPage = () => {
   // const users = props.users;
   const pageNum = 1;
 
