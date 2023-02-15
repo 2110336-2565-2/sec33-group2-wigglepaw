@@ -1,29 +1,51 @@
+import { FreelancePetSitter, PetSitter, User } from "@prisma/client";
 import { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
-import Header from "../../components/Header";
 import FreelancePetSitterProfile from "../../components/Profile/FreelancePetSitterProfile";
 import PetHotelProfile from "../../components/Profile/PetHotelProfile";
 import PetOwnerProfile from "../../components/Profile/PetOwnerProfile";
+import { UserSubType, UserType } from "../../types/user";
+import { api } from "../../utils/api";
 
 const Profile: NextPage = () => {
   const router = useRouter();
   const { username } = router.query;
-  const userType: number = 1; //TODO: get user type
+  const { data: session, status } = useSession();
+  const editable = session?.user?.username
+    ? session?.user?.username == username
+    : false;
 
-  switch (userType) {
-    case 0:
-      return <PetOwnerProfile username={username}></PetOwnerProfile>;
+  const { data, error: userError } = api.user.getByUsername.useQuery(
+    { username: typeof username === "string" ? username : "" },
+    {
+      enabled: typeof username === "string",
+    }
+  );
 
-    case 1:
+  if (userError) return <div>Error จ้า: {userError.message}</div>;
+  if (data === undefined) return <div>Loading...</div>;
+  if (data === null) return <div>Not found</div>;
+
+  switch (data.userType) {
+    case UserType.PetOwner:
+      return (
+        <PetOwnerProfile user={data} editable={editable}></PetOwnerProfile>
+      );
+
+    case UserType.FreelancePetSitter:
       return (
         <FreelancePetSitterProfile
-          username={username}
+          user={data}
+          editable={editable}
         ></FreelancePetSitterProfile>
       );
 
-    case 2:
-      return <PetHotelProfile username={username}></PetHotelProfile>;
+    case UserType.PetHotel:
+      return (
+        <PetHotelProfile user={data} editable={editable}></PetHotelProfile>
+      );
 
     default:
       return <div>Error จ้า</div>;
