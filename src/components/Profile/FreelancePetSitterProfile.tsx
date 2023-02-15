@@ -142,7 +142,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
             <p className="data-field">
               <IoPaw className="profile-icon" />
               &nbsp;Pet Types:&nbsp;
-              <span className="inline-flex flex-wrap gap-2">
+              <span className="mt-1 inline-flex flex-wrap gap-2">
                 {props.user.petTypes.map((petType) => (
                   <span
                     key={petType}
