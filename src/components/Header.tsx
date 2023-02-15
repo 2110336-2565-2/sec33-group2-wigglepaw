@@ -47,7 +47,10 @@ const Header = () => {
             <li className="header-li">
               <div className="header-li-div">
                 <Link
-                  href="/login"
+                  href={{
+                    pathname: "/login",
+                    query: { previousPage: asPath },
+                  }}
                   className={
                     "header-a" +
                     `${asPath.includes("/login") ? " header-at-page" : ""}`
@@ -122,7 +125,10 @@ const Header = () => {
               About
             </Link>
             <Link
-              href="/login"
+              href={{
+                pathname: "/login",
+                query: { previousPage: asPath },
+              }}
               className={
                 "header-register-link" +
                 `${

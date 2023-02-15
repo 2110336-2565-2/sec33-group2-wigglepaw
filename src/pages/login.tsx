@@ -38,8 +38,11 @@ const LoginPage: NextPage = () => {
     });
 
     if (result?.ok) {
-      // redict to home page
-      await router.push("/");
+      // redict to previous page
+      const previousPage: string = router.query.previousPage
+        ? router.query.previousPage.toString()
+        : "/";
+      await router.push(previousPage);
     } else {
       alert(`Login failed: ${result?.error ?? "unknown error"}`);
     }
