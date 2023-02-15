@@ -14,7 +14,6 @@ import { z } from "zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../utils/api";
-import type { User, PetSitter, PetHotel } from "@prisma/client";
 import {
   PetHotelProfileType,
   PetSitterProfileType,
@@ -44,6 +43,12 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
   const updatePetSitter = api.petSitter.update.useMutation();
   const updateUser = api.user.update.useMutation();
   const [editing, setEditing] = useState(false);
+
+  const profileImageUri = props.user
+    ? props.user.imageUri
+      ? props.user.imageUri
+      : "/profiledummy.png"
+    : "/profiledummy.png";
 
   const {
     register,
@@ -91,7 +96,12 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
       <div className="mx-3 flex flex-wrap">
         <div className="my-auto flex w-screen flex-col md:w-1/5 md:min-w-min ">
           <div className="relative mx-auto flex h-[6rem] w-[6rem]">
-            <Image src={"/profile_icon.png"} alt={"Icon"} fill></Image>
+            <Image
+              src={profileImageUri}
+              alt={"Icon"}
+              fill
+              className="rounded-xl"
+            ></Image>
           </div>
           <h1 className="mx-auto my-1 text-center text-2xl font-semibold">
             {props.user.username}

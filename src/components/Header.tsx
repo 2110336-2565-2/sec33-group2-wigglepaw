@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { api } from "../utils/api";
 
 const Header = () => {
   const { data: session, status } = useSession();
@@ -17,6 +18,14 @@ const Header = () => {
 
   const router = useRouter();
   const asPath = router.asPath;
+
+  const userData = api.user.getByUsername.useQuery({
+    username: username ? username : "",
+  });
+
+  const profileImageUri = userData?.data?.imageUri
+    ? userData?.data?.imageUri
+    : "/profiledummy.png";
 
   return (
     <span className="mb-4 flex h-fit w-screen bg-sky-900 md:pr-2">
@@ -173,7 +182,12 @@ const Header = () => {
         <div className="relative my-auto ml-1">
           <div className="relative m-2 flex h-[4rem] w-[4rem]">
             <button onClick={toggleProfile} className="my-auto h-fit">
-              <Image src={"/profile_icon.png"} alt={"Icon"} fill></Image>
+              <Image
+                src={profileImageUri}
+                alt={"Icon"}
+                fill
+                className="rounded-xl"
+              ></Image>
             </button>
             <div
               className="absolute top-full right-0 z-30 rounded bg-slate-300 px-2 py-1"
