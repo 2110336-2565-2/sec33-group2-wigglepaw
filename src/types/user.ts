@@ -33,3 +33,51 @@ export type UserSubType =
       userType: UserType.PetHotel;
     } & PetSitter &
       PetHotel);
+
+/**
+ * I try to filter some unnecessary fields when displaying user profile.
+ * I do this to get rid of errors in profile components.
+ * Feel free to edit this. I know it's not a good practice.
+ */
+export type UserProfile = {
+  userId: string;
+  username: string;
+  email: string;
+  phoneNumber: string | null;
+  address: string | null;
+  imageUri: string | null;
+};
+
+export type UserProfileSubType =
+  | ({
+      userType: UserType.PetOwner;
+    } & PetOwnerProfileType)
+  | ({
+      userType: UserType.FreelancePetSitter;
+    } & PetSitterProfileType &
+      FreelancePetSitterProfileType)
+  | ({
+      userType: UserType.PetHotel;
+    } & PetSitterProfileType &
+      PetHotelProfileType);
+
+export type PetOwnerProfileType = {
+  firstName: string;
+  lastName: string;
+};
+
+export type PetSitterProfileType = {
+  petTypes: string[];
+  verifyStatus: boolean;
+  certificationUri: string | null;
+};
+
+export type FreelancePetSitterProfileType = {
+  firstName: string;
+  lastName: string;
+};
+
+export type PetHotelProfileType = {
+  businessLicenseUri: string | null;
+  hotelName: string;
+};

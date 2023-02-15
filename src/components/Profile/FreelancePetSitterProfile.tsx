@@ -18,10 +18,15 @@ import { api } from "../../utils/api";
 import type { User, PetSitter, FreelancePetSitter } from "@prisma/client";
 import { Popover } from "@headlessui/react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import {
+  FreelancePetSitterProfileType,
+  PetSitterProfileType,
+  UserProfile,
+} from "../../types/user";
 
 type FreelancePetSitterProfileProps = {
   editable: boolean;
-  user: User & PetSitter & FreelancePetSitter;
+  user: UserProfile & PetSitterProfileType & FreelancePetSitterProfileType;
 };
 
 const formDataSchema = z.object({
