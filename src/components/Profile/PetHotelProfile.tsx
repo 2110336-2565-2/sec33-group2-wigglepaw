@@ -15,10 +15,15 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../utils/api";
 import type { User, PetSitter, PetHotel } from "@prisma/client";
+import {
+  PetHotelProfileType,
+  PetSitterProfileType,
+  UserProfile,
+} from "../../types/user";
 
 type PetHotelProfileProps = {
   editable: boolean;
-  user: User & PetSitter & PetHotel;
+  user: UserProfile & PetSitterProfileType & PetHotelProfileType;
 };
 
 const formDataSchema = z.object({
