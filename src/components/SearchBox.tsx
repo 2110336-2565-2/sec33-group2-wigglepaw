@@ -39,6 +39,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
     searchName: watch("name") as string,
     searchPetType: watch("petType") as string,
     searchLocation: watch("location") as string,
+    searchPriceMax: watch("priceRange") as number,
     searchSortBy: watch("sortby") as string,
     searchIncludePetSitterType: watch("petSitterType") as string,
   });
