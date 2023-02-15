@@ -21,12 +21,12 @@ const PetSitterCard = ({ pet_sitter }: PetSitterCardProps) => {
   const name = pet_sitter ? pet_sitter.user.username : "NAME";
   const petTypes = pet_sitter ? pet_sitter.petTypes : ["Husky"];
   const profile_link = pet_sitter
-    ? "/profile/" + pet_sitter.user.username
-    : "/profile/lmao";
+    ? "/user/" + pet_sitter.user.username
+    : "/user/lmao";
   return (
     <div className="drop-shadow-md transition-all hover:scale-[1.03] ">
       <Link
-        href={profile_link} // TODO: Link to correct user
+        href={profile_link}
         className="m-3 flex h-fit rounded-2xl border border-2 border-solid border-black bg-yellow-50 p-3  transition-colors hover:bg-yellow-200  md:p-5"
       >
         <div className="relative flex w-[4rem] md:w-[5rem]">
