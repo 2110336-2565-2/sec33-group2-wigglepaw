@@ -237,7 +237,7 @@ export default function RegisterPetSitter() {
                   defaultValue={page2hotel.hotelName}
                   register={register}
                   validationRules={{ required: true }}
-                  placeholder="Letsingitout resort and spa"
+                  placeholder="Letsing It Out Resort and Spa"
                   type="text"
                 />
                 {errors.hotelname && (
@@ -251,7 +251,7 @@ export default function RegisterPetSitter() {
                   defaultValue={page2hotel.businessLicenseUri}
                   register={register}
                   validationRules={{ required: true }}
-                  placeholder="I dont even know what to put here :<"
+                  placeholder="Your business license"
                   type="text"
                 />
                 {errors.businessLicenseUri && (
@@ -439,7 +439,7 @@ export default function RegisterPetSitter() {
                   defaultValue={page1.username}
                   register={register}
                   validationRules={{ required: true }}
-                  placeholder="goddamn"
+                  placeholder="your username"
                   type="text"
                 />
                 {errors.username && (
@@ -453,7 +453,7 @@ export default function RegisterPetSitter() {
                   defaultValue={page1.email}
                   register={register}
                   validationRules={{ required: true }}
-                  placeholder="gg@ggwp"
+                  placeholder="example@email.com"
                   type="email"
                 />
                 {errors.email && (
