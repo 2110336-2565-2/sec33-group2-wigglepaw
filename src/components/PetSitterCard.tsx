@@ -16,7 +16,6 @@ interface PetSitterCardProps {
 }
 
 const PetSitterCard = ({ pet_sitter }: PetSitterCardProps) => {
-  // console.log("yoyo");
   // console.log(pet_sitter);
   const name = pet_sitter ? pet_sitter.user.username : "NAME";
   const petTypes = pet_sitter ? pet_sitter.petTypes : ["Husky"];
@@ -32,18 +31,17 @@ const PetSitterCard = ({ pet_sitter }: PetSitterCardProps) => {
     <div className="drop-shadow-md transition-all hover:scale-[1.03] ">
       <Link
         href={profile_link}
-        className="m-3 flex h-fit rounded-2xl border border-2 border-solid border-black bg-yellow-50 p-3  transition-colors hover:bg-yellow-200  md:p-5"
+        className="m-3 flex h-fit rounded-2xl border-2 border-solid border-black bg-yellow-50 p-4 transition-colors hover:bg-yellow-200"
       >
-        <div className="relative flex w-[4rem] md:w-[5rem]">
+        <div className="relative flex h-[4rem] w-[4rem]">
           <Image
             src={profileImageUri}
             alt={"Profile Pic"}
             fill
-            className="rounded-2xl object-contain"
+            className="rounded-2xl object-cover"
           ></Image>
         </div>
-
-        <div className="mx-3 w-[100%] leading-6">
+        <div className="mx-3 mr-auto w-fit leading-6">
           <div className="flex items-center">
             <FontAwesomeIcon icon={faAddressCard} />
             <p className="ml-2"> {name}</p>
@@ -59,9 +57,8 @@ const PetSitterCard = ({ pet_sitter }: PetSitterCardProps) => {
             <p className="ml-2"> 3 Stars</p>
           </div>
         </div>
-        <div className="my-auto ml-auto w-fit text-center md:mr-4">
+        <div className="my-auto mr-2 w-fit text-center">
           <FontAwesomeIcon icon={faMap} />
-
           <p>5.0 km</p>
         </div>
       </Link>

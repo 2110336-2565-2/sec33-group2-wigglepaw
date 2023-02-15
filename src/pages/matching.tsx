@@ -9,7 +9,6 @@ import PetSitterCard from "../components/PetSitterCard";
 
 import { number } from "zod";
 import { useForm } from "react-hook-form";
-import SearchResult from "../components/SearchResult";
 
 const prisma = new PrismaClient();
 
@@ -82,33 +81,26 @@ const matching: NextPage = (props: any) => {
         ></SearchBox>
       </div>
       <div className="flex justify-center pt-5">
-        <div className=" w-[60%]    ">
-          <div className="relative flex items-center justify-center ">
-            <h1 className="text-2xl font-bold">Results</h1>
-            <form className="absolute right-0 " onSubmit={onSubmitpage}>
-              <label className="mr-2"></label>
+        <div className="w-[90%] md:w-[60%]">
+          <div className="flex justify-between">
+            <h1 className="text-xl font-bold text-yellow-500">Results</h1>
+            <form className="w-fit" onSubmit={onSubmitpage}>
               <input
-                className="absolute right-[5rem] w-[5rem] rounded bg-zinc-100 px-2 py-1 text-center text-sm font-semibold text-[#213951]  hover:bg-white focus:outline-none focus:ring-2 focus:ring-blue-300 "
+                className="w-[5rem] rounded bg-zinc-100 px-2 py-1 text-center text-sm font-semibold text-[#213951]  hover:bg-white focus:outline-none focus:ring-2 focus:ring-blue-300 "
                 id="page"
                 type="number"
                 min={1}
                 max={5}
               />
-              <button className="rounded-xl bg-yellow-200 px-2 ">Search</button>
+              <button className="rounded-xl bg-yellow-200 px-2">Search</button>
             </form>
           </div>
-          <div className="mt-5 md:grid md:grid-cols-2">
+          <div className="mt-5 lg:grid lg:grid-cols-2">
             {petSitters?.map((user: any) => (
               <PetSitterCard pet_sitter={user}></PetSitterCard>
             ))}
-
-            {/* <PetSitterCard pet_sitter={null}></PetSitterCard>
-            <PetSitterCard pet_sitter={null}></PetSitterCard>
-            <PetSitterCard pet_sitter={null}></PetSitterCard>
-            <PetSitterCard pet_sitter={null}></PetSitterCard>
-            <PetSitterCard pet_sitter={null}></PetSitterCard> */}
           </div>
-          <div className="mt-5 flex items-center  justify-center">
+          <div className="mt-5 flex items-center justify-center">
             <Pagelay />
           </div>
         </div>

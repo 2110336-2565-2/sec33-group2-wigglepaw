@@ -5,7 +5,7 @@
 @layer base {
   /* main */
   .find-link {
-    @apply mx-2 md:mx-4 block w-fit rounded bg-sky-900 py-2 px-2 md:px-5 text-xl text-white transition-colors hover:bg-sky-700;
+    @apply mx-2 block w-fit rounded bg-sky-900 py-2 px-2 text-xl text-white transition-colors hover:bg-sky-700 md:mx-4 md:px-5;
   }
 }
 
@@ -20,14 +20,13 @@
   .header-a {
     @apply rounded py-2 px-4 text-lg font-bold text-white transition-all hover:bg-sky-700;
   }
-  .buttonstyle{
-    @apply rounded bg-[#98AAB4] px-6  py-2.5 text-center text-sm font-semibold text-[#213951] drop-shadow-md hover:bg-[#8b9ba3] focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto md:px-16
+  .buttonstyle {
+    @apply rounded bg-[#98AAB4] px-6  py-2.5 text-center text-sm font-semibold text-[#213951] drop-shadow-md hover:bg-[#8b9ba3] focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto md:px-16;
   }
 
-
   /* registerPerSitter */
-  .errorstyle{
-    @apply mt-1 text-xs italic text-red-500
+  .errorstyle {
+    @apply mt-1 text-xs italic text-red-500;
   }
   .header-register-link {
     @apply my-1 flex h-fit w-[11rem] rounded bg-green-700 p-2 text-base font-semibold text-white transition-all hover:bg-green-600;
@@ -51,6 +50,11 @@
   }
   .profile-edit-button {
     @apply mx-auto flex whitespace-nowrap rounded-2xl bg-sky-700 px-3 py-1 text-center font-semibold text-white hover:bg-sky-600;
+  }
+
+  /* searchbox */
+  .search-input {
+    @apply mb-2 rounded px-1 py-[0.125rem];
   }
 
   .center-thing {
