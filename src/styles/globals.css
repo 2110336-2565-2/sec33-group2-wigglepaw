@@ -67,7 +67,7 @@
 
   /* Index */
   .circlerec {
-    @apply h-[9rem] w-[9rem] rounded-full
+    @apply h-[8rem] w-[8rem] 
   }
 }
 /* nice color */
