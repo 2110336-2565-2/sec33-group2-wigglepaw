@@ -136,7 +136,7 @@ export async function main() {
   var dataCount = 5;
 
   // EDIT HERE **********************************************
-  var firstNames: string[] = [
+  const firstNames: string[] = [
     "Tokino",
     "Kanata",
     "Watame",
