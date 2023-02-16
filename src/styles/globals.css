@@ -1,3 +1,104 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  /* main */
+  .find-link {
+    @apply mx-2 block w-fit rounded bg-sky-900 py-2 px-2 text-xl text-white transition-colors hover:bg-sky-700 md:mx-4 md:px-5;
+  }
+}
+
+@layer components {
+  /* header */
+  .header-li {
+    @apply float-left;
+  }
+  .header-li-div {
+    @apply my-auto h-fit;
+  }
+  .header-a {
+    @apply rounded py-2 px-4 text-lg font-bold text-white transition-all hover:bg-sky-700;
+  }
+  .buttonstyle {
+    @apply rounded bg-[#98AAB4] px-6  py-2.5 text-center text-sm font-semibold text-[#213951] drop-shadow-md hover:bg-[#8b9ba3] focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto md:px-16;
+  }
+
+  /* registerPerSitter */
+  .errorstyle {
+    @apply mt-1 text-xs italic text-red-500;
+  }
+  .header-register-link {
+    @apply my-1 flex h-fit w-[11rem] rounded bg-green-700 p-2 text-base font-semibold text-white transition-all hover:bg-green-600;
+  }
+  .header-menu-link {
+    @apply my-1 flex h-fit w-[7rem] rounded bg-sky-700 p-2 text-base font-semibold text-white transition-all hover:bg-sky-600;
+  }
+  .header-at-page {
+    @apply bg-white text-sky-700 hover:bg-white;
+  }
+
+  /* profile */
+  .profile-information {
+    @apply mt-2 flex w-screen flex-wrap rounded-md border-[3px] border-sky-500 p-2 md:mt-0 md:w-3/5;
+  }
+  .data-field {
+    @apply my-auto mb-[.4rem] inline w-full items-center text-lg;
+  }
+  .profile-icon {
+    @apply my-auto inline h-5 w-5;
+  }
+  .profile-input {
+    @apply mb-1 mt-[0.1rem] w-full rounded-md border-2 border-sky-200 focus:ring-sky-700;
+  }
+  .profile-edit-button {
+    @apply mx-auto flex whitespace-nowrap rounded-2xl bg-sky-700 px-3 py-1 text-center font-semibold text-white hover:bg-sky-600;
+  }
+
+  /* searchbox */
+  .search-input {
+    @apply mb-2 rounded px-1 py-[0.125rem];
+  }
+
+  .center-thing {
+    @apply flex items-center justify-center;
+  }
+}
+/* nice color */
+.testt {
+  background: linear-gradient(
+    90deg,
+    #ffb2fa 0%,
+    #5999fe 34%,
+    #70e2d6 70%,
+    #fdff77 87%,
+    #ffb2fa 100%
+  );
+}
+html {
+  font-size: 16px;
+  /* font-family: 'Ubuntu', sans-serif; */
+}
+@media screen and (min-width: 600px) {
+  html {
+    font-size: 17px;
+  }
+}
+/* sss */
+@media screen and (min-width: 1200px) {
+  html {
+    font-size: 18px;
+  }
+}
+@media screen and (min-width: 1600px) {
+  html {
+    font-size: 19px;
+  }
+}
+
+* {
+  -ms-overflow-style: none;
+}
+::-webkit-scrollbar {
+  display: none;
+}

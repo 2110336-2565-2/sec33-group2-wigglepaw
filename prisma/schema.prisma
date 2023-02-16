@@ -14,36 +14,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
-
-model Owner {
-    id    String @id @default(cuid())
-    name  String
-    email String @unique
-
-    Pet Pet[]
-}
-
-model Pet {
-    id        String   @id @default(cuid())
-    name      String
-    kind      PetKind
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    owner   Owner  @relation(fields: [ownerId], references: [id])
-    ownerId String
-}
-
-enum PetKind {
-    DOGGO
-    NEKO
-}
-
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -58,7 +28,7 @@ model Account {
     scope             String?
     id_token          String? // @db.Text
     session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user              User    @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
 }
@@ -68,17 +38,61 @@ model Session {
     sessionToken String   @unique
     userId       String
     expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user         User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
 }
 
+// ***************** IMPORTANT *******************
+// I changed "id" to "userId" for clearer meaning.
+// This can fuck up NextAuth, please fix the variable names after merging this.
+// ***************** IMPORTANT *******************
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
+    userId        String     @id @default(cuid())
+    petOwner      PetOwner?
+    petSitter     PetSitter?
+    username      String     @unique
+    password      String
+    email         String     @unique
     emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
+    phoneNumber   String?
+    address       String?
+    imageUri      String?
+    bankAccount   String? // Assume 1 per user
+    bankName      String? // Assume 1 per user
+    accounts      Account[] // Needed for Auth
+    sessions      Session[] // Needed for Auth
+}
+
+model PetOwner {
+    userId    String @id @default(cuid())
+    user      User   @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    firstName String
+    lastName  String
+}
+
+model PetSitter {
+    userId             String              @id @default(cuid())
+    user               User                @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    freelancePetSitter FreelancePetSitter?
+    petHotel           PetHotel?
+    petTypes           String[]
+    verifyStatus       Boolean
+    certificationUri   String?
+    startPrice         Float?
+    endPrice           Float?
+}
+
+model FreelancePetSitter {
+    userId    String    @id @default(cuid())
+    petSitter PetSitter @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    firstName String
+    lastName  String
+}
+
+model PetHotel {
+    userId             String    @id @default(cuid())
+    petSitter          PetSitter @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    businessLicenseUri String?
+    hotelName          String
 }
 
 model VerificationToken {
