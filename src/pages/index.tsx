@@ -92,7 +92,7 @@ const Home: NextPage = () => {
         <div className=" flex h-[100%] w-[80%] items-center justify-center ">
           <div className="mb-16 grid  w-[100%] justify-items-center md:grid-cols-3 md:grid-rows-2 ">
             <div className="center-thing md:col-span-3">
-              <h1 className=" px-4 text-[2.5rem]">
+              <h1 className="py-12 px-4 text-[2.5rem] md:py-0">
                 10 billion users, 234 million members
               </h1>
             </div>
@@ -139,8 +139,8 @@ const Home: NextPage = () => {
           </div>
         </div>
       </section>
-      <section className="absolute h-[90%] w-[100%] md:top-[160%]">
-        <div className="grid h-full w-full grid-cols-2 grid-rows-2">
+      <section className="w-[100%] md:absolute md:top-[160%] md:h-[90%]">
+        <div className="h-full w-full md:grid md:grid-cols-2 md:grid-rows-2">
           <div className="bg-bg-box-main p-16">
             <h1>INTRODUCING CHAT SYSTEM!</h1>
             <p className="mt-5   text-sm">
@@ -158,7 +158,9 @@ const Home: NextPage = () => {
           <div className="bg-bg-main">
             <img src="/doghappy1.jpg" className="object-cover"></img>
           </div>
-          <div className="bg-[url('/cathappy1.jpg')] bg-cover bg-no-repeat"></div>
+          <div className="">
+            <img src="/cathappy1.jpg" className="object-cover"></img>
+          </div>
           <div className="bg-bg-box-main p-16">
             <h1>INTRODUCING BOOKING SYSTEM!</h1>
             <p className="mt-5   text-sm">
