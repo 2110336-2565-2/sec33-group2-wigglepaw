@@ -16,12 +16,6 @@ const SearchBox: React.FC<SearchBoxProps> = ({
   useFormReturn,
   setPetSitters,
 }) => {
-  // const formDataSchema = z.object({
-  //   name: z.string().trim().min(1),
-  //   priceRange: z.number(),
-  // });
-
-  // type FormData = z.infer<typeof formDataSchema>;
   const {
     register,
     setValue,
@@ -30,30 +24,34 @@ const SearchBox: React.FC<SearchBoxProps> = ({
     formState: { errors },
   } = useFormReturn;
 
-  // // TODO: how to get the params from the form and send it as a params to the useQuery ?
-  // const petSitters = api.petSitter.searchPetSitter.useQuery({
-  const petHotels = api.petHotel.getByUsername.useQuery({
-    username: watch("name") as string,
-  });
-
-  const petSitterSort = api.petSitter.searchPetSitter.useQuery({
-    searchName: watch("name") as string,
-    searchPetType: watch("petType") as string,
-    searchLocation: watch("location") as string,
-    searchPriceMin: watch("searchPriceMin") as number,
-    searchPriceMax: watch("searchPriceMax") as number,
-    searchSortBy: watch("sortby") as string,
-    searchIncludePetSitterType: watch("petSitterType") as string,
-  });
-  useEffect(() => {
-    setPetSitters(petSitterSort.data);
-  }, [petSitterSort]);
-
-  const router = useRouter();
+  const petSitterSort = api.petSitter.searchPetSitter.useQuery(
+    {
+      searchName: watch("name") as string,
+      searchPetType: watch("petType") as string,
+      // searchLocation: watch("location") as string,
+      searchPriceMin: watch("searchPriceMin") as number,
+      searchPriceMax: watch("searchPriceMax") as number,
+      searchSortBy: watch("sortby") as string,
+      searchIncludePetSitterType: watch("petSitterType") as string,
+    },
+    {
+      enabled: false,
+    }
+  );
 
   const onSubmit = async (data: FieldValues) => {
-    alert(JSON.stringify(data));
+    // alert(JSON.stringify(data));
+    await petSitterSort.refetch();
   };
+
+  useEffect(() => {
+    if (petSitterSort.status === "success") {
+      setPetSitters(petSitterSort.data);
+    }
+  }, [petSitterSort.status]);
+
+  // console.log(petSitterSort.data)
+  // console.log(petSitterSort.status);
 
   return (
     <form className="w-[90%] md:w-[60%]" onSubmit={handleSubmit(onSubmit)}>
@@ -75,7 +73,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
             <br />
             {/* check into required true*/}
 
-            <label htmlFor="location">Location</label>
+            {/* <label htmlFor="location">Location</label>
             <br />
             <input
               className="search-input"
@@ -83,7 +81,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
               id="location"
               {...register("location")}
             />
-            <br />
+            <br /> */}
             <label htmlFor="petType">Pet Type</label>
             <br />
             <input
@@ -100,36 +98,10 @@ const SearchBox: React.FC<SearchBoxProps> = ({
             </datalist>
             <br />
 
-            {/* TODO: passed a state onto the inner component of the range slider*/}
-
-            {/* slider is work in progress */}
-            {/* <div> */}
-            {/* <label htmlFor="priceRange">Price Range</label>
-
-            <input type="range"
-              min="0"
-              max="100"
-              value={50}
-              onChange={e => {
-                setPriceValue(e.target.value);
-              }}
-            /> */}
-
-            {/* <RangeSlider/> */}
-            {/* <TmpRangeSlider/> */}
-            {/* </div> */}
-
             <label>Price Range</label>
             <br></br>
-            {/* <input type="range"
-          {...(register("priceRange", {required: true})) }
-
-          >
-
-          </input> */}
             <br></br>
-            {/* <RangeSlider register={register} setValue={setValue} /> */}
-            <TwoThumbs register={register} setValue={setValue} />
+            <TwoThumbs rtl={false} register={register} setValue={setValue} />
           </div>
         </div>
         <div className="mx-auto w-full min-w-fit px-4 pt-2">

@@ -4,4 +4,5 @@ export interface SearchValues {
   searchPriceMax: number;
   sortby: string;
   petSitterType: string;
+  petType: string;
 }

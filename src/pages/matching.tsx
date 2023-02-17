@@ -16,7 +16,7 @@ const matching: NextPage = () => {
   const [petSitters, setPetSitters] = useState([]);
 
   React.useEffect(() => {
-    //console.log("hhh ", petSitters);
+    console.log("hhh ", petSitters);
   }, [petSitters]);
 
   let apage = [1, 2, 3, 4, 5];
@@ -51,8 +51,9 @@ const matching: NextPage = () => {
   const useFormReturn = useForm({
     defaultValues: {
       name: "",
-      searchPriceMin: 0,
+      searchPriceMin: 250,
       searchPriceMax: 1000,
+      petType: "",
       sortby: "",
       petSitterType: "",
     },
