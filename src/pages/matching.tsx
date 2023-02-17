@@ -8,6 +8,7 @@ import PetSitterCard from "../components/PetSitterCard";
 
 import { number } from "zod";
 import { useForm } from "react-hook-form";
+import { BEGIN_MAX, BEGIN_MIN } from "../components/TwoThumbs";
 
 const matching: NextPage = () => {
   // const users = props.users;
@@ -51,8 +52,8 @@ const matching: NextPage = () => {
   const useFormReturn = useForm({
     defaultValues: {
       name: "",
-      searchPriceMin: 250,
-      searchPriceMax: 1000,
+      searchPriceMin: BEGIN_MIN,
+      searchPriceMax: BEGIN_MAX,
       petType: "",
       sortby: "",
       petSitterType: "",

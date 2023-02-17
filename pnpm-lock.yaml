@@ -35,6 +35,7 @@ specifiers:
   react-dom: 18.2.0
   react-hook-form: ^7.42.1
   react-icons: ^4.7.1
+  react-intersection-observer: ^9.4.2
   react-range: ^1.8.14
   superjson: 1.9.1
   tailwindcss: ^3.2.0
@@ -64,6 +65,7 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
   react-hook-form: 7.42.1_react@18.2.0
   react-icons: 4.7.1_react@18.2.0
+  react-intersection-observer: 9.4.2_react@18.2.0
   react-range: 1.8.14_biqbaboplfbrettd7655fr4n2y
   superjson: 1.9.1
   trpc-panel: 1.2.8_v7aw5md42ua3rf277jyeogdfny
@@ -3250,6 +3252,14 @@ packages:
     resolution: {integrity: sha512-yHd3oKGMgm7zxo3EA7H2n7vxSoiGmHk5t6Ou4bXsfcgWyhfDKMpyKfhHR6Bjnn63c+YXBLBPUql9H4wPJM6sXw==}
     peerDependencies:
       react: '*'
+    dependencies:
+      react: 18.2.0
+    dev: false
+
+  /react-intersection-observer/9.4.2_react@18.2.0:
+    resolution: {integrity: sha512-AdK+ryzZ7U9ZJYttDUZ8q2Am3nqE0exg5Ryl5Y124KeVsix/1hGZPbdu58EqA98TwnzwDNWHxg/kwNawmIiUig==}
+    peerDependencies:
+      react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
     dev: false

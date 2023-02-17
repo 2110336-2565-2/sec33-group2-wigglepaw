@@ -21,6 +21,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
     setValue,
     handleSubmit,
     watch,
+    getValues,
     formState: { errors },
   } = useFormReturn;
 
@@ -101,7 +102,12 @@ const SearchBox: React.FC<SearchBoxProps> = ({
             <label>Price Range</label>
             <br></br>
             <br></br>
-            <TwoThumbs rtl={false} register={register} setValue={setValue} />
+            <TwoThumbs
+              rtl={false}
+              register={register}
+              setValue={setValue}
+              getValues={getValues}
+            />
           </div>
         </div>
         <div className="mx-auto w-full min-w-fit px-4 pt-2">

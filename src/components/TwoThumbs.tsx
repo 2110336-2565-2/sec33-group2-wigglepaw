@@ -1,23 +1,50 @@
 import * as React from "react";
-import { UseFormRegister, UseFormSetValue } from "react-hook-form";
+import {
+  UseFormGetValues,
+  UseFormRegister,
+  UseFormSetValue,
+} from "react-hook-form";
 import { Range, getTrackBackground } from "react-range";
 import { SearchValues } from "../common/interfaces";
 
-const STEP = 0.1;
+const STEP = 100;
 const MIN = 0;
-const MAX = 1000;
+const MAX = 10000;
+export const BEGIN_MIN = 300;
+export const BEGIN_MAX = 2000;
 
 interface RangeSliderProps {
   register: UseFormRegister<SearchValues>; // declare register props
   setValue: UseFormSetValue<SearchValues>;
+  getValues: UseFormGetValues<SearchValues>;
 }
 
 const TwoThumbs: React.FC<{ rtl: boolean } & RangeSliderProps> = ({
   rtl = false,
   register,
   setValue,
+  getValues,
 }) => {
-  const [values, setValues] = React.useState([250, 1000]);
+  const [values, setValues] = React.useState([BEGIN_MIN, BEGIN_MAX]);
+
+  const {
+    onBlur: onBlurMin,
+    name: nameMin,
+    ref: refMin,
+  } = register("searchPriceMin", {
+    value: values[0],
+    valueAsNumber: true,
+  });
+
+  const {
+    onBlur: onBlurMax,
+    name: nameMax,
+    ref: refMax,
+  } = register("searchPriceMax", {
+    value: values[1],
+    valueAsNumber: true,
+  });
+
   return (
     <div
       style={{
@@ -75,8 +102,8 @@ const TwoThumbs: React.FC<{ rtl: boolean } & RangeSliderProps> = ({
             {...props}
             style={{
               ...props.style,
-              height: "42px",
-              width: "42px",
+              height: "10px",
+              width: "10px",
               borderRadius: "4px",
               backgroundColor: "#FFF",
               display: "flex",
@@ -95,18 +122,49 @@ const TwoThumbs: React.FC<{ rtl: boolean } & RangeSliderProps> = ({
           </div>
         )}
       />
-      <output style={{ marginTop: "30px" }} id="output">
+      {/* <output style={{ marginTop: "30px" }} id="output">
         {values[0]?.toFixed(1)} - {values[1]?.toFixed(1)}
-      </output>
+      </output> */}
+      <label>Min</label>
       <input
-        {...register("searchPriceMin", { value: values[0] })}
-        className="h-0 w-0"
-        hidden
-      ></input>
+        className="mx-2 w-10"
+        onBlur={onBlurMin}
+        name={nameMin}
+        ref={refMin}
+        onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (
+            e.key === "Enter" &&
+            ((e.target as HTMLInputElement).value as unknown as number) > 0 &&
+            ((e.target as HTMLInputElement).value as unknown as number) <
+              (values[1] ?? MAX)
+          ) {
+            setValues([
+              (e.target as HTMLInputElement).value as unknown as number,
+              values[1] as number,
+            ]);
+          }
+        }}
+      />
+
+      <label>Max</label>
       <input
-        {...register("searchPriceMax", { value: values[1] })}
-        className="h-0 w-0"
-        hidden
+        className="mx-2 w-10"
+        onBlur={onBlurMax}
+        name={nameMax}
+        ref={refMax}
+        onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (
+            e.key === "Enter" &&
+            ((e.target as HTMLInputElement).value as unknown as number) < MAX &&
+            ((e.target as HTMLInputElement).value as unknown as number) >
+              (values[0] ?? MIN)
+          ) {
+            setValues([
+              values[0] as number,
+              (e.target as HTMLInputElement).value as unknown as number,
+            ]);
+          }
+        }}
       ></input>
     </div>
   );
