@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import RangeSlider from "./RangeSlider";
 import { SetStateAction, useEffect, useState } from "react";
 import { SearchValues } from "../common/interfaces";
+import TwoThumbs from "./TwoThumbs";
 interface SearchBoxProps {
   useFormReturn: UseFormReturn<SearchValues>;
   setPetSitters: React.Dispatch<any>;
@@ -39,7 +40,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
     searchName: watch("name") as string,
     searchPetType: watch("petType") as string,
     searchLocation: watch("location") as string,
-    searchPriceMax: watch("priceRange") as number,
+    searchPriceMin: watch("searchPriceMin") as number,
+    searchPriceMax: watch("searchPriceMax") as number,
     searchSortBy: watch("sortby") as string,
     searchIncludePetSitterType: watch("petSitterType") as string,
   });
@@ -50,20 +52,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
   const router = useRouter();
 
   const onSubmit = async (data: FieldValues) => {
-    // TODO: call the back end router in here
-
-    // data.priceRange = test[0]; // way of the CURSE --FIXED
-
-    //console.log(hotels);
-
-    //console.log(petHotelsSort.data?.petSitter.user?.username);
-
-    // alert data
     alert(JSON.stringify(data));
-
-    // TODO: once retrieved data from the back end
-    // set the result in the matching page to that
-    // setResult(result);
   };
 
   return (
@@ -139,7 +128,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
           </input> */}
             <br></br>
-            <RangeSlider register={register} setValue={setValue} />
+            {/* <RangeSlider register={register} setValue={setValue} /> */}
+            <TwoThumbs register={register} setValue={setValue} />
           </div>
         </div>
         <div className="mx-auto w-full min-w-fit px-4 pt-2">

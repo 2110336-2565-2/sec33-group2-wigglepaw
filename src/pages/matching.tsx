@@ -13,7 +13,7 @@ const matching: NextPage = () => {
   // const users = props.users;
   const pageNum = 1;
 
-  const [petSitters, setPetSitters] = useState();
+  const [petSitters, setPetSitters] = useState([]);
 
   React.useEffect(() => {
     //console.log("hhh ", petSitters);
@@ -44,14 +44,15 @@ const matching: NextPage = () => {
     return <>{hi}</>;
   };
 
-  const onSubmitpage = (e) => {
+  const onSubmitpage = (e: any) => {
     e.preventDefault();
     setCpage(parseInt(e.target.page.value));
   };
   const useFormReturn = useForm({
     defaultValues: {
       name: "",
-      priceRange: 50.0,
+      searchPriceMin: 0,
+      searchPriceMax: 1000,
       sortby: "",
       petSitterType: "",
     },
