@@ -14,4 +14,4 @@ services:
       - ./pgdata:/var/lib/postgresql/data
     ports:
       # Expose port 5000 on the host to port 5432 in the container
-      - "5000:5432"
+      - "5020:5432"
