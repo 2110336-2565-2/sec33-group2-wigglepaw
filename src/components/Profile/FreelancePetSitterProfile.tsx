@@ -12,7 +12,7 @@ import { IoPaw } from "react-icons/io5";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../utils/api";
 import { Popover } from "@headlessui/react";
@@ -22,6 +22,7 @@ import {
   PetSitterProfileType,
   UserProfile,
 } from "../../types/user";
+import { Dialog, Transition } from "@headlessui/react";
 
 type FreelancePetSitterProfileProps = {
   editable: boolean;
@@ -60,6 +61,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
   const updatePetSitter = api.petSitter.update.useMutation();
   const updateUser = api.user.update.useMutation();
   const [editing, setEditing] = useState(false);
+  const [isPosting, setIsPosting] = useState(true);
 
   const profileImageUri = props.user
     ? props.user.imageUri
@@ -225,14 +227,6 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
                   defaultValue={props.user.petTypes}
                   onChange={(val) => setValue("petTypes", val)}
                 />
-                {/* <input
-                  defaultValue={`${
-                    props.user.petTypes ? props.user.petTypes : ""
-                  }`}
-                  placeholder="Seprate with ,"
-                  className="profile-input"
-                  {...register("petTypes")}
-                /> */}
               </p>
 
               <div className="mt-3 flex">
@@ -252,8 +246,66 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
           </div>
         )}
       </div>
-      <div className="mx-3 mt-2 flex max-w-md justify-center sm:w-1/2">
-        <h1 className="text-xl font-bold">Posts</h1>
+      <div className="mx-3 mt-2 max-w-md md:mx-auto md:w-1/2">
+        <div className="w-full text-xl font-bold">Posts</div>
+        <button
+          className="profile-post text-center font-semibold"
+          onClick={() => {
+            setIsPosting(true);
+          }}
+        >
+          + New Post
+        </button>
+        <Transition show={isPosting} as={Fragment}>
+          <Dialog onClose={() => setIsPosting(false)}>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              {/* The backdrop, rendered as a fixed sibling to the panel container */}
+              <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+            </Transition.Child>
+
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              {/* Full-screen scrollable container */}
+              <div className="fixed inset-0 overflow-y-auto">
+                {/* Container to center the panel */}
+                <div className="flex min-h-full items-center justify-center p-4">
+                  <Dialog.Panel className="mx-auto w-[50vw] rounded bg-white">
+                    <Dialog.Title>Deactivate account</Dialog.Title>
+                    <Dialog.Description>
+                      This will permanently deactivate your account
+                    </Dialog.Description>
+
+                    <p>
+                      Are you sure you want to deactivate your account? All of
+                      your data will be permanently removed. This action cannot
+                      be undone.
+                    </p>
+
+                    <button onClick={() => setIsPosting(false)}>
+                      Deactivate
+                    </button>
+                    <button onClick={() => setIsPosting(false)}>Cancel</button>
+                  </Dialog.Panel>
+                </div>
+              </div>
+            </Transition.Child>
+          </Dialog>
+        </Transition>
         {/* TODO: Posts display */}
         {/* {users.map((user: any) => (
           <PetSitterCard pet_sitter={user}></PetSitterCard>
