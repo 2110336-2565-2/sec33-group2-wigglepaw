@@ -2,16 +2,88 @@ import { type NextPage } from "next";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { api } from "../utils/api";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import Header from "../components/Header";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import React from "react";
+import FullCalendar from "@fullcalendar/react"; // must go before plugins
+import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import { text } from "stream/consumers";
 
 const About: NextPage = () => {
+  type Insid = { title: string; start: string; end: string };
+  interface formstatus {
+    hi: Insid[];
+  }
+  const [events, setEvents] = useState<formstatus>([]);
   const { ref: myRef, inView: myVis } = useInView({});
   const { ref: myRef2, inView: myVis2 } = useInView({});
+  const { ref: myRef3, inView: myVis3 } = useInView({});
+
+  const submitEvent = (e: { target: any; preventDefault: () => void }) => {
+    e.preventDefault();
+    setEvents([
+      ...events,
+      {
+        title: e.target.title.value,
+        start: e.target.start.value,
+        end: e.target.end.value,
+      },
+    ]);
+  };
   return (
     <>
-      <div className="absolute z-[-20] h-[200%] w-[100%] bg-[#EAE7DC] ">
+      <Header />
+      <div className="center-thing  h-screen w-screen">
+        <div className="h-[80%] w-[80%] overflow-scroll">
+          <div className="">
+            <FullCalendar
+              plugins={[dayGridPlugin, timeGridPlugin]}
+              initialView="timeGridWeek"
+              contentHeight={600}
+              stickyFooterScrollbar={true}
+              headerToolbar={
+                {
+                  left: "prev,next",
+                  center: "title",
+                  right: "dayGridMonth,timeGridWeek",
+                } // user can switch between the two
+              }
+              eventClick={function (arg) {
+                console.log(arg.event.title);
+                console.log("Start: ", arg.event.start, "End: ", arg.event.end);
+              }}
+              events={events}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="center-thing mb-40">
+        <form onSubmit={submitEvent}>
+          <label>Add Event Title</label>
+          <input type="text" id="title" className="mx-2 bg-gray-100"></input>
+          <label>Start Date</label>
+          <input
+            type="datetime-local"
+            id="start"
+            className="mx-2 bg-gray-100"
+          ></input>
+          <label>End Date</label>
+          <input
+            type="datetime-local"
+            id="end"
+            className="mx-2 bg-gray-100"
+          ></input>
+          <button className="ml-2 rounded-xl bg-sky-200 px-3 py-2">
+            Submit
+          </button>
+        </form>
+      </div>
+      {/* <div className="absolute z-[-20] h-[200%] w-[100%] bg-[#EAE7DC] ">
         <section className="h-full">
           <Header />
           <div className="h-full">
@@ -40,7 +112,7 @@ const About: NextPage = () => {
                 <p>Find who is right for your pets!</p>
               </div>
             </div>
-            <div className="absolute top-[52%] left-[35%] h-[20%] w-[50%] rounded-3xl bg-white bg-opacity-50 ">
+            <div className="absolute top-[52%] left-[35%] h-[20%] w-[50%] rounded-3xl  ">
               <img
                 src="/about2.png"
                 className="rounded-3xl border-2 border-bg-box-main object-cover "
@@ -55,7 +127,7 @@ const About: NextPage = () => {
                 <p>Ready to ...</p>
               </div>
             </div>
-            <div className="absolute top-[80%] left-[35%] h-[20%] w-[50%] rounded-3xl bg-white bg-opacity-50 ">
+            <div className="absolute top-[80%] left-[35%] h-[20%] w-[50%] rounded-3xl ">
               <img
                 src="/about2.png"
                 className="rounded-3xl border-2 border-bg-box-main object-cover "
@@ -88,7 +160,7 @@ const About: NextPage = () => {
         <div className="mt- relative left-[15%] mt-6 h-[30%] w-[70%] ">
           <img
             src="/about3.png"
-            className="h-[100%] w-full rounded-3xl border-2 border-bg-box-main object-cover "
+            className="opacity=0 h-[100%] w-full rounded-3xl border-2 border-bg-box-main object-cover "
           ></img>
         </div>
 
@@ -116,15 +188,15 @@ const About: NextPage = () => {
             className="h-[100%] w-full rounded-3xl border-2 border-bg-box-main object-cover "
           ></img>
         </div>
-        {/* <div
+        <div
           ref={myRef}
           className={
             "relative flex items-center justify-center text-[5rem] "
             //+(myVis ? "animate-[wiggle_3s_ease-in-out_]" : "")
           }
-        ></div> */}
+        ></div>
       </div>
-      <div className="absolute top-[400%] z-[-30] h-[200%] w-[100%] bg-[#EAE7DC]"></div>
+      <div className="absolute top-[400%] z-[-30] h-[200%] w-[100%] bg-[#EAE7DC]"></div> */}
     </>
   );
 };
