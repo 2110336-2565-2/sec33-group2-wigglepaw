@@ -24,6 +24,8 @@ import {
 } from "../../types/user";
 import { Dialog, Transition } from "@headlessui/react";
 
+import Post from "./Post";
+
 type FreelancePetSitterProfileProps = {
   editable: boolean;
   user: UserProfile & PetSitterProfileType & FreelancePetSitterProfileType;
@@ -61,7 +63,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
   const updatePetSitter = api.petSitter.update.useMutation();
   const updateUser = api.user.update.useMutation();
   const [editing, setEditing] = useState(false);
-  const [isPosting, setIsPosting] = useState(true);
+  const [isPosting, setIsPosting] = useState(false);
 
   const profileImageUri = props.user
     ? props.user.imageUri
@@ -111,6 +113,9 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
 
     setEditing(false);
   };
+
+  //TODO: Remove
+  const posts = [1, 2];
 
   return (
     <div>
@@ -316,10 +321,11 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
               </Transition.Child>
             </Dialog>
           </Transition>
+          <div className="mx-auto my-1 h-1 w-[80%] border-b-[3px] border-gray-400" />
           {/* TODO: Posts display */}
-          {/* {users.map((user: any) => (
-          <PetSitterCard pet_sitter={user}></PetSitterCard>
-        ))} */}
+          {posts.map((post: any) => (
+            <Post></Post>
+          ))}
         </div>
       </div>
     </div>

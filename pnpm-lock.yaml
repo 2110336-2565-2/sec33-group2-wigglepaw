@@ -33,8 +33,10 @@ specifiers:
   prisma: ^4.8.0
   react: 18.2.0
   react-dom: 18.2.0
+  react-grid-gallery: ^1.0.0
   react-hook-form: ^7.42.1
   react-icons: ^4.7.1
+  react-image-lightbox: ^5.1.4
   react-range: ^1.8.14
   superjson: 1.9.1
   tailwindcss: ^3.2.0
@@ -62,8 +64,10 @@ dependencies:
   next-auth: 4.18.8_7jnwqgtpcnwg4nzft4b6xlzlfi
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-grid-gallery: 1.0.0_react@18.2.0
   react-hook-form: 7.42.1_react@18.2.0
   react-icons: 4.7.1_react@18.2.0
+  react-image-lightbox: 5.1.4_biqbaboplfbrettd7655fr4n2y
   react-range: 1.8.14_biqbaboplfbrettd7655fr4n2y
   superjson: 1.9.1
   trpc-panel: 1.2.8_v7aw5md42ua3rf277jyeogdfny
@@ -2038,6 +2042,10 @@ packages:
       strip-final-newline: 3.0.0
     dev: true
 
+  /exenv/1.2.2:
+    resolution: {integrity: sha512-Z+ktTxTwv9ILfgKCk32OX3n/doe+OcLTRtqK9pcL+JsP3J1/VW8Uvl4ZjLlKqeW4rzK4oesDOGMEMRIZqtP4Iw==}
+    dev: false
+
   /fast-deep-equal/3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
     dev: true
@@ -3237,6 +3245,14 @@ packages:
       scheduler: 0.23.0
     dev: false
 
+  /react-grid-gallery/1.0.0_react@18.2.0:
+    resolution: {integrity: sha512-S1gr6WXBlPFVrE0x2BHuu7jhyaB61mabcMQyx+8KCgAyKzGza0WF67AfAnS9Q00aurFEq4IP8eqb2Bk5F4RAmQ==}
+    peerDependencies:
+      react: '>=16.14.0'
+    dependencies:
+      react: 18.2.0
+    dev: false
+
   /react-hook-form/7.42.1_react@18.2.0:
     resolution: {integrity: sha512-2UIGqwMZksd5HS55crTT1ATLTr0rAI4jS7yVuqTaoRVDhY2Qc4IyjskCmpnmdYqUNOYFy04vW253tb2JRVh+IQ==}
     engines: {node: '>=12.22.0'}
@@ -3254,8 +3270,40 @@ packages:
       react: 18.2.0
     dev: false
 
+  /react-image-lightbox/5.1.4_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-kTiAODz091bgT7SlWNHab0LSMZAPJtlNWDGKv7pLlLY1krmf7FuG1zxE0wyPpeA8gPdwfr3cu6sPwZRqWsc3Eg==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+    peerDependencies:
+      react: 16.x || 17.x
+      react-dom: 16.x || 17.x
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      react-modal: 3.16.1_biqbaboplfbrettd7655fr4n2y
+    dev: false
+
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
+
+  /react-lifecycles-compat/3.0.4:
+    resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
+    dev: false
+
+  /react-modal/3.16.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-VStHgI3BVcGo7OXczvnJN7yT2TWHJPDXZWyI/a0ssFNhGZWsPmB8cF0z33ewDXq4VfYMO1vXgiv/g8Nj9NDyWg==}
+    engines: {node: '>=8'}
+    peerDependencies:
+      react: ^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18
+      react-dom: ^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18
+    dependencies:
+      exenv: 1.2.2
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      react-lifecycles-compat: 3.0.4
+      warning: 4.0.3
+    dev: false
 
   /react-range/1.8.14_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-v2nyD5106rHf9dwHzq+WRlhCes83h1wJRHIMFjbZsYYsO6LF4mG/mR3cH7Cf+dkeHq65DItuqIbLn/3jjYjsHg==}
@@ -3896,6 +3944,12 @@ packages:
       rollup: 3.13.0
     optionalDependencies:
       fsevents: 2.3.2
+    dev: false
+
+  /warning/4.0.3:
+    resolution: {integrity: sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==}
+    dependencies:
+      loose-envify: 1.4.0
     dev: false
 
   /which-boxed-primitive/1.0.2:
