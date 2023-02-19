@@ -12,6 +12,11 @@ export const petOwnerRouter = createTRPCRouter({
         where: {
           userId: input.id,
         },
+        include: {
+          user: true,
+          pet: true,
+          review: true,
+        },
       });
     }),
 
@@ -27,6 +32,8 @@ export const petOwnerRouter = createTRPCRouter({
         },
         include: {
           user: true,
+          pet: true,
+          review: true,
         },
       });
     }),
@@ -65,6 +72,8 @@ export const petOwnerRouter = createTRPCRouter({
         },
         include: {
           user: true,
+          pet: true,
+          review: true,
         },
       });
     }),
