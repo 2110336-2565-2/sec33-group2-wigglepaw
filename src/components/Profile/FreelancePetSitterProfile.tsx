@@ -86,6 +86,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
       userId: props.user.userId,
       data: { firstName: firstName, lastName: lastName },
     });
+
     await updatePetSitter.mutateAsync({
       userId: props.user.userId,
       data: {
@@ -101,6 +102,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
         address: data.address,
       },
     });
+
     // Refetch user data
     // console.log("Invalidating cache");
     await utils.user.getByUsername.invalidate({
@@ -246,70 +248,79 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
           </div>
         )}
       </div>
-      <div className="mx-3 mt-2 max-w-md md:mx-auto md:w-1/2">
-        <div className="w-full text-xl font-bold">Posts</div>
-        <button
-          className="profile-post text-center font-semibold"
-          onClick={() => {
-            setIsPosting(true);
-          }}
-        >
-          + New Post
-        </button>
-        <Transition show={isPosting} as={Fragment}>
-          <Dialog onClose={() => setIsPosting(false)}>
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              {/* The backdrop, rendered as a fixed sibling to the panel container */}
-              <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-            </Transition.Child>
+      <div className="mx-3 mt-2">
+        <div className="mx-auto max-w-lg md:w-2/3 md:max-w-2xl">
+          <div className="w-full text-xl font-bold">Posts</div>
+          <button
+            className="profile-post text-center font-semibold"
+            onClick={() => {
+              setIsPosting(true);
+            }}
+          >
+            + New Post
+          </button>
+          <Transition show={isPosting} as={Fragment}>
+            <Dialog onClose={() => {}}>
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                {/* The backdrop, rendered as a fixed sibling to the panel container */}
+                <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+              </Transition.Child>
 
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
-            >
-              {/* Full-screen scrollable container */}
-              <div className="fixed inset-0 overflow-y-auto">
-                {/* Container to center the panel */}
-                <div className="flex min-h-full items-center justify-center p-4">
-                  <Dialog.Panel className="mx-auto w-[50vw] rounded bg-white">
-                    <Dialog.Title>Deactivate account</Dialog.Title>
-                    <Dialog.Description>
-                      This will permanently deactivate your account
-                    </Dialog.Description>
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-200"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                {/* Full-screen scrollable container */}
+                <div className="fixed inset-0 overflow-y-auto">
+                  {/* Container to center the panel */}
+                  <div className="flex min-h-full items-center justify-center">
+                    <Dialog.Panel className="mx-auto w-[50vw] rounded bg-white p-4">
+                      <Dialog.Title className="font-bold">
+                        Create Post
+                      </Dialog.Title>
+                      <Dialog.Description>
+                        Post something about your experience!
+                      </Dialog.Description>
 
-                    <p>
-                      Are you sure you want to deactivate your account? All of
-                      your data will be permanently removed. This action cannot
-                      be undone.
-                    </p>
-
-                    <button onClick={() => setIsPosting(false)}>
-                      Deactivate
-                    </button>
-                    <button onClick={() => setIsPosting(false)}>Cancel</button>
-                  </Dialog.Panel>
+                      <textarea className="min-h-[2rem] w-full"></textarea>
+                      <div className="flex w-full justify-between">
+                        <button
+                          className=""
+                          onClick={() => setIsPosting(false)}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          className=""
+                          onClick={() => setIsPosting(false)}
+                        >
+                          Post
+                        </button>
+                      </div>
+                    </Dialog.Panel>
+                  </div>
                 </div>
-              </div>
-            </Transition.Child>
-          </Dialog>
-        </Transition>
-        {/* TODO: Posts display */}
-        {/* {users.map((user: any) => (
+              </Transition.Child>
+            </Dialog>
+          </Transition>
+          {/* TODO: Posts display */}
+          {/* {users.map((user: any) => (
           <PetSitterCard pet_sitter={user}></PetSitterCard>
         ))} */}
+        </div>
       </div>
     </div>
   );
