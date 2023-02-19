@@ -17,6 +17,8 @@ import { muteRouter } from "./routers/muteRouter";
 import { adminRouter } from "./routers/adminRouter";
 import { reportTicketRouter } from "./routers/reportTicketRouter";
 import { approvalRequestRouter } from "./routers/approvalRequestRouter";
+import { z } from "zod";
+import { generateOpenApiDocument } from "trpc-openapi";
 
 /**
  * This is the primary router for your server.
@@ -44,8 +46,36 @@ export const appRouter = createTRPCRouter({
   mute: muteRouter,
   // Health check route, return 200 OK if server is up
   healthcheck: publicProcedure
-    .meta({ description: "Health check route, return 200 OK if server is up" })
+    .meta({
+      description: "Health check route, return 200 OK if server is up",
+      openapi: {
+        method: "GET",
+        path: "/healthcheck",
+      },
+    })
+    .input(z.void())
+    .output(z.boolean())
     .query(() => true),
+  // OpenAPI schema route, return OpenAPI schema document
+  openapi: publicProcedure
+    .meta({
+      description: "OpenAPI schema route, return OpenAPI schema document",
+      openapi: {
+        method: "GET",
+        path: "/openapi",
+      },
+    })
+    .input(z.void())
+    .output(z.any())
+    .query(() => {
+      const openApiDoc = generateOpenApiDocument(appRouter, {
+        title: "WigglePaw API",
+        description: "OpenAPI compliant REST API built using tRPC with Next.js",
+        version: "1.0.0",
+        baseUrl: "http://localhost:3000/api",
+      });
+      return openApiDoc;
+    }),
 });
 
 // export type definition of API

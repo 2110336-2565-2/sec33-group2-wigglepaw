@@ -30,7 +30,16 @@ import type { IOmise } from "omise";
 
 export const userRouter = createTRPCRouter({
   getByUsername: publicProcedure
+    .meta({
+      description: "Get user by username",
+      openapi: {
+        method: "GET",
+        path: "/api/user/getByUsername",
+        tags: ["user"],
+      },
+    })
     .input(z.object({ username: z.string() }))
+    .output(userFields.passthrough().nullable())
     .query(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findFirst({
         where: {
