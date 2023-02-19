@@ -94,7 +94,7 @@ const ProfilePictureUploadDemo: NextPage = () => {
 
       <section className="border-4 p-1">
         <h2 className="pb-3 text-lg">Profile Picture</h2>
-        {session.user.picture ? (
+        {profileData.data.imageUri ? (
           <>
             <img
               className="m-auto"
