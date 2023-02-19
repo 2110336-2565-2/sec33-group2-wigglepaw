@@ -108,4 +108,25 @@ export const petOwnerRouter = createTRPCRouter({
         },
       });
     }),
+
+  addPet: publicProcedure
+    .input(
+      z.object({
+        user: userFields,
+        petOwner: petOwnerFields,
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.petOwner.create({
+        data: {
+          user: {
+            create: input.user,
+          },
+          ...input.petOwner,
+        },
+        include: {
+          user: true,
+        },
+      });
+    }),
 });

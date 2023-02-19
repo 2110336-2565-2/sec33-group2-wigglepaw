@@ -68,6 +68,8 @@ model PetOwner {
     petTypes  String[]
     firstName String
     lastName  String
+    review    Review[]
+    Pet       Pet[]
 }
 
 model PetSitter {
@@ -80,6 +82,8 @@ model PetSitter {
     certificationUri   String?
     startPrice         Float?
     endPrice           Float?
+    Review             Review[]
+    Post               Post[]
 }
 
 model FreelancePetSitter {
@@ -96,10 +100,39 @@ model PetHotel {
     hotelName          String
 }
 
+model Pet {
+    petId      String   @id @default(cuid())
+    petOwnerId String
+    petOwner   PetOwner @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
+    petType    String
+    name       String?
+    sex        String?
+    breed      String?
+}
+
 model VerificationToken {
     identifier String
     token      String   @unique
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Review {
+    reviewId    String    @id @default(cuid())
+    petOwnerId  String
+    petOwner    PetOwner  @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
+    petSitterId String
+    petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    text        String?
+    rating      Int
+}
+
+model Post {
+    postId      String    @id @default(cuid())
+    petSitterId String
+    petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    text        String
+    pictureUri  String?
+    videoUri    String?
 }

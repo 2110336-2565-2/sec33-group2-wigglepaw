@@ -31,6 +31,13 @@ export const petOwnerFields = z.object({
   lastName: z.string(),
 });
 
+export const petFields = z.object({
+  petType: z.string(),
+  name: z.string().optional(),
+  sex: z.enum(["Male", "Female"]),
+  breed: z.string().optional(),
+});
+
 export const petHotelFields = z.object({
   // petSitter: petSitterFields,
   businessLicenseUri: z.string().optional(),
@@ -54,4 +61,24 @@ export const searchField = z.object({
   searchEndSchedule: z.string().default(""),
   searchIncludePetSitterType: z.string().default(""),
   searchSortBy: z.string().default(""),
+});
+
+export const reviewFields = z.object({
+  rating: z.union([
+    z
+      .number({ invalid_type_error: "Rating must be an integer from 1 to 10" })
+      .int()
+      .gte(0),
+    z
+      .number({ invalid_type_error: "Rating must be an integer from 1 to 10" })
+      .int()
+      .lte(10),
+  ]),
+  text: z.string().optional(),
+});
+
+export const postFields = z.object({
+  text: z.string(),
+  pictureUri: z.string().optional(),
+  videoUri: z.string().optional(),
 });
