@@ -63,8 +63,9 @@ model User {
 }
 
 model PetOwner {
-    userId    String @id @default(cuid())
-    user      User   @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    userId    String   @id @default(cuid())
+    user      User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    petTypes  String[]
     firstName String
     lastName  String
 }

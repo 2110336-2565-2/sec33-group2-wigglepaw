@@ -26,6 +26,7 @@ export const petSitterFields = z.object({
 
 export const petOwnerFields = z.object({
   // user: userFields,
+  petTypes: z.array(z.string()),
   firstName: z.string(),
   lastName: z.string(),
 });
