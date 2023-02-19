@@ -65,6 +65,7 @@ model User {
 model PetOwner {
     userId    String @id @default(cuid())
     user      User   @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    booking   Booking[]
     firstName String
     lastName  String
 }
@@ -74,6 +75,7 @@ model PetSitter {
     user               User                @relation(fields: [userId], references: [userId], onDelete: Cascade)
     freelancePetSitter FreelancePetSitter?
     petHotel           PetHotel?
+    booking            Booking[]
     petTypes           String[]
     verifyStatus       Boolean
     certificationUri   String?
@@ -93,6 +95,27 @@ model PetHotel {
     petSitter          PetSitter @relation(fields: [userId], references: [userId], onDelete: Cascade)
     businessLicenseUri String?
     hotelName          String
+}
+
+model Booking {
+    bookingId       String    @id @default(cuid())
+    petOwner        PetOwner    @relation(fields: [petOwnerId], references: [userId])
+    petSitter       PetSitter   @relation(fields: [petSitterId], references: [userId])
+    petOwnerId      String
+    petSitterId     String
+    startDate       DateTime
+    endDate         DateTime
+    numberOfPets    Int
+    // pet             Pet[]
+    status          BookingStatus
+    note            String?
+}
+
+enum BookingStatus {
+    requested
+    accepted
+    canceledByPetOwner
+    canceledByPetSitter
 }
 
 model VerificationToken {

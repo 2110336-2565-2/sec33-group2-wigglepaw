@@ -42,6 +42,14 @@ export const freelancePetSitterFields = z.object({
   lastName: z.string(),
 });
 
+export const bookingFields = z.object({
+  petSitterId: z.string(),
+  startDate: z.date().default(new Date("1-1-1")),
+  endDate: z.date().default(new Date("1-1-1")),
+  petIdList: z.array(z.string()).default([]),
+  note: z.string().nullable().default(null),
+});
+
 export const searchField = z.object({
   searchName: z.string().default(""),
   searchRating: z.number().nullable().default(null),
@@ -53,4 +61,12 @@ export const searchField = z.object({
   searchEndSchedule: z.string().default(""),
   searchIncludePetSitterType: z.string().default(""),
   searchSortBy: z.string().default(""),
+});
+
+export const returnStatus = z.enum(["ERROR", "SUCCESS"]);
+export const returnField = z.object({
+  status: returnStatus,
+  code: z.string().nullable().default(null),
+  reason: z.string().nullable().default(null),
+  result: z.string().nullable().default(null),
 });

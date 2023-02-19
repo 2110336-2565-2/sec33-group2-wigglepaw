@@ -5,6 +5,7 @@ import { petOwnerRouter } from "./routers/petOwnerRouter";
 import { userRouter } from "./routers/userRouter";
 import { createTRPCRouter, publicProcedure } from "./trpc";
 import { petSitterRouter } from "./routers/petSitterRouter";
+import { bookingRouter } from "./routers/bookingRouter";
 
 /**
  * This is the primary router for your server.
@@ -17,6 +18,7 @@ export const appRouter = createTRPCRouter({
   petOwner: petOwnerRouter,
   freelancePetSitter: freelancePetSitterRouter,
   petHotel: petHotelRouter,
+  booking: bookingRouter,
   seed: seedRouter,
   // Health check route, return 200 OK if server is up
   healthcheck: publicProcedure
