@@ -48,9 +48,11 @@ export const searchField = z.object({
   searchPriceMin: z.number().nullable().default(null),
   searchPriceMax: z.number().nullable().default(null),
   searchLocation: z.string().default(""),
-  searchPetType: z.string().default(""),
+  searchPetTypes: z.array(z.string()).default([]),
   searchStartSchedule: z.string().default(""),
   searchEndSchedule: z.string().default(""),
   searchIncludePetSitterType: z.string().default(""),
+  searhcIncludePetHotel: z.boolean().default(true),
+  searhcIncludeFreelancePetSitter: z.boolean().default(true),
   searchSortBy: z.string().default(""),
 });

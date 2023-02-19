@@ -43,9 +43,7 @@ export function searchByPriceMax(searchPriceMax: number | null): object {
   };
 }
 // input as "cat dog bird", uncomplete string input like "ca do ird" won't be able to get expected result
-export function searchByPetTypes(text: string): object {
-  if (text == "") return {};
-  const petTypes = text.split(" ");
+export function searchByPetTypes(petTypes: string[]): object {
   return {
     petTypes: {
       hasEvery: petTypes,
@@ -92,6 +90,7 @@ export function searchByPetSitterType(
   includePetHotel: boolean,
   includeFreelancePetSitter: boolean
 ): object {
+  if (includePetHotel == false && includeFreelancePetSitter == false) return {};
   const result: object[] = [];
   if (includePetHotel)
     result.push({
