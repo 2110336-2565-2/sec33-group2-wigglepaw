@@ -70,14 +70,24 @@ export const petRouter = createTRPCRouter({
       return;
     }),
 
-  // delete: publicProcedure
-  //   .input(
-  //     z.object({
-  //       petOwnerId: z.string().cuid(),
-  //       pet: petFields,
-  //     })
-  //   )
-  //   .mutation(async ({ ctx, input }) => {
-
-  //   }),
+  delete: publicProcedure
+    .input(
+      z.object({
+        petId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const pet = await ctx.prisma.pet.findFirst({
+        where: {
+          petId: input.petId,
+        },
+      });
+      if (!pet) return "ERROR";
+      await ctx.prisma.pet.delete({
+        where: {
+          petId: input.petId,
+        },
+      });
+      await updatePetTypes(pet.petOwnerId);
+    }),
 });
