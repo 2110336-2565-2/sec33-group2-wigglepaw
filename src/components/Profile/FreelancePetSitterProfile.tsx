@@ -115,7 +115,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
   };
 
   //TODO: Remove
-  const posts = [1, 2];
+  const posts = ["one", "two"];
 
   return (
     <div>
@@ -324,7 +324,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
           <div className="mx-auto my-1 h-1 w-[80%] border-b-[3px] border-gray-400" />
           {/* TODO: Posts display */}
           {posts.map((post: any) => (
-            <Post></Post>
+            <Post num={post}></Post>
           ))}
         </div>
       </div>
