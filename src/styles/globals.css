@@ -39,6 +39,9 @@
   }
 
   /* profile */
+  .profile-information {
+    @apply mt-2 flex w-screen flex-wrap rounded-md border-[3px] border-sky-500 p-2 md:mt-0 md:w-3/5;
+  }
   .data-field {
     @apply my-auto mb-[.4rem] inline w-full items-center text-lg;
   }
