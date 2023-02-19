@@ -10,7 +10,7 @@ const DemoNewPetSitterCard: NextPage = () => {
         <Link href={""}>
           <div
             id="card"
-            className="relative flex h-[189px] flex-row bg-[#f6f6f6] drop-shadow-lg duration-150 max-md:h-[115px] md:hover:scale-[1.01]"
+            className="relative flex h-[189px] flex-row bg-[#f6f6f6] drop-shadow-lg duration-150 max-md:h-[115px] max-md:drop-shadow-md md:hover:scale-[1.01]"
           >
             <div className="absolute -left-4 top-3 z-10 bg-[#C3177E] px-2 py-1 text-xs font-bold text-white max-md:py-0.5 max-md:text-[10px]">
               Pet Hotel
