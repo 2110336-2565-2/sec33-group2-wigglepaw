@@ -9,12 +9,13 @@ import Header from "../components/Header";
 const Home: NextPage = () => {
   const { ref: myRef, inView: myVis } = useInView({});
   return (
-    <>
-      <section className="h-full w-[100%]">
-        <div className="-z-10 h-screen w-[100%] bg-[url('/dog-bg.jpg')] bg-auto bg-left bg-no-repeat">
-          <Header></Header>
+    <div className="relative">
+      <section className="h-[32rem] min-h-screen w-full md:h-screen">
+        {/* <div className="-z-10 h-screen w-[100%] origin-bottom-right bg-[url('/dog-bg.jpg')] bg-auto bg-left bg-no-repeat"> */}
+        <div className="-z-10 flex h-full w-full origin-bottom-right flex-col bg-[url('/dog-bg-2.jpg')] bg-cover bg-center bg-no-repeat md:h-full">
+          <Header />
 
-          <div className="center-thing h-[80%]">
+          <div className="center-thing -mt-4 flex-grow">
             {/* <div className="absolute right-[-5%] bottom-0 -z-0 ">
               <img
                 src="/dogwalking.png"
@@ -61,24 +62,30 @@ const Home: NextPage = () => {
               />
             </div> */}
 
-            <div className="mx-5 grid h-[50%]  w-[75%] grid-cols-3 grid-rows-5 rounded-2xl bg-white bg-opacity-50 px-6 py-4 shadow-2xl md:w-[50%] ">
-              <h1 className="center-thing col-span-3 row-span-2 text-[2rem]">
-                &quot;Let us take care your loves&quot;
+            <div className="mx-5 grid max-h-[80%] w-full max-w-lg grid-cols-3 grid-rows-5 rounded-2xl  bg-white bg-opacity-50 px-6 pt-4 pb-6 shadow-2xl ">
+              <h1 className="center-thing col-span-3 row-span-2 text-center text-[2rem] font-semibold md:w-full">
+                <span className="w-full">
+                  &quot;Let us take care your loves&quot;
+                </span>
               </h1>
               <div className="center-thing">
+                {/* <hr className="center-thing testt invisible h-1 w-full rounded md:visible  " /> */}
                 <hr className="center-thing testt invisible h-1 w-full rounded md:visible  " />
               </div>
               <div className="center-thing">
                 <h2 className=" col-span-1 text-[1.3rem]">WigglePaw</h2>
               </div>
               <div className="center-thing">
-                <hr className=" testt invisible h-1 w-full rounded md:visible " />
+                {/* <hr className=" testt invisible h-1 w-full rounded md:visible " /> */}
+                <hr className=" testt invisible h-1 w-full rounded md:visible" />
               </div>
-              <h3 className="items-top col-span-3 flex w-full justify-center text-[1rem]">
-                A matching platform for pet sitters and pet owners
+              <h3 className="items-top col-span-3 flex items-center justify-center text-center text-[1rem] max-md:row-span-2 md:w-full">
+                <span className="w-7/8 md:w-full">
+                  A matching platform for pet sitters and pet owners
+                </span>
               </h3>
               <div className="col-span-3 grid grid-cols-1">
-                <div className="center-thing  w-full ">
+                <div className="center-thing w-full">
                   <Link href="/matching" className="find-link rounded-xl">
                     Find Pet Sitters &gt;
                   </Link>
@@ -88,46 +95,58 @@ const Home: NextPage = () => {
           </div>
         </div>
       </section>
-      <section className="center-thing w-[100%] bg-[#EAE7DC]  md:absolute md:top-[100.01%]   md:h-[60%]">
-        <div className=" flex h-[100%] w-[80%] items-center justify-center ">
-          <div className="mb-16 grid  w-[100%] justify-items-center md:grid-cols-3 md:grid-rows-2 ">
+      <section className="center-thing min-h-[30vh] w-full bg-[#EAE7DC] pt-6 pb-16">
+        <div className="center-thing h-full w-full max-w-[1800px]">
+          <div className="grid w-[100%] justify-items-center text-center md:grid-cols-3 md:grid-rows-3">
             <div className="center-thing md:col-span-3">
-              <h1 className="py-12 px-4 text-[2.5rem] md:py-0">
-                10 billion users, 234 million members
-              </h1>
-            </div>
-            <div>
-              <div className="center-thing">
-                <img
-                  src="/secure.png"
-                  className="circlerec object-cover "
-                ></img>
+              <div className="max-md:hidden">
+                <h1 className="py-12 px-4 text-[2.5rem] font-semibold md:py-0 md:text-[2.5rem]">
+                  10 billion users, 234 million members
+                </h1>
               </div>
-              <h1 className="center-thing mt-7">SECURE</h1>
-              <p className="mt-2 text-center text-sm">
+              <div className="md:hidden">
+                <h1 className="py-12 px-4 text-[2rem] font-semibold md:py-0 md:text-[2.5rem]">
+                  10 billion users,
+                  <br />
+                  234 million members
+                </h1>
+              </div>
+            </div>
+            <div className="flex w-full flex-col items-center md:row-span-2">
+              <div className="center-thing scale-[70%]">
+                <img src="/secure.png" className="circlerec object-cover"></img>
+              </div>
+              <h1 className="center-thing mt-6 text-[1.3rem] font-semibold">
+                SECURE
+              </h1>
+              <p className="my-2 w-2/3 max-w-xs">
                 With 35 authentication levels, even admins cannot access your
                 data{" "}
               </p>
             </div>
-            <div>
-              <div className="center-thing">
+            <div className="flex w-full flex-col items-center md:row-span-2">
+              <div className="center-thing scale-[70%]">
                 <img
                   src="/paws.png"
                   className="circlerec object-cover object-left"
                 ></img>
               </div>
-              <h1 className="center-thing mt-7">WORRY-FREE</h1>
-              <p className="mt-2 text-center text-sm">
-                No pet ever died from us, Be happy
+              <h1 className="center-thing mt-6 text-[1.3rem] font-semibold">
+                WORRY-FREE
+              </h1>
+              <p className="my-2 w-2/3 max-w-xs text-center">
+                No pet ever died from us, Be happy with your food
               </p>
             </div>
-            <div>
+            <div className="flex w-full flex-col items-center md:row-span-2">
               <img
                 src="/price-tag.png"
-                className="circlerec overflow-visible "
+                className="circlerec scale-[70%] overflow-visible"
               ></img>
-              <h1 className="center-thing mt-7">REASONABLE PRICE</h1>
-              <p className="mt-2 text-center text-sm">Only 99.99$ a month</p>
+              <h1 className="center-thing mt-6 text-[1.3rem] font-semibold">
+                REASONABLE PRICE
+              </h1>
+              <p className="my-2 w-4/5 border-2">Only 99.99$ a month</p>
             </div>
             {/* <div
             ref={myRef}
@@ -139,46 +158,56 @@ const Home: NextPage = () => {
           </div>
         </div>
       </section>
-      <section className="w-[100%] md:absolute md:top-[160%] md:h-[90%]">
+      <section className="flex w-[100%] items-end bg-[#EAE7DC]">
         <div className="h-full w-full md:grid md:grid-cols-2 md:grid-rows-2">
-          <div className="bg-bg-box-main p-16">
-            <h1>INTRODUCING CHAT SYSTEM!</h1>
-            <p className="mt-5   text-sm">
+          <div className="h-full max-w-[900px] place-self-end bg-bg-box-main p-16">
+            <h1 className="text-[1.3rem] font-semibold">
+              INTRODUCING CHAT SYSTEM!
+            </h1>
+            <p className="mt-5">
               You can chat to those you want, ask a question, inquire more
               details and make a deal with them
             </p>
-            <p className="mt-5 text-sm">
+            <p className="mt-5">
               Block those you don't want, report and help us make a better
               community for everyone
             </p>
-            <button className="find-link mx-0 mt-8 rounded-xl px-3 text-base">
+            <button className="find-link mx-0 mt-8 rounded-lg px-3 text-base">
               <p className="text-white">TO CHAT SYSTEM!</p>
             </button>
           </div>
-          <div className="bg-bg-main">
-            <img src="/doghappy1.jpg" className="object-cover"></img>
+          <div className="max-w-[900px] bg-[#EAE7DC]">
+            <img
+              src="/doghappy1.jpg"
+              className="h-full bg-center object-cover"
+            ></img>
           </div>
-          <div className="">
-            <img src="/cathappy1.jpg" className="object-cover"></img>
+          <div className="h-full place-self-end bg-[#EAE7DC]">
+            <img
+              src="/cathappy1.jpg"
+              className="h-full bg-center object-cover"
+            ></img>
           </div>
-          <div className="bg-bg-box-main p-16">
-            <h1>INTRODUCING BOOKING SYSTEM!</h1>
-            <p className="mt-5   text-sm">
+          <div className="max-w-[900px] bg-bg-box-main p-16">
+            <h1 className="text-[1.3rem] font-semibold">
+              INTRODUCING BOOKING SYSTEM!
+            </h1>
+            <p className="mt-5">
               Find and book those you interested in, free booking cancellation!
             </p>
-            <p className="mt-5 text-sm">
+            <p className="mt-5">
               You have your very own schedule, make organize thing a lot easier!
             </p>
-            <button className="find-link mx-0 mt-8 rounded-xl px-3 text-base">
+            <button className="find-link mx-0 mt-8 rounded-lg px-3 text-base">
               <p className="text-white">TO BOOKING SYSTEM!</p>
             </button>
           </div>
         </div>
       </section>
-      <section className="w-[100%] bg-[#EAE7DC] py-12 md:absolute md:top-[250%]">
-        <div className="  px-12 ">
+      <section className="center-thing w-[100%] bg-[#EAE7DC] py-12">
+        <div className="max-w-[1800px] px-12">
           <h1 className="center-thing text-[2.5rem]">ABOUT</h1>
-          <p className="px-16 pt-5">
+          <p className="px-4 pt-5 md:px-16">
             I don't know hat to write, so just write something repeatly for 5
             times then so just write something repeatly for 5 times then so just
             write something repeatly for 5 times then so just write something
@@ -186,13 +215,13 @@ const Home: NextPage = () => {
             times then
           </p>
           <div className="center-thing">
-            <button className="find-link mx-0 mt-5 rounded-xl px-3 text-base">
+            <button className="find-link mx-0 mt-5 rounded-lg px-3 text-base">
               <p className="text-white">MORE ABOUT US!</p>
             </button>
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 };
 
