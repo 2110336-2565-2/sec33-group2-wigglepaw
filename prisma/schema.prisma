@@ -69,7 +69,7 @@ model PetOwner {
     firstName String
     lastName  String
     review    Review[]
-    Pet       Pet[]
+    pet       Pet[]
 }
 
 model PetSitter {
@@ -82,8 +82,8 @@ model PetSitter {
     certificationUri   String?
     startPrice         Float?
     endPrice           Float?
-    Review             Review[]
-    Post               Post[]
+    review             Review[]
+    post               Post[]
 }
 
 model FreelancePetSitter {

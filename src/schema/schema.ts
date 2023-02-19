@@ -34,7 +34,7 @@ export const petOwnerFields = z.object({
 export const petFields = z.object({
   petType: z.string(),
   name: z.string().optional(),
-  sex: z.enum(["Male", "Female"]),
+  sex: z.enum(["Male", "Female"]).optional(),
   breed: z.string().optional(),
 });
 
