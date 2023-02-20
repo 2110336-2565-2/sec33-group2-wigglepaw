@@ -111,7 +111,7 @@ model Booking {
     startDate       DateTime
     endDate         DateTime
     numberOfPets    Int
-    pet             Pet[]
+    pet             Pet[]   @relation("MyRelationTable")
     status          BookingStatus
     note            String?
 }
@@ -131,6 +131,7 @@ model Pet {
     name       String?
     sex        String?
     breed      String?
+    pet        Booking[]    @relation("MyRelationTable")
 }
 
 model VerificationToken {

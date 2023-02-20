@@ -95,15 +95,13 @@ export const bookingRouter = createTRPCRouter({
           note: input.note,
           numberOfPets: input.petIdList.length,
           status: BookingStatus.requested,
-          // pet: {
-          //   petId: {
-          //     in: input.petIdList
-          //   }
-          // }
+          pet: {
+            connect: input.petIdList.map((petId) => ({ petId: petId })),
+          },
         },
-        // include: {
-        //   pet: true,
-        // },
+        include: {
+          pet: true,
+        },
       });
     }),
 
