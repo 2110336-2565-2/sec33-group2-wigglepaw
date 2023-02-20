@@ -120,8 +120,8 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
   return (
     <div>
       <Header></Header>
-      <div className="mx-3 flex flex-wrap">
-        <div className="my-auto flex w-screen flex-col md:mx-4 md:w-1/5 md:min-w-min ">
+      <div className="mx-3 flex flex-wrap justify-center">
+        <div className="my-auto flex w-screen flex-col md:m-4 md:w-1/5 md:min-w-min">
           <div className="relative mx-auto flex h-[6rem] w-[6rem]">
             <Image
               src={profileImageUri}
@@ -257,7 +257,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
         <div className="mx-auto max-w-lg md:w-2/3 md:max-w-2xl">
           <div className="w-full text-xl font-bold">Posts</div>
           <button
-            className="profile-post text-center font-semibold"
+            className="profile-post py-2 text-center font-semibold"
             onClick={() => {
               setIsPosting(true);
             }}
@@ -292,24 +292,24 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
                 <div className="fixed inset-0 overflow-y-auto">
                   {/* Container to center the panel */}
                   <div className="flex min-h-full items-center justify-center">
-                    <Dialog.Panel className="mx-auto w-[50vw] rounded bg-white p-4">
-                      <Dialog.Title className="font-bold">
+                    <Dialog.Panel className="mx-auto box-border w-[90vw] max-w-[50rem] rounded bg-white p-4">
+                      <Dialog.Title className="mb-2 text-xl font-bold">
                         Create Post
                       </Dialog.Title>
-                      <Dialog.Description>
-                        Post something about your experience!
-                      </Dialog.Description>
-
-                      <textarea className="min-h-[2rem] w-full"></textarea>
+                      <textarea
+                        className="mb-2 min-h-[4rem] w-full border-2"
+                        placeholder="Post something about your pet setting experience!"
+                      ></textarea>
+                      <div className="mb-2 w-full">UPLOAD IMAGES</div>
                       <div className="flex w-full justify-between">
                         <button
-                          className=""
+                          className="rounded-full bg-red-800 px-2 py-1 font-semibold text-white hover:bg-red-600"
                           onClick={() => setIsPosting(false)}
                         >
                           Cancel
                         </button>
                         <button
-                          className=""
+                          className="rounded-full bg-sky-800 px-2 py-1 font-semibold text-white hover:bg-sky-600"
                           onClick={() => setIsPosting(false)}
                         >
                           Post

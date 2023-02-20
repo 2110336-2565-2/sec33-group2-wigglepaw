@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { Gallery, Image } from "react-grid-gallery";
+import { Gallery, Image as I2 } from "react-grid-gallery";
 import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
 
-export interface CustomImage extends Image {
+export interface CustomImage extends I2 {
   original: string;
 }
 
 const Post = (props: any) => {
   //TODO: Remove image example
+
   const images1: CustomImage[] = [
     {
       src: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
@@ -100,25 +101,28 @@ const Post = (props: any) => {
     },
   ];
 
+  //Image Light Box
   const [index, setIndex] = useState(-1);
-
   const currentImage = images[index];
   const nextIndex = (index + 1) % images.length;
   const nextImage = images[nextIndex] || currentImage;
   const prevIndex = (index + images.length - 1) % images.length;
   const prevImage = images[prevIndex] || currentImage;
-
-  const handleClick = (index: number, item: CustomImage) => setIndex(index);
-  const handleClose = () => setIndex(-1);
+  const handleClickLB = (index: number, item: CustomImage) => setIndex(index);
+  const handleCloseLB = () => setIndex(-1);
   const handleMovePrev = () => setIndex(prevIndex);
   const handleMoveNext = () => setIndex(nextIndex);
 
-  const imagesLeft: number =
-    images.length -
-    (document
-      .querySelector(`#${props.num}`)
-      ?.querySelectorAll(".ReactGridGallery_tile").length ?? 0);
-  console.log(imagesLeft);
+  const [imagesLeft, setimagesLeft] = useState(0);
+
+  useEffect(() => {
+    setimagesLeft(
+      images.length -
+        (document
+          .querySelector(`#${props.num}`)
+          ?.querySelectorAll(".ReactGridGallery_tile").length ?? 0)
+    );
+  });
 
   return (
     <div className="profile-post">
@@ -137,11 +141,11 @@ const Post = (props: any) => {
           <Gallery
             id={props.num}
             images={images}
-            onClick={handleClick}
+            onClick={handleClickLB}
             enableImageSelection={false}
             maxRows={2}
-            rowHeight={120}
-            margin={3}
+            rowHeight={140}
+            margin={2}
           />
         </div>
       )}
@@ -161,7 +165,7 @@ const Post = (props: any) => {
           nextSrcThumbnail={nextImage?.src}
           prevSrc={prevImage?.original}
           prevSrcThumbnail={prevImage?.src}
-          onCloseRequest={handleClose}
+          onCloseRequest={handleCloseLB}
           onMovePrevRequest={handleMovePrev}
           onMoveNextRequest={handleMoveNext}
         />
