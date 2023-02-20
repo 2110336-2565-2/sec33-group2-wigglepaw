@@ -66,11 +66,11 @@ export const searchField = z.object({
 export const reviewFields = z.object({
   rating: z.union([
     z
-      .number({ invalid_type_error: "Rating must be an integer from 1 to 10" })
+      .number({ invalid_type_error: "Rating must be an integer from 1 to 5" })
       .int()
       .gte(1),
     z
-      .number({ invalid_type_error: "Rating must be an integer from 1 to 10" })
+      .number({ invalid_type_error: "Rating must be an integer from 1 to 5" })
       .int()
       .lte(5),
   ]),
