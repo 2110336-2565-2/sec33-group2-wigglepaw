@@ -27,8 +27,9 @@ const ProfilePictureUploadDemo: NextPage = () => {
 
   // TODO: convert these valet logic to custom hook
   const uploadProfilePictureURL =
-    api.file.requestUploadProfilePictureURL.useMutation();
-  const confirmUpload = api.file.confirmUploadProfilePicture.useMutation();
+    api.profilePicture.requestUploadProfilePictureURL.useMutation();
+  const confirmUpload =
+    api.profilePicture.confirmUploadProfilePicture.useMutation();
 
   // Form ==================================================
   const {

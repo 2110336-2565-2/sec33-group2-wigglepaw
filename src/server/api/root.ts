@@ -19,7 +19,7 @@ export const appRouter = createTRPCRouter({
   freelancePetSitter: freelancePetSitterRouter,
   petHotel: petHotelRouter,
   seed: seedRouter,
-  file: profilePictureRouter,
+  profilePicture: profilePictureRouter,
   // Health check route, return 200 OK if server is up
   healthcheck: publicProcedure
     .meta({ description: "Health check route, return 200 OK if server is up" })
