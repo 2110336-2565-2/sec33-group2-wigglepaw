@@ -16,29 +16,39 @@ const reviewPage: NextPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  return (
-    <div>
-      <Header />
-      <h1>Review Page</h1>
-      <form>
-        <h2>Write your review</h2>
-        <input
-          {...register("review")}
-          type="text"
-          className="w-full rounded px-1"
-        />
-        <h2>Star</h2>
-        <select name="star" id="star">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select>
-        <br />
-        <button>Back</button> <button>submit review</button>
-      </form>
-    </div>
-  );
+  const OnSubmit = async (data: any) => {
+    console.log(data.review);
+  };
+  const avgrate = 4.2;
+  const [review, setReview] = useState(false);
+  if (review == false) {
+    return (
+      <div>
+        <Header />
+        <div className="mt-4 flex h-full flex-col items-center text-xl">
+          <h1>Reviews</h1>
+          <h2>Average rating : {avgrate}</h2>
+          <button onClick={() => setReview(true)}>Write Review</button>
+          <h2>Review from other users</h2>
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <Header />
+        <div className="mt-4 flex h-full flex-col items-center text-xl">
+          <h1>Select star</h1>
+          <h2>Write review</h2>
+          <form onClick={handleSubmit(OnSubmit)}>
+            <input id="Review" type="text" {...register("review")} />
+            <button onClick={() => setReview(false)}>Back</button>
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 };
+
 export default reviewPage;
