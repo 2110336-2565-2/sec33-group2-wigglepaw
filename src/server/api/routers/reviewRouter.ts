@@ -1,3 +1,4 @@
+import { prisma } from "./../../db";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
@@ -7,6 +8,33 @@ import {
   petFields,
   reviewFields,
 } from "../../../schema/schema";
+
+async function updateAvgRating(petSitterId: string) {
+  const petSitter = await prisma.petSitter.findFirst({
+    where: {
+      userId: petSitterId,
+    },
+    include: {
+      review: true,
+    },
+  });
+  const reviews = petSitter?.review;
+  if (!reviews) return;
+
+  let sum = 0;
+  for (const review of reviews) {
+    sum += review.rating;
+  }
+  const avg = sum / reviews.length;
+
+  const update = await prisma.petSitter.update({
+    where: {
+      userId: petSitterId,
+    },
+    data: { avgRating: avg },
+  });
+  return update;
+}
 
 export const reviewRouter = createTRPCRouter({
   create: publicProcedure
@@ -53,6 +81,8 @@ export const reviewRouter = createTRPCRouter({
         },
       });
 
+      await updateAvgRating(input.petSitterId);
+
       return;
     }),
 
@@ -63,11 +93,14 @@ export const reviewRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.review.delete({
+      const deleted = await ctx.prisma.review.delete({
         where: {
           reviewId: input.reviewId,
         },
       });
+      const petSitterId = deleted.petSitterId;
+
+      await updateAvgRating(petSitterId);
       return;
     }),
 });

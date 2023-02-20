@@ -84,6 +84,7 @@ model PetSitter {
     endPrice           Float?
     post               Post[]
     review             Review[]
+    avgRating          Float?
 }
 
 model FreelancePetSitter {
