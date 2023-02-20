@@ -90,4 +90,21 @@ export const petRouter = createTRPCRouter({
       });
       await updatePetTypes(pet.petOwnerId);
     }),
+
+  update: publicProcedure
+    .input(
+      z.object({
+        petId: z.string(),
+        data: petFields.partial(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const update = await ctx.prisma.pet.update({
+        where: {
+          petId: input.petId,
+        },
+        data: { ...input.data },
+      });
+      return update;
+    }),
 });
