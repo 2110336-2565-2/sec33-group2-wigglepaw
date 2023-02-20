@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import {
   S3Client,
   PutObjectCommand,
@@ -8,16 +8,28 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { TRPCError } from "@trpc/server";
 
-// TODO: Move out of here, maybe slap into ctx.
-const s3 = new S3Client({
-  region: "auto",
-  endpoint: process.env.S3_ENDPOINT,
-  credentials: {
-    accessKeyId: process.env.S3_ACCESS_KEY_ID ?? "",
-    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? "",
-  },
-  forcePathStyle: true,
+/**
+ * Make S3 parameter pointing to profile picture of the user, to be used in S3 commands.
+ */
+const s3Param = (userId: string) => ({
+  Bucket: process.env.S3_BUCKET,
+  Key: `profile-img/${userId}.webp`,
 });
+
+/**
+ * Get the public URL of the profile picture of the user.
+ */
+const publicUri = (userId: string) => {
+  if (!process.env.S3_ENDPOINT) {
+    throw new Error("S3_ENDPOINT not set");
+  }
+  if (!process.env.S3_BUCKET) {
+    throw new Error("S3_BUCKET not set");
+  }
+  return `${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET}/${
+    s3Param(userId).Key
+  }`;
+};
 
 export const profilePictureRouter = createTRPCRouter({
   requestUploadProfilePictureURL: protectedProcedure
@@ -28,11 +40,10 @@ export const profilePictureRouter = createTRPCRouter({
     .mutation(async ({ ctx }) => {
       // Create temporary signed URL for uploading file
       const url = await getSignedUrl(
-        s3,
+        ctx.s3,
         new PutObjectCommand({
-          Bucket: "wigglepaw-profile-picture",
-          Key: ctx.session.user.id,
-          ContentType: "image/png",
+          ...s3Param(ctx.session.user.id),
+          ContentType: "image/webp",
           // TODO: Limit content length
         }),
         {
@@ -49,12 +60,7 @@ export const profilePictureRouter = createTRPCRouter({
       // Check if the profile picture exists in storage.
       // Frontend should have already uploaded the file, but who ever trust them.
       try {
-        await s3.send(
-          new HeadObjectCommand({
-            Bucket: "wigglepaw-profile-picture",
-            Key: ctx.session.user.id,
-          })
-        );
+        await ctx.s3.send(new HeadObjectCommand(s3Param(ctx.session.user.id)));
       } catch (e) {
         if (
           typeof e === "object" &&
@@ -75,9 +81,7 @@ export const profilePictureRouter = createTRPCRouter({
       //
       // The Uri here depend on user id, which may cause broswer cache problem.
       // to solve this, we add a timestamp to the end of the Uri, so the uri will be different every time.
-      const imageUri = `https://pub-ba94baa4e38145d4aee2d8a7d40db1e1.r2.dev/${
-        ctx.session.user.id
-      }?v=${Date.now()}`;
+      const imageUri = publicUri(ctx.session.user.id) + `?${Date.now()}`;
 
       console.log(ctx.session.user.id);
       const user = await ctx.prisma.user.update({
