@@ -13,37 +13,51 @@ import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { text } from "stream/consumers";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 const About: NextPage = () => {
   type Insid = { title: string; start: string; end: string };
-  interface formstatus {
-    hi: Insid[];
-  }
-  const [events, setEvents] = useState<formstatus>([]);
+
+  const [events, setEvents] = useState([]);
   const { ref: myRef, inView: myVis } = useInView({});
   const { ref: myRef2, inView: myVis2 } = useInView({});
   const { ref: myRef3, inView: myVis3 } = useInView({});
 
+  const randcolor = [
+    "#fde047",
+    "#bef264",
+    "#4ade80",
+    "#67e8f9",
+    "#38bdf8",
+    "#a78bfa",
+    "#e879f9",
+    "#4c1d95",
+    "#f472b6",
+  ];
   const submitEvent = (e: { target: any; preventDefault: () => void }) => {
     e.preventDefault();
+    console.log(events);
+    const randcol = randcolor[Math.floor(Math.random() * randcolor.length)];
     setEvents([
       ...events,
       {
         title: e.target.title.value,
         start: e.target.start.value,
         end: e.target.end.value,
+        color: randcol,
       },
     ]);
   };
   return (
     <>
       <Header />
-      <div className="center-thing  h-screen w-screen">
-        <div className="h-[80%] w-[80%] overflow-scroll">
-          <div className="">
+      <div className="flex h-screen w-screen  items-center justify-start">
+        <div className="mx-24 flex h-full w-full">
+          <div className=" h-[80%] w-full overflow-scroll">
             <FullCalendar
               plugins={[dayGridPlugin, timeGridPlugin]}
-              initialView="timeGridWeek"
+              initialView="dayGridMonth"
               contentHeight={600}
               stickyFooterScrollbar={true}
               headerToolbar={
@@ -58,7 +72,64 @@ const About: NextPage = () => {
                 console.log("Start: ", arg.event.start, "End: ", arg.event.end);
               }}
               events={events}
+              eventColor={"#378006"}
             />
+          </div>
+          <div className="ml-10 h-[90%] w-[70%] border-l-2 border-black">
+            <div className="my-10 ml-4">
+              {events.map((value, index) => {
+                const bordercolor = " border-[" + value.color + "]";
+                console.log(bordercolor);
+
+                const style =
+                  "mb-5  border-l-4 px-5 py-2 shadow-md hover:border-4  " +
+                  bordercolor;
+
+                const datetimeString = value.start;
+                const datetimeString2 = value.end;
+                const datetime = new Date(datetimeString);
+                const datetime2 = new Date(datetimeString2);
+
+                const options = {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                };
+
+                options.hour = "numeric";
+                options.minute = "numeric";
+                options.hour12 = true;
+                const timestart = datetime.toLocaleTimeString("en-US", options);
+                const timeend = datetime2.toLocaleTimeString("en-US", options);
+
+                return (
+                  <div className={style}>
+                    <div className="flex">
+                      <div className="text-sm text-gray-500">
+                        {timestart} &nbsp;-{" "}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {" "}
+                        &nbsp; {timeend}
+                      </div>
+                    </div>
+                    <div className="mt-1 flex">
+                      <span className="mr-5">{value.title} </span>
+                      <div
+                        onClick={() => {
+                          setEvents((current) =>
+                            current.filter((events, i) => i !== index)
+                          );
+                        }}
+                        className="hover:scale-[1.2]"
+                      >
+                        <FontAwesomeIcon size="sm" icon={faTrashCan} />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
