@@ -35,6 +35,25 @@ const About: NextPage = () => {
     "#4c1d95",
     "#f472b6",
   ];
+
+  const eventContent = ({ event, view }) => {
+    // Create a new div element for the event
+    const eventEl = document.createElement("div");
+    // Set the font size of the event
+    eventEl.style.fontSize = "11px";
+    eventEl.style.color = "black";
+    // Set the innerHTML of the event element
+    eventEl.innerHTML = event.title;
+    // Return the new event element as a React component
+    return (
+      <>
+        {React.createElement("div", {
+          dangerouslySetInnerHTML: { __html: eventEl.outerHTML },
+        })}
+      </>
+    );
+  };
+
   const submitEvent = (e: { target: any; preventDefault: () => void }) => {
     e.preventDefault();
     console.log(events);
@@ -73,6 +92,7 @@ const About: NextPage = () => {
               }}
               events={events}
               eventColor={"#378006"}
+              eventContent={eventContent}
             />
           </div>
           <div className="ml-10 h-[90%] w-[70%] border-l-2 border-black">
