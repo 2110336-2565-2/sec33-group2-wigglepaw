@@ -35,7 +35,7 @@ const DemoSearchBoxComponent: NextPage = () => {
 
   return (
     <main className="pt-20">
-      <div className="mx-auto h-screen w-[351px] border">
+      <div className="mx-auto h-screen w-[351px]">
         <div id="search-box" className="relative drop-shadow-md">
           <div id="header-search" className="">
             <Image
@@ -45,14 +45,14 @@ const DemoSearchBoxComponent: NextPage = () => {
               height={91}
               className="absolute"
             />
-            <p className="absolute left-1 top-5 z-20 w-full text-center text-[25px] font-bold text-white drop-shadow-lg">
+            <p className="absolute left-[2px] top-5 z-20 w-full text-center text-[25px] font-bold text-white drop-shadow-lg">
               Search Pet Sitters
             </p>
           </div>
           <div id="empty-space" className="mx-auto h-[15px] w-[312px] "></div>
           <div
             id="search-pane"
-            className="mx-auto flex w-[312px] flex-col rounded-xl bg-[#ffdfa0] px-7 pb-6 pt-16"
+            className="mx-auto flex w-[312px] flex-col rounded-xl bg-[#ffdfa0] px-7 pb-6 pt-[72px]"
           >
             <div id="search-params-wrapper" className="flex flex-col ">
               <div
@@ -80,7 +80,7 @@ const DemoSearchBoxComponent: NextPage = () => {
                     <Fragment key={petType}>
                       <div className="flex flex-row gap-2">
                         <div
-                          className="flex h-[25px] w-[25px] select-none flex-col justify-center rounded-sm text-center text-xl font-medium text-white"
+                          className="flex h-[25px] w-[25px] select-none flex-col justify-center rounded-md text-center text-xl font-medium text-white shadow-inner drop-shadow-sm"
                           style={{ backgroundColor: getBgColor(petType) }}
                           onClick={() => {
                             toggleState(petType);
@@ -101,14 +101,14 @@ const DemoSearchBoxComponent: NextPage = () => {
                 <p className="text-[15px] font-bold text-[#8a5534]">
                   Price Range
                 </p>
-                <div id="two-thumbs" className=" ">
+                <div id="two-thumbs" className="">
                   twoThumbs component & min max
                 </div>
               </div>
             </div>
 
             <div id="search-button-wrapper" className="">
-              <button className="drop-shadow-slg w-full rounded-sm bg-[#2a4764] py-2 text-[25px] font-bold text-white hover:bg-[#213951]">
+              <button className="drop-shadow-slg w-full rounded-sm bg-[#2a4764] py-2 text-[20px] font-bold text-white hover:bg-[#213951]">
                 Search
               </button>
             </div>
