@@ -80,7 +80,7 @@ export const petRouter = createTRPCRouter({
         },
       });
       await updatePetTypes(input.petOwnerId);
-      return;
+      return createPet;
     }),
 
   delete: publicProcedure
@@ -96,12 +96,13 @@ export const petRouter = createTRPCRouter({
         },
       });
       if (!pet) return "ERROR";
-      await ctx.prisma.pet.delete({
+      const del = await ctx.prisma.pet.delete({
         where: {
           petId: input.petId,
         },
       });
       await updatePetTypes(pet.petOwnerId);
+      return del;
     }),
 
   update: publicProcedure

@@ -38,6 +38,27 @@ export const postRouter = createTRPCRouter({
         },
       });
 
-      return;
+      return createPost;
+    }),
+
+  delete: publicProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const post = await ctx.prisma.post.findFirst({
+        where: {
+          postId: input.postId,
+        },
+      });
+      if (!post) return "Post id not found";
+      const del = await ctx.prisma.post.delete({
+        where: {
+          postId: input.postId,
+        },
+      });
+      return del;
     }),
 });
