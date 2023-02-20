@@ -22,6 +22,7 @@ export const serverSchema = z.object({
   S3_ACCESS_KEY_ID: z.string(),
   S3_SECRET_ACCESS_KEY: z.string(),
   S3_ENDPOINT: z.string(),
+  S3_BUCKET: z.string(),
   // DISCORD_CLIENT_ID: z.string(),
   // DISCORD_CLIENT_SECRET: z.string(),
 });
@@ -39,6 +40,7 @@ export const serverEnv = {
   S3_ACCESS_KEY_ID: process.env.S3_ACCESS_KEY_ID,
   S3_SECRET_ACCESS_KEY: process.env.S3_SECRET_ACCESS_KEY,
   S3_ENDPOINT: process.env.S3_ENDPOINT,
+  S3_BUCKET: process.env.S3_BUCKET,
   // DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
   // DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
 };
