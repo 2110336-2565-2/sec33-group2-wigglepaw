@@ -29,12 +29,15 @@ function getSuccessResponse(result: string): object {
 export const bookingRouter = createTRPCRouter({
   //public procedure that get booking by ID
   getById: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ bookingId: z.string() }))
     .query(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
       const result = await ctx.prisma.booking.findUnique({
         where: {
-          bookingId: input.id,
+          bookingId: input.bookingId,
+        },
+        include: {
+          pet: true,
         },
       });
       if (result == null) return null;
@@ -50,13 +53,16 @@ export const bookingRouter = createTRPCRouter({
       where: {
         OR: [{ petSitterId: userId }, { petOwnerId: userId }],
       },
+      include: {
+        pet: true,
+      },
     });
     return result;
   }),
 
   //public procedure that get booking by name
   getByUserId: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ userId: z.string() }))
     .query(({ ctx, input }) => {
       if (ctx.session.user == null) return [];
       const userType: UserType = ctx.session.user?.userType ?? null;
@@ -68,11 +74,14 @@ export const bookingRouter = createTRPCRouter({
       if (!isPetSitter && !isPetOwner) return [];
       const userId = ctx.session.user.id;
       const condition: object[] = isPetSitter
-        ? [{ petSitterId: userId }, { petOwnerId: input.id }]
-        : [{ petSitterId: input.id }, { petOwnerId: userId }];
+        ? [{ petSitterId: userId }, { petOwnerId: input.userId }]
+        : [{ petSitterId: input.userId }, { petOwnerId: userId }];
       return ctx.prisma.booking.findMany({
         where: {
           AND: condition,
+        },
+        include: {
+          pet: true,
         },
       });
     }),
