@@ -68,11 +68,11 @@ export const reviewFields = z.object({
     z
       .number({ invalid_type_error: "Rating must be an integer from 1 to 10" })
       .int()
-      .gte(0),
+      .gte(1),
     z
       .number({ invalid_type_error: "Rating must be an integer from 1 to 10" })
       .int()
-      .lte(10),
+      .lte(5),
   ]),
   text: z.string().optional(),
 });
