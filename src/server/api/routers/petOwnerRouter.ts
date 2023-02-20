@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-import { userFields, petOwnerFields } from "../../../schema/schema";
+import { userFields, petOwnerFields, petFields } from "../../../schema/schema";
 
 export const petOwnerRouter = createTRPCRouter({
   //public procedure that get petOwner by ID
@@ -11,6 +11,11 @@ export const petOwnerRouter = createTRPCRouter({
       return ctx.prisma.petOwner.findUnique({
         where: {
           userId: input.id,
+        },
+        include: {
+          user: true,
+          pet: true,
+          review: true,
         },
       });
     }),
@@ -27,6 +32,8 @@ export const petOwnerRouter = createTRPCRouter({
         },
         include: {
           user: true,
+          pet: true,
+          review: true,
         },
       });
     }),
@@ -65,6 +72,8 @@ export const petOwnerRouter = createTRPCRouter({
         },
         include: {
           user: true,
+          pet: true,
+          review: true,
         },
       });
     }),
@@ -107,5 +116,38 @@ export const petOwnerRouter = createTRPCRouter({
           user: true,
         },
       });
+    }),
+  //public procedure that create petOwner
+  updatePetTypes: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const petOwner = await ctx.prisma.petOwner.findFirst({
+        where: {
+          userId: input.userId,
+        },
+        include: {
+          pet: true, // Return all fields
+        },
+      });
+      if (!petOwner) return "petOwnerId doens't exist";
+
+      const pets = petOwner?.pet;
+      if (!pets) return "Internal server error SHIT";
+
+      const petTypes = new Set<string>();
+      for (const pet of pets) {
+        petTypes.add(pet.petType);
+      }
+
+      const update = await ctx.prisma.petOwner.update({
+        where: {
+          userId: input.userId,
+        },
+        data: {
+          petTypes: Array.from(petTypes.values()),
+        },
+      });
+
+      return "Updated pet types of this pet owner successfully!";
     }),
 });

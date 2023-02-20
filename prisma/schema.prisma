@@ -63,11 +63,14 @@ model User {
 }
 
 model PetOwner {
-    userId    String @id @default(cuid())
-    user      User   @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    userId    String   @id @default(cuid())
+    user      User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
     booking   Booking[]
+    petTypes  String[]
     firstName String
     lastName  String
+    review    Review[]
+    pet       Pet[]
 }
 
 model PetSitter {
@@ -81,6 +84,8 @@ model PetSitter {
     certificationUri   String?
     startPrice         Float?
     endPrice           Float?
+    review             Review[]
+    post               Post[]
 }
 
 model FreelancePetSitter {
@@ -106,7 +111,7 @@ model Booking {
     startDate       DateTime
     endDate         DateTime
     numberOfPets    Int
-    // pet             Pet[]
+    pet             Pet[]
     status          BookingStatus
     note            String?
 }
@@ -118,10 +123,39 @@ enum BookingStatus {
     canceledByPetSitter
 }
 
+model Pet {
+    petId      String   @id @default(cuid())
+    petOwnerId String
+    petOwner   PetOwner @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
+    petType    String
+    name       String?
+    sex        String?
+    breed      String?
+}
+
 model VerificationToken {
     identifier String
     token      String   @unique
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Review {
+    reviewId    String    @id @default(cuid())
+    petOwnerId  String
+    petOwner    PetOwner  @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
+    petSitterId String
+    petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    text        String?
+    rating      Int
+}
+
+model Post {
+    postId      String    @id @default(cuid())
+    petSitterId String
+    petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    text        String
+    pictureUri  String?
+    videoUri    String?
 }

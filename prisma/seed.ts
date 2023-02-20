@@ -95,7 +95,8 @@ async function makeOwner(
   lastName: string,
   phone: string,
   address: string,
-  imageUri: string
+  imageUri: string,
+  petTypes: string[]
 ) {
   return await prisma.petOwner.create({
     data: {
@@ -109,6 +110,8 @@ async function makeOwner(
           imageUri: imageUri,
         },
       },
+
+      petTypes: petTypes,
       firstName: firstName,
       lastName: lastName,
     },
@@ -124,7 +127,7 @@ function getMultipleRandom(arr: string[], num: number) {
   return shuffled.slice(0, num);
 }
 
-function randomIntFromInterval(min: number, max: number) {
+function getRandomIntFromInterval(min: number, max: number) {
   // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -133,10 +136,10 @@ export async function main() {
   // EDIT HERE **********************************************
 
   await prisma.user.deleteMany({});
-  var dataCount = 5;
+  const dataCount = 5;
 
   // EDIT HERE **********************************************
-  var firstNames: string[] = [
+  const firstNames: string[] = [
     "Tokino",
     "Kanata",
     "Watame",
@@ -148,7 +151,7 @@ export async function main() {
     "Matsuri",
     "Mei",
   ];
-  var lastNames: string[] = [
+  const lastNames: string[] = [
     "Amane",
     "Kiryuu",
     "Sora",
@@ -156,7 +159,7 @@ export async function main() {
     "Rosenthal",
     "Sung086",
   ];
-  var addresses: string[] = [
+  const addresses: string[] = [
     "Home",
     "Bangkok somewhere",
     "USA",
@@ -165,7 +168,7 @@ export async function main() {
     "Isekai",
     "OtakuRoom",
   ];
-  var petTypes: string[] = [
+  const petTypes: string[] = [
     "Dog",
     "Cat",
     "Goldfish",
@@ -175,25 +178,36 @@ export async function main() {
     "Lizard",
     "Hamster",
   ];
-  for (var i = 0; i < dataCount; i++) {
-    var firstName = getMultipleRandom(firstNames, 1)[0] ?? "";
-    var lastName = getMultipleRandom(lastNames, 1)[0] ?? "";
-    var hotelName = firstName + " " + lastName + " Hotel";
-    var address = getMultipleRandom(addresses, 1)[0] ?? "";
-    var phoneNumber = "1234569780";
-    var petType = getMultipleRandom(petTypes, randomIntFromInterval(1, 3));
-    var startPrice = randomIntFromInterval(100, 300);
-    var endPrice = startPrice + randomIntFromInterval(100, 3000);
-    var imageUri = "https://picsum.photos/200";
-    switch (randomIntFromInterval(1, 3)) {
+  for (let i = 0; i < dataCount; i++) {
+    const firstName = getMultipleRandom(firstNames, 1)[0] ?? "";
+    const lastName = getMultipleRandom(lastNames, 1)[0] ?? "";
+    const hotelName = firstName + " " + lastName + " Hotel";
+    const address = getMultipleRandom(addresses, 1)[0] ?? "";
+    const phoneNumber = "1234569780";
+    const petType = getMultipleRandom(petTypes, getRandomIntFromInterval(1, 3));
+    const startPrice = getRandomIntFromInterval(100, 300);
+    const endPrice = startPrice + getRandomIntFromInterval(100, 3000);
+    const imageUri = "https://picsum.photos/200";
+
+    await new Promise((r) => setTimeout(r, 1000));
+
+    switch (getRandomIntFromInterval(1, 3)) {
       case 1: {
-        var code = "Owner" + randomIntFromInterval(100, 999);
-        makeOwner(code, firstName, lastName, phoneNumber, address, imageUri);
+        const code = "Owner" + getRandomIntFromInterval(100, 999).toString();
+        await makeOwner(
+          code,
+          firstName,
+          lastName,
+          phoneNumber,
+          address,
+          imageUri,
+          petType
+        );
         break;
       }
       case 2: {
-        var code = "Free" + randomIntFromInterval(100, 999);
-        makeFree(
+        const code = "Free" + getRandomIntFromInterval(100, 999).toString();
+        await makeFree(
           code,
           firstName,
           lastName,
@@ -207,8 +221,8 @@ export async function main() {
         break;
       }
       default: {
-        var code = "Hotel" + randomIntFromInterval(100, 999);
-        makeHotel(
+        const code = "Hotel" + getRandomIntFromInterval(100, 999).toString();
+        await makeHotel(
           code,
           hotelName,
           phoneNumber,

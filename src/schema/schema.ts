@@ -26,8 +26,16 @@ export const petSitterFields = z.object({
 
 export const petOwnerFields = z.object({
   // user: userFields,
+  petTypes: z.array(z.string()),
   firstName: z.string(),
   lastName: z.string(),
+});
+
+export const petFields = z.object({
+  petType: z.string(),
+  name: z.string().optional(),
+  sex: z.enum(["Male", "Female"]).optional(),
+  breed: z.string().optional(),
 });
 
 export const petHotelFields = z.object({
@@ -69,4 +77,24 @@ export const returnField = z.object({
   code: z.string().nullable().default(null),
   reason: z.string().nullable().default(null),
   result: z.string().nullable().default(null),
+});
+
+export const reviewFields = z.object({
+  rating: z.union([
+    z
+      .number({ invalid_type_error: "Rating must be an integer from 1 to 10" })
+      .int()
+      .gte(0),
+    z
+      .number({ invalid_type_error: "Rating must be an integer from 1 to 10" })
+      .int()
+      .lte(10),
+  ]),
+  text: z.string().optional(),
+});
+
+export const postFields = z.object({
+  text: z.string(),
+  pictureUri: z.string().optional(),
+  videoUri: z.string().optional(),
 });
