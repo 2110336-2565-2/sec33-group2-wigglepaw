@@ -1,3 +1,4 @@
+import { reviewRouter } from "./routers/reviewRouter";
 import { seedRouter } from "./routers/seedRouter";
 import { petHotelRouter } from "./routers/petHotelRouter";
 import { freelancePetSitterRouter } from "./routers/freelancePetSitterRouter";
@@ -20,6 +21,7 @@ export const appRouter = createTRPCRouter({
   petHotel: petHotelRouter,
   seed: seedRouter,
   pet: petRouter,
+  review: reviewRouter,
   // Health check route, return 200 OK if server is up
   healthcheck: publicProcedure
     .meta({ description: "Health check route, return 200 OK if server is up" })

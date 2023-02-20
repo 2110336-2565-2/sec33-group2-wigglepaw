@@ -37,6 +37,19 @@ async function updatePetTypes(petOwnerId: string) {
 }
 
 export const petRouter = createTRPCRouter({
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.pet.findUnique({
+        where: {
+          petId: input.id,
+        },
+        include: {
+          petOwner: true,
+        },
+      });
+    }),
+
   create: publicProcedure
     .input(
       z.object({
