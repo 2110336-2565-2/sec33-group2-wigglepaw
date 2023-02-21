@@ -138,14 +138,19 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
               className="rounded-full object-cover"
             />
             {props.editable && (
-              <button
-                className="h-full w-full rounded-full opacity-0 transition delay-200 ease-in-out hover:bg-slate-400 hover:opacity-60"
-                onClick={() => {
-                  setIsUploadingProfile(true);
-                }}
-              >
-                EDIT
-              </button>
+              <>
+                <button
+                  className="absolute h-full w-full rounded-full opacity-0 transition delay-200 ease-in-out hover:bg-slate-400 hover:opacity-60"
+                  onClick={() => {
+                    setIsUploadingProfile(true);
+                  }}
+                >
+                  EDIT
+                </button>
+                <p className="py-auto absolute left-full ml-2 h-full w-[6rem] text-sm md:hidden">
+                  Click on your profile to change profile
+                </p>
+              </>
             )}
             <Transition show={isUploadingProfile} as={Fragment}>
               <Dialog onClose={() => {}}>
