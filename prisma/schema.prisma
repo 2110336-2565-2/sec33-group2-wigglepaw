@@ -63,13 +63,14 @@ model User {
 }
 
 model PetOwner {
-    userId    String   @id @default(cuid())
-    user      User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
-    petTypes  String[]
-    firstName String
-    lastName  String
-    pet       Pet[]
-    review    Review[]
+    userId         String           @id @default(cuid())
+    user           User             @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    petTypes       String[]
+    firstName      String
+    lastName       String
+    pet            Pet[]
+    review         Review[]
+    SessionRequest SessionRequest[]
 }
 
 model PetSitter {
@@ -85,6 +86,7 @@ model PetSitter {
     post               Post[]
     review             Review[]
     avgRating          Float?
+    SessionRequest     SessionRequest[]
 }
 
 model FreelancePetSitter {
@@ -136,4 +138,14 @@ model Post {
     text        String
     pictureUri  String?
     videoUri    String?
+}
+
+model SessionRequest {
+    srId        String    @id @default(cuid())
+    petOwnerId  String
+    petOwner    PetOwner  @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
+    petSitterId String
+    petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    status      String // Waiting, Cancelled, Accepted, Declined
+    text        String?
 }

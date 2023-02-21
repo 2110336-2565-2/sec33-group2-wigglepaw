@@ -73,3 +73,8 @@ export const postFields = z.object({
   pictureUri: z.string().optional(),
   videoUri: z.string().optional(),
 });
+
+export const sessionRequestFields = z.object({
+  status: z.enum(["Waiting", "Cancelled", "Accepted", "Declined"]),
+  text: z.string().optional(),
+});
