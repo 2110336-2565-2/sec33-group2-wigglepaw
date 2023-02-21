@@ -12,16 +12,9 @@ import { IoPaw } from "react-icons/io5";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import {
-  Fragment,
-  InputHTMLAttributes,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../utils/api";
-import type { User, PetSitter, FreelancePetSitter } from "@prisma/client";
 import { Dialog, Popover, Transition } from "@headlessui/react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import {
@@ -31,6 +24,7 @@ import {
 } from "../../types/user";
 
 import Post from "./Post";
+import UploadProfilePicture from "./UploadProfilePicture";
 
 type FreelancePetSitterProfileProps = {
   editable: boolean;
@@ -47,7 +41,7 @@ const formDataSchema = z.object({
   petTypes: z.string().array(),
 });
 
-type FormData = z.infer<typeof formDataSchema>;
+type FormDataInfomation = z.infer<typeof formDataSchema>;
 
 // A list of pet types
 // TODO: Get this from somewhere else, instead of hardcoding here.
@@ -71,25 +65,17 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
   const [editing, setEditing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
 
-  const profileImageUri = props.user
-    ? props.user.imageUri
-      ? props.user.imageUri
-      : "/profiledummy.png"
-    : "/profiledummy.png";
-
-  const [isUploadingProfile, setIsUploadingProfile] = useState(false);
-
   const {
     register,
     handleSubmit,
     watch,
     setValue,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<FormDataInfomation>({
     resolver: zodResolver(formDataSchema),
     mode: "onSubmit",
   });
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: FormDataInfomation) => {
     const [firstName, lastName] = data.firstNameLastName.split(" ");
     const petTypesArray: string[] = data.petTypes;
     await updateFreelancePetSitter.mutateAsync({
@@ -132,83 +118,12 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
         <div className="my-auto flex w-screen flex-col md:m-4 md:w-1/5 md:min-w-min">
           <div className="relative mx-auto flex h-[6rem] w-[6rem]">
             <Image
-              src={"/profile_icon.png"}
+              src={props.user.imageUri ?? "/profile_icon.png"}
               alt={"Icon"}
               fill
               className="rounded-full object-cover"
             />
-            {props.editable && (
-              <>
-                <button
-                  className="absolute h-full w-full rounded-full opacity-0 transition delay-200 ease-in-out hover:bg-slate-400 hover:opacity-60"
-                  onClick={() => {
-                    setIsUploadingProfile(true);
-                  }}
-                >
-                  EDIT
-                </button>
-                <p className="py-auto absolute left-full ml-2 h-full w-[6rem] text-sm md:hidden">
-                  Click on your profile to change profile
-                </p>
-              </>
-            )}
-            <Transition show={isUploadingProfile} as={Fragment}>
-              <Dialog onClose={() => {}}>
-                <Transition.Child
-                  as={Fragment}
-                  enter="ease-out duration-300"
-                  enterFrom="opacity-0"
-                  enterTo="opacity-100"
-                  leave="ease-in duration-200"
-                  leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
-                >
-                  {/* The backdrop, rendered as a fixed sibling to the panel container */}
-                  <div
-                    className="fixed inset-0 bg-black/30"
-                    aria-hidden="true"
-                  />
-                </Transition.Child>
-
-                <Transition.Child
-                  as={Fragment}
-                  enter="ease-out duration-200"
-                  enterFrom="opacity-0 scale-95"
-                  enterTo="opacity-100 scale-100"
-                  leave="ease-in duration-200"
-                  leaveFrom="opacity-100 scale-100"
-                  leaveTo="opacity-0 scale-95"
-                >
-                  {/* Full-screen scrollable container */}
-                  <div className="fixed inset-0 overflow-y-auto">
-                    {/* Container to center the panel */}
-                    <div className="flex min-h-full items-center justify-center">
-                      <Dialog.Panel className="mx-auto box-border w-[90vw] max-w-[50rem] rounded bg-white p-4">
-                        <Dialog.Title className="mb-2 text-xl font-bold">
-                          Change my profile picture
-                        </Dialog.Title>
-
-                        <div className="mb-2 w-full">UPLOAD IMAGES</div>
-                        <div className="flex w-full justify-between">
-                          <button
-                            className="rounded-full bg-red-800 px-2 py-1 font-semibold text-white hover:bg-red-600"
-                            onClick={() => setIsUploadingProfile(false)}
-                          >
-                            Cancel
-                          </button>
-                          <button
-                            className="rounded-full bg-sky-800 px-2 py-1 font-semibold text-white hover:bg-sky-600"
-                            onClick={() => setIsUploadingProfile(false)}
-                          >
-                            Save
-                          </button>
-                        </div>
-                      </Dialog.Panel>
-                    </div>
-                  </div>
-                </Transition.Child>
-              </Dialog>
-            </Transition>
+            {props.editable && <UploadProfilePicture user={props.user} />}
           </div>
           <h1 className="mx-auto my-1 text-center text-2xl font-semibold">
             {props.user.username}
