@@ -57,19 +57,6 @@ function useUpdateProfilePicture() {
   return { mutate: updateProfilePicture, status };
 }
 
-const ProfileImage = ({ url }: { url: string }) => {
-  const [dim] = useImageSize(url);
-  return (
-    <Image
-      className="rounded-full object-cover"
-      src={url}
-      alt="Profile Picture"
-      fill
-    />
-    //<span>{`${url} (${dim?.width ?? ""}x${dim?.height ?? ""})`}</span>
-  );
-};
-
 const UploadProfilePicture = (props: any) => {
   const [isUploadingProfile, setIsUploadingProfile] = useState(false);
   const [images, setImages] = useState([]);
@@ -187,11 +174,14 @@ const UploadProfilePicture = (props: any) => {
 
                   <div className="relative mx-auto mb-2 h-[6rem] w-[6rem]">
                     {profileData.data?.imageUri ? (
-                      <ProfileImage
-                        url={selectingImgUrl ?? profileData.data.imageUri}
+                      <Image
+                        className="rounded-full object-cover"
+                        src={selectingImgUrl ?? profileData.data.imageUri}
+                        alt="Profile Picture"
+                        fill
                       />
                     ) : (
-                      <div className="italic text-gray-400">
+                      <div className="text-center align-middle italic text-gray-400">
                         No profile picture
                       </div>
                     )}
@@ -206,28 +196,49 @@ const UploadProfilePicture = (props: any) => {
                         type="file"
                         required
                         accept="image/*"
+                        className="mb-2"
                       />
-                      <button
-                        type="submit"
-                        className="rounded-lg bg-green-500 p-2 text-white hover:bg-green-400 disabled:opacity-50"
-                        disabled={
-                          updateProfilePicture.status === "loading" ||
-                          compressProgress !== null
-                        }
-                      >
-                        {updateProfilePicture.status == "error" && <p>Error</p>}
-                        {updateProfilePicture.status == "idle" && <p>Upload</p>}
-                        {updateProfilePicture.status == "loading" && (
-                          <p>Loading...</p>
+
+                      {updateProfilePicture.status == "error" && (
+                        <p className="mb-2 rounded-lg bg-red-500 p-2 text-white hover:bg-green-400">
+                          Error
+                        </p>
+                      )}
+                      {updateProfilePicture.status == "idle" && (
+                        <p className="mb-2 rounded-lg bg-gray-500 p-2 text-white">
+                          Upload
+                        </p>
+                      )}
+                      {compressProgress && (
+                        <p className="mb-2 rounded-lg bg-yellow-500 p-2 text-white">
+                          Loading... {compressProgress}%
+                        </p>
+                      )}
+                      {(updateProfilePicture.status == "success" ||
+                        updateProfilePicture.status == "loading") &&
+                        !compressProgress && (
+                          <p className="mb-2 rounded-lg bg-green-500 p-2 text-white">
+                            Save Successful
+                          </p>
                         )}
-                        {updateProfilePicture.status == "success" && (
-                          <p>Upload Again</p>
-                        )}
-                      </button>
-                      {compressProgress && <span>{compressProgress}%</span>}
-                      <span className="text-red-500">
+
+                      <span className="mb-2 text-red-500">
                         {errors.image?.message}
                       </span>
+                      <div className="flex w-full justify-between">
+                        <button
+                          className="rounded-full bg-red-800 px-2 py-1 font-semibold text-white hover:bg-red-600"
+                          onClick={() => setIsUploadingProfile(false)}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          className="rounded-full bg-sky-800 px-2 py-1 font-semibold text-white hover:bg-sky-600"
+                          type="submit"
+                        >
+                          Save
+                        </button>
+                      </div>
                     </form>
                   </div>
                 </Dialog.Panel>
