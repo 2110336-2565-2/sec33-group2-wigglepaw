@@ -129,6 +129,7 @@ model Review {
     petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
     text        String?
     rating      Int
+    createdAt   DateTime
 }
 
 model Post {
