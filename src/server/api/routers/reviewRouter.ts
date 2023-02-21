@@ -25,7 +25,7 @@ async function updateAvgRating(petSitterId: string) {
   for (const review of reviews) {
     sum += review.rating;
   }
-  const avg = sum / reviews.length;
+  const avg = Math.round((sum / reviews.length) * 100) / 100;
 
   const update = await prisma.petSitter.update({
     where: {

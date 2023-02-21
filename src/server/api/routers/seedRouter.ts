@@ -21,6 +21,8 @@ import {
   makeReview,
   updateAvgRating,
 } from "../../../seed/db";
+import Rand, { PRNG } from "rand-seed";
+import { resetRand } from "../../../seed/util";
 
 export const seedRouter = createTRPCRouter({
   seedUsers: publicProcedure
@@ -34,7 +36,7 @@ export const seedRouter = createTRPCRouter({
       if (input.clearUsers) {
         await ctx.prisma.user.deleteMany({});
       }
-
+      resetRand();
       for (let i = 0; i < input.numberOfUsers; i++) {
         const firstName = getMultipleRandom(firstNames, 1)[0] ?? "";
         const lastName = getMultipleRandom(lastNames, 1)[0] ?? "";
@@ -122,9 +124,12 @@ export const seedRouter = createTRPCRouter({
         i++
       ) {
         sitterIds[i] = sitters[i]?.userId ?? "";
-        ownerIds[i] = owners[i]?.userId ?? "";
       }
 
+      for (let i = 0; i < Math.min(input.numberOfReviews, owners.length); i++) {
+        ownerIds[i] = owners[i]?.userId ?? "";
+      }
+      resetRand();
       for (let i = 0; i < input.numberOfReviews; i++) {
         const sitterId = getMultipleRandom(sitterIds, 1)[0] ?? "";
         const ownerId = getMultipleRandom(ownerIds, 1)[0] ?? "";
