@@ -3,8 +3,13 @@ import { TypeOf, z } from "zod";
 import { BookingStatus } from "@prisma/client";
 import { UserProfile, UserSubType, UserType } from "../../../types/user";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-import { bookingFields, returnReadBookingFields } from "../../../schema/schema";
+import {
+  bookingFields,
+  searchBookingField,
+  returnReadBookingFields,
+} from "../../../schema/schema";
 import { UserTypeLogic } from "../logic/session";
+import { BookingSearchLogic } from "../logic/search";
 
 const NO_USER_IN_SESSION = {
   status: "ERROR",
@@ -120,7 +125,10 @@ export const bookingRouter = createTRPCRouter({
       const userIdCondition: object = { petSitterId: userId };
       const qualified = await ctx.prisma.booking.findFirst({
         where: {
-          AND: [userIdCondition, { bookingId: input.bookingId }],
+          AND: [
+            BookingSearchLogic.byUserIdAuto(userId),
+            BookingSearchLogic.byBookingId(input.bookingId),
+          ],
         },
       });
       if (qualified == null || input.bookingId != qualified.bookingId)
@@ -151,10 +159,12 @@ export const bookingRouter = createTRPCRouter({
       const userTypeLogic = new UserTypeLogic(userType);
       if (!userTypeLogic.isPetOwner()) return USER_TYPE_MISMATCH;
       const userId = ctx.session.user.id;
-      const userIdCondition: object = { petOwnerId: userId };
       const qualified = await ctx.prisma.booking.findFirst({
         where: {
-          AND: [userIdCondition, { bookingId: input.bookingId }],
+          AND: [
+            BookingSearchLogic.byUserIdAuto(userId),
+            BookingSearchLogic.byBookingId(input.bookingId),
+          ],
         },
       });
       if (qualified == null || input.bookingId != qualified.bookingId)
@@ -186,10 +196,12 @@ export const bookingRouter = createTRPCRouter({
       const userTypeLogic = new UserTypeLogic(userType);
       if (!userTypeLogic.isPetSitter()) return USER_TYPE_MISMATCH;
       const userId = ctx.session.user.id;
-      const userIdCondition: object = { petSitterId: userId };
       const qualified = await ctx.prisma.booking.findFirst({
         where: {
-          AND: [userIdCondition, { bookingId: input.bookingId }],
+          AND: [
+            BookingSearchLogic.byUserIdAuto(userId),
+            BookingSearchLogic.byBookingId(input.bookingId),
+          ],
         },
       });
       if (qualified == null || input.bookingId != qualified.bookingId)
@@ -206,5 +218,44 @@ export const bookingRouter = createTRPCRouter({
         },
       });
       return getSuccessResponse(update.status);
+    }),
+
+  // search booking by petSitter
+  search: protectedProcedure
+    .input(searchBookingField)
+    .query(async ({ ctx, input }) => {
+      if (ctx.session.user == null) return [];
+      const userType: UserType = ctx.session.user?.userType ?? null;
+      const userTypeLogic = new UserTypeLogic(userType);
+      if (!userTypeLogic.isPetSitter() && !userTypeLogic.isPetOwner())
+        return [];
+      const userId = ctx.session.user.id;
+      const isPetSitter = userTypeLogic.isPetSitter();
+      return await ctx.prisma.booking.findMany({
+        where: {
+          AND: [
+            // input.searchBookingId?BookingSearchLogic.byBookingId(input.searchBookingId):{},
+            BookingSearchLogic.byUserId(userId, isPetSitter),
+            input.searchBookingIdList
+              ? BookingSearchLogic.byBookingIdList(input.searchBookingIdList)
+              : {},
+            input.searchStatusList
+              ? BookingSearchLogic.byStatusList(input.searchStatusList)
+              : {},
+            input.searchStartDate
+              ? BookingSearchLogic.byStartDate(input.searchStartDate)
+              : {},
+            input.searchUserId
+              ? BookingSearchLogic.byUserId(input.searchUserId, !isPetSitter)
+              : {},
+          ],
+        },
+        orderBy: [
+          input.searchSortBy
+            ? BookingSearchLogic.sortBy(input.searchSortBy)
+            : {},
+        ],
+        select: returnReadBookingFields,
+      });
     }),
 });
