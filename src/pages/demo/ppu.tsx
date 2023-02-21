@@ -5,9 +5,9 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { api } from "../utils/api";
+import { api } from "../../utils/api";
 import axios from "axios";
-import Header from "../components/Header";
+import Header from "../../components/Header";
 import { useImageSize } from "react-image-size";
 import imageCompression from "browser-image-compression";
 
