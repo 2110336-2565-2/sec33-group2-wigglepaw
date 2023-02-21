@@ -26,9 +26,7 @@ const publicUri = (userId: string) => {
   if (!process.env.S3_BUCKET) {
     throw new Error("S3_BUCKET not set");
   }
-  return `${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET}/${
-    s3Param(userId).Key
-  }`;
+  return `${process.env.S3_PUBLIC_URL}/${s3Param(userId).Key}`;
 };
 
 export const profilePictureRouter = createTRPCRouter({
