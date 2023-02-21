@@ -29,7 +29,7 @@ const SortAndFilterPanel = () => {
   return (
     <div
       id="sort-filter-pane"
-      className="w-[312px] rounded-xl border border-[#633C01] py-5"
+      className="w-[312px] rounded-xl border border-[#633c015d] py-5"
     >
       <div id="sort-panel" className="px-7">
         <p className="mb-1 text-[18px] font-bold text-[#633C01]">
@@ -37,8 +37,8 @@ const SortAndFilterPanel = () => {
         </p>
         <div className="text-center">
           <select
-            className="font-regular w-full rounded-sm border border-[#633c01] bg-[#eeeeee] py-2  px-1 text-[15px] text-[#633c01]
-              focus:border-[#633c01] focus:outline-none focus:ring-2 focus:ring-[#633c01]"
+            className="font-regular w-full rounded-sm border border-[#633c015d] bg-[#eeeeee] py-2 px-1 text-[15px]  text-[#633c01] duration-150 hover:bg-[#dbdbdb]
+              focus:border-[#633c01] focus:outline-none focus:ring-1 focus:ring-[#633c01]"
           >
             <option value="" disabled selected hidden>
               Choose a filter
@@ -51,9 +51,12 @@ const SortAndFilterPanel = () => {
           </select>
         </div>
       </div>
-      <div id="separator" className="my-2 h-2 border-b border-[#633C01]"></div>
+      <div
+        id="separator"
+        className="mt-2 mb-4 h-2 border-b border-[#633c015d]"
+      ></div>
       <div id="filter-panel" className="px-7">
-        <p className="my-1 text-[18px] font-bold text-[#633C01]">
+        <p className="my-2 text-[18px] font-bold text-[#633C01]">
           Filter Pet Sitter Type
         </p>
 
@@ -65,11 +68,11 @@ const SortAndFilterPanel = () => {
             <Fragment key={petSitterType}>
               <div className="flex flex-row gap-2">
                 <div
-                  className="flex h-[25px] w-[25px] select-none flex-col justify-center rounded-md text-center text-xl font-medium text-white shadow-inner"
                   style={{
                     backgroundColor: getBgColor(petSitterType),
                     borderWidth: checkBoxState[petSitterType] ? "0px" : "1.5px",
                   }}
+                  className="flex h-[25px] w-[25px] select-none flex-col justify-center rounded-md text-center text-xl font-medium text-white shadow-inner"
                   onClick={() => {
                     toggleState(petSitterType);
                   }}

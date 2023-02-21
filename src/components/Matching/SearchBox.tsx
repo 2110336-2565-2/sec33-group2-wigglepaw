@@ -1,5 +1,7 @@
 import Image from "next/image";
-import { Fragment, useState } from "react";
+import { check } from "prettier";
+import { Fragment, useContext, useEffect, useState } from "react";
+import { MatchingFormContext } from "./MatchingFormProvider";
 import PriceRangeInput from "./PriceRangeInput";
 const petTypesList = [
   "Dog",
@@ -22,16 +24,24 @@ const initialCheckBoxState: { [key: string]: boolean } = petTypesList.reduce(
 );
 
 const SearchBox = () => {
+  const { register, setValue } = useContext(MatchingFormContext);
+
   const [checkBoxState, setCheckBoxState] = useState(initialCheckBoxState);
 
   const toggleState = (petType: string) => {
-    console.log(!checkBoxState[petType]);
     setCheckBoxState({ ...checkBoxState, [petType]: !checkBoxState[petType] });
   };
 
   const getBgColor = (petType: string): string => {
     return checkBoxState[petType] ? "#633c01" : "#ffffff";
   };
+
+  useEffect(() => {
+    const searchPetTypes = Object.entries(checkBoxState)
+      .filter(([, value]) => value)
+      .map((elem) => elem[0]);
+    setValue("searchPetTypes", searchPetTypes);
+  }, [checkBoxState, setValue]);
 
   return (
     <div id="search-box" className="relative drop-shadow-md">
@@ -60,8 +70,9 @@ const SearchBox = () => {
           >
             <p className="text-[18px] font-bold text-[#8a5534]">Name</p>
             <input
-              className="rounded-md border border-[#8a5534] px-2 py-1 font-normal text-[#b77b59] placeholder-[#caa79287] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663] "
+              className="rounded-md border border-[#633c015d] px-2 py-1 font-extrabold text-[#633c01] placeholder-[#caa79287] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663] "
               placeholder="Sitter Name"
+              {...register("searchName")}
             ></input>
           </div>
           <div
@@ -85,7 +96,6 @@ const SearchBox = () => {
                         toggleState(petType);
                       }}
                     >
-                      <input type="checkbox" hidden className=""></input>
                       {checkBoxState[petType] ? "✓" : ""}
                     </div>
                     <p className="text-[15px] font-normal text-[#8a5534]">
@@ -94,6 +104,7 @@ const SearchBox = () => {
                   </div>
                 </Fragment>
               ))}
+              <input hidden {...register("searchPetTypes")}></input>
             </div>
           </div>
           <div id="price-range-input-wrapper" className="flex flex-col ">

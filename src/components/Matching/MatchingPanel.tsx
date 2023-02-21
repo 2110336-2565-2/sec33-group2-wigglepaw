@@ -1,15 +1,24 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ContextType, createContext, useContext } from "react";
+import { type FieldValues, useForm, UseFormReturn } from "react-hook-form";
+import { searchField } from "../../schema/schema";
+import MatchingFormProvider from "./MatchingFormProvider";
 import SearchBox from "./SearchBox";
 import SortAndFilterPanel from "./SortAndFilterPanel";
+
+// TODO: add schedule, rating, ...
+
 const MatchingPanel = () => {
-  // TODO: setup the form, and linked to backend
   return (
     <div id="matching-panel" className="mx-auto w-[383px]">
-      <div id="searchbox-wrapper" className="mb-6">
-        <SearchBox />
-      </div>
-      <div id="sort-and-filter-wrapper" className="flex justify-center">
-        <SortAndFilterPanel />
-      </div>
+      <MatchingFormProvider>
+        <div id="searchbox-wrapper" className="mb-6">
+          <SearchBox />
+        </div>
+        <div id="sort-and-filter-wrapper" className="flex justify-center">
+          <SortAndFilterPanel />
+        </div>
+      </MatchingFormProvider>
     </div>
   );
 };

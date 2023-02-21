@@ -88,7 +88,7 @@ const PriceRangeInput = () => {
               <p className="text-[15px] font-medium text-[#8a5534]">Min</p>
             </label>
             <input
-              className="w-[90px] rounded-md border border-[#8a5534] px-2 py-1 text-center text-[#b77b59] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663]"
+              className="w-[90px] rounded-md border border-[#633c015d] px-2 py-1 text-center font-extrabold text-[#633c01] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663]"
               //   onBlur={onBlurMin}
               //   name={nameMin}
               //   ref={refMin}
@@ -120,7 +120,7 @@ const PriceRangeInput = () => {
               <p className="text-[15px] font-medium text-[#8a5534]">Max</p>
             </label>
             <input
-              className="w-[90px] rounded-md border border-[#8a5534] px-2 py-1 text-center text-[#b77b59] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663]"
+              className="w-[90px] rounded-md border border-[#633c015d] px-2 py-1 text-center font-extrabold text-[#633c01] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663]"
               //   onBlur={onBlurMax}
               //   name={nameMax}
               //   ref={refMax}

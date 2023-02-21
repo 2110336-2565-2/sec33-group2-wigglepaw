@@ -33,7 +33,7 @@ const PetsitterCard = () => {
           <div className="max-md:hidden">
             <div className="mb-2 flex flex-col">
               <div>
-                <span className="mr-2 text-[30px] font-semibold text-[#213951] hover:underline">
+                <span className="mr-2 text-[27px] font-semibold text-[#213951] hover:underline">
                   Eren Yeager
                 </span>
                 <span className="text-[20px] font-normal text-[#bfbfbf]">
