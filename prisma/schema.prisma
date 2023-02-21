@@ -148,4 +148,5 @@ model SessionRequest {
     petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
     status      String // Waiting, Cancelled, Accepted, Declined
     text        String?
+    createdAt   DateTime
 }

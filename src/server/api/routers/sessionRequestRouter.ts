@@ -37,6 +37,8 @@ export const sessionRequestRouter = createTRPCRouter({
           petSitterId: input.petSitterId,
           petOwnerId: input.petOwnerId,
           ...input.sessionRequest,
+          status: "Waiting",
+          createdAt: new Date(),
         },
       });
       return createSessionRequest;

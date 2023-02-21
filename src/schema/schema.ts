@@ -75,6 +75,5 @@ export const postFields = z.object({
 });
 
 export const sessionRequestFields = z.object({
-  status: z.enum(["Waiting", "Cancelled", "Accepted", "Declined"]),
   text: z.string().optional(),
 });
