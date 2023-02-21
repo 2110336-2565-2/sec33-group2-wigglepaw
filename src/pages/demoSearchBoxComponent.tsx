@@ -60,7 +60,7 @@ const DemoSearchBoxComponent: NextPage = () => {
                 id="name-input-wrapper"
                 className="mb-2 flex flex-col border-b-[1px] border-[#c89d48] pb-4"
               >
-                <p className="text-[15px] font-bold text-[#8a5534]">Name</p>
+                <p className="text-[18px] font-bold text-[#8a5534]">Name</p>
                 <input
                   className="rounded-md border border-[#8a5534] px-2 py-1 text-[#b77b59] placeholder-[#caa79287] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663] "
                   placeholder="Sitter Name"
@@ -70,7 +70,7 @@ const DemoSearchBoxComponent: NextPage = () => {
                 id="pet-types-input-wrapper"
                 className="mb-2 flex flex-col border-b-[1px] border-[#c89d48] pb-4 "
               >
-                <p className="mb-1 mt-1 text-[15px] font-bold text-[#8a5534]">
+                <p className="my-1 text-[18px] font-bold text-[#8a5534]">
                   Pet Types
                 </p>
                 <div
@@ -99,7 +99,7 @@ const DemoSearchBoxComponent: NextPage = () => {
                 </div>
               </div>
               <div id="price-range-input-wrapper" className="flex flex-col ">
-                <p className="mb-1 text-[15px] font-bold text-[#8a5534]">
+                <p className="mb-1 text-[18px] font-bold text-[#8a5534]">
                   Price Range
                 </p>
                 <div id="two-thumbs-container" className="mb-6 px-2">
