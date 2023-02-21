@@ -107,7 +107,7 @@ const SearchBox = () => {
         </div>
 
         <div id="search-button-wrapper" className="">
-          <button className="drop-shadow-slg w-full rounded-sm bg-[#2a4764] py-2 text-[20px] font-bold text-white hover:bg-[#213951]">
+          <button className="drop-shadow-slg w-full rounded-sm bg-[#2a4764] py-2 text-[20px] font-bold text-white duration-150 hover:bg-[#213951]">
             Search
           </button>
         </div>
