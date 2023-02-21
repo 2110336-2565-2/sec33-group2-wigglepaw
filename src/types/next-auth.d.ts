@@ -1,4 +1,5 @@
 import { type DefaultSession } from "next-auth";
+import { JWT } from "next-auth/jwt";
 import { type UserSubType } from "./user";
 
 declare module "next-auth/jwt" {
@@ -25,7 +26,9 @@ declare module "next-auth" {
     user?: {
       id: string;
       username: string;
-    } & DefaultSession["user"];
+      email: string;
+      picture: string | null;
+    } & UserSubType;
   }
 
   /**
