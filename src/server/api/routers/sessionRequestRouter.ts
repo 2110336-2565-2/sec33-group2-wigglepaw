@@ -41,4 +41,58 @@ export const sessionRequestRouter = createTRPCRouter({
       });
       return createSessionRequest;
     }),
+
+  cancel: publicProcedure
+    .input(
+      z.object({
+        srId: z.string().cuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const createSessionRequest = await ctx.prisma.sessionRequest.update({
+        where: {
+          srId: input.srId,
+        },
+        data: {
+          status: "Cancelled",
+        },
+      });
+      return createSessionRequest;
+    }),
+
+  accept: publicProcedure
+    .input(
+      z.object({
+        srId: z.string().cuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const createSessionRequest = await ctx.prisma.sessionRequest.update({
+        where: {
+          srId: input.srId,
+        },
+        data: {
+          status: "Accepted",
+        },
+      });
+      return createSessionRequest;
+    }),
+
+  decline: publicProcedure
+    .input(
+      z.object({
+        srId: z.string().cuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const createSessionRequest = await ctx.prisma.sessionRequest.update({
+        where: {
+          srId: input.srId,
+        },
+        data: {
+          status: "Declined",
+        },
+      });
+      return createSessionRequest;
+    }),
 });
