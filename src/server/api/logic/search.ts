@@ -3,15 +3,16 @@ import { BookingStatus } from "@prisma/client";
 
 // function makeOptional() {
 //   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-//     const originalMethod:function = descriptor.value;
+//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+//     const originalMethod = descriptor.value;
 //     descriptor.value = function (...args: any[]) {
-//       if (args[0] == null) {
+//       if (args.every(arg=> arg==null)) {
 //         return {}
 //       } else {
+//         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 //         return originalMethod.apply(this, args);
 //       }
 //     };
-
 //     return descriptor;
 //   };
 // }
@@ -61,7 +62,8 @@ export abstract class BookingSearchLogic {
       },
     };
   }
-  public static sortBy(sortName: string): object {
+
+  public static sortBy(sortName: string | undefined): object {
     switch (sortName) {
       case "date":
         return { startDate: "asc" };

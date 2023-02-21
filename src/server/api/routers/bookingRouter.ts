@@ -122,7 +122,6 @@ export const bookingRouter = createTRPCRouter({
       const userTypeLogic = new UserTypeLogic(userType);
       if (!userTypeLogic.isPetSitter()) return USER_TYPE_MISMATCH;
       const userId = ctx.session.user.id;
-      const userIdCondition: object = { petSitterId: userId };
       const qualified = await ctx.prisma.booking.findFirst({
         where: {
           AND: [
@@ -250,11 +249,7 @@ export const bookingRouter = createTRPCRouter({
               : {},
           ],
         },
-        orderBy: [
-          input.searchSortBy
-            ? BookingSearchLogic.sortBy(input.searchSortBy)
-            : {},
-        ],
+        orderBy: [BookingSearchLogic.sortBy(input.searchSortBy)],
         select: returnReadBookingFields,
       });
     }),
