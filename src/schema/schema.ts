@@ -93,3 +93,43 @@ export const postFields = z.object({
 export const sessionRequestFields = z.object({
   text: z.string().optional(),
 });
+
+export const returnReadPetOwnerFields = {
+  userId: true,
+  petTypes: true,
+  firstName: true,
+  lastName: true,
+  review: true,
+};
+export const returnReadPetSitterFields = {
+  userId: true,
+  // freelancePetSitter :true,
+  // petHotel           :true,
+  petTypes: true,
+  verifyStatus: true,
+  certificationUri: true,
+  startPrice: true,
+  endPrice: true,
+  avgRating: true,
+};
+export const returnReadPetFields = {
+  petId: true,
+  petOwnerId: true,
+  petType: true,
+  name: true,
+  sex: true,
+  breed: true,
+};
+export const returnReadBookingFields = {
+  bookingId: true,
+  petOwnerId: true,
+  petSitterId: true,
+  startDate: true,
+  endDate: true,
+  numberOfPets: true,
+  status: true,
+  note: true,
+  pet: { select: returnReadPetFields },
+  // petOwner: { select: returnReadPetOwnerFields },
+  // petSitter: { select: returnReadPetSitterFields },
+};

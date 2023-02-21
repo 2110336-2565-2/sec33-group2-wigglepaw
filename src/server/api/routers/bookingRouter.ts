@@ -3,7 +3,8 @@ import { TypeOf, z } from "zod";
 import { BookingStatus } from "@prisma/client";
 import { UserProfile, UserSubType, UserType } from "../../../types/user";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-import { bookingFields, returnField } from "../../../schema/schema";
+import { bookingFields, returnReadBookingFields } from "../../../schema/schema";
+import { UserTypeLogic } from "../logic/session";
 
 const NO_USER_IN_SESSION = {
   status: "ERROR",
@@ -36,9 +37,7 @@ export const bookingRouter = createTRPCRouter({
         where: {
           bookingId: input.bookingId,
         },
-        include: {
-          pet: true,
-        },
+        select: returnReadBookingFields,
       });
       if (result == null) return null;
       if (![result.petSitterId, result.petOwnerId].includes(userId))
@@ -53,9 +52,7 @@ export const bookingRouter = createTRPCRouter({
       where: {
         OR: [{ petSitterId: userId }, { petOwnerId: userId }],
       },
-      include: {
-        pet: true,
-      },
+      select: returnReadBookingFields,
     });
     return result;
   }),
@@ -66,33 +63,28 @@ export const bookingRouter = createTRPCRouter({
     .query(({ ctx, input }) => {
       if (ctx.session.user == null) return [];
       const userType: UserType = ctx.session.user?.userType ?? null;
-      const isPetSitter: boolean = [
-        UserType.FreelancePetSitter,
-        UserType.PetHotel,
-      ].includes(userType);
-      const isPetOwner: boolean = [UserType.PetOwner].includes(userType);
-      if (!isPetSitter && !isPetOwner) return [];
+      const userTypeLogic = new UserTypeLogic(userType);
+      if (!userTypeLogic.isPetSitter() && !userTypeLogic.isPetOwner())
+        return [];
       const userId = ctx.session.user.id;
-      const condition: object[] = isPetSitter
+      const condition: object[] = userTypeLogic.isPetSitter()
         ? [{ petSitterId: userId }, { petOwnerId: input.userId }]
         : [{ petSitterId: input.userId }, { petOwnerId: userId }];
       return ctx.prisma.booking.findMany({
         where: {
           AND: condition,
         },
-        include: {
-          pet: true,
-        },
+        select: returnReadBookingFields,
       });
     }),
 
-  // create booking petOwner
-  create: protectedProcedure
+  // request booking petOwner
+  request: protectedProcedure
     .input(bookingFields)
     .mutation(async ({ ctx, input }) => {
       const userType: UserType = ctx.session.user?.userType ?? null;
-      const isPetOwner: boolean = [UserType.PetOwner].includes(userType);
-      if (!isPetOwner) return USER_TYPE_MISMATCH;
+      const userTypeLogic = new UserTypeLogic(userType);
+      if (!userTypeLogic.isPetOwner()) return USER_TYPE_MISMATCH;
       const petOwnerId = ctx.session.user.id;
 
       return await ctx.prisma.booking.create({
@@ -108,14 +100,12 @@ export const bookingRouter = createTRPCRouter({
             connect: input.petIdList.map((petId) => ({ petId: petId })),
           },
         },
-        include: {
-          pet: true,
-        },
+        select: returnReadBookingFields,
       });
     }),
 
-  // accepted booking by petSitter
-  accepted: protectedProcedure
+  // accept booking by petSitter
+  accept: protectedProcedure
     .input(
       z.object({
         bookingId: z.string(),
@@ -124,24 +114,17 @@ export const bookingRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       if (ctx.session.user == null) return NO_USER_IN_SESSION;
       const userType: UserType = ctx.session.user?.userType ?? null;
-      const isPetSitter: boolean = [
-        UserType.FreelancePetSitter,
-        UserType.PetHotel,
-      ].includes(userType);
-      if (!isPetSitter) return USER_TYPE_MISMATCH;
-      const qualified = await ctx.prisma.booking.findFirstOrThrow({
+      const userTypeLogic = new UserTypeLogic(userType);
+      if (!userTypeLogic.isPetSitter()) return USER_TYPE_MISMATCH;
+      const userId = ctx.session.user.id;
+      const userIdCondition: object = { petSitterId: userId };
+      const qualified = await ctx.prisma.booking.findFirst({
         where: {
-          AND: [
-            { petSitterId: ctx.session.user.id },
-            { bookingId: input.bookingId },
-          ],
-        },
-        select: {
-          bookingId: true,
-          status: true,
+          AND: [userIdCondition, { bookingId: input.bookingId }],
         },
       });
-      if (input.bookingId != qualified.bookingId) return NO_BOOKING_FOUND;
+      if (qualified == null || input.bookingId != qualified.bookingId)
+        return NO_BOOKING_FOUND;
       if (qualified.status != BookingStatus.requested)
         return BOOKING_STATUS_UNAVAILABLE;
       const update = await ctx.prisma.booking.update({
@@ -155,7 +138,7 @@ export const bookingRouter = createTRPCRouter({
       return getSuccessResponse(update.status);
     }),
 
-  // cancel booking by petSitter or petOwner
+  // cancel booking by petOwner
   cancel: protectedProcedure
     .input(
       z.object({
@@ -165,31 +148,55 @@ export const bookingRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       if (ctx.session.user == null) return NO_USER_IN_SESSION;
       const userType: UserType = ctx.session.user?.userType ?? null;
-      const isPetSitter: boolean = [
-        UserType.FreelancePetSitter,
-        UserType.PetHotel,
-      ].includes(userType);
-      const isPetOwner: boolean = [UserType.PetOwner].includes(userType);
-      if (!isPetSitter && !isPetOwner) return USER_TYPE_MISMATCH;
+      const userTypeLogic = new UserTypeLogic(userType);
+      if (!userTypeLogic.isPetOwner()) return USER_TYPE_MISMATCH;
       const userId = ctx.session.user.id;
-      const userIdCondition: object = isPetSitter
-        ? { petSitterId: userId }
-        : { petOwnerId: userId };
-      const qualified = await ctx.prisma.booking.findFirstOrThrow({
+      const userIdCondition: object = { petOwnerId: userId };
+      const qualified = await ctx.prisma.booking.findFirst({
         where: {
           AND: [userIdCondition, { bookingId: input.bookingId }],
         },
-        select: {
-          bookingId: true,
-          status: true,
-        },
       });
-      if (input.bookingId != qualified.bookingId) return NO_BOOKING_FOUND;
+      if (qualified == null || input.bookingId != qualified.bookingId)
+        return NO_BOOKING_FOUND;
       if (qualified.status != BookingStatus.requested)
         return BOOKING_STATUS_UNAVAILABLE;
-      const status = isPetSitter
-        ? BookingStatus.canceledByPetSitter
-        : BookingStatus.canceledByPetOwner;
+      const status = BookingStatus.canceled;
+      const update = await ctx.prisma.booking.update({
+        where: {
+          bookingId: input.bookingId,
+        },
+        data: {
+          status: status,
+        },
+      });
+      return getSuccessResponse(update.status);
+    }),
+
+  // reject booking by petSitter
+  reject: protectedProcedure
+    .input(
+      z.object({
+        bookingId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.session.user == null) return NO_USER_IN_SESSION;
+      const userType: UserType = ctx.session.user?.userType ?? null;
+      const userTypeLogic = new UserTypeLogic(userType);
+      if (!userTypeLogic.isPetSitter()) return USER_TYPE_MISMATCH;
+      const userId = ctx.session.user.id;
+      const userIdCondition: object = { petSitterId: userId };
+      const qualified = await ctx.prisma.booking.findFirst({
+        where: {
+          AND: [userIdCondition, { bookingId: input.bookingId }],
+        },
+      });
+      if (qualified == null || input.bookingId != qualified.bookingId)
+        return NO_BOOKING_FOUND;
+      if (qualified.status != BookingStatus.requested)
+        return BOOKING_STATUS_UNAVAILABLE;
+      const status = BookingStatus.rejected;
       const update = await ctx.prisma.booking.update({
         where: {
           bookingId: input.bookingId,

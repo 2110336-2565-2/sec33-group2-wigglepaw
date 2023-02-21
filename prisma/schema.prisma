@@ -122,8 +122,8 @@ model Booking {
 enum BookingStatus {
     requested
     accepted
-    canceledByPetOwner
-    canceledByPetSitter
+    canceled
+    rejected
 }
 
 model Pet {
