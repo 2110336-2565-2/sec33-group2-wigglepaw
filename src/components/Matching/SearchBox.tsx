@@ -51,7 +51,7 @@ const SearchBox = () => {
       <div id="empty-space" className="mx-auto h-[15px] w-[312px] "></div>
       <div
         id="search-pane"
-        className="mx-auto flex w-[312px] flex-col rounded-xl border-b-2 border-[#d2b67d] bg-[#ffdfa0] px-7 pb-6 pt-[72px]"
+        className="mx-auto flex w-[312px] flex-col rounded-xl border-b-2 border-r border-r-[#dabf888d] border-b-[#d2b67d] bg-[#ffdfa0] px-7 pb-6 pt-[72px]"
       >
         <div id="search-params-wrapper" className="flex flex-col ">
           <div

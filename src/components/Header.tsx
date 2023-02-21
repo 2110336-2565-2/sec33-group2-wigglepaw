@@ -28,10 +28,10 @@ const Header = () => {
     : "/profiledummy.png";
 
   return (
-    <span className="mb-4 flex h-fit w-screen bg-sky-900 md:pr-2">
+    <span className="mb-4 flex h-fit w-screen bg-[#213951] md:pr-2">
       <nav className="flex w-full">
         <Link href={"/"} className="flex shrink-0">
-          <div className="relative m-2 flex h-[4rem] w-[5rem]">
+          <div className="relative m-2 ml-6 flex h-[4rem] w-[5rem]">
             <Image src={"/logo_w.png"} alt={""} fill></Image>
           </div>
           <h1 className="my-auto mr-2 text-2xl font-bold text-white sm:text-3xl">

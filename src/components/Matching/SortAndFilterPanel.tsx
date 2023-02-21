@@ -29,7 +29,7 @@ const SortAndFilterPanel = () => {
   return (
     <div
       id="sort-filter-pane"
-      className="rounded-xl border border-[#633C01] py-5"
+      className="w-[312px] rounded-xl border border-[#633C01] py-5"
     >
       <div id="sort-panel" className="px-7">
         <p className="mb-1 text-[18px] font-bold text-[#633C01]">
@@ -37,7 +37,7 @@ const SortAndFilterPanel = () => {
         </p>
         <div className="text-center">
           <select
-            className="font-regular w-full rounded-sm border border-[#633c01] bg-[#d6d6d6] py-2  px-1 text-[15px] text-[#633c01]
+            className="font-regular w-full rounded-sm border border-[#633c01] bg-[#eeeeee] py-2  px-1 text-[15px] text-[#633c01]
               focus:border-[#633c01] focus:outline-none focus:ring-2 focus:ring-[#633c01]"
           >
             <option value="" disabled selected hidden>

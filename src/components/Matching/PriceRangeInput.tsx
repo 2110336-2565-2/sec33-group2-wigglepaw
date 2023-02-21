@@ -5,8 +5,8 @@ import { Range, getTrackBackground } from "react-range";
 const STEP = 100;
 const MIN = 0;
 const MAX = 10000;
-export const BEGIN_MIN = 300;
-export const BEGIN_MAX = 2000;
+export const BEGIN_MIN = 1000;
+export const BEGIN_MAX = 4000;
 
 const PriceRangeInput = () => {
   const [values, setValues] = useState([BEGIN_MIN, BEGIN_MAX]);
