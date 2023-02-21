@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Image from "next/image";
 import { Fragment, useState } from "react";
-import PriceRangeInput from "../components/PriceRangeInput";
+import PriceRangeInput from "../components/Matching/PriceRangeInput";
 const petTypesList = [
   "Dog",
   "Cat",

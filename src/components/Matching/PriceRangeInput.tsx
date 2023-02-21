@@ -92,7 +92,7 @@ const PriceRangeInput = () => {
               //   onBlur={onBlurMin}
               //   name={nameMin}
               //   ref={refMin}
-              value={values[0]}
+              value={`${values[0] as number}฿`}
               onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
                 if (
                   e.key === "Enter" &&
@@ -124,7 +124,7 @@ const PriceRangeInput = () => {
               //   onBlur={onBlurMax}
               //   name={nameMax}
               //   ref={refMax}
-              value={values[1]}
+              value={`${values[1] as number}฿`}
               onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
                 if (
                   e.key === "Enter" &&
