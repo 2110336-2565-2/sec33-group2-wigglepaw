@@ -112,12 +112,12 @@ const ProfilePictureUploadDemo: NextPage = () => {
 
   // Guard ==================================================
 
-  if (status === "loading" || !profileData.data) {
-    return <div>Loading...</div>;
-  }
-
   if (!session || !session.user) {
     return <div>Not signed in</div>;
+  }
+
+  if (!profileData.data) {
+    return <div>Loading...</div>;
   }
 
   // Render ==================================================
