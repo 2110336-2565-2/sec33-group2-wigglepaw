@@ -138,6 +138,7 @@ model Post {
     text        String
     pictureUri  String?
     videoUri    String?
+    createdAt   DateTime
 }
 
 model SessionRequest {

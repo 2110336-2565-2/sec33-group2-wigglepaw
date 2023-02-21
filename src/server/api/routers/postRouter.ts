@@ -21,6 +21,7 @@ export const postRouter = createTRPCRouter({
         data: {
           petSitterId: input.petSitterId,
           ...input.post,
+          createdAt: new Date(),
         },
       });
       const postId = createPost.postId;
