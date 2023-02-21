@@ -16,7 +16,6 @@ const MatchingFormProvider: React.FunctionComponent<{
   });
 
   const onSubmit = (data: FieldValues) => {
-    alert(data);
     console.log(data);
   };
 

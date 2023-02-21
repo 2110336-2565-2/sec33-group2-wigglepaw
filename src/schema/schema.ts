@@ -52,7 +52,7 @@ export const searchField = z.object({
   searchStartSchedule: z.string().default(""),
   searchEndSchedule: z.string().default(""),
   searchIncludePetSitterType: z.string().default(""),
-  searhcIncludePetHotel: z.boolean().default(true),
-  searhcIncludeFreelancePetSitter: z.boolean().default(true),
+  searchIncludePetHotel: z.boolean().default(true),
+  searchIncludeFreelancePetSitter: z.boolean().default(true),
   searchSortBy: z.string().default(""),
 });

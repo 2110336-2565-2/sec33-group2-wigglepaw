@@ -1,30 +1,46 @@
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
+import { MatchingFormContext } from "./MatchingFormProvider";
+
+// key : frontend display, value: backend input
+const petSitterTypeList = ["Pet Hotel", "Freelance"];
+
+const sortByOptions = {
+  Name: "name",
+  Price: "price",
+  "Start Price": "startPrice",
+  "End Price": "endPrice",
+};
 
 const SortAndFilterPanel = () => {
-  // TODO: convert to "hotel" and "freelance" for backend
-  const petSitterTypeList = ["Pet Hotel", "Freelance"];
+  const { register, setValue } = useContext(MatchingFormContext);
 
   const initialCheckBoxState: { [key: string]: boolean } =
     petSitterTypeList.reduce((map, petSitterType) => {
-      map[petSitterType] = false;
+      map[petSitterType] = true; // search both hotel and freelance by default
       return map;
     }, {} as { [key: string]: boolean });
 
   const [checkBoxState, setCheckBoxState] = useState(initialCheckBoxState);
 
   const toggleState = (petSitterType: string) => {
-    console.log(!checkBoxState[petSitterType]);
-    setCheckBoxState({
+    let params;
+    if (petSitterType === "Pet Hotel") {
+      params = "searchIncludePetHotel";
+    } else {
+      params = "searchIncludeFreelancePetSitter";
+    }
+    setValue(params, !checkBoxState[petSitterType]);
+
+    const updatedCheckBoxState = {
       ...checkBoxState,
       [petSitterType]: !checkBoxState[petSitterType],
-    });
+    };
+    setCheckBoxState(updatedCheckBoxState);
   };
 
   const getBgColor = (petSitterType: string): string => {
     return checkBoxState[petSitterType] ? "#633C01" : "#ffffff";
   };
-
-  const sortByOptions = ["Name", "Review", "Price"];
 
   return (
     <div
@@ -39,13 +55,14 @@ const SortAndFilterPanel = () => {
           <select
             className="font-regular w-full rounded-sm border border-[#633c015d] bg-[#eeeeee] py-2 px-1 text-[15px]  text-[#633c01] duration-150 hover:bg-[#dbdbdb]
               focus:border-[#633c01] focus:outline-none focus:ring-1 focus:ring-[#633c01]"
+            {...register("searchSortBy")}
           >
             <option value="" disabled selected hidden>
               Choose a filter
             </option>
-            {sortByOptions.map((sortByOption) => (
-              <option key={sortByOption} value={sortByOption}>
-                {sortByOption}
+            {Object.entries(sortByOptions).map(([key, value]) => (
+              <option key={key} value={value}>
+                {key}
               </option>
             ))}
           </select>
@@ -77,7 +94,6 @@ const SortAndFilterPanel = () => {
                     toggleState(petSitterType);
                   }}
                 >
-                  <input type="checkbox" hidden className=""></input>
                   {checkBoxState[petSitterType] ? "✓" : ""}
                 </div>
                 <p className="text-[15px] font-normal text-[#633C01]">
@@ -86,6 +102,7 @@ const SortAndFilterPanel = () => {
               </div>
             </Fragment>
           ))}
+          <input hidden {...register("searchIncludePetSitterType")}></input>
         </div>
       </div>
     </div>

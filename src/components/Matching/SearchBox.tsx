@@ -29,7 +29,15 @@ const SearchBox = () => {
   const [checkBoxState, setCheckBoxState] = useState(initialCheckBoxState);
 
   const toggleState = (petType: string) => {
-    setCheckBoxState({ ...checkBoxState, [petType]: !checkBoxState[petType] });
+    const updatedCheckBoxState = {
+      ...checkBoxState,
+      [petType]: !checkBoxState[petType],
+    };
+    const searchPetTypes = Object.entries(updatedCheckBoxState)
+      .filter(([, value]) => value)
+      .map((elem) => elem[0]);
+    setValue("searchPetTypes", searchPetTypes);
+    setCheckBoxState(updatedCheckBoxState);
   };
 
   const getBgColor = (petType: string): string => {
@@ -109,7 +117,7 @@ const SearchBox = () => {
           </div>
           <div id="price-range-input-wrapper" className="flex flex-col ">
             <p className="mb-1 text-[18px] font-bold text-[#8a5534]">
-              Price Range
+              Price Range &#40;฿&#41;
             </p>
             <div id="two-thumbs-container" className="mb-6 px-2">
               <PriceRangeInput />

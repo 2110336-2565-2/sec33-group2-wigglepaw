@@ -89,8 +89,8 @@ export const petSitterRouter = createTRPCRouter({
               input.searchIncludePetSitterType
             ),
             searchLogic.searchByPetSitterType(
-              input.searhcIncludePetHotel,
-              input.searhcIncludeFreelancePetSitter
+              input.searchIncludePetHotel,
+              input.searchIncludeFreelancePetSitter
             ),
           ],
         },

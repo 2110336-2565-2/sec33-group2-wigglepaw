@@ -1,19 +1,21 @@
 import Image from "next/image";
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import { Range, getTrackBackground } from "react-range";
+import { MatchingFormContext } from "./MatchingFormProvider";
 
 const STEP = 100;
 const MIN = 0;
 const MAX = 10000;
-export const BEGIN_MIN = 1000;
-export const BEGIN_MAX = 4000;
+const BEGIN_MIN = 1000;
+const BEGIN_MAX = 4000;
 
 const PriceRangeInput = () => {
   const [values, setValues] = useState([BEGIN_MIN, BEGIN_MAX]);
 
+  const { register, setValue } = useContext(MatchingFormContext);
+
   return (
     <Fragment>
-      {/* two thumbs starts here */}
       <div
         style={{
           display: "flex",
@@ -30,8 +32,8 @@ const PriceRangeInput = () => {
           rtl={false}
           onChange={(values) => {
             if (values[0] && values[1]) {
-              //   setValue("searchPriceMin", values[0]);
-              //   setValue("searchPriceMax", values[1]);
+              setValue("searchPriceMin", values[0]);
+              setValue("searchPriceMax", values[1]);
               setValues(values);
             }
           }}
@@ -67,7 +69,7 @@ const PriceRangeInput = () => {
               </div>
             </div>
           )}
-          renderThumb={({ props /*isDragged*/ }) => (
+          renderThumb={({ props }) => (
             <div
               className="focus:outline-none"
               {...props}
@@ -89,10 +91,10 @@ const PriceRangeInput = () => {
             </label>
             <input
               className="w-[90px] rounded-md border border-[#633c015d] px-2 py-1 text-center font-extrabold text-[#633c01] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663]"
-              //   onBlur={onBlurMin}
-              //   name={nameMin}
-              //   ref={refMin}
-              value={`${values[0] as number}฿`}
+              {...register("searchPriceMin", {
+                value: values[0],
+                valueAsNumber: true,
+              })}
               onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
                 if (
                   e.key === "Enter" &&
@@ -121,10 +123,10 @@ const PriceRangeInput = () => {
             </label>
             <input
               className="w-[90px] rounded-md border border-[#633c015d] px-2 py-1 text-center font-extrabold text-[#633c01] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663]"
-              //   onBlur={onBlurMax}
-              //   name={nameMax}
-              //   ref={refMax}
-              value={`${values[1] as number}฿`}
+              {...register("searchPriceMax", {
+                value: values[1],
+                valueAsNumber: true,
+              })}
               onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
                 if (
                   e.key === "Enter" &&
