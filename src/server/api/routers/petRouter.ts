@@ -37,6 +37,19 @@ async function updatePetTypes(petOwnerId: string) {
 }
 
 export const petRouter = createTRPCRouter({
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.pet.findUnique({
+        where: {
+          petId: input.id,
+        },
+        include: {
+          petOwner: true,
+        },
+      });
+    }),
+
   create: publicProcedure
     .input(
       z.object({
@@ -67,7 +80,7 @@ export const petRouter = createTRPCRouter({
         },
       });
       await updatePetTypes(input.petOwnerId);
-      return;
+      return createPet;
     }),
 
   delete: publicProcedure
@@ -83,11 +96,29 @@ export const petRouter = createTRPCRouter({
         },
       });
       if (!pet) return "ERROR";
-      await ctx.prisma.pet.delete({
+      const del = await ctx.prisma.pet.delete({
         where: {
           petId: input.petId,
         },
       });
       await updatePetTypes(pet.petOwnerId);
+      return del;
+    }),
+
+  update: publicProcedure
+    .input(
+      z.object({
+        petId: z.string(),
+        data: petFields.partial(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const update = await ctx.prisma.pet.update({
+        where: {
+          petId: input.petId,
+        },
+        data: { ...input.data },
+      });
+      return update;
     }),
 });

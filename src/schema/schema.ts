@@ -80,16 +80,7 @@ export const returnField = z.object({
 });
 
 export const reviewFields = z.object({
-  rating: z.union([
-    z
-      .number({ invalid_type_error: "Rating must be an integer from 1 to 10" })
-      .int()
-      .gte(0),
-    z
-      .number({ invalid_type_error: "Rating must be an integer from 1 to 10" })
-      .int()
-      .lte(10),
-  ]),
+  rating: z.number().gte(1).lte(5),
   text: z.string().optional(),
 });
 
@@ -97,4 +88,8 @@ export const postFields = z.object({
   text: z.string(),
   pictureUri: z.string().optional(),
   videoUri: z.string().optional(),
+});
+
+export const sessionRequestFields = z.object({
+  text: z.string().optional(),
 });
