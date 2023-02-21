@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import Image from "next/image";
 import { Fragment, useState } from "react";
+import PriceRangeInput from "../components/PriceRangeInput";
 const petTypesList = [
   "Dog",
   "Cat",
@@ -61,7 +62,7 @@ const DemoSearchBoxComponent: NextPage = () => {
               >
                 <p className="text-[15px] font-bold text-[#8a5534]">Name</p>
                 <input
-                  className=" rounded-md border border-[#8a5534] px-2 py-1 text-[#b77b59] placeholder-[#c2c2c2] "
+                  className="rounded-md border border-[#8a5534] px-2 py-1 text-[#b77b59] placeholder-[#caa79287] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663] "
                   placeholder="Sitter Name"
                 ></input>
               </div>
@@ -86,7 +87,7 @@ const DemoSearchBoxComponent: NextPage = () => {
                             toggleState(petType);
                           }}
                         >
-                          <input type="checkbox" hidden></input>
+                          <input type="checkbox" hidden className=""></input>
                           {checkBoxState[petType] ? "✓" : ""}
                         </div>
                         <p className="text-[15px] font-normal text-[#8a5534]">
@@ -98,11 +99,11 @@ const DemoSearchBoxComponent: NextPage = () => {
                 </div>
               </div>
               <div id="price-range-input-wrapper" className="flex flex-col ">
-                <p className="text-[15px] font-bold text-[#8a5534]">
+                <p className="mb-1 text-[15px] font-bold text-[#8a5534]">
                   Price Range
                 </p>
-                <div id="two-thumbs" className="">
-                  twoThumbs component & min max
+                <div id="two-thumbs-container" className="mb-6 px-2">
+                  <PriceRangeInput />
                 </div>
               </div>
             </div>
