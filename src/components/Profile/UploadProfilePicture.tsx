@@ -1,11 +1,11 @@
 import { Dialog, Transition } from "@headlessui/react";
 import axios from "axios";
-import { Fragment, useEffect, useMemo, useState } from "react";
-import { useImageSize } from "react-image-size";
+import { Fragment, useMemo, useState } from "react";
 import { api } from "../../utils/api";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import imageCompression from "browser-image-compression";
+import { HiPencilAlt } from "react-icons/hi";
 
 // The type is simple enough so I didn't bother to create zod schema for it.
 // But if you want, try https://zod.dev/?id=custom-schemas + https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof
@@ -59,8 +59,6 @@ function useUpdateProfilePicture() {
 
 const UploadProfilePicture = (props: any) => {
   const [isUploadingProfile, setIsUploadingProfile] = useState(false);
-  const [images, setImages] = useState([]);
-  const [newImageUri, setNewImageUri] = useState("");
 
   const profileData = api.user.getForProfilePage.useQuery(
     {
@@ -124,12 +122,12 @@ const UploadProfilePicture = (props: any) => {
   return (
     <>
       <button
-        className="absolute h-full w-full rounded-full opacity-0 transition delay-200 ease-in-out hover:bg-slate-400 hover:opacity-60"
+        className="absolute flex h-full w-full justify-center rounded-full opacity-0 transition delay-100 hover:bg-slate-400 hover:opacity-60"
         onClick={() => {
           setIsUploadingProfile(true);
         }}
       >
-        EDIT
+        <HiPencilAlt className="my-auto fill-white text-3xl font-bold" />
       </button>
       <p className="py-auto absolute left-full ml-2 h-full w-[6rem] text-sm md:hidden">
         Click on your profile to change profile
@@ -167,12 +165,12 @@ const UploadProfilePicture = (props: any) => {
             <div className="fixed inset-0 overflow-y-auto">
               {/* Container to center the panel */}
               <div className="flex min-h-full items-center justify-center">
-                <Dialog.Panel className="mx-auto box-border w-[90vw] max-w-[50rem] rounded bg-white p-4">
+                <Dialog.Panel className="mx-auto box-border w-[90vw] max-w-[30rem] rounded-md bg-white p-4">
                   <Dialog.Title className="mb-2 text-xl font-bold">
                     Change my profile picture
                   </Dialog.Title>
 
-                  <div className="relative mx-auto mb-2 h-[6rem] w-[6rem]">
+                  <div className="relative mx-auto mb-2 h-[6rem] w-[6rem] md:h-[8rem] md:w-[8rem]">
                     {profileData.data?.imageUri ? (
                       <Image
                         className="rounded-full object-cover"
@@ -206,7 +204,7 @@ const UploadProfilePicture = (props: any) => {
                       )}
                       {updateProfilePicture.status == "idle" && (
                         <p className="mb-2 rounded-lg bg-gray-500 p-2 text-white">
-                          Upload
+                          Choose your picture
                         </p>
                       )}
                       {compressProgress && (
