@@ -45,5 +45,6 @@ services:
         mc config host add minio http://minio:9000 root password;
         mc mb --quiet minio/wigglepaw;
         mc anonymous set download minio/wigglepaw;
+        mc admin user svcacct add --access-key J9jiu0i7jrqoJEwO --secret-key 29oOdS0Buo99jA4KXeKwLfbK1cTbIDpm minio root
       "
 
