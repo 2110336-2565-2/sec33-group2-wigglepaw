@@ -69,6 +69,8 @@
   .circlerec {
     @apply h-[8rem] w-[8rem] 
   }
+
+ 
 }
 /* nice color */
 .testt {
@@ -80,6 +82,20 @@
     #fdff77 87%,
     #ffb2fa 100%
   );
+}
+.fc-daygrid-day-number{
+  font-size: 0.6rem;
+}
+.fc-daygrid-week-number{
+  font-size: 0.6rem;
+}
+.fc-col-header-cell{
+  font-size: 0.8rem;
+  background-color:#fef08a;
+  
+}
+.fc-widget-header{
+ 
 }
 
 html {

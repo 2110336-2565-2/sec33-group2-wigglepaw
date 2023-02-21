@@ -42,6 +42,13 @@ const About: NextPage = () => {
     // Set the font size of the event
     eventEl.style.fontSize = "11px";
     eventEl.style.color = "black";
+
+    eventEl.style.borderColor = "black";
+    eventEl.style.borderStyle = "solid";
+    eventEl.style.borderWidth = "1px";
+
+    eventEl.style.paddingLeft = "5px";
+
     // Set the innerHTML of the event element
     eventEl.innerHTML = event.title;
     // Return the new event element as a React component
@@ -71,14 +78,15 @@ const About: NextPage = () => {
   return (
     <>
       <Header />
-      <div className="flex h-screen w-screen  items-center justify-start">
-        <div className="mx-24 flex h-full w-full">
+      <div className="w-screen items-center justify-start  md:flex md:h-screen">
+        <div className="mx-4 h-full w-full md:mx-24 md:flex">
           <div className=" h-[80%] w-full overflow-scroll">
             <FullCalendar
               plugins={[dayGridPlugin, timeGridPlugin]}
               initialView="dayGridMonth"
               contentHeight={600}
               stickyFooterScrollbar={true}
+              weekNumbers={true}
               headerToolbar={
                 {
                   left: "prev,next",
@@ -95,15 +103,11 @@ const About: NextPage = () => {
               eventContent={eventContent}
             />
           </div>
-          <div className="ml-10 h-[90%] w-[70%] border-l-2 border-black">
+          <div className="md:ml-10 md:h-[90%] md:w-[70%] md:border-l-2 md:border-black">
             <div className="my-10 ml-4">
               {events.map((value, index) => {
                 const bordercolor = " border-[" + value.color + "]";
                 console.log(bordercolor);
-
-                const style =
-                  "mb-5  border-l-4 px-5 py-2 shadow-md hover:border-4  " +
-                  bordercolor;
 
                 const datetimeString = value.start;
                 const datetimeString2 = value.end;
@@ -123,7 +127,8 @@ const About: NextPage = () => {
                 const timeend = datetime2.toLocaleTimeString("en-US", options);
 
                 return (
-                  <div className={style}>
+                  // eslint-disable-next-line react/jsx-key
+                  <div className="mb-5  border-l-4 border-yellow-300 py-2 shadow-md md:pl-5  ">
                     <div className="flex">
                       <div className="text-sm text-gray-500">
                         {timestart} &nbsp;-{" "}
@@ -141,7 +146,7 @@ const About: NextPage = () => {
                             current.filter((events, i) => i !== index)
                           );
                         }}
-                        className="hover:scale-[1.2]"
+                        className="hover:scale-[1.05]"
                       >
                         <FontAwesomeIcon size="sm" icon={faTrashCan} />
                       </div>
@@ -153,7 +158,7 @@ const About: NextPage = () => {
           </div>
         </div>
       </div>
-      <div className="center-thing mb-40">
+      <div className="center-thing md:mb-40">
         <form onSubmit={submitEvent}>
           <label>Add Event Title</label>
           <input type="text" id="title" className="mx-2 bg-gray-100"></input>
