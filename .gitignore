@@ -43,5 +43,6 @@ yarn-error.log*
 
 # docker volumes
 pgdata
+s3-data
 
 docker-compose.yaml 
