@@ -14,36 +14,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
-
-model Owner {
-    id    String @id @default(cuid())
-    name  String
-    email String @unique
-
-    Pet Pet[]
-}
-
-model Pet {
-    id        String   @id @default(cuid())
-    name      String
-    kind      PetKind
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    owner   Owner  @relation(fields: [ownerId], references: [id])
-    ownerId String
-}
-
-enum PetKind {
-    DOGGO
-    NEKO
-}
-
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())

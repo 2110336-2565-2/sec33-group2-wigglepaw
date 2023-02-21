@@ -94,7 +94,7 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
     <div>
       <Header></Header>
       <div className="mx-3 flex flex-wrap">
-        <div className="my-auto flex w-screen flex-col md:w-1/5 md:min-w-min ">
+        <div className="my-auto flex w-screen flex-col md:mx-4 md:w-1/5 md:min-w-min ">
           <div className="relative mx-auto flex h-[6rem] w-[6rem]">
             <Image
               src={profileImageUri}
@@ -119,7 +119,7 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
         </div>
 
         {!editing && (
-          <div className="justify-auto mt-2 flex w-screen flex-wrap rounded-md border-[3px] border-sky-500 p-2 md:mt-0 md:w-3/5">
+          <div className="profile-information">
             <p className="data-field">
               <HiUserCircle className="profile-icon" />
               &nbsp;Hotel Name: {props.user.hotelName}

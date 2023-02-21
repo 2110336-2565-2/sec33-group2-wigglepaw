@@ -4,8 +4,6 @@ import { freelancePetSitterRouter } from "./routers/freelancePetSitterRouter";
 import { petOwnerRouter } from "./routers/petOwnerRouter";
 import { userRouter } from "./routers/userRouter";
 import { createTRPCRouter, publicProcedure } from "./trpc";
-import { exampleRouter } from "./routers/example";
-import { petRouter } from "./routers/petRouter";
 import { petSitterRouter } from "./routers/petSitterRouter";
 
 /**
@@ -14,8 +12,6 @@ import { petSitterRouter } from "./routers/petSitterRouter";
  * All routers added in /api/routers should be manually added here
  */
 export const appRouter = createTRPCRouter({
-  example: exampleRouter,
-  pet: petRouter,
   user: userRouter,
   petSitter: petSitterRouter,
   petOwner: petOwnerRouter,

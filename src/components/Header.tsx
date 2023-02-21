@@ -141,7 +141,7 @@ const Header = () => {
               className={
                 "header-register-link" +
                 `${
-                  asPath == "/login"
+                  asPath.includes("/login")
                     ? " header-at-page"
                     : " bg-sky-700 hover:bg-sky-600"
                 }`
