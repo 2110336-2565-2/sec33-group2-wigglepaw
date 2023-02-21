@@ -36,6 +36,7 @@ async function makeFree(
               address: address,
               phoneNumber: phone,
               imageUri: imageUri,
+              createdAt: new Date(),
             },
           },
           verifyStatus: true,
@@ -80,6 +81,7 @@ async function makeHotel(
               address: address,
               phoneNumber: phone,
               imageUri: imageUri,
+              createdAt: new Date(),
             },
           },
           verifyStatus: true,
@@ -120,6 +122,7 @@ async function makeOwner(
           address: address,
           phoneNumber: phone,
           imageUri: imageUri,
+          createdAt: new Date(),
         },
       },
 

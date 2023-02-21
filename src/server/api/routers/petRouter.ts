@@ -62,6 +62,7 @@ export const petRouter = createTRPCRouter({
         data: {
           ...input.pet,
           petOwnerId: input.petOwnerId,
+          createdAt: new Date(),
         },
       });
 

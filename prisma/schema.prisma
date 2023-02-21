@@ -60,6 +60,7 @@ model User {
     bankName      String? // Assume 1 per user
     accounts      Account[] // Needed for Auth
     sessions      Session[] // Needed for Auth
+    createdAt     DateTime
 }
 
 model PetOwner {
@@ -111,6 +112,7 @@ model Pet {
     name       String?
     sex        String?
     breed      String?
+    createdAt  DateTime
 }
 
 model VerificationToken {

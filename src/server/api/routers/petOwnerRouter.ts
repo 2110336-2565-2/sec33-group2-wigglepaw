@@ -64,6 +64,7 @@ export const petOwnerRouter = createTRPCRouter({
               username: "username" + code,
               email: "email" + code + "@gmail.com",
               password: "password" + code,
+              createdAt: new Date(),
             },
           },
 
@@ -108,7 +109,10 @@ export const petOwnerRouter = createTRPCRouter({
       return await ctx.prisma.petOwner.create({
         data: {
           user: {
-            create: input.user,
+            create: {
+              ...input.user,
+              createdAt: new Date(),
+            },
           },
           ...input.petOwner,
         },

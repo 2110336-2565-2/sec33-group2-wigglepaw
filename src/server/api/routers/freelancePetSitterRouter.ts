@@ -26,7 +26,10 @@ export const freelancePetSitterRouter = createTRPCRouter({
           petSitter: {
             create: {
               user: {
-                create: input.user,
+                create: {
+                  ...input.user,
+                  createdAt: new Date(),
+                },
               },
               ...input.petSitter,
             },
@@ -60,6 +63,7 @@ export const freelancePetSitterRouter = createTRPCRouter({
                   username: "username" + code,
                   email: "email" + code + "@gmail.com",
                   password: "password" + code,
+                  createdAt: new Date(),
                 },
               },
               verifyStatus: true,
