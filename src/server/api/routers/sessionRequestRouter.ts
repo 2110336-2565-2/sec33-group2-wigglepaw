@@ -49,9 +49,10 @@ export const sessionRequestRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const createSessionRequest = await ctx.prisma.sessionRequest.update({
+      const createSessionRequest = await ctx.prisma.sessionRequest.updateMany({
         where: {
           srId: input.srId,
+          status: "Waiting",
         },
         data: {
           status: "Cancelled",
@@ -67,9 +68,10 @@ export const sessionRequestRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const createSessionRequest = await ctx.prisma.sessionRequest.update({
+      const createSessionRequest = await ctx.prisma.sessionRequest.updateMany({
         where: {
           srId: input.srId,
+          status: "Waiting",
         },
         data: {
           status: "Accepted",
@@ -85,9 +87,10 @@ export const sessionRequestRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const createSessionRequest = await ctx.prisma.sessionRequest.update({
+      const createSessionRequest = await ctx.prisma.sessionRequest.updateMany({
         where: {
           srId: input.srId,
+          status: "Waiting",
         },
         data: {
           status: "Declined",
