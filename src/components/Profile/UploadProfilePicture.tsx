@@ -1,6 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import axios from "axios";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { useImageSize } from "react-image-size";
 import { api } from "../../utils/api";
 import Image from "next/image";
@@ -75,14 +75,6 @@ const UploadProfilePicture = (props: any) => {
   const [images, setImages] = useState([]);
   const [newImageUri, setNewImageUri] = useState("");
 
-  useEffect(() => {
-    if (images.length >= 1) {
-      const newImageUris = images[0].map((image) => URL.createObjectURL(image));
-
-      setNewImageUri(newImageUris);
-    }
-  }, [images]);
-
   const profileData = api.user.getForProfilePage.useQuery(
     {
       username: props.user?.username ?? "",
@@ -127,6 +119,20 @@ const UploadProfilePicture = (props: any) => {
     // Upload image, run with custom hook
     await updateProfilePicture.mutate(compressedImage);
   };
+
+  // Watch for image changes
+  // and create a URL for the image when it changes.
+  // selectingImgs is the file currently in form.
+  // uploadingImgUrl is the URL for the file created from selectingImgs.
+  // will be null if no file is selected (in form input).
+  const selectingImgs = watch("image");
+  const selectingImgUrl = useMemo(() => {
+    if (!selectingImgs || selectingImgs.length === 0) {
+      return null;
+    }
+    const img = selectingImgs[0];
+    return img ? URL.createObjectURL(img) : null;
+  }, [selectingImgs]);
 
   return (
     <>
@@ -181,7 +187,9 @@ const UploadProfilePicture = (props: any) => {
 
                   <div className="relative mx-auto mb-2 h-[6rem] w-[6rem]">
                     {profileData.data?.imageUri ? (
-                      <ProfileImage url={profileData.data.imageUri} />
+                      <ProfileImage
+                        url={selectingImgUrl ?? profileData.data.imageUri}
+                      />
                     ) : (
                       <div className="italic text-gray-400">
                         No profile picture
