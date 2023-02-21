@@ -13,7 +13,7 @@ import { TRPCError } from "@trpc/server";
  */
 const s3Param = (userId: string) => ({
   Bucket: process.env.S3_BUCKET,
-  Key: `profile-img/${userId}.webp`,
+  Key: `profile-img/${userId}.png`,
 });
 
 /**
@@ -43,7 +43,7 @@ export const profilePictureRouter = createTRPCRouter({
         ctx.s3,
         new PutObjectCommand({
           ...s3Param(ctx.session.user.id),
-          ContentType: "image/webp",
+          ContentType: "image/png",
           // TODO: Limit content length
         }),
         {

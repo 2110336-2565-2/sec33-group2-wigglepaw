@@ -8,6 +8,8 @@ import { z } from "zod";
 import { api } from "../utils/api";
 import axios from "axios";
 import Header from "../components/Header";
+import { useImageSize } from "react-image-size";
+import imageCompression from "browser-image-compression";
 
 // The type is simple enough so I didn't bother to create zod schema for it.
 // But if you want, try https://zod.dev/?id=custom-schemas + https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof
@@ -47,6 +49,12 @@ const ProfilePictureUploadDemo: NextPage = () => {
       return;
     }
 
+    console.log(`Image size: ${image.size} bytes`);
+    const compressedImage = await imageCompression(image, {
+      maxSizeMB: 1,
+    });
+    console.log(`Compressed image size: ${compressedImage.size} bytes`);
+
     // Get the URL for upload the image to storage.
     // The URL is presigned, it can only be used for certain defined operations
     // (in this case, PUT), only to this user profile picture, and will expire after a certain time.
@@ -61,7 +69,7 @@ const ProfilePictureUploadDemo: NextPage = () => {
     //
     // This way of uploading directly to storage safely is call valet key pattern,
     // useful for reducing server load and costs.
-    const res = await axios.put(url, image);
+    const res = await axios.put(url, compressedImage);
     console.log(res);
 
     // Notify the server that the image has been uploaded.
@@ -96,15 +104,7 @@ const ProfilePictureUploadDemo: NextPage = () => {
       <section className="border-4 p-1">
         <h2 className="pb-3 text-lg">Profile Picture</h2>
         {profileData.data.imageUri ? (
-          <>
-            <img
-              className="m-auto"
-              src={profileData.data.imageUri}
-              alt="Profile Picture"
-            />
-
-            <span>{profileData.data.imageUri}</span>
-          </>
+          <ProfileImage url={profileData.data.imageUri} />
         ) : (
           <div className="italic text-gray-400">No profile picture</div>
         )}
@@ -130,6 +130,18 @@ const ProfilePictureUploadDemo: NextPage = () => {
         <pre>{JSON.stringify(profileData.data, null, 2)}</pre>
       </section>
     </div>
+  );
+};
+
+const ProfileImage = ({ url }: { url: string }) => {
+  const [dim] = useImageSize(url);
+
+  return (
+    <>
+      <img className="m-auto" src={url} alt="Profile Picture" />
+
+      <span>{`${url} (${dim?.width ?? ""}x${dim?.height ?? ""})`}</span>
+    </>
   );
 };
 
