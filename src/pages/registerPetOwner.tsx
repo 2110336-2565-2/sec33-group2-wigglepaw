@@ -33,7 +33,7 @@ const formDataSchema1 = z.object({
 });
 // Schema for second page of form
 const formDataSchema2 = z.object({
-  cardno: z.string().regex(/^\d{16}$/),
+  cardno: z.string(), //.regex(/^\d{16}$/),
   expdate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   cvv: z.string().regex(/^\d{3}$/),
   bankno: z.string(), //.regex(/^\d{12}$/),
@@ -66,6 +66,9 @@ const RegisterPage: NextPage = () => {
   const router = useRouter();
   const mutation = api.petOwner.create.useMutation();
   const onSubmit = async (data: FormData) => {
+    alert(JSON.stringify(tag));
+
+    //when send Pet type  send tag instead of data.type !!
     console.assert(data.password === data.confirmpassword);
     mutation.mutate({
       user: {
@@ -82,6 +85,7 @@ const RegisterPage: NextPage = () => {
         lastName: data.lastname,
       },
     });
+
     const result = await signIn("credentials", {
       redirect: false,
       username: data.username,
@@ -94,7 +98,19 @@ const RegisterPage: NextPage = () => {
       alert(`Login failed: ${result?.error ?? "unknown error"}`);
     }
   };
+
+  const handleSpace = (e) => {
+    if (e.keyCode === 32) {
+      console.log(tag);
+      setTag([...tag, e.target.value]);
+      //console.log(e.target.value);
+      e.target.value = "";
+    }
+  };
+
   const [page, setPage] = useState(0);
+  const [tag, setTag] = useState([]);
+  const [pettype, setPettype] = useState([]);
   if (page === 0)
     return (
       <div className="flex h-screen flex-col">
@@ -199,17 +215,47 @@ const RegisterPage: NextPage = () => {
                   type="password"
                 />
               </div>
-              <div className="flex gap-6">
-                <div className="flex w-full flex-col">
-                  <Input
+
+              <div className="flex w-full flex-col">
+                <label htmlFor="type">
+                  Type Of Pet* (Use Space to begin a new tag) :
+                </label>
+
+                <div className="flex w-full rounded border border-gray-100 bg-gray-100 p-1 px-2 text-sm text-gray-900 drop-shadow-md focus:border-blue-500 focus:bg-white focus:ring-blue-500">
+                  <div className="center-thing ">
+                    {tag.map((value, index) => (
+                      <div className="center-thing mr-1 rounded-full bg-slate-300 py-1 px-2 text-sm  ">
+                        <span>{value}</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            console.log(index);
+                            setTag((current) =>
+                              current.filter((tag, i) => i !== index)
+                            );
+                          }}
+                          className="center-thing ml-1 h-4 w-4 rounded-full bg-black text-[0.6rem] text-white"
+                        >
+                          x
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  <input
                     id="type"
-                    label="Type of pet* :"
+                    className="w-full  rounded border border-black bg-gray-100 p-1 px-2 text-sm text-gray-900 focus:border-blue-500 focus:bg-white focus:ring-blue-500"
                     placeholder="Dogs"
-                    register={register}
-                    errors={errors}
-                    validationRules={{ required: true }}
+                    {...register("type", { required: true })}
+                    onKeyDown={handleSpace}
                   />
                 </div>
+
+                <span className=" text-sm text-red-500">
+                  {errors["type"]?.message}
+                </span>
+              </div>
+              <div className="flex gap-6">
                 <div className="flex w-full flex-col">
                   <Input
                     id="breed"
@@ -233,7 +279,7 @@ const RegisterPage: NextPage = () => {
                 </div>
               </div>
             </div>
-            <div className="my-5 flex w-full justify-evenly">
+            <div className="my-5 mb-10 flex w-full justify-evenly">
               <Button>Back</Button>
               <Button
                 type="button"
