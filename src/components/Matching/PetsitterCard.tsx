@@ -9,8 +9,8 @@ interface PetSitterCardProps {
   startPrice: number | null;
   endPrice: number | null;
   petTypes: string[];
+  profileImageUri: string | null;
   // TODO: add reviews
-  // TODO: profilePicImage
 }
 
 const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
@@ -22,13 +22,14 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
   startPrice,
   endPrice,
   petTypes,
+  profileImageUri,
   // TODO: reviews
-  // TODO: profilePicImage
 }) => {
   // sanitize the props
   if (address == null) address = "this sitter location is a mystery";
   if (startPrice == null) startPrice = 0;
-  if (endPrice == null) endPrice = 10000000; // FIXME: fix this hard code
+  if (endPrice == null) endPrice = 10000000; // FIXME: fix this hardcoding
+  if (profileImageUri == null) profileImageUri = "/profiledummy.png";
 
   // convert price range to logos
   const getPriceLogo = (price: number): string => {
@@ -37,13 +38,14 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
     if (price < 5000) return "฿฿฿";
     return "฿฿฿฿";
   };
-
   const startPriceSign = getPriceLogo(startPrice);
   const endPriceSign = getPriceLogo(endPrice);
 
+  const profile_link = "/user/" + username;
+
   /*  TODO: add link to profile */
   return (
-    <Link href={""}>
+    <Link href={profile_link}>
       <div
         id="card"
         className="relative flex h-[189px] flex-row border border-t-[#ecececc2] border-l-[#ecececc2] border-b-[#cbcbcbc2] border-r-[#cbcbcbc2] bg-[#f6f6f6] drop-shadow-sm duration-150 hover:bg-[#eeeeee] max-md:h-[115px] max-md:drop-shadow-md md:hover:scale-[1.01]"
@@ -61,7 +63,7 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
           <div className="relative h-full w-full">
             <Image
               alt="sitter profile image"
-              src="/profiledummy.png"
+              src={profileImageUri}
               fill
               className="object-cover"
             />
