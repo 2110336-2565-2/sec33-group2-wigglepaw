@@ -138,8 +138,9 @@ model Post {
     postId      String    @id @default(cuid())
     petSitterId String
     petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
-    text        String
-    pictureUri  String?
+    title       String
+    text        String?
+    pictureUri  String[]
     videoUri    String?
     createdAt   DateTime  @default(now())
 }

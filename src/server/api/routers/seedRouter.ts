@@ -139,4 +139,44 @@ export const seedRouter = createTRPCRouter({
         await makeReview(sitterId, ownerId, rating, text);
       }
     }),
+
+  seedPosts: publicProcedure
+    .input(
+      z.object({
+        clearPosts: z.boolean(),
+        numberOfPosts: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.clearPosts) {
+        await ctx.prisma.post.deleteMany({});
+      }
+
+      const sitters = await prisma.petSitter.findMany();
+      const owners = await prisma.petOwner.findMany();
+
+      const sitterIds = new Array<string>(input.numberOfReviews);
+      const ownerIds = new Array<string>(input.numberOfReviews);
+
+      for (
+        let i = 0;
+        i < Math.min(input.numberOfReviews, sitters.length);
+        i++
+      ) {
+        sitterIds[i] = sitters[i]?.userId ?? "";
+      }
+
+      for (let i = 0; i < Math.min(input.numberOfReviews, owners.length); i++) {
+        ownerIds[i] = owners[i]?.userId ?? "";
+      }
+      resetRand();
+      for (let i = 0; i < input.numberOfReviews; i++) {
+        const sitterId = getMultipleRandom(sitterIds, 1)[0] ?? "";
+        const ownerId = getMultipleRandom(ownerIds, 1)[0] ?? "";
+        const rating = getRandomIntFromInterval(1, 5);
+        const text = getMultipleRandom(reviewTexts, 1)[0] ?? "";
+
+        await makeReview(sitterId, ownerId, rating, text);
+      }
+    }),
 });
