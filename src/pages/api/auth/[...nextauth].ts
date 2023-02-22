@@ -98,6 +98,7 @@ export const authOptions: NextAuthOptions = {
             userType: UserType.PetOwner,
             firstName: userDB.petOwner.firstName,
             lastName: userDB.petOwner.lastName,
+            petTypes: userDB.petOwner.petTypes,
           };
 
           const user: User = { ...userSubInfo, ...userCommonInfo };
@@ -113,6 +114,8 @@ export const authOptions: NextAuthOptions = {
             petTypes: userDB.petSitter.petTypes,
             startPrice: userDB.petSitter.startPrice,
             endPrice: userDB.petSitter.endPrice,
+            avgRating: userDB.petSitter.avgRating,
+            reviewCount: userDB.petSitter.reviewCount,
           };
 
           const user: User = { ...userSubInfo, ...userCommonInfo };
@@ -128,6 +131,8 @@ export const authOptions: NextAuthOptions = {
             petTypes: userDB.petSitter.petTypes,
             startPrice: userDB.petSitter.startPrice,
             endPrice: userDB.petSitter.endPrice,
+            avgRating: userDB.petSitter.avgRating,
+            reviewCount: userDB.petSitter.reviewCount,
           };
 
           const user: User = { ...userSubInfo, ...userCommonInfo };

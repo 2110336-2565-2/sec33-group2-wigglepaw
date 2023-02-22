@@ -26,7 +26,9 @@ export const freelancePetSitterRouter = createTRPCRouter({
           petSitter: {
             create: {
               user: {
-                create: input.user,
+                create: {
+                  ...input.user,
+                },
               },
               ...input.petSitter,
             },
