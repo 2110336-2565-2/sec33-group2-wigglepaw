@@ -172,7 +172,6 @@ const Post = (props: any) => {
       )}
 
       {!!currentImage && (
-        /* @ts-ignore */
         <Lightbox
           mainSrc={currentImage?.original}
           imageTitle={currentImage?.caption}
