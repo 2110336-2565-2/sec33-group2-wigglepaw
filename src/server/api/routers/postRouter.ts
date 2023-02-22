@@ -1,3 +1,4 @@
+import { PetSitter } from "@prisma/client";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
@@ -23,21 +24,6 @@ export const postRouter = createTRPCRouter({
           ...input.post,
         },
       });
-      const postId = createPost.postId;
-
-      const connectSitter = await ctx.prisma.petSitter.update({
-        where: {
-          userId: input.petSitterId,
-        },
-        data: {
-          post: {
-            connect: {
-              postId: postId,
-            },
-          },
-        },
-      });
-
       return createPost;
     }),
 

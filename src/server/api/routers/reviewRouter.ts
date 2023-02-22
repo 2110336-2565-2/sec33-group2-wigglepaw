@@ -34,37 +34,10 @@ export const reviewRouter = createTRPCRouter({
           ...input.review,
         },
       });
-      const reviewId = createReview.reviewId;
-
-      const connectOwner = await ctx.prisma.petOwner.update({
-        where: {
-          userId: input.petOwnerId,
-        },
-        data: {
-          review: {
-            connect: {
-              reviewId: reviewId,
-            },
-          },
-        },
-      });
-
-      const connectSitter = await ctx.prisma.petSitter.update({
-        where: {
-          userId: input.petSitterId,
-        },
-        data: {
-          review: {
-            connect: {
-              reviewId: reviewId,
-            },
-          },
-        },
-      });
 
       await updateAvgRating(input.petSitterId);
 
-      return;
+      return createReview;
     }),
 
   delete: publicProcedure
