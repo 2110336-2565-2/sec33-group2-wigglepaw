@@ -3,11 +3,8 @@ import { TypeOf, z } from "zod";
 import { BookingStatus } from "@prisma/client";
 import { UserProfile, UserSubType, UserType } from "../../../types/user";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-import {
-  bookingFields,
-  searchBookingField,
-  returnReadBookingFields,
-} from "../../../schema/schema";
+import { bookingFields, searchBookingField } from "../../../schema/schema";
+import { Return } from "../../../schema/returnSchema";
 import { UserTypeLogic } from "../logic/session";
 import { BookingSearchLogic } from "../logic/search";
 
@@ -42,7 +39,7 @@ export const bookingRouter = createTRPCRouter({
         where: {
           bookingId: input.bookingId,
         },
-        select: returnReadBookingFields,
+        select: Return.bookingFields,
       });
       if (result == null) return null;
       if (![result.petSitterId, result.petOwnerId].includes(userId))
@@ -57,7 +54,7 @@ export const bookingRouter = createTRPCRouter({
       where: {
         OR: [{ petSitterId: userId }, { petOwnerId: userId }],
       },
-      select: returnReadBookingFields,
+      select: Return.bookingFields,
     });
     return result;
   }),
@@ -79,7 +76,7 @@ export const bookingRouter = createTRPCRouter({
         where: {
           AND: condition,
         },
-        select: returnReadBookingFields,
+        select: Return.bookingFields,
       });
     }),
 
@@ -105,7 +102,7 @@ export const bookingRouter = createTRPCRouter({
             connect: input.petIdList.map((petId) => ({ petId: petId })),
           },
         },
-        select: returnReadBookingFields,
+        select: Return.bookingFields,
       });
     }),
 
@@ -250,7 +247,7 @@ export const bookingRouter = createTRPCRouter({
           ],
         },
         orderBy: [BookingSearchLogic.sortBy(input.searchSortBy)],
-        select: returnReadBookingFields,
+        select: Return.bookingFields,
       });
     }),
 });
