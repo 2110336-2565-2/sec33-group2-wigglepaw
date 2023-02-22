@@ -10,7 +10,8 @@ interface PetSitterCardProps {
   endPrice: number | null;
   petTypes: string[];
   profileImageUri: string | null;
-  // TODO: add reviews
+  avgRating: number | null;
+  reviewCount: number;
 }
 
 const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
@@ -23,7 +24,8 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
   endPrice,
   petTypes,
   profileImageUri,
-  // TODO: reviews
+  avgRating,
+  reviewCount,
 }) => {
   // sanitize the props
   if (address == null) address = "this sitter location is a mystery";
@@ -42,6 +44,21 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
   const endPriceSign = getPriceLogo(endPrice);
 
   const profile_link = "/user/" + username;
+
+  // handle Review Display
+  const getReviewStatus = (review: number | null): string => {
+    if (review == null) return "No Reviews";
+    if (review >= 4) return "Very Positive";
+    if (review >= 2) return "Mixed";
+    return "Bad";
+  };
+
+  const reviewColors: { [key: string]: string } = {
+    "Very Positive": "#1F61A4",
+    Mixed: "#B19B4B",
+    Bad: "#A7233B",
+    "No Reviews": "#8e8e8e",
+  };
 
   /*  TODO: add link to profile */
   return (
@@ -140,13 +157,16 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
           <div className="flex h-full flex-col justify-center">
             <div className="text-[18px] font-normal">
               {/* TODO: add link to review page*/}
-              <span className="text-[#1F61A4] hover:underline">
-                Very Positive
+              <span
+                className="hover:underline"
+                style={{ color: reviewColors[getReviewStatus(avgRating)] }}
+              >
+                {getReviewStatus(avgRating)}
               </span>
-              <span className="font-light text-[#8e8e8e]">(24)</span>
+              <span className="font-light text-[#8e8e8e]">({reviewCount})</span>
             </div>
             <button className="font-mono text-[30px]" /* TODO: add handler */>
-              <div className="mt-2 w-[119px] bg-[#2a4764] py-1 text-center text-white duration-150 hover:bg-[#213951]">
+              <div className="w-[119px] bg-[#2a4764] py-1 text-center text-white duration-150 hover:bg-[#213951]">
                 Book
               </div>
             </button>

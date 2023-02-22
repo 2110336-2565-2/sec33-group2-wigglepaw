@@ -83,7 +83,8 @@ const PetSitterCardFactory: React.FunctionComponent<{
     endPrice: petSitter.endPrice,
     petTypes: petSitter.petTypes,
     profileImageUri: petSitter.user.imageUri,
-    // TODO: reviews
+    avgRating: petSitter.avgRating,
+    reviewCount: petSitter.reviewCount,
   };
 
   return <PetsitterCard {...props} />;
