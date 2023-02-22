@@ -1,102 +1,92 @@
-import * as React from "react";
+import type { NextPage } from "next";
 import { useState } from "react";
-import { NextPage } from "next";
+import Link from "next/link";
 import Header from "../components/Header";
-import SearchBox from "../components/SearchBox";
+import MatchingFormProvider, {
+  type SearchPetSittersUseQueryReturnElement,
+} from "../components/Matching/MatchingFormProvider";
+import MatchingPanel from "../components/Matching/MatchingPanel";
+import PetsitterCard from "../components/Matching/PetsitterCard";
 
-import PetSitterCard from "../components/PetSitterCard";
-
-import { number } from "zod";
-import { useForm } from "react-hook-form";
-import { BEGIN_MAX, BEGIN_MIN } from "../components/TwoThumbs";
-
-const matching: NextPage = () => {
-  // const users = props.users;
-  const pageNum = 1;
-
-  const [petSitters, setPetSitters] = useState([]);
-
-  React.useEffect(() => {
-    console.log("hhh ", petSitters);
-  }, [petSitters]);
-
-  let apage = [1, 2, 3, 4, 5];
-  const [cpage, setCpage] = useState(0);
-  const Pagelay = () => {
-    const hi = apage.map((element) => {
-      return (
-        <>
-          <div
-            className={
-              "mx-4 mb-5 flex items-center justify-evenly rounded-full text-white transition-all hover:scale-[1.15] " +
-              (element === cpage
-                ? " h-10 w-10 bg-yellow-200 text-sm text-black"
-                : " h-7 w-7 bg-yellow-100 text-sm text-black")
-            }
-            onClick={() => {
-              setCpage(element);
-            }}
-          >
-            <p>{element}</p>
-          </div>
-        </>
-      );
-    });
-    return <>{hi}</>;
-  };
-
-  const onSubmitpage = (e: any) => {
-    e.preventDefault();
-    setCpage(parseInt(e.target.page.value));
-  };
-  const useFormReturn = useForm({
-    defaultValues: {
-      name: "",
-      searchPriceMin: BEGIN_MIN,
-      searchPriceMax: BEGIN_MAX,
-      petType: "",
-      sortby: "",
-      petSitterType: "",
-    },
-    // resolver: zodResolver(formDataSchema),
-  });
+// TODO: document this page structure, use cases
+const Matching: NextPage = () => {
+  const [matchedPetSitters, setMatchedPetSitters] = useState<
+    SearchPetSittersUseQueryReturnElement[]
+  >([]);
 
   return (
-    <div>
-      <Header></Header>
-      <div className="flex justify-center">
-        <SearchBox
-          useFormReturn={useFormReturn}
-          setPetSitters={setPetSitters}
-        ></SearchBox>
-      </div>
-      <div className="flex justify-center pt-5">
-        <div className="w-[90%] md:w-[60%]">
-          <div className="flex justify-between">
-            <h1 className="text-xl font-bold text-yellow-500">Results</h1>
-            <form className="w-fit" onSubmit={onSubmitpage}>
-              <input
-                className="w-[5rem] rounded bg-zinc-100 px-2 py-1 text-center text-sm font-semibold text-[#213951]  hover:bg-white focus:outline-none focus:ring-2 focus:ring-blue-300 "
-                id="page"
-                type="number"
-                min={1}
-                max={5}
+    <>
+      <Header />
+      <div
+        id="content-wrapper"
+        className="mb-8 flex flex-row justify-start gap-8"
+      >
+        <MatchingFormProvider setMatchedPetSitters={setMatchedPetSitters}>
+          <MatchingPanel />
+        </MatchingFormProvider>
+        <div id="main-wrapper" className="pt-8">
+          <p className="mb-5 text-[16px] text-[#485B6F]">
+            📍Explore our list of experienced sitters & hotels for your beloved
+            pets.{" "}
+            <Link href="/registerPetSitter">
+              <span className="text-[#3C8DE1] underline hover:text-[#285686]">
+                Want to become our sitters ?
+              </span>
+            </Link>
+          </p>
+          <div
+            id="pet-sitter-cards-wrapper"
+            className="flex w-full flex-col gap-6"
+          >
+            {matchedPetSitters?.map((matchedPetSitter) => (
+              <PetSitterCardFactory
+                key={matchedPetSitter.user.username}
+                petSitter={matchedPetSitter}
               />
-              <button className="rounded-xl bg-yellow-200 px-2">Search</button>
-            </form>
-          </div>
-          <div className="mt-5 lg:grid lg:grid-cols-2">
-            {petSitters?.map((user: any) => (
-              <PetSitterCard pet_sitter={user}></PetSitterCard>
             ))}
-          </div>
-          <div className="mt-5 flex items-center justify-center">
-            <Pagelay />
+            {/* <PetsitterCard /> */}
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
-export default matching;
+const PetSitterCardFactory: React.FunctionComponent<{
+  petSitter: SearchPetSittersUseQueryReturnElement;
+}> = ({ petSitter }) => {
+  let name: string;
+  let typeTagText: string;
+  let typeTagColor: string;
+
+  if (petSitter.freelancePetSitter) {
+    const { firstName, lastName } = petSitter.freelancePetSitter;
+    name = firstName + " " + lastName;
+    typeTagText = "Freelance";
+    typeTagColor = "#169C64";
+  } else if (petSitter.petHotel) {
+    name = petSitter.petHotel.hotelName;
+    typeTagText = "Pet Hotel";
+    typeTagColor = "#C3177E";
+  } else {
+    console.log("error pet sitter type");
+    return <></>;
+  }
+
+  const props = {
+    name,
+    typeTagText,
+    typeTagColor,
+    username: petSitter.user.username,
+    address: petSitter.user.address,
+    startPrice: petSitter.startPrice,
+    endPrice: petSitter.endPrice,
+    petTypes: petSitter.petTypes,
+    profileImageUri: petSitter.user.imageUri,
+    // TODO: reviews
+  };
+
+  return <PetsitterCard {...props} />;
+};
+
+export default Matching;
