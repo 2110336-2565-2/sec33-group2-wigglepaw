@@ -65,6 +65,7 @@ export const bookingRouter = createTRPCRouter({
       const userTypeLogic = new UserTypeLogic(userType);
       if (!userTypeLogic.isPetOwner()) return USER_TYPE_MISMATCH;
       const petOwnerId = ctx.session.user.id;
+      const uniquePetIdList = [...new Set(input.petIdList)];
 
       return await ctx.prisma.booking.create({
         data: {
@@ -73,10 +74,10 @@ export const bookingRouter = createTRPCRouter({
           startDate: input.startDate,
           endDate: input.endDate,
           note: input.note,
-          numberOfPets: input.petIdList.length,
+          numberOfPets: uniquePetIdList.length,
           status: BookingStatus.requested,
           pet: {
-            connect: input.petIdList.map((petId) => ({ petId: petId })),
+            connect: uniquePetIdList.map((petId) => ({ petId: petId })),
           },
         },
         select: Return.booking,
