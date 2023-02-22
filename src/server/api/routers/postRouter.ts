@@ -90,7 +90,9 @@ export const postRouter = createTRPCRouter({
           postId,
         },
         data: {
-          pictureUri: imageKeys,
+          pictureUri: imageKeys.map(
+            (key) => `${process.env.S3_PUBLIC_URL!}/${key}`
+          ),
         },
       });
 

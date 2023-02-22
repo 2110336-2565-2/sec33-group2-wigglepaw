@@ -3,6 +3,9 @@ import { Fragment, useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Image from "next/image";
+import { api } from "../../utils/api";
+import { useSession } from "next-auth/react";
+import axios from "axios";
 
 const formDataSchema = z.object({
   title: z.string().min(1, { message: "Required" }),
@@ -14,6 +17,9 @@ type FormData = z.infer<typeof formDataSchema>;
 
 const UploadPost = (props: any) => {
   const [isPosting, setIsPosting] = useState(false);
+
+  const { data: session, status } = useSession();
+  const createPost = api.post.requestCreate.useMutation();
 
   // Form ==================================================
   const {
@@ -31,7 +37,26 @@ const UploadPost = (props: any) => {
       return;
     }
 
+    if (session?.user?.id === undefined) {
+      alert("No user id");
+      return;
+    }
+
+    console.log(data);
+
     //TODO: Upload Images
+    const { uploadUrls } = await createPost.mutateAsync({
+      petSitterId: session.user.id,
+      post: {
+        title: "Title",
+        text: "Content",
+      },
+      pictureCount: image.length,
+    });
+
+    console.assert(uploadUrls.length === image.length);
+
+    await Promise.all(uploadUrls.map((url, i) => axios.put(url, image[i])));
   };
 
   const selectingImgs = watch("image");
