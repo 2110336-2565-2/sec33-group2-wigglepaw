@@ -29,7 +29,6 @@ export const petHotelRouter = createTRPCRouter({
               user: {
                 create: {
                   ...input.user,
-                  createdAt: new Date(),
                 },
               },
               ...input.petSitter,
@@ -64,7 +63,6 @@ export const petHotelRouter = createTRPCRouter({
                   username: "username" + code,
                   email: "email" + code + "@gmail.com",
                   password: "password" + code,
-                  createdAt: new Date(),
                 },
               },
               verifyStatus: true,

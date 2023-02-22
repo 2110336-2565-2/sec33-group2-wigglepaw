@@ -50,7 +50,6 @@ export async function makeFree(
               address: address,
               phoneNumber: phone,
               imageUri: imageUri,
-              createdAt: new Date(),
             },
           },
           verifyStatus: true,
@@ -95,7 +94,6 @@ export async function makeHotel(
               address: address,
               phoneNumber: phone,
               imageUri: imageUri,
-              createdAt: new Date(),
             },
           },
           verifyStatus: true,
@@ -136,7 +134,6 @@ export async function makeOwner(
           address: address,
           phoneNumber: phone,
           imageUri: imageUri,
-          createdAt: new Date(),
         },
       },
 
@@ -162,7 +159,6 @@ export async function makeReview(
       petOwnerId: petOwnerId,
       rating: rating,
       text: text,
-      createdAt: new Date(),
     },
   });
   const reviewId = createReview.reviewId;
@@ -209,7 +205,6 @@ export async function makePost(
       text: text,
       pictureUri: pictureUri,
       videoUri: videoUri,
-      createdAt: new Date(),
     },
   });
   return createPost;

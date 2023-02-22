@@ -51,7 +51,6 @@ export const reviewRouter = createTRPCRouter({
           petSitterId: input.petSitterId,
           petOwnerId: input.petOwnerId,
           ...input.review,
-          createdAt: new Date(),
         },
       });
       const reviewId = createReview.reviewId;

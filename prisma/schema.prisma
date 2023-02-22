@@ -60,7 +60,7 @@ model User {
     bankName      String? // Assume 1 per user
     accounts      Account[] // Needed for Auth
     sessions      Session[] // Needed for Auth
-    createdAt     DateTime
+    createdAt     DateTime   @default(now())
 }
 
 model PetOwner {
@@ -112,7 +112,7 @@ model Pet {
     name       String?
     sex        String?
     breed      String?
-    createdAt  DateTime
+    createdAt  DateTime @default(now())
 }
 
 model VerificationToken {
@@ -131,7 +131,7 @@ model Review {
     petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
     text        String?
     rating      Int
-    createdAt   DateTime
+    createdAt   DateTime  @default(now())
 }
 
 model Post {
@@ -141,7 +141,7 @@ model Post {
     text        String
     pictureUri  String?
     videoUri    String?
-    createdAt   DateTime
+    createdAt   DateTime  @default(now())
 }
 
 model SessionRequest {
@@ -152,5 +152,16 @@ model SessionRequest {
     petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
     status      String // Waiting, Cancelled, Accepted, Declined
     text        String?
-    createdAt   DateTime
+    createdAt   DateTime  @default(now())
+    Event       Event[]
+}
+
+model Schedule {
+    userId String @id @default(cuid())
+}
+
+model Event {
+    eventId        String         @id @default(cuid())
+    srId           String
+    sessionRequest SessionRequest @relation(fields: [srId], references: [srId], onDelete: Cascade)
 }
