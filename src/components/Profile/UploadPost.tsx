@@ -1,9 +1,10 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState, useMemo } from "react";
+import { Fragment, useState, useMemo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Image from "next/image";
 import { Gallery, Image as I2 } from "react-grid-gallery";
+import { getImageSize } from "react-image-size";
 
 const formDataSchema = z.object({
   title: z.string().min(1, { message: "Required" }),
@@ -153,38 +154,70 @@ const ShowImages = (props: {
   images: CustomImage[];
 }) => {
   const imagesURLs = props.imagesURLs;
-  if (!imagesURLs) return <></>;
 
-  //   return (<Gallery
-  //   images={props.images}
-  //   enableImageSelection={false}
-  //   maxRows={2}
-  //   rowHeight={140}
-  //   margin={2}
-  // />)
+  const [imageResults, setImageResults] = useState<CustomImage[] | null>(null);
 
-  if (imagesURLs.length == 1) {
-    return (
-      <div className="mb-2 grid w-full gap-2">
-        {imagesURLs.map((iUrl: any) => (
-          <div className="relative h-[25vw] max-h-48 md:h-[40vw]">
-            <Image className="object-contain" src={iUrl} alt="" fill />
-          </div>
-        ))}
-      </div>
-    );
-  } else if (imagesURLs.length >= 1) {
-    return (
-      <div className="mb-2 grid w-full grid-cols-2 gap-2 md:grid-cols-3">
-        {imagesURLs.map((iUrl: any) => (
-          <div className="relative h-[25vw] max-h-32 md:h-[33vw] md:max-h-36">
-            <Image className="object-contain" src={iUrl} alt="" fill />
-          </div>
-        ))}
-      </div>
-    );
-  }
-  return <></>;
+  useEffect(() => {
+    async function run() {
+      if (!imagesURLs) return;
+
+      const dims = await Promise.all(
+        imagesURLs.map((url) => getImageSize(url))
+      );
+
+      return dims.map((dim, i) => {
+        const img: CustomImage = {
+          src: imagesURLs[i] ?? "",
+          original: imagesURLs[i] ?? "",
+          width: dim.width,
+          height: dim.height,
+        };
+        return img;
+      });
+    }
+
+    run()
+      .then((res) => {
+        if (res !== undefined) {
+          setImageResults(res);
+        }
+      })
+      .catch((err) => console.log(err));
+  }, [imagesURLs]);
+
+  if (!imagesURLs || !imageResults) return <></>;
+
+  return (
+    <Gallery
+      images={imageResults}
+      enableImageSelection={false}
+      rowHeight={140}
+      margin={2}
+    />
+  );
+
+  // if (imagesURLs.length == 1) {
+  //   return (
+  //     <div className="mb-2 grid w-full gap-2">
+  //       {imagesURLs.map((iUrl: any) => (
+  //         <div className="relative h-[25vw] max-h-48 md:h-[40vw]">
+  //           <Image className="object-contain" src={iUrl} alt="" fill />
+  //         </div>
+  //       ))}
+  //     </div>
+  //   );
+  // } else if (imagesURLs.length >= 1) {
+  //   return (
+  //     <div className="mb-2 grid w-full grid-cols-2 gap-2 md:grid-cols-3">
+  //       {imagesURLs.map((iUrl: any) => (
+  //         <div className="relative h-[25vw] max-h-32 md:h-[33vw] md:max-h-36">
+  //           <Image className="object-contain" src={iUrl} alt="" fill />
+  //         </div>
+  //       ))}
+  //     </div>
+  //   );
+  // }
+  // return <></>;
 };
 
 export default UploadPost;
