@@ -9,9 +9,19 @@ export async function updateAvgRating(petSitterId: string) {
       review: true,
     },
   });
-  const reviews = petSitter?.review;
-  if (!reviews) return;
 
+  const reviews = petSitter?.review;
+  const reviewCount = petSitter?.review.length;
+
+  if (!reviews || !reviewCount) {
+    const update = await prisma.petSitter.update({
+      where: {
+        userId: petSitterId,
+      },
+      data: { avgRating: null, reviewCount: 0 },
+    });
+    return update;
+  }
   let sum = 0;
   for (const review of reviews) {
     sum += review.rating;
@@ -22,7 +32,7 @@ export async function updateAvgRating(petSitterId: string) {
     where: {
       userId: petSitterId,
     },
-    data: { avgRating: avg },
+    data: { avgRating: avg, reviewCount: reviewCount },
   });
   return update;
 }
@@ -190,6 +200,7 @@ export async function makeReview(
   });
 
   await updateAvgRating(petSitterId);
+
   return createReview;
 }
 

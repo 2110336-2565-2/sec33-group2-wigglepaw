@@ -87,6 +87,7 @@ model PetSitter {
     post               Post[]
     review             Review[]
     avgRating          Float?
+    reviewCount        Int                 @default(0)
     SessionRequest     SessionRequest[]
 }
 

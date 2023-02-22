@@ -8,33 +8,14 @@ import {
   petFields,
   reviewFields,
 } from "../../../schema/schema";
-
-async function updateAvgRating(petSitterId: string) {
-  const petSitter = await prisma.petSitter.findFirst({
-    where: {
-      userId: petSitterId,
-    },
-    include: {
-      review: true,
-    },
-  });
-  const reviews = petSitter?.review;
-  if (!reviews) return;
-
-  let sum = 0;
-  for (const review of reviews) {
-    sum += review.rating;
-  }
-  const avg = Math.round((sum / reviews.length) * 100) / 100;
-
-  const update = await prisma.petSitter.update({
-    where: {
-      userId: petSitterId,
-    },
-    data: { avgRating: avg },
-  });
-  return update;
-}
+import {
+  makeFree,
+  makeHotel,
+  makeOwner,
+  makePost,
+  makeReview,
+  updateAvgRating,
+} from "../../../seed/db";
 
 export const reviewRouter = createTRPCRouter({
   create: publicProcedure

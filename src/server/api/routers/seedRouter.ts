@@ -111,12 +111,15 @@ export const seedRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      if (input.clearReviews) {
-        await ctx.prisma.review.deleteMany({});
-      }
-
       const sitters = await prisma.petSitter.findMany();
       const owners = await prisma.petOwner.findMany();
+
+      if (input.clearReviews) {
+        await ctx.prisma.review.deleteMany({});
+        for (const sitter of sitters) {
+          await updateAvgRating(sitter.userId);
+        }
+      }
 
       const N = input.numberOfReviews;
       const sitterIds = new Array<string>(N);
