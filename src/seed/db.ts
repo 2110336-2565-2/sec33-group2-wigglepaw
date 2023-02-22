@@ -171,33 +171,6 @@ export async function makeReview(
       text: text,
     },
   });
-  const reviewId = createReview.reviewId;
-
-  await prisma.petOwner.update({
-    where: {
-      userId: petOwnerId,
-    },
-    data: {
-      review: {
-        connect: {
-          reviewId: reviewId,
-        },
-      },
-    },
-  });
-
-  await prisma.petSitter.update({
-    where: {
-      userId: petSitterId,
-    },
-    data: {
-      review: {
-        connect: {
-          reviewId: reviewId,
-        },
-      },
-    },
-  });
 
   await updateAvgRating(petSitterId);
 
