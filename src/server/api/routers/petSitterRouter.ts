@@ -109,13 +109,21 @@ export const petSitterRouter = createTRPCRouter({
       return await ctx.prisma.petSitter.findMany({
         where: {
           AND: [
-            searchLogic.searchByName(input.searchName),
-            searchLogic.searchByPriceMin(input.searchPriceMin),
-            searchLogic.searchByPriceMax(input.searchPriceMax),
-            searchLogic.searchByPetTypes(input.searchPetTypes),
-            searchLogic.searchByPetSitterTypes(
-              input.searchIncludePetSitterType
-            ),
+            input.searchName ? searchLogic.searchByName(input.searchName) : {},
+            input.searchPriceMin
+              ? searchLogic.searchByPriceMin(input.searchPriceMin)
+              : {},
+            input.searchPriceMax
+              ? searchLogic.searchByPriceMax(input.searchPriceMax)
+              : {},
+            input.searchPetTypes
+              ? searchLogic.searchByPetTypes(input.searchPetTypes)
+              : {},
+            input.searchIncludePetSitterType
+              ? searchLogic.searchByPetSitterTypes(
+                  input.searchIncludePetSitterType
+                )
+              : {},
             searchLogic.searchByPetSitterType(
               input.searchIncludePetHotel,
               input.searchIncludeFreelancePetSitter
