@@ -1,5 +1,5 @@
 abstract class InnerReturn {
-  public static userFields: object = {
+  public static user: object = {
     userId: true,
     username: true,
     email: true,
@@ -7,24 +7,24 @@ abstract class InnerReturn {
     address: true,
     imageUri: true,
   };
-  public static petOwnerFields: object = {
+  public static petOwner: object = {
     userId: true,
     petTypes: true,
     firstName: true,
     lastName: true,
     review: true,
   };
-  public static freelancePetSitterFields: object = {
+  public static freelancePetSitter: object = {
     userId: true,
     firstName: true,
     lastName: true,
   };
-  public static petHotelFields: object = {
+  public static petHotel: object = {
     userId: true,
     businessLicenseUri: true,
     hotelName: true,
   };
-  public static petSitterFields: object = {
+  public static petSitter: object = {
     userId: true,
     petTypes: true,
     verifyStatus: true,
@@ -33,7 +33,7 @@ abstract class InnerReturn {
     endPrice: true,
     avgRating: true,
   };
-  public static petFields: object = {
+  public static pet: object = {
     petId: true,
     petOwnerId: true,
     petType: true,
@@ -41,7 +41,7 @@ abstract class InnerReturn {
     sex: true,
     breed: true,
   };
-  public static bookingFields: object = {
+  public static booking: object = {
     bookingId: true,
     petOwnerId: true,
     petSitterId: true,
@@ -53,24 +53,24 @@ abstract class InnerReturn {
   };
 }
 export abstract class Return {
-  public static userFields: object = {
-    ...InnerReturn.userFields,
+  public static user: object = {
+    ...InnerReturn.user,
   };
-  public static petOwnerFields: object = {
-    ...InnerReturn.petOwnerFields,
+  public static petOwner: object = {
+    ...InnerReturn.petOwner,
   };
-  public static petSitterFields: object = {
-    ...InnerReturn.petSitterFields,
-    petHotel: { select: InnerReturn.petHotelFields },
-    freelancePetSitter: { select: InnerReturn.freelancePetSitterFields },
+  public static petSitter: object = {
+    ...InnerReturn.petSitter,
+    petHotel: { select: InnerReturn.petHotel },
+    freelancePetSitter: { select: InnerReturn.freelancePetSitter },
   };
-  public static petFields: object = {
-    ...InnerReturn.petFields,
+  public static pet: object = {
+    ...InnerReturn.pet,
   };
-  public static bookingFields: object = {
-    ...InnerReturn.bookingFields,
-    pet: { select: InnerReturn.petFields },
-    petOwner: { select: InnerReturn.petOwnerFields },
-    petSitter: { select: InnerReturn.petSitterFields },
+  public static booking: object = {
+    ...InnerReturn.booking,
+    pet: { select: InnerReturn.pet },
+    petOwner: { select: InnerReturn.petOwner },
+    petSitter: { select: this.petSitter },
   };
 }

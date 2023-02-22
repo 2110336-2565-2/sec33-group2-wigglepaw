@@ -32,7 +32,7 @@ export abstract class BookingSearchLogic {
     };
   }
   public static byUserId(userId: string, isPetSitter: boolean): object {
-    return isPetSitter ? this.byPetOwnerId(userId) : this.byPetSitterId(userId);
+    return isPetSitter ? this.byPetSitterId(userId) : this.byPetOwnerId(userId);
   }
   public static byPetOwnerId(petOwnerId: string): object {
     return { petOwnerId: petOwnerId };

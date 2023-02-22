@@ -35,50 +35,27 @@ export const bookingRouter = createTRPCRouter({
     .input(z.object({ bookingId: z.string() }))
     .query(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      const result = await ctx.prisma.booking.findUnique({
+      const result = await ctx.prisma.booking.findFirst({
         where: {
-          bookingId: input.bookingId,
+          AND: [
+            BookingSearchLogic.byUserIdAuto(userId),
+            BookingSearchLogic.byBookingId(input.bookingId),
+          ],
         },
-        select: Return.bookingFields,
+        select: Return.booking,
       });
-      if (result == null) return null;
-      if (![result.petSitterId, result.petOwnerId].includes(userId))
-        return null;
-      else return result;
+      return result;
     }),
 
   //public procedure that get booking by logged in user ID
   getMyBooking: protectedProcedure.query(({ ctx }) => {
     const userId = ctx.session.user.id;
     const result = ctx.prisma.booking.findMany({
-      where: {
-        OR: [{ petSitterId: userId }, { petOwnerId: userId }],
-      },
-      select: Return.bookingFields,
+      where: BookingSearchLogic.byUserIdAuto(userId),
+      select: Return.booking,
     });
     return result;
   }),
-
-  //public procedure that get booking by name
-  getByUserId: protectedProcedure
-    .input(z.object({ userId: z.string() }))
-    .query(({ ctx, input }) => {
-      if (ctx.session.user == null) return [];
-      const userType: UserType = ctx.session.user?.userType ?? null;
-      const userTypeLogic = new UserTypeLogic(userType);
-      if (!userTypeLogic.isPetSitter() && !userTypeLogic.isPetOwner())
-        return [];
-      const userId = ctx.session.user.id;
-      const condition: object[] = userTypeLogic.isPetSitter()
-        ? [{ petSitterId: userId }, { petOwnerId: input.userId }]
-        : [{ petSitterId: input.userId }, { petOwnerId: userId }];
-      return ctx.prisma.booking.findMany({
-        where: {
-          AND: condition,
-        },
-        select: Return.bookingFields,
-      });
-    }),
 
   // request booking petOwner
   request: protectedProcedure
@@ -102,7 +79,7 @@ export const bookingRouter = createTRPCRouter({
             connect: input.petIdList.map((petId) => ({ petId: petId })),
           },
         },
-        select: Return.bookingFields,
+        select: Return.booking,
       });
     }),
 
@@ -226,12 +203,11 @@ export const bookingRouter = createTRPCRouter({
       if (!userTypeLogic.isPetSitter() && !userTypeLogic.isPetOwner())
         return [];
       const userId = ctx.session.user.id;
-      const isPetSitter = userTypeLogic.isPetSitter();
       return await ctx.prisma.booking.findMany({
         where: {
           AND: [
             // input.searchBookingId?BookingSearchLogic.byBookingId(input.searchBookingId):{},
-            BookingSearchLogic.byUserId(userId, isPetSitter),
+            BookingSearchLogic.byUserIdAuto(userId),
             input.searchBookingIdList
               ? BookingSearchLogic.byBookingIdList(input.searchBookingIdList)
               : {},
@@ -242,12 +218,12 @@ export const bookingRouter = createTRPCRouter({
               ? BookingSearchLogic.byStartDate(input.searchStartDate)
               : {},
             input.searchUserId
-              ? BookingSearchLogic.byUserId(input.searchUserId, !isPetSitter)
+              ? BookingSearchLogic.byUserIdAuto(input.searchUserId)
               : {},
           ],
         },
         orderBy: [BookingSearchLogic.sortBy(input.searchSortBy)],
-        select: Return.bookingFields,
+        select: Return.booking,
       });
     }),
 });
