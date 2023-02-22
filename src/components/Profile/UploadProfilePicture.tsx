@@ -227,6 +227,7 @@ const UploadProfilePicture = (props: any) => {
                         <button
                           className="rounded-full bg-red-800 px-2 py-1 font-semibold text-white hover:bg-red-600"
                           onClick={() => setIsUploadingProfile(false)}
+                          type="reset"
                         >
                           Cancel
                         </button>

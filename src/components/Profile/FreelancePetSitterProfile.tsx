@@ -25,6 +25,7 @@ import {
 
 import Post from "./Post";
 import UploadProfilePicture from "./UploadProfilePicture";
+import UploadPost from "./UploadPost";
 
 type FreelancePetSitterProfileProps = {
   editable: boolean;
@@ -63,7 +64,6 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
   const updatePetSitter = api.petSitter.update.useMutation();
   const updateUser = api.user.update.useMutation();
   const [editing, setEditing] = useState(false);
-  const [isPosting, setIsPosting] = useState(false);
 
   const {
     register,
@@ -251,71 +251,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
       <div className="mx-3 mt-2">
         <div className="mx-auto max-w-lg md:w-2/3 md:max-w-2xl">
           <div className="w-full text-xl font-bold">Posts</div>
-          <button
-            className="profile-post py-2 text-center font-semibold"
-            onClick={() => {
-              setIsPosting(true);
-            }}
-          >
-            + New Post
-          </button>
-          <Transition show={isPosting} as={Fragment}>
-            <Dialog onClose={() => {}}>
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0"
-                enterTo="opacity-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-              >
-                {/* The backdrop, rendered as a fixed sibling to the panel container */}
-                <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-              </Transition.Child>
-
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-200"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                {/* Full-screen scrollable container */}
-                <div className="fixed inset-0 overflow-y-auto">
-                  {/* Container to center the panel */}
-                  <div className="flex min-h-full items-center justify-center">
-                    <Dialog.Panel className="mx-auto box-border w-[90vw] max-w-[50rem] rounded bg-white p-4">
-                      <Dialog.Title className="mb-2 text-xl font-bold">
-                        Create Post
-                      </Dialog.Title>
-                      <textarea
-                        className="mb-2 min-h-[4rem] w-full border-2"
-                        placeholder="Post something about your pet setting experience!"
-                      ></textarea>
-                      <div className="mb-2 w-full">UPLOAD IMAGES</div>
-                      <div className="flex w-full justify-between">
-                        <button
-                          className="rounded-full bg-red-800 px-2 py-1 font-semibold text-white hover:bg-red-600"
-                          onClick={() => setIsPosting(false)}
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          className="rounded-full bg-sky-800 px-2 py-1 font-semibold text-white hover:bg-sky-600"
-                          onClick={() => setIsPosting(false)}
-                        >
-                          Post
-                        </button>
-                      </div>
-                    </Dialog.Panel>
-                  </div>
-                </div>
-              </Transition.Child>
-            </Dialog>
-          </Transition>
+          {props.editable && <UploadPost user={props.user} />}
           <div className="mx-auto my-1 h-1 w-[80%] border-b-[3px] border-gray-400" />
           {/* TODO: Posts display */}
           {posts.map((post: any) => (
