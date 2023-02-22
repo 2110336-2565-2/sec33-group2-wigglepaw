@@ -23,6 +23,7 @@ export const petSitterFields = z.object({
   startPrice: z.number().optional(),
   endPrice: z.number().optional(),
   // location: z.string().default("Laem Thong Rd, Thung Sukhla, Si Racha, Chon Buri 20110")
+  // location might be duplicated with userFields.address
 });
 
 export const petOwnerFields = z.object({

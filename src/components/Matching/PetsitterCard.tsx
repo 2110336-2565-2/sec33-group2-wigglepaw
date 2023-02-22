@@ -1,7 +1,46 @@
 import Image from "next/image";
 import Link from "next/link";
+interface PetSitterCardProps {
+  name: string;
+  typeTagText: string;
+  typeTagColor: string;
+  username: string;
+  address: string | null;
+  startPrice: number | null;
+  endPrice: number | null;
+  petTypes: string[];
+  // TODO: add reviews
+  // TODO: profilePicImage
+}
 
-const PetsitterCard = () => {
+const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
+  name,
+  typeTagText,
+  typeTagColor,
+  username,
+  address,
+  startPrice,
+  endPrice,
+  petTypes,
+  // TODO: reviews
+  // TODO: profilePicImage
+}) => {
+  // sanitize the props
+  if (address == null) address = "this sitter location is a mystery";
+  if (startPrice == null) startPrice = 0;
+  if (endPrice == null) endPrice = 10000000; // FIXME: fix this hard code
+
+  // convert price range to logos
+  const getPriceLogo = (price: number): string => {
+    if (price < 500) return "฿";
+    if (price < 1000) return "฿฿";
+    if (price < 5000) return "฿฿฿";
+    return "฿฿฿฿";
+  };
+
+  const startPriceSign = getPriceLogo(startPrice);
+  const endPriceSign = getPriceLogo(endPrice);
+
   /*  TODO: add link to profile */
   return (
     <Link href={""}>
@@ -9,8 +48,11 @@ const PetsitterCard = () => {
         id="card"
         className="relative flex h-[189px] flex-row border border-t-[#ecececc2] border-l-[#ecececc2] border-b-[#cbcbcbc2] border-r-[#cbcbcbc2] bg-[#f6f6f6] drop-shadow-sm duration-150 hover:bg-[#eeeeee] max-md:h-[115px] max-md:drop-shadow-md md:hover:scale-[1.01]"
       >
-        <div className="absolute -left-4 top-3 z-10 bg-[#C3177E] px-2 py-1 text-xs font-bold text-white max-md:py-0.5 max-md:text-[10px]">
-          Pet Hotel
+        <div
+          className="absolute -left-4 top-3 z-10 px-2 py-1 text-xs font-bold text-white max-md:py-0.5 max-md:text-[10px]"
+          style={{ backgroundColor: typeTagColor }}
+        >
+          {typeTagText}
         </div>
         <div
           id="profile-image-part"
@@ -34,10 +76,10 @@ const PetsitterCard = () => {
             <div className="mb-2 flex flex-col">
               <div>
                 <span className="mr-2 text-[27px] font-semibold text-[#213951] hover:underline">
-                  Eren Yeager
+                  {name}
                 </span>
                 <span className="text-[20px] font-normal text-[#bfbfbf]">
-                  ฿฿฿
+                  {`${startPriceSign}-${endPriceSign}`}
                 </span>
               </div>
               <div className="text-[14px] font-semibold text-[#8E8E8E]">
@@ -45,15 +87,14 @@ const PetsitterCard = () => {
               </div>
             </div>
             <div className="flex flex-row gap-2">
-              <div className="rounded-md border bg-[#a3a3a3] px-3 text-[14px] text-white shadow-sm">
-                Cat
-              </div>
-              <div className="rounded-md border bg-[#a3a3a3] px-3 text-[14px] text-white shadow-sm">
-                Deer
-              </div>
-              <div className="rounded-md border bg-[#a3a3a3] px-3 text-[14px] text-white shadow-sm">
-                Iguana
-              </div>
+              {petTypes.map((petType) => (
+                <div
+                  key={petType}
+                  className="rounded-md border bg-[#a3a3a3] px-3 text-[14px] text-white shadow-sm"
+                >
+                  {petType}
+                </div>
+              ))}
             </div>
           </div>
           {/* end of desktop */}

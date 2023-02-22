@@ -5,7 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Header from "../components/Header";
 import MatchingFormProvider, {
-  SearchPetSittersUseQueryReturn,
+  SearchPetSittersUseQueryReturnElement,
 } from "../components/Matching/MatchingFormProvider";
 import MatchingPanel from "../components/Matching/MatchingPanel";
 import PetsitterCard from "../components/Matching/PetsitterCard";
@@ -18,8 +18,9 @@ import type {
 
 // TODO: document this page structure, use cases
 const DemoMatchingPage: NextPage = () => {
-  const [matchedPetSitters, setMatchedPetSitters] =
-    useState<SearchPetSittersUseQueryReturn>([]);
+  const [matchedPetSitters, setMatchedPetSitters] = useState<
+    SearchPetSittersUseQueryReturnElement[]
+  >([]);
 
   return (
     <>
@@ -46,8 +47,13 @@ const DemoMatchingPage: NextPage = () => {
             id="pet-sitter-cards-wrapper"
             className="flex w-full flex-col gap-6"
           >
-            <PetsitterCard />
-            <PetsitterCard />
+            {matchedPetSitters?.map((matchedPetSitter) => (
+              <PetSitterCardFactory
+                key={matchedPetSitter.user.username}
+                petSitter={matchedPetSitter}
+              />
+            ))}
+            {/* <PetsitterCard /> */}
           </div>
         </div>
       </div>
@@ -56,3 +62,40 @@ const DemoMatchingPage: NextPage = () => {
 };
 
 export default DemoMatchingPage;
+
+const PetSitterCardFactory: React.FunctionComponent<{
+  petSitter: SearchPetSittersUseQueryReturnElement;
+}> = ({ petSitter }) => {
+  let name: string;
+  let typeTagText: string;
+  let typeTagColor: string;
+
+  if (petSitter.freelancePetSitter) {
+    const { firstName, lastName } = petSitter.freelancePetSitter;
+    name = firstName + " " + lastName;
+    typeTagText = "Freelance";
+    typeTagColor = "#169C64";
+  } else if (petSitter.petHotel) {
+    name = petSitter.petHotel.hotelName;
+    typeTagText = "Pet Hotel";
+    typeTagColor = "#C3177E";
+  } else {
+    console.log("error pet sitter type");
+    return <></>;
+  }
+
+  const props = {
+    name,
+    typeTagText,
+    typeTagColor,
+    username: petSitter.user.username,
+    address: petSitter.user.address,
+    startPrice: petSitter.startPrice,
+    endPrice: petSitter.endPrice,
+    petTypes: petSitter.petTypes,
+    // TODO: reviews
+    // TODO: profilePicImage
+  };
+
+  return <PetsitterCard {...props} />;
+};

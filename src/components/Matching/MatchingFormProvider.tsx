@@ -13,14 +13,14 @@ import type {
 
 // TODO: heavily document this code
 
-export type SearchPetSittersUseQueryReturn = (PetSitter & {
+export type SearchPetSittersUseQueryReturnElement = PetSitter & {
   user: User;
   freelancePetSitter: FreelancePetSitter | null;
   petHotel: PetHotel | null;
-})[];
+};
 interface MatchingFormContextT {
   useFormReturn: UseFormReturn;
-  setMatchedPetSitters: React.Dispatch<SearchPetSittersUseQueryReturn>;
+  setMatchedPetSitters: React.Dispatch<SearchPetSittersUseQueryReturnElement[]>;
   // FIXME: would be nice if we could do type inference here, no idea how to do it for now,
   //
   // this also doesn't work, seems like the types in the schema/schema.ts and types/user.ts are in conflict
@@ -33,7 +33,7 @@ export const MatchingFormContext = createContext<MatchingFormContextT>(
 
 const MatchingFormProvider: React.FunctionComponent<{
   children: React.ReactNode;
-  setMatchedPetSitters: React.Dispatch<SearchPetSittersUseQueryReturn>;
+  setMatchedPetSitters: React.Dispatch<SearchPetSittersUseQueryReturnElement[]>;
 }> = ({ children, setMatchedPetSitters }) => {
   const useFormReturn = useForm({
     resolver: zodResolver(searchField),
