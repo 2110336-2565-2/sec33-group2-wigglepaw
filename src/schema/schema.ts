@@ -28,8 +28,16 @@ export const petSitterFields = z.object({
 
 export const petOwnerFields = z.object({
   // user: userFields,
+  petTypes: z.array(z.string()),
   firstName: z.string(),
   lastName: z.string(),
+});
+
+export const petFields = z.object({
+  petType: z.string(),
+  name: z.string().optional(),
+  sex: z.enum(["Male", "Female"]).optional(),
+  breed: z.string().optional(),
 });
 
 export const petHotelFields = z.object({
@@ -57,4 +65,20 @@ export const searchField = z.object({
   searchIncludePetHotel: z.boolean().default(true),
   searchIncludeFreelancePetSitter: z.boolean().default(true),
   searchSortBy: z.string().default(""),
+});
+
+export const reviewFields = z.object({
+  rating: z.number().gte(1).lte(5),
+  text: z.string().optional(),
+});
+
+export const postFields = z.object({
+  title: z.string(),
+  text: z.string().optional(),
+  pictureUri: z.array(z.string()),
+  videoUri: z.string().optional(),
+});
+
+export const sessionRequestFields = z.object({
+  text: z.string().optional(),
 });

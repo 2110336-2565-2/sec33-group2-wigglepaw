@@ -1,11 +1,10 @@
-import { initTRPC } from "@trpc/server";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
 import { env } from "../../../env/server.mjs";
 import { createTRPCContext } from "../../../server/api/trpc";
 import { appRouter } from "../../../server/api/root";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-
+import { TRPCError, initTRPC } from "@trpc/server";
 import {
   freelancePetSitterFields,
   petSitterFields,
@@ -20,6 +19,35 @@ const zodUserFields = z.object({
 });
 
 export const petSitterRouter = createTRPCRouter({
+  getAllReviewsById: publicProcedure
+    .input(z.object({ petSitterId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findFirst({
+        where: {
+          userId: input.petSitterId,
+        },
+        include: {
+          petSitter: {
+            include: {
+              review: true,
+            },
+          },
+        },
+      });
+
+      if (!user) return null;
+
+      try {
+        return user.petSitter?.review;
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "petSitterRouter fucked up",
+          cause: error,
+        });
+      }
+    }),
+
   update: publicProcedure
     .input(z.object({ userId: z.string(), data: petSitterFields }))
     .mutation(async ({ ctx, input }) => {

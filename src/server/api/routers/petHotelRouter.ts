@@ -27,7 +27,9 @@ export const petHotelRouter = createTRPCRouter({
           petSitter: {
             create: {
               user: {
-                create: input.user,
+                create: {
+                  ...input.user,
+                },
               },
               ...input.petSitter,
             },
@@ -109,7 +111,7 @@ export const petHotelRouter = createTRPCRouter({
       console.log("gg:   ", input);
 
       //PAI JOBS
-      const user = await ctx.prisma.user.findMany({
+      const user = await ctx.prisma.user.findFirst({
         where: {
           username: input.username,
         },
