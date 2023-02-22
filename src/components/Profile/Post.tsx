@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useAsync } from "react-async-hook";
 import { Gallery, Image as I2 } from "react-grid-gallery";
 import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
+import { addWidthHeightToImages } from "../../utils/image";
 
 export interface CustomImage extends I2 {
   original: string;
@@ -34,34 +36,34 @@ const Post = (props: any) => {
     },
   ];
 
-  const images: CustomImage[] = [
+  const imageSrcs = [
     {
       src: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
       original:
         "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
-      width: 320,
-      height: 174,
+      // width: 320,
+      // height: 174,
     },
     {
       src: "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg",
       original:
         "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg",
-      width: 320,
-      height: 212,
+      // width: 320,
+      // height: 212,
     },
     {
       src: "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg",
       original:
         "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg",
-      width: 320,
-      height: 212,
+      // width: 320,
+      // height: 212,
     },
     {
       src: "https://c5.staticflickr.com/9/8768/28941110956_b05ab588c1_b.jpg",
       original:
         "https://c5.staticflickr.com/9/8768/28941110956_b05ab588c1_b.jpg",
-      width: 240,
-      height: 320,
+      // width: 240,
+      // height: 320,
       tags: [{ value: "Nature", title: "Nature" }],
       caption: "8H (gratisography.com)",
     },
@@ -69,16 +71,16 @@ const Post = (props: any) => {
       src: "https://c3.staticflickr.com/9/8583/28354353794_9f2d08d8c0_b.jpg",
       original:
         "https://c3.staticflickr.com/9/8583/28354353794_9f2d08d8c0_b.jpg",
-      width: 320,
-      height: 190,
+      // width: 320,
+      // height: 190,
       caption: "286H (gratisography.com)",
     },
     {
       src: "https://c7.staticflickr.com/9/8569/28941134686_d57273d933_b.jpg",
       original:
         "https://c7.staticflickr.com/9/8569/28941134686_d57273d933_b.jpg",
-      width: 320,
-      height: 148,
+      // width: 320,
+      // height: 148,
       tags: [{ value: "People", title: "People" }],
       caption: "315H (gratisography.com)",
     },
@@ -86,8 +88,8 @@ const Post = (props: any) => {
       src: "https://c6.staticflickr.com/9/8342/28897193381_800db6419e_b.jpg",
       original:
         "https://c6.staticflickr.com/9/8342/28897193381_800db6419e_b.jpg",
-      width: 320,
-      height: 213,
+      // width: 320,
+      // height: 213,
       caption: "201H (gratisography.com)",
     },
     {
@@ -95,14 +97,39 @@ const Post = (props: any) => {
       original:
         "https://c2.staticflickr.com/9/8239/28897202241_1497bec71a_b.jpg",
       alt: "Big Ben - London",
-      width: 248,
-      height: 320,
+      // width: 248,
+      // height: 320,
       caption: "Big Ben (Tom Eversley - isorepublic.com)",
     },
   ];
 
+  // Hook to execute async function and return result
+  const { result: images } = useAsync<CustomImage[]>(
+    // Function returning a promise to execute,
+    // calc and add width and height field to images
+    () => addWidthHeightToImages(imageSrcs),
+    // Run only once (this is similar to useEffect's)
+    []
+  );
+
   //Image Light Box
   const [index, setIndex] = useState(-1);
+  const [imagesLeft, setimagesLeft] = useState(0);
+
+  useEffect(() => {
+    if (images) {
+      setimagesLeft(
+        images.length -
+          (document
+            .querySelector(`#${props.num}`)
+            ?.querySelectorAll(".ReactGridGallery_tile").length ?? 0)
+      );
+    }
+  });
+
+  if (!images) {
+    return null;
+  }
   const currentImage = images[index];
   const nextIndex = (index + 1) % images.length;
   const nextImage = images[nextIndex] || currentImage;
@@ -112,17 +139,6 @@ const Post = (props: any) => {
   const handleCloseLB = () => setIndex(-1);
   const handleMovePrev = () => setIndex(prevIndex);
   const handleMoveNext = () => setIndex(nextIndex);
-
-  const [imagesLeft, setimagesLeft] = useState(0);
-
-  useEffect(() => {
-    setimagesLeft(
-      images.length -
-        (document
-          .querySelector(`#${props.num}`)
-          ?.querySelectorAll(".ReactGridGallery_tile").length ?? 0)
-    );
-  });
 
   return (
     <div className="profile-post">

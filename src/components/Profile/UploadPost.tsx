@@ -1,11 +1,10 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState, useMemo, useEffect } from "react";
+import { Fragment, useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Gallery, Image } from "react-grid-gallery";
-import { getImageSize } from "react-image-size";
-import { useQuery } from "@tanstack/react-query";
-import { imagesFromURLs } from "../../utils/image";
+import { addWidthHeightToImages } from "../../utils/image";
+import { useAsync } from "react-async-hook";
 
 const formDataSchema = z.object({
   title: z.string().min(1, { message: "Required" }),
@@ -152,16 +151,19 @@ const ShowImages = (props: {
 }) => {
   const imagesURLs = props.imagesURLs;
 
-  // Get image dimensions,
-  // use (abuse?) react-query to run async function.
-  const { data: images } = useQuery({
-    // unique key for this query
-    queryKey: imagesURLs ?? [],
-    // async function to run
-    queryFn: ({ queryKey }) => imagesFromURLs(queryKey),
-    enabled: imagesURLs !== null,
-    refetchOnWindowFocus: false,
-  });
+  // Get image in format that react-grid-gallery can use
+  // use react-async-hook to run async function in react component, and get the output.
+  const { result: images } = useAsync(async () => {
+    // If no imagesURLs, there is no images to show
+    if (!imagesURLs) return undefined;
+
+    // Convert imagesURLs (string) to imageObjs ({src: string})
+    const imageObjs = imagesURLs.map((i) => ({ src: i }));
+
+    // Add width and height to images, so that the gallery can render them properly
+    // then return the images
+    return await addWidthHeightToImages(imageObjs);
+  }, [imagesURLs]);
 
   if (!imagesURLs || !images) return <></>;
 
