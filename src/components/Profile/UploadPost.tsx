@@ -19,7 +19,7 @@ const UploadPost = (props: any) => {
   const [isPosting, setIsPosting] = useState(false);
 
   const { data: session, status } = useSession();
-  const createPost = api.post.requestCreate.useMutation();
+  const createPost = api.post.create.useMutation();
 
   // Form ==================================================
   const {

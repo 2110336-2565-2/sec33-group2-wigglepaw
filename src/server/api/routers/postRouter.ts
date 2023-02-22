@@ -44,7 +44,7 @@ async function checkIfUploaded(s3: S3Client, uploadUrls: string[]): bool {
 }
 
 export const postRouter = createTRPCRouter({
-  requestCreate: publicProcedure
+  create: publicProcedure
     .input(
       z.object({
         petSitterId: z.string().cuid(),
