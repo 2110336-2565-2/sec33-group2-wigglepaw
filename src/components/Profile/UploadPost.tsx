@@ -3,6 +3,7 @@ import { Fragment, useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Image from "next/image";
+import { Gallery, Image as I2 } from "react-grid-gallery";
 
 const formDataSchema = z.object({
   title: z.string().min(1, { message: "Required" }),
@@ -12,8 +13,14 @@ const formDataSchema = z.object({
 
 type FormData = z.infer<typeof formDataSchema>;
 
+export interface CustomImage extends I2 {
+  original: string;
+}
+
 const UploadPost = (props: any) => {
   const [isPosting, setIsPosting] = useState(false);
+
+  const images: CustomImage[] = [];
 
   // Form ==================================================
   const {
@@ -45,8 +52,10 @@ const UploadPost = (props: any) => {
 
     if (selectingImgs) {
       for (const img of selectingImgs) {
-        imageURLs.push(URL.createObjectURL(img));
+        const img_url = URL.createObjectURL(img);
+        imageURLs.push(img_url);
       }
+      console.log(images);
     }
     return imageURLs;
   }, [selectingImgs]);
@@ -109,9 +118,7 @@ const UploadPost = (props: any) => {
                       accept="image/*"
                       className="mb-2"
                     />
-
-                    <ShowImages imagesURLs={imagesURLs} />
-
+                    <ShowImages imagesURLs={imagesURLs} images={images} />
                     <div className="flex w-full justify-between">
                       <button
                         className="rounded-full bg-red-800 px-2 py-1 font-semibold text-white hover:bg-red-600"
@@ -141,29 +148,43 @@ const UploadPost = (props: any) => {
   );
 };
 
-const ShowImages = (props: { imagesURLs: string[] | null }) => {
+const ShowImages = (props: {
+  imagesURLs: string[] | null;
+  images: CustomImage[];
+}) => {
   const imagesURLs = props.imagesURLs;
   if (!imagesURLs) return <></>;
+
+  //   return (<Gallery
+  //   images={props.images}
+  //   enableImageSelection={false}
+  //   maxRows={2}
+  //   rowHeight={140}
+  //   margin={2}
+  // />)
+
   if (imagesURLs.length == 1) {
     return (
       <div className="mb-2 grid w-full gap-2">
         {imagesURLs.map((iUrl: any) => (
-          <div className="relative h-[40vw] max-h-48">
+          <div className="relative h-[25vw] max-h-48 md:h-[40vw]">
+            <Image className="object-contain" src={iUrl} alt="" fill />
+          </div>
+        ))}
+      </div>
+    );
+  } else if (imagesURLs.length >= 1) {
+    return (
+      <div className="mb-2 grid w-full grid-cols-2 gap-2 md:grid-cols-3">
+        {imagesURLs.map((iUrl: any) => (
+          <div className="relative h-[25vw] max-h-32 md:h-[33vw] md:max-h-36">
             <Image className="object-contain" src={iUrl} alt="" fill />
           </div>
         ))}
       </div>
     );
   }
-  return (
-    <div className="mb-2 grid w-full grid-cols-2 gap-2 md:grid-cols-3">
-      {imagesURLs.map((iUrl: any) => (
-        <div className="relative h-[20vw] max-h-32">
-          <Image className="object-contain" src={iUrl} alt="" fill />
-        </div>
-      ))}
-    </div>
-  );
+  return <></>;
 };
 
 export default UploadPost;
