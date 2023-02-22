@@ -80,6 +80,7 @@ const RegisterPage: NextPage = () => {
       petOwner: {
         firstName: data.firstname,
         lastName: data.lastname,
+        petTypes: [],
       },
     });
     const result = await signIn("credentials", {
