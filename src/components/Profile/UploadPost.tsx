@@ -2,9 +2,10 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState, useMemo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import Image from "next/image";
-import { Gallery, Image as I2 } from "react-grid-gallery";
+import { Gallery, Image } from "react-grid-gallery";
 import { getImageSize } from "react-image-size";
+import { useQuery } from "@tanstack/react-query";
+import { imagesFromURLs } from "../../utils/image";
 
 const formDataSchema = z.object({
   title: z.string().min(1, { message: "Required" }),
@@ -14,14 +15,10 @@ const formDataSchema = z.object({
 
 type FormData = z.infer<typeof formDataSchema>;
 
-export interface CustomImage extends I2 {
-  original: string;
-}
-
 const UploadPost = (props: any) => {
   const [isPosting, setIsPosting] = useState(false);
 
-  const images: CustomImage[] = [];
+  const images: Image[] = [];
 
   // Form ==================================================
   const {
@@ -151,45 +148,26 @@ const UploadPost = (props: any) => {
 
 const ShowImages = (props: {
   imagesURLs: string[] | null;
-  images: CustomImage[];
+  images: Image[];
 }) => {
   const imagesURLs = props.imagesURLs;
 
-  const [imageResults, setImageResults] = useState<CustomImage[] | null>(null);
+  // Get image dimensions,
+  // use (abuse?) react-query to run async function.
+  const { data: images } = useQuery({
+    // unique key for this query
+    queryKey: imagesURLs ?? [],
+    // async function to run
+    queryFn: ({ queryKey }) => imagesFromURLs(queryKey),
+    enabled: imagesURLs !== null,
+    refetchOnWindowFocus: false,
+  });
 
-  useEffect(() => {
-    async function run() {
-      if (!imagesURLs) return;
-
-      const dims = await Promise.all(
-        imagesURLs.map((url) => getImageSize(url))
-      );
-
-      return dims.map((dim, i) => {
-        const img: CustomImage = {
-          src: imagesURLs[i] ?? "",
-          original: imagesURLs[i] ?? "",
-          width: dim.width,
-          height: dim.height,
-        };
-        return img;
-      });
-    }
-
-    run()
-      .then((res) => {
-        if (res !== undefined) {
-          setImageResults(res);
-        }
-      })
-      .catch((err) => console.log(err));
-  }, [imagesURLs]);
-
-  if (!imagesURLs || !imageResults) return <></>;
+  if (!imagesURLs || !images) return <></>;
 
   return (
     <Gallery
-      images={imageResults}
+      images={images}
       enableImageSelection={false}
       rowHeight={140}
       margin={2}
