@@ -12,7 +12,9 @@ const BEGIN_MAX = 4000;
 const PriceRangeInput = () => {
   const [values, setValues] = useState([BEGIN_MIN, BEGIN_MAX]);
 
-  const { register, setValue } = useContext(MatchingFormContext);
+  const {
+    useFormReturn: { register, setValue },
+  } = useContext(MatchingFormContext);
 
   return (
     <Fragment>

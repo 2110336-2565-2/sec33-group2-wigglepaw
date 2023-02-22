@@ -22,6 +22,7 @@ export const petSitterFields = z.object({
   certificationUri: z.string().optional(),
   startPrice: z.number().optional(),
   endPrice: z.number().optional(),
+  // location: z.string().default("Laem Thong Rd, Thung Sukhla, Si Racha, Chon Buri 20110")
 });
 
 export const petOwnerFields = z.object({

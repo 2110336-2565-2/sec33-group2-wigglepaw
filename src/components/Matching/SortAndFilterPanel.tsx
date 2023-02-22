@@ -12,7 +12,9 @@ const sortByOptions = {
 };
 
 const SortAndFilterPanel = () => {
-  const { register, setValue } = useContext(MatchingFormContext);
+  const {
+    useFormReturn: { register, setValue },
+  } = useContext(MatchingFormContext);
 
   const initialCheckBoxState: { [key: string]: boolean } =
     petSitterTypeList.reduce((map, petSitterType) => {

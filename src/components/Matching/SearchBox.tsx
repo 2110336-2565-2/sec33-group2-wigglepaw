@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { check } from "prettier";
 import { Fragment, useContext, useEffect, useState } from "react";
+import { api } from "../../utils/api";
 import { MatchingFormContext } from "./MatchingFormProvider";
 import PriceRangeInput from "./PriceRangeInput";
 const petTypesList = [
@@ -24,8 +25,12 @@ const initialCheckBoxState: { [key: string]: boolean } = petTypesList.reduce(
 );
 
 const SearchBox = () => {
-  const { register, setValue } = useContext(MatchingFormContext);
+  const {
+    useFormReturn: { register, setValue },
+  } = useContext(MatchingFormContext);
 
+  // FIXME: redocument this
+  // the internals of this state
   const [checkBoxState, setCheckBoxState] = useState(initialCheckBoxState);
 
   const toggleState = (petType: string) => {
@@ -126,7 +131,10 @@ const SearchBox = () => {
         </div>
 
         <div id="search-button-wrapper" className="">
-          <button className="drop-shadow-slg w-full rounded-sm bg-[#2a4764] py-2 text-[20px] font-bold text-white duration-150 hover:bg-[#213951]">
+          <button
+            type="submit"
+            className="drop-shadow-slg w-full rounded-sm bg-[#2a4764] py-2 text-[20px] font-bold text-white duration-150 hover:bg-[#213951]"
+          >
             Search
           </button>
         </div>

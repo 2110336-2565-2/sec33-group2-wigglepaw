@@ -10,8 +10,8 @@ import { SearchValues } from "../common/interfaces";
 const STEP = 100;
 const MIN = 0;
 const MAX = 10000;
-export const BEGIN_MIN = 300;
-export const BEGIN_MAX = 2000;
+export const BEGIN_MIN = 1000;
+export const BEGIN_MAX = 4000;
 
 interface RangeSliderProps {
   register: UseFormRegister<SearchValues>; // declare register props
