@@ -49,7 +49,7 @@ export const postRouter = createTRPCRouter({
       z.object({
         petSitterId: z.string().cuid(),
         post: postFields.omit({ pictureUri: true }),
-        pictureCount: z.number().min(1).max(10),
+        pictureCount: z.number().min(1).max(50),
       })
     )
     .mutation(async ({ ctx, input }) => {
