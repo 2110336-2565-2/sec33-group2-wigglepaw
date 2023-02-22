@@ -141,6 +141,7 @@ model Post {
     title       String
     text        String?
     pictureUri  String[]
+    videoUri    String?
     createdAt   DateTime  @default(now())
 }
 
