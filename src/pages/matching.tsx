@@ -19,7 +19,7 @@ const Matching: NextPage = () => {
       <Header />
       <div
         id="content-wrapper"
-        className="mb-8 flex flex-row justify-start gap-8"
+        className=" mb-8 flex flex-row justify-start gap-8"
       >
         <MatchingFormProvider setMatchedPetSitters={setMatchedPetSitters}>
           <MatchingPanel />

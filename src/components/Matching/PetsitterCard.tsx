@@ -48,7 +48,7 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
     <Link href={profile_link}>
       <div
         id="card"
-        className="relative flex h-[189px] flex-row border border-t-[#ecececc2] border-l-[#ecececc2] border-b-[#cbcbcbc2] border-r-[#cbcbcbc2] bg-[#f6f6f6] drop-shadow-sm duration-150 hover:bg-[#eeeeee] max-md:h-[115px] max-md:drop-shadow-md md:hover:scale-[1.01]"
+        className="hover:border-1 relative flex h-[189px] flex-row border border-t-[#ecececc2] border-l-[#ecececc2] border-b-[#cbcbcbc2] border-r-[#cbcbcbc2] bg-[#f6f6f6] shadow-xl drop-shadow-sm duration-150 hover:border-red-500 hover:bg-[#eeeeee] max-md:h-[115px] max-md:drop-shadow-md md:hover:scale-[1.01]"
       >
         <div
           className="absolute -left-4 top-3 z-10 px-2 py-1 text-xs font-bold text-white max-md:py-0.5 max-md:text-[10px]"
@@ -146,7 +146,7 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
               <span className="font-light text-[#8e8e8e]">(24)</span>
             </div>
             <button className="font-mono text-[30px]" /* TODO: add handler */>
-              <div className="w-[119px] bg-[#2a4764] py-1 text-center text-white duration-150 hover:bg-[#213951]">
+              <div className="mt-2 w-[119px] bg-[#2a4764] py-1 text-center text-white duration-150 hover:bg-[#213951]">
                 Book
               </div>
             </button>
