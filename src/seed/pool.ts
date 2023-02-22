@@ -58,3 +58,29 @@ export const reviewTexts: string[] = [
   "Pretty nice",
   "Skibidi pop pop pop pop ye ye ye ye",
 ];
+
+export const postTitles: string[] = [
+  "Best dog ever",
+  "Best cat ever",
+  "Walking in the park",
+  "OHIO is the best place ever",
+  "OHIO is the worst place ever",
+];
+
+export const postTexts: string[] = [
+  "Feeding dogs is my happiness",
+  "I don't like this cat but took care of it anyway for monayyy",
+  "I like this dog",
+  "Took this dog for a walk",
+  "Skibidi pop pop pop pop ye ye ye ye",
+];
+
+export const postPictures: string[] = [
+  "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
+  "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg",
+  "https://c5.staticflickr.com/9/8768/28941110956_b05ab588c1_b.jpg",
+  "https://c3.staticflickr.com/9/8583/28354353794_9f2d08d8c0_b.jpg",
+  "https://c7.staticflickr.com/9/8569/28941134686_d57273d933_b.jpg",
+  "https://c6.staticflickr.com/9/8342/28897193381_800db6419e_b.jpg",
+  "https://c2.staticflickr.com/9/8239/28897202241_1497bec71a_b.jpg",
+];

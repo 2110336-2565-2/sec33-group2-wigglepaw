@@ -195,13 +195,15 @@ export async function makeReview(
 
 export async function makePost(
   petSitterId: string,
+  title: string,
   text: string,
-  pictureUri: string,
+  pictureUri: string[],
   videoUri: string
 ) {
   const createPost = await prisma.post.create({
     data: {
       petSitterId: petSitterId,
+      title: title,
       text: text,
       pictureUri: pictureUri,
       videoUri: videoUri,

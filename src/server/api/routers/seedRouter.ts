@@ -8,6 +8,9 @@ import {
   imageUris,
   petTypes,
   reviewTexts,
+  postPictures,
+  postTexts,
+  postTitles,
 } from "../../../seed/pool";
 import {
   getMultipleRandom,
@@ -115,22 +118,19 @@ export const seedRouter = createTRPCRouter({
       const sitters = await prisma.petSitter.findMany();
       const owners = await prisma.petOwner.findMany();
 
-      const sitterIds = new Array<string>(input.numberOfReviews);
-      const ownerIds = new Array<string>(input.numberOfReviews);
+      const N = input.numberOfReviews;
+      const sitterIds = new Array<string>(N);
+      const ownerIds = new Array<string>(N);
 
-      for (
-        let i = 0;
-        i < Math.min(input.numberOfReviews, sitters.length);
-        i++
-      ) {
+      for (let i = 0; i < Math.min(N, sitters.length); i++) {
         sitterIds[i] = sitters[i]?.userId ?? "";
       }
 
-      for (let i = 0; i < Math.min(input.numberOfReviews, owners.length); i++) {
+      for (let i = 0; i < Math.min(N, owners.length); i++) {
         ownerIds[i] = owners[i]?.userId ?? "";
       }
       resetRand();
-      for (let i = 0; i < input.numberOfReviews; i++) {
+      for (let i = 0; i < N; i++) {
         const sitterId = getMultipleRandom(sitterIds, 1)[0] ?? "";
         const ownerId = getMultipleRandom(ownerIds, 1)[0] ?? "";
         const rating = getRandomIntFromInterval(1, 5);
@@ -153,30 +153,23 @@ export const seedRouter = createTRPCRouter({
       }
 
       const sitters = await prisma.petSitter.findMany();
-      const owners = await prisma.petOwner.findMany();
 
-      const sitterIds = new Array<string>(input.numberOfReviews);
-      const ownerIds = new Array<string>(input.numberOfReviews);
+      const N = input.numberOfPosts;
+      const sitterIds = new Array<string>(N);
 
-      for (
-        let i = 0;
-        i < Math.min(input.numberOfReviews, sitters.length);
-        i++
-      ) {
+      for (let i = 0; i < Math.min(N, sitters.length); i++) {
         sitterIds[i] = sitters[i]?.userId ?? "";
       }
 
-      for (let i = 0; i < Math.min(input.numberOfReviews, owners.length); i++) {
-        ownerIds[i] = owners[i]?.userId ?? "";
-      }
       resetRand();
-      for (let i = 0; i < input.numberOfReviews; i++) {
+      for (let i = 0; i < N; i++) {
         const sitterId = getMultipleRandom(sitterIds, 1)[0] ?? "";
-        const ownerId = getMultipleRandom(ownerIds, 1)[0] ?? "";
-        const rating = getRandomIntFromInterval(1, 5);
-        const text = getMultipleRandom(reviewTexts, 1)[0] ?? "";
+        const title = getMultipleRandom(postTitles, 1)[0] ?? "";
+        const text = getMultipleRandom(postTexts, 1)[0] ?? "";
+        const pics = getRandomIntFromInterval(0, 4);
+        const pictureUri = getMultipleRandom(postPictures, pics) ?? [];
 
-        await makeReview(sitterId, ownerId, rating, text);
+        await makePost(sitterId, title, text, pictureUri, "vdoUri");
       }
     }),
 });
