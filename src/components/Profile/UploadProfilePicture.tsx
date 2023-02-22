@@ -6,56 +6,11 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import imageCompression from "browser-image-compression";
 import { HiPencilAlt } from "react-icons/hi";
+import { useUpdateProfilePicture } from "../../utils/upload";
 
 // The type is simple enough so I didn't bother to create zod schema for it.
 // But if you want, try https://zod.dev/?id=custom-schemas + https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof
 type FormDataProfile = { image: FileList };
-
-/**
- * Custom hook that encapsulates the logic of uploading a profile picture.
- */
-function useUpdateProfilePicture() {
-  const utils = api.useContext();
-  const uploadProfilePictureURL =
-    api.profilePicture.requestUploadProfilePictureURL.useMutation();
-  const confirmUpload =
-    api.profilePicture.confirmUploadProfilePicture.useMutation();
-
-  const updateProfilePicture = async (image: File) => {
-    // Get the URL for upload the image to storage.
-    // The URL is presigned, it can only be used for certain defined operations
-    // (in this case, PUT), only to this user profile picture, and will expire after a certain time.
-    //
-    // The URL should be considered a secret, anyone else who has it can upload.
-    const url = await uploadProfilePictureURL.mutateAsync();
-
-    // Upload the image to the URL.
-    // This operation doesn't pass through our server at all.
-    // so we don't use TRPC here, instead, we use axios.
-    //
-    // This way of uploading directly to storage safely is call valet key pattern,
-    // useful for reducing server load and costs.
-    await axios.put(url, image);
-
-    // Notify the server that the image has been uploaded.
-    // This will update the user's profile picture URL in the database.
-    // This is a normal TRPC call.
-    //
-    // The downside of valet key pattern is that server can't automatically
-    // know when the image has been uploaded, so we need to notify it.
-    await confirmUpload.mutateAsync();
-
-    // Update the profile picture URL in the cache.
-    await utils.user.invalidate();
-  };
-
-  const status =
-    confirmUpload.status !== "idle" && confirmUpload.status !== "success"
-      ? confirmUpload.status
-      : uploadProfilePictureURL.status;
-
-  return { mutate: updateProfilePicture, status };
-}
 
 const UploadProfilePicture = (props: any) => {
   const [isUploadingProfile, setIsUploadingProfile] = useState(false);
@@ -102,7 +57,7 @@ const UploadProfilePicture = (props: any) => {
     console.log(`Compressed image size: ${compressedImage.size} bytes`);
 
     // Upload image, run with custom hook
-    await updateProfilePicture.mutate(compressedImage);
+    await updateProfilePicture.mutateAsync(compressedImage);
   };
 
   // Watch for image changes

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { api } from "../../utils/api";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import { useAddNewPost } from "../../utils/upload";
 
 const formDataSchema = z.object({
   title: z.string().min(1, { message: "Required" }),
@@ -19,7 +20,7 @@ const UploadPost = (props: any) => {
   const [isPosting, setIsPosting] = useState(false);
 
   const { data: session, status } = useSession();
-  const createPost = api.post.create.useMutation();
+  const addNewPost = useAddNewPost();
 
   // Form ==================================================
   const {
@@ -37,26 +38,28 @@ const UploadPost = (props: any) => {
       return;
     }
 
-    if (session?.user?.id === undefined) {
-      alert("No user id");
+    console.log(data);
+
+    const user = session?.user;
+    if (!user) {
+      alert("No user found");
       return;
     }
 
-    console.log(data);
+    // TODO: Remove this mock subsitution once form is ready
+    data.title = data.title ?? "Mock title";
+    data.content = data.content ?? "Mock content";
 
-    //TODO: Upload Images
-    const { uploadUrls } = await createPost.mutateAsync({
-      petSitterId: session.user.id,
-      post: {
-        title: "Title",
-        text: "Content",
+    await addNewPost.mutateAsync(
+      user.id,
+      {
+        title: data.title,
+        text: data.content,
+        // TODO: Add videoUri?
+        videoUri: null,
       },
-      pictureCount: image.length,
-    });
-
-    console.assert(uploadUrls.length === image.length);
-
-    await Promise.all(uploadUrls.map((url, i) => axios.put(url, image[i])));
+      image
+    );
   };
 
   const selectingImgs = watch("image");
