@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { useAsync } from "react-async-hook";
 import { Gallery, Image as I2 } from "react-grid-gallery";
-import Lightbox from "react-image-lightbox";
-import "react-image-lightbox/style.css";
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
 import { addWidthHeightToImages } from "../../utils/image";
 import { Post } from "@prisma/client";
 
 const Post = (props: { post: Post }) => {
+  const [index, setIndex] = useState(-1);
+  const [imagesLeft, setimagesLeft] = useState(0);
+
   //Convert string array to object
   const imageSrcs = props.post.pictureUri.map((uri) => ({ src: uri }));
 
@@ -19,10 +22,6 @@ const Post = (props: { post: Post }) => {
     props.post.pictureUri
   );
 
-  //Image Light Box
-  const [index, setIndex] = useState(-1);
-  const [imagesLeft, setimagesLeft] = useState(0);
-
   useEffect(() => {
     if (images) {
       setimagesLeft(
@@ -34,20 +33,12 @@ const Post = (props: { post: Post }) => {
     }
   });
 
+  //Image Light Box
   if (!images) {
     return null;
   }
   const currentImage = images[index];
-  const nextIndex = (index + 1) % images.length;
-  const nextImage = images[nextIndex] || currentImage;
-  const prevIndex = (index + images.length - 1) % images.length;
-  const prevImage = images[prevIndex] || currentImage;
-  const handleClickLB = (index: number) => setIndex(index);
-  const handleCloseLB = () => setIndex(-1);
-  const handleMovePrev = () => setIndex(prevIndex);
-  const handleMoveNext = () => setIndex(nextIndex);
-
-  console.log(index);
+  const handleClickLB = (index: number, item: I2) => setIndex(index);
 
   return (
     <div className="profile-post">
@@ -75,18 +66,12 @@ const Post = (props: { post: Post }) => {
           More {imagesLeft} images, Click on the image!
         </div>
       )}
-
       {!!currentImage && (
         <Lightbox
-          mainSrc={currentImage.src}
-          mainSrcThumbnail={currentImage.src}
-          nextSrc={nextImage?.src}
-          nextSrcThumbnail={nextImage?.src}
-          prevSrc={prevImage?.src}
-          prevSrcThumbnail={prevImage?.src}
-          onCloseRequest={handleCloseLB}
-          onMovePrevRequest={handleMovePrev}
-          onMoveNextRequest={handleMoveNext}
+          slides={images}
+          open={index >= 0}
+          index={index}
+          close={() => setIndex(-1)}
         />
       )}
     </div>
