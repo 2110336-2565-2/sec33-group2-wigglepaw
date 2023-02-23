@@ -9,6 +9,7 @@ import {
   HiX,
 } from "react-icons/hi";
 import { IoPaw } from "react-icons/io5";
+import { GiTumbleweed } from "react-icons/gi";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -261,9 +262,15 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
           )}
           {/* TODO: Posts display */}
           {posts ? (
-            posts.map((post: any) => <Post post={post}></Post>)
+            posts.length >= 1 ? (
+              posts.map((post: any) => <Post post={post}></Post>)
+            ) : (
+              <div className="w-full text-center font-medium">
+                Currently No Post <GiTumbleweed className="inline" />
+              </div>
+            )
           ) : (
-            <p>Loading</p>
+            <div>Loading...</div>
           )}
         </div>
       </div>

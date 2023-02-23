@@ -5,7 +5,6 @@ import { z } from "zod";
 import { Gallery, Image } from "react-grid-gallery";
 import { addWidthHeightToImages } from "../../utils/image";
 import { useAsync } from "react-async-hook";
-import Image from "next/image";
 import { api } from "../../utils/api";
 import { useSession } from "next-auth/react";
 import axios from "axios";

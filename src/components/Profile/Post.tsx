@@ -7,92 +7,7 @@ import { addWidthHeightToImages } from "../../utils/image";
 import { Post } from "@prisma/client";
 
 const Post = (props: { post: Post }) => {
-  //TODO: Remove image example
-  const images1: I2[] = [
-    {
-      src: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
-      width: 320,
-      height: 174,
-    },
-    {
-      src: "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg",
-      width: 320,
-      height: 212,
-    },
-    {
-      src: "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg",
-      width: 320,
-      height: 212,
-    },
-  ];
-
-  const imageSrcsOld = [
-    {
-      src: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
-      original:
-        "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
-      // width: 320,
-      // height: 174,
-    },
-    {
-      src: "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg",
-      original:
-        "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg",
-      // width: 320,
-      // height: 212,
-    },
-    {
-      src: "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg",
-      original:
-        "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg",
-      // width: 320,
-      // height: 212,
-    },
-    {
-      src: "https://c5.staticflickr.com/9/8768/28941110956_b05ab588c1_b.jpg",
-      original:
-        "https://c5.staticflickr.com/9/8768/28941110956_b05ab588c1_b.jpg",
-      // width: 240,
-      // height: 320,
-      tags: [{ value: "Nature", title: "Nature" }],
-      caption: "8H (gratisography.com)",
-    },
-    {
-      src: "https://c3.staticflickr.com/9/8583/28354353794_9f2d08d8c0_b.jpg",
-      original:
-        "https://c3.staticflickr.com/9/8583/28354353794_9f2d08d8c0_b.jpg",
-      // width: 320,
-      // height: 190,
-      caption: "286H (gratisography.com)",
-    },
-    {
-      src: "https://c7.staticflickr.com/9/8569/28941134686_d57273d933_b.jpg",
-      original:
-        "https://c7.staticflickr.com/9/8569/28941134686_d57273d933_b.jpg",
-      // width: 320,
-      // height: 148,
-      tags: [{ value: "People", title: "People" }],
-      caption: "315H (gratisography.com)",
-    },
-    {
-      src: "https://c6.staticflickr.com/9/8342/28897193381_800db6419e_b.jpg",
-      original:
-        "https://c6.staticflickr.com/9/8342/28897193381_800db6419e_b.jpg",
-      // width: 320,
-      // height: 213,
-      caption: "201H (gratisography.com)",
-    },
-    {
-      src: "https://c2.staticflickr.com/9/8239/28897202241_1497bec71a_b.jpg",
-      original:
-        "https://c2.staticflickr.com/9/8239/28897202241_1497bec71a_b.jpg",
-      alt: "Big Ben - London",
-      // width: 248,
-      // height: 320,
-      caption: "Big Ben (Tom Eversley - isorepublic.com)",
-    },
-  ];
-
+  //Convert string array to object
   const imageSrcs = props.post.pictureUri.map((uri) => ({ src: uri }));
 
   // Hook to execute async function and return result
@@ -103,8 +18,6 @@ const Post = (props: { post: Post }) => {
     // Run only once (this is similar to useEffect's)
     props.post.pictureUri
   );
-
-  console.log(images);
 
   //Image Light Box
   const [index, setIndex] = useState(-1);
@@ -129,22 +42,20 @@ const Post = (props: { post: Post }) => {
   const nextImage = images[nextIndex] || currentImage;
   const prevIndex = (index + images.length - 1) % images.length;
   const prevImage = images[prevIndex] || currentImage;
-  const handleClickLB = (index: number, item: I2) => setIndex(index);
+  const handleClickLB = (index: number) => setIndex(index);
   const handleCloseLB = () => setIndex(-1);
   const handleMovePrev = () => setIndex(prevIndex);
   const handleMoveNext = () => setIndex(nextIndex);
 
+  console.log(index);
+
   return (
     <div className="profile-post">
       <div className="mt-1 flex w-full justify-between ">
-        <h1 className="text-lg font-bold">Post Title</h1>
+        <h1 className="text-lg font-bold">{props.post.title}</h1>
         <h2>2d ago</h2>
       </div>
-      <p className="my-1 text-gray-700">
-        Provide in-home pet sitting and pet care services, including workday
-        check-ins and feedings, litterbox, cage, and kennel cleaning, overnight
-        care, and long-term ...
-      </p>
+      <p className="my-1 text-gray-700">{props.post.text}</p>
 
       {images.length >= 1 && (
         <div className="mb-2">
@@ -167,9 +78,8 @@ const Post = (props: { post: Post }) => {
 
       {!!currentImage && (
         <Lightbox
-          mainSrc={currentImage?.src}
-          imageTitle={currentImage?.caption}
-          mainSrcThumbnail={currentImage?.src}
+          mainSrc={currentImage.src}
+          mainSrcThumbnail={currentImage.src}
           nextSrc={nextImage?.src}
           nextSrcThumbnail={nextImage?.src}
           prevSrc={prevImage?.src}
