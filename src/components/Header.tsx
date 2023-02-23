@@ -28,10 +28,10 @@ const Header = () => {
     : "/profiledummy.png";
 
   return (
-    <span className="mb-4 flex h-fit w-screen bg-sky-900 md:pr-2">
+    <span className="mb-4 flex h-fit w-screen bg-wp-blue md:pr-2">
       <nav className="flex w-full">
         <Link href={"/"} className="flex shrink-0">
-          <div className="relative m-2 flex h-[4rem] w-[5rem]">
+          <div className="relative m-2 ml-6 flex h-[4rem] w-[5rem]">
             <Image src={"/logo_w.png"} alt={""} fill></Image>
           </div>
           <h1 className="my-auto mr-2 text-2xl font-bold text-white sm:text-3xl">
@@ -127,7 +127,7 @@ const Header = () => {
             <Link
               href="/about"
               className={
-                "header-register-link bg-sky-700 hover:bg-sky-600" +
+                "header-register-link bg-wp-blue hover:bg-wp-light-blue" +
                 `${asPath.includes("/about") ? " header-at-page" : ""}`
               }
             >
@@ -143,7 +143,7 @@ const Header = () => {
                 `${
                   asPath.includes("/login")
                     ? " header-at-page"
-                    : " bg-sky-700 hover:bg-sky-600"
+                    : " bg-wp-blue hover:bg-wp-light-blue"
                 }`
               }
             >
@@ -186,7 +186,7 @@ const Header = () => {
                 src={profileImageUri}
                 alt={"Icon"}
                 fill
-                className="rounded-xl"
+                className="rounded-xl object-cover"
               ></Image>
             </button>
             <div

@@ -13,7 +13,6 @@ interface RangeSliderProps {
   register: UseFormRegister<SearchValues>; // declare register props
   setValue: UseFormSetValue<SearchValues>;
 }
-
 const RangeSlider = ({ register, setValue }: RangeSliderProps) => {
   const [values, setValues] = React.useState([50]);
 

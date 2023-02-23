@@ -75,15 +75,22 @@ export abstract class BookingSearchLogic {
 
 // search by first name, last name, hotel name
 export function searchByName(text: string): object {
-  if (text == "") return {};
   const words = text.split(" ");
   return {
     AND: [
       ...words.map((word) => ({
         OR: [
-          { freelancePetSitter: { firstName: { contains: word } } },
-          { freelancePetSitter: { lastName: { contains: word } } },
-          { petHotel: { hotelName: { contains: word } } },
+          {
+            freelancePetSitter: {
+              firstName: { contains: word, mode: "insensitive" },
+            },
+          },
+          {
+            freelancePetSitter: {
+              lastName: { contains: word, mode: "insensitive" },
+            },
+          },
+          { petHotel: { hotelName: { contains: word, mode: "insensitive" } } },
         ],
       })),
     ],
@@ -91,8 +98,7 @@ export function searchByName(text: string): object {
 }
 // only show if petsitter endPrice is greater than input price(Min)
 // null endPrice will be exclude if searchPriceMin isn't null
-export function searchByPriceMin(searchPriceMin: number | null): object {
-  if (searchPriceMin == null) return {};
+export function searchByPriceMin(searchPriceMin: number): object {
   return {
     endPrice: {
       gte: searchPriceMin,
@@ -101,27 +107,39 @@ export function searchByPriceMin(searchPriceMin: number | null): object {
 }
 // only show if petsitter startPrice is less than input price(Max)
 // null startPrice will be exclude if searchPriceMax isn't null
-export function searchByPriceMax(searchPriceMax: number | null): object {
-  if (searchPriceMax == null) return {};
+export function searchByPriceMax(searchPriceMax: number): object {
   return {
     startPrice: {
       lte: searchPriceMax,
     },
   };
 }
+function capitalizeFirstLetter(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
 // input as "cat dog bird", uncomplete string input like "ca do ird" won't be able to get expected result
-export function searchByPetTypes(text: string): object {
-  if (text == "") return {};
-  const petTypes = text.split(" ");
+export function searchByPetTypes(petTypes: string[]): object {
+  const conditions = petTypes.map((petType) => {
+    const petTypeLowerCase = petType.toLowerCase();
+    const petTypeLowerCaseWithFirstUpperCase =
+      capitalizeFirstLetter(petTypeLowerCase);
+    return {
+      OR: [
+        {
+          petTypes: { has: petTypeLowerCase },
+        },
+        {
+          petTypes: { has: petTypeLowerCaseWithFirstUpperCase },
+        },
+      ],
+    };
+  });
   return {
-    petTypes: {
-      hasEvery: petTypes,
-    },
+    AND: conditions,
   };
 }
 // search by single name "cat", "dog" etc.
 export function searchBySinglePetType(petType: string): object {
-  if (petType == "") return {};
   return {
     petTypes: {
       has: petType,
@@ -130,7 +148,6 @@ export function searchBySinglePetType(petType: string): object {
 }
 // search by pet sitter type
 export function searchByPetSitterTypes(text: string): object {
-  if (text == "") return {};
   const petSitterTypes = text.split(" ");
   return searchByPetSitterType(
     petSitterTypes.includes("hotel"),
@@ -159,6 +176,7 @@ export function searchByPetSitterType(
   includePetHotel: boolean,
   includeFreelancePetSitter: boolean
 ): object {
+  if (includePetHotel == false && includeFreelancePetSitter == false) return {};
   const result: object[] = [];
   if (includePetHotel)
     result.push({
@@ -209,5 +227,4 @@ export function searchOrderBy(sortName: string): object {
       return { startPrice: "asc" };
     }
   }
-  return {};
 }

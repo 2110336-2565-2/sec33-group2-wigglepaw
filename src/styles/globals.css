@@ -5,7 +5,7 @@
 @layer base {
   /* main */
   .find-link {
-    @apply mx-2 block w-fit rounded bg-sky-900 py-2 px-2 text-xl text-white transition-colors hover:bg-sky-700 md:mx-4 md:px-5;
+    @apply mx-2 block w-fit rounded bg-wp-blue py-2 px-2 text-xl text-white transition-colors hover:bg-wp-light-blue md:mx-4 md:px-5;
   }
 }
 
@@ -18,10 +18,10 @@
     @apply my-auto h-fit;
   }
   .header-a {
-    @apply rounded py-2 px-4 text-lg font-bold text-white transition-all hover:bg-sky-700;
+    @apply rounded py-2 px-4 text-lg font-bold text-white transition-all hover:bg-wp-light-blue;
   }
   .buttonstyle {
-    @apply rounded bg-[#98AAB4] px-6  py-2.5 text-center text-sm font-semibold text-[#213951] drop-shadow-md hover:bg-[#8b9ba3] focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto md:px-16;
+    @apply rounded bg-[#98AAB4] px-6  py-2.5 text-center text-sm font-semibold text-wp-blue drop-shadow-md hover:bg-[#8b9ba3] focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto md:px-16;
   }
 
   /* registerPerSitter */
@@ -32,10 +32,10 @@
     @apply my-1 flex h-fit w-[11rem] rounded bg-green-700 p-2 text-base font-semibold text-white transition-all hover:bg-green-600;
   }
   .header-menu-link {
-    @apply my-1 flex h-fit w-[7rem] rounded bg-sky-700 p-2 text-base font-semibold text-white transition-all hover:bg-sky-600;
+    @apply my-1 flex h-fit w-[7rem] rounded bg-wp-blue p-2 text-base font-semibold text-white transition-all hover:bg-wp-light-blue;
   }
   .header-at-page {
-    @apply bg-white text-sky-700 hover:bg-white;
+    @apply bg-white text-wp-blue hover:bg-white;
   }
 
   /* profile */
@@ -52,7 +52,7 @@
     @apply mb-1 mt-[0.1rem] w-full rounded-md border-2 border-sky-200 focus:ring-sky-700;
   }
   .profile-edit-button {
-    @apply mx-auto flex whitespace-nowrap rounded-2xl bg-sky-700 px-3 py-1 text-center font-semibold text-white hover:bg-sky-600;
+    @apply mx-auto flex whitespace-nowrap rounded-2xl bg-wp-blue px-3 py-1 text-center font-semibold text-white hover:bg-wp-light-blue;
   }
 
   /* searchbox */
@@ -62,6 +62,11 @@
 
   .center-thing {
     @apply flex items-center justify-center;
+  }
+
+  /* Index */
+  .circlerec {
+    @apply h-[8rem] w-[8rem];
   }
 }
 /* nice color */
@@ -75,6 +80,19 @@
     #ffb2fa 100%
   );
 }
+.fc-daygrid-day-number {
+  font-size: 0.6rem;
+}
+.fc-daygrid-week-number {
+  font-size: 0.6rem;
+}
+.fc-col-header-cell {
+  font-size: 0.8rem;
+  background-color: #fef08a;
+}
+.fc-widget-header {
+}
+
 html {
   font-size: 16px;
   /* font-family: 'Ubuntu', sans-serif; */
