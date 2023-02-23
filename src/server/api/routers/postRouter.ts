@@ -23,10 +23,10 @@ const s3Param = (postId: string, i: number) => ({
   Key: `post-img/${postId}/${i}.png`,
 });
 
-async function checkIfUploaded(s3: S3Client, uploadUrls: string[]): bool {
+async function checkIfUploaded(s3: S3Client, uploadUrls: string[]) {
   // Get if files exists in all uploadUrls
   try {
-    const result = await Promise.all(
+    await Promise.all(
       uploadUrls.map((url) =>
         s3.send(
           new HeadObjectCommand({
@@ -131,11 +131,10 @@ export const postRouter = createTRPCRouter({
           postId: input.postId,
         },
       });
-      if (!post) return "Post id not found";
       return post;
     }),
 
-  getAllPostByUser: publicProcedure
+  getAllPostByUserId: publicProcedure
     .input(
       z.object({
         userId: z.string(),
