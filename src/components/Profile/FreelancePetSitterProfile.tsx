@@ -109,7 +109,9 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
   };
 
   //TODO: Remove
-  const posts = ["one", "two"];
+  const { data: posts, error: userError } = api.post.getAllPostByUser.useQuery({
+    userId: typeof props.user.userId === "string" ? props.user.userId : "",
+  });
 
   return (
     <div>
@@ -251,12 +253,18 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
       <div className="mx-3 mt-2">
         <div className="mx-auto max-w-lg md:w-2/3 md:max-w-2xl">
           <div className="w-full text-xl font-bold">Posts</div>
-          {props.editable && <UploadPost user={props.user} />}
-          <div className="mx-auto my-1 h-1 w-[80%] border-b-[3px] border-gray-400" />
+          {props.editable && (
+            <>
+              <UploadPost user={props.user} />
+              <div className="mx-auto my-1 h-1 w-[80%] border-b-[3px] border-gray-400" />
+            </>
+          )}
           {/* TODO: Posts display */}
-          {posts.map((post: any) => (
-            <Post num={post}></Post>
-          ))}
+          {posts ? (
+            posts.map((post: any) => <Post post={post}></Post>)
+          ) : (
+            <p>Loading</p>
+          )}
         </div>
       </div>
     </div>

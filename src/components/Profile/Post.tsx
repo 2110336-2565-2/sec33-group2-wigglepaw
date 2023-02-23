@@ -4,39 +4,29 @@ import { Gallery, Image as I2 } from "react-grid-gallery";
 import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
 import { addWidthHeightToImages } from "../../utils/image";
+import { Post } from "@prisma/client";
 
-export interface CustomImage extends I2 {
-  original: string;
-}
-
-const Post = (props: any) => {
+const Post = (props: { post: Post }) => {
   //TODO: Remove image example
-
-  const images1: CustomImage[] = [
+  const images1: I2[] = [
     {
       src: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
-      original:
-        "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
       width: 320,
       height: 174,
     },
     {
       src: "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg",
-      original:
-        "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg",
       width: 320,
       height: 212,
     },
     {
       src: "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg",
-      original:
-        "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg",
       width: 320,
       height: 212,
     },
   ];
 
-  const imageSrcs = [
+  const imageSrcsOld = [
     {
       src: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
       original:
@@ -103,14 +93,18 @@ const Post = (props: any) => {
     },
   ];
 
+  const imageSrcs = props.post.pictureUri.map((uri) => ({ src: uri }));
+
   // Hook to execute async function and return result
-  const { result: images } = useAsync<CustomImage[]>(
+  const { result: images } = useAsync<I2[]>(
     // Function returning a promise to execute,
     // calc and add width and height field to images
     () => addWidthHeightToImages(imageSrcs),
     // Run only once (this is similar to useEffect's)
     []
   );
+
+  console.log(images);
 
   //Image Light Box
   const [index, setIndex] = useState(-1);
@@ -121,7 +115,7 @@ const Post = (props: any) => {
       setimagesLeft(
         images.length -
           (document
-            .querySelector(`#${props.num}`)
+            .querySelector(`#${props.post.postId}`)
             ?.querySelectorAll(".ReactGridGallery_tile").length ?? 0)
       );
     }
@@ -135,7 +129,7 @@ const Post = (props: any) => {
   const nextImage = images[nextIndex] || currentImage;
   const prevIndex = (index + images.length - 1) % images.length;
   const prevImage = images[prevIndex] || currentImage;
-  const handleClickLB = (index: number, item: CustomImage) => setIndex(index);
+  const handleClickLB = (index: number, item: I2) => setIndex(index);
   const handleCloseLB = () => setIndex(-1);
   const handleMovePrev = () => setIndex(prevIndex);
   const handleMoveNext = () => setIndex(nextIndex);
@@ -155,7 +149,7 @@ const Post = (props: any) => {
       {images.length >= 1 && (
         <div className="mb-2">
           <Gallery
-            id={props.num}
+            id={props.post.postId}
             images={images}
             onClick={handleClickLB}
             enableImageSelection={false}
@@ -173,12 +167,12 @@ const Post = (props: any) => {
 
       {!!currentImage && (
         <Lightbox
-          mainSrc={currentImage?.original}
+          mainSrc={currentImage?.src}
           imageTitle={currentImage?.caption}
           mainSrcThumbnail={currentImage?.src}
-          nextSrc={nextImage?.original}
+          nextSrc={nextImage?.src}
           nextSrcThumbnail={nextImage?.src}
-          prevSrc={prevImage?.original}
+          prevSrc={prevImage?.src}
           prevSrcThumbnail={prevImage?.src}
           onCloseRequest={handleCloseLB}
           onMovePrevRequest={handleMovePrev}

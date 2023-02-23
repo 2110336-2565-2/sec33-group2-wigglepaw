@@ -1,4 +1,3 @@
-import { FreelancePetSitter, PetSitter, User } from "@prisma/client";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
