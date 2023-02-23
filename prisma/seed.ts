@@ -24,6 +24,7 @@ async function makeFree(
               address: address,
               phoneNumber: phone,
               imageUri: imageUri,
+              createdAt: new Date(),
             },
           },
           verifyStatus: true,
@@ -68,6 +69,7 @@ async function makeHotel(
               address: address,
               phoneNumber: phone,
               imageUri: imageUri,
+              createdAt: new Date(),
             },
           },
           verifyStatus: true,
@@ -108,6 +110,7 @@ async function makeOwner(
           address: address,
           phoneNumber: phone,
           imageUri: imageUri,
+          createdAt: new Date(),
         },
       },
 
@@ -188,8 +191,6 @@ export async function main() {
     const startPrice = getRandomIntFromInterval(100, 300);
     const endPrice = startPrice + getRandomIntFromInterval(100, 3000);
     const imageUri = "https://picsum.photos/200";
-
-    await new Promise((r) => setTimeout(r, 1000));
 
     switch (getRandomIntFromInterval(1, 3)) {
       case 1: {

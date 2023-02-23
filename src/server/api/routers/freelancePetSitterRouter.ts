@@ -10,6 +10,7 @@ import { createTRPCContext } from "../../../server/api/trpc";
 import { appRouter } from "../../../server/api/root";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+import { saltHashPassword } from "../../../pages/api/auth/[...nextauth]";
 
 export const freelancePetSitterRouter = createTRPCRouter({
   create: publicProcedure
@@ -21,12 +22,20 @@ export const freelancePetSitterRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      return await ctx.prisma.freelancePetSitter.create({
+      const user = input.user;
+      const saltHash = saltHashPassword(user.password);
+      const salt = saltHash.salt;
+      const hash = saltHash.hash;
+      user.password = hash;
+      await ctx.prisma.freelancePetSitter.create({
         data: {
           petSitter: {
             create: {
               user: {
-                create: input.user,
+                create: {
+                  ...input.user,
+                  salt: salt,
+                },
               },
               ...input.petSitter,
             },
@@ -41,6 +50,7 @@ export const freelancePetSitterRouter = createTRPCRouter({
           },
         },
       });
+      return;
     }),
 
   createDummy: publicProcedure
@@ -51,6 +61,9 @@ export const freelancePetSitterRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const code = input.code;
+      const saltHash = saltHashPassword("password");
+      const salt = saltHash.salt;
+      const hash = saltHash.hash;
       return await ctx.prisma.freelancePetSitter.create({
         data: {
           petSitter: {
@@ -59,7 +72,8 @@ export const freelancePetSitterRouter = createTRPCRouter({
                 create: {
                   username: "username" + code,
                   email: "email" + code + "@gmail.com",
-                  password: "password" + code,
+                  password: hash,
+                  salt: salt,
                 },
               },
               verifyStatus: true,
