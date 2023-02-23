@@ -5,6 +5,11 @@ import { z } from "zod";
 import { Gallery, Image } from "react-grid-gallery";
 import { addWidthHeightToImages } from "../../utils/image";
 import { useAsync } from "react-async-hook";
+import Image from "next/image";
+import { api } from "../../utils/api";
+import { useSession } from "next-auth/react";
+import axios from "axios";
+import { useAddNewPost } from "../../utils/upload";
 
 const formDataSchema = z.object({
   title: z.string().min(1, { message: "Required" }),
@@ -18,6 +23,8 @@ const UploadPost = (props: any) => {
   const [isPosting, setIsPosting] = useState(false);
 
   const images: Image[] = [];
+  const { data: session, status } = useSession();
+  const addNewPost = useAddNewPost();
 
   // Form ==================================================
   const {
@@ -35,7 +42,28 @@ const UploadPost = (props: any) => {
       return;
     }
 
-    //TODO: Upload Images
+    console.log(data);
+
+    const user = session?.user;
+    if (!user) {
+      alert("No user found");
+      return;
+    }
+
+    // TODO: Remove this mock subsitution once form is ready
+    data.title = data.title ?? "Mock title";
+    data.content = data.content ?? "Mock content";
+
+    await addNewPost.mutateAsync(
+      user.id,
+      {
+        title: data.title,
+        text: data.content,
+        // TODO: Add videoUri?
+        videoUri: null,
+      },
+      image
+    );
   };
 
   const selectingImgs = watch("image");
