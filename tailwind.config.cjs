@@ -14,6 +14,8 @@ module.exports = {
       colors: {
         "bg-box-main": "#CCB0A4",
         "bg-main": "#E5D4C4",
+        "wp-blue": "#213951",
+        "wp-light-blue": "#3b6691",
       },
       fontFamily: {
         sans: ["Ubuntu", "sans-serif"],
@@ -22,5 +24,4 @@ module.exports = {
     },
   },
   plugins: [],
-
 };
