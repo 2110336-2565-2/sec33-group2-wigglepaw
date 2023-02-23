@@ -65,6 +65,10 @@ export const searchField = z.object({
   searhcIncludePetHotel: z.boolean().default(true),
   searhcIncludeFreelancePetSitter: z.boolean().default(true),
   searchSortBy: z.string().default(""),
+  limit: z.number(),
+  cursor: z.string().nullish(),
+  skip: z.number().optional(),
+  userId: z.string().optional(),
 });
 
 export const reviewFields = z.object({

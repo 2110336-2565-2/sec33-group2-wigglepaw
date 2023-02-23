@@ -106,7 +106,10 @@ export const petSitterRouter = createTRPCRouter({
   searchPetSitter: publicProcedure
     .input(searchField)
     .query(async ({ ctx, input }) => {
-      return await ctx.prisma.petSitter.findMany({
+      const items = await ctx.prisma.petSitter.findMany({
+        take: input.limit + 1,
+        skip: input.skip,
+        cursor: input.cursor ? { userId: input.cursor } : undefined,
         where: {
           AND: [
             input.searchName ? searchLogic.searchByName(input.searchName) : {},
@@ -137,5 +140,16 @@ export const petSitterRouter = createTRPCRouter({
           freelancePetSitter: true,
         },
       });
+
+      let nextCursor: typeof input.cursor | undefined = undefined;
+      if (items.length > input.limit) {
+        const nextItem = items.pop();
+        nextCursor = nextItem?.userId;
+      }
+
+      return {
+        items,
+        nextCursor,
+      };
     }),
 });

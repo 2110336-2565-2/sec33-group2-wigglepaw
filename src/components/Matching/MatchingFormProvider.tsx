@@ -1,15 +1,17 @@
-import { createContext, useEffect } from "react";
+import { createContext, useEffect, useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { searchField } from "../../schema/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { api } from "../../utils/api";
+import { z } from "zod";
 import type {
   FreelancePetSitter,
   PetHotel,
   PetSitter,
   User,
 } from "@prisma/client";
+import { match } from "assert";
 
 // TODO: heavily document this code
 
@@ -36,20 +38,41 @@ const MatchingFormProvider: React.FunctionComponent<{
   setMatchedPetSitters: React.Dispatch<SearchPetSittersUseQueryReturnElement[]>;
 }> = ({ children, setMatchedPetSitters }) => {
   const useFormReturn = useForm({
-    resolver: zodResolver(searchField),
+    resolver: zodResolver(
+      z.object({
+        searchName: z.string().optional(),
+        searchRating: z.number().optional(),
+        searchPriceMin: z.number().optional(),
+        searchPriceMax: z.number().optional(),
+        searchLocation: z.string().optional(),
+        searchPetTypes: z.array(z.string()).optional(),
+        searchStartSchedule: z.string().optional(),
+        searchEndSchedule: z.string().optional(),
+        searchIncludePetSitterType: z.string().optional(),
+        searhcIncludePetHotel: z.boolean().default(true),
+        searhcIncludeFreelancePetSitter: z.boolean().default(true),
+        searchSortBy: z.string().default(""),
+      })
+    ),
   });
 
-  const query = api.petSitter.searchPetSitter.useQuery(
-    useFormReturn.watch(), // getValues doesn't work because it subscribe to the latest input changes
+  const [page, setPage] = useState(0);
+
+  const query = api.petSitter.searchPetSitter.useInfiniteQuery(
+    { ...useFormReturn.watch(), limit: 5, userId: "" }, // getValues doesn't work because it subscribe to the latest input changes
+
     {
+      getNextPageParam: (lastpage) => lastpage.nextCursor,
       enabled: false,
       onSuccess: (data) => {
-        setMatchedPetSitters(data);
+        console.log("hihihhih...", data?.pages[page]?.items);
+        setMatchedPetSitters(data?.pages[page]?.items);
       },
     }
   );
 
   const onSubmit = async () => {
+    console.log();
     await query.refetch();
   };
 

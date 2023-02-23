@@ -24,7 +24,13 @@ const Matching: NextPage = () => {
         <MatchingFormProvider setMatchedPetSitters={setMatchedPetSitters}>
           <MatchingPanel />
         </MatchingFormProvider>
-        <div id="main-wrapper" className="pt-8">
+        <div
+          id="main-wrapper"
+          onClick={() => {
+            console.log(matchedPetSitters);
+          }}
+          className="pt-8"
+        >
           <p className="mb-5 text-[16px] text-[#485B6F]">
             📍Explore our list of experienced sitters & hotels for your beloved
             pets.{" "}
