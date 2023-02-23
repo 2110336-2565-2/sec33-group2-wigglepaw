@@ -14,10 +14,21 @@ const Post = (props: { post: Post }) => {
   const imageSrcs = props.post.pictureUri.map((uri) => ({ src: uri }));
 
   // Hook to execute async function and return result
-  const { result: images } = useAsync<I2[]>(
+  const { result: images } = useAsync(
     // Function returning a promise to execute,
     // calc and add width and height field to images
-    () => addWidthHeightToImages(imageSrcs),
+    () =>
+      addWidthHeightToImages(imageSrcs, ({ src }) => {
+        // Replacement callback, called if image fails to load
+        console.error(`Failed to load image: ${src}`);
+
+        return {
+          // TODO: Use actual replacement image (not profile dummy)
+          src: "/profiledummy.png",
+          width: 225,
+          height: 225,
+        };
+      }),
     // Run only once (this is similar to useEffect's)
     props.post.pictureUri
   );
