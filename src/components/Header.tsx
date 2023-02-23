@@ -28,7 +28,7 @@ const Header = () => {
     : "/profiledummy.png";
 
   return (
-    <span className="mb-4 flex h-fit w-screen bg-sky-900 md:pr-2">
+    <span className="mb-4 flex h-fit w-screen bg-wp-blue md:pr-2">
       <nav className="flex w-full">
         <Link href={"/"} className="flex shrink-0">
           <div className="relative m-2 flex h-[4rem] w-[5rem]">
