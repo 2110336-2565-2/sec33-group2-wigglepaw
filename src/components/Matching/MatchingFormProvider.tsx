@@ -5,6 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { api } from "../../utils/api";
 import { z } from "zod";
+import { useRef } from "react";
+
+import { useInView } from "react-intersection-observer";
 import type {
   FreelancePetSitter,
   PetHotel,
@@ -36,7 +39,8 @@ export const MatchingFormContext = createContext<MatchingFormContextT>(
 const MatchingFormProvider: React.FunctionComponent<{
   children: React.ReactNode;
   setMatchedPetSitters: React.Dispatch<SearchPetSittersUseQueryReturnElement[]>;
-}> = ({ children, setMatchedPetSitters }) => {
+  num: number;
+}> = ({ children, setMatchedPetSitters, num }) => {
   const useFormReturn = useForm({
     resolver: zodResolver(
       z.object({
@@ -56,7 +60,12 @@ const MatchingFormProvider: React.FunctionComponent<{
     ),
   });
 
+  // Set the reference to the child component
+  useEffect(() => {
+    void handleFetchNextPage();
+  }, [num]);
   const [page, setPage] = useState(0);
+
   //Don't use page as a current page, page is previous stage of current page :()
 
   const { data, fetchNextPage } =
@@ -69,11 +78,21 @@ const MatchingFormProvider: React.FunctionComponent<{
         onSuccess: (data) => {
           console.log("hihihhih...", data?.pages[page + 1]?.items);
           if (data?.pages[page + 1]?.items == undefined) {
-            setMatchedPetSitters(data?.pages[page]?.items);
+            let allPages = [];
+            for (let i = 0; i <= page; i++) {
+              allPages = [...allPages, ...data?.pages[i]?.items];
+            }
+            setMatchedPetSitters(allPages);
+            console.log("sasaa", allPages.length);
           } else {
             setPage(page + 1);
 
-            setMatchedPetSitters(data?.pages[page + 1]?.items);
+            let allPages = [];
+            for (let i = 0; i <= page + 1; i++) {
+              allPages = [...allPages, ...data?.pages[i]?.items];
+            }
+            setMatchedPetSitters(allPages);
+            console.log("sasaa", allPages.length);
           }
         },
       }
@@ -106,30 +125,6 @@ const MatchingFormProvider: React.FunctionComponent<{
       <MatchingFormContext.Provider value={contextValue}>
         {children}
       </MatchingFormContext.Provider>
-      <div className="testt relative left-[25%] flex h-1/2 w-1/2 justify-center">
-        <button
-          className="mr-5 h-10 w-10 rounded-full border-2 border-white text-white"
-          type="button"
-          onClick={async () => {
-            await handleFetchNextPage();
-          }}
-        >
-          Next
-        </button>
-        <button
-          className={
-            page <= 0
-              ? "hidden h-10 w-10 rounded-full border-2 border-white text-white "
-              : "visible h-10 w-10 rounded-full border-2 border-white text-white"
-          }
-          type="button"
-          onClick={() => {
-            handleFetchPreviousPage();
-          }}
-        >
-          Previous
-        </button>
-      </div>
     </form>
   );
 };
