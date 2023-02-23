@@ -110,10 +110,9 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
   };
 
   //TODO: Remove
-  const { data: posts, error: userError } =
-    api.post.getAllPostByUserId.useQuery({
-      userId: typeof props.user.userId === "string" ? props.user.userId : "",
-    });
+  const { data: posts, error: userError } = api.post.getPostsByUserId.useQuery({
+    userId: typeof props.user.userId === "string" ? props.user.userId : "",
+  });
 
   return (
     <div>
