@@ -57,23 +57,31 @@ const MatchingFormProvider: React.FunctionComponent<{
   });
 
   const [page, setPage] = useState(0);
+  //Don't use page as a current page, page is previous stage of current page :()
 
-  const query = api.petSitter.searchPetSitter.useInfiniteQuery(
-    { ...useFormReturn.watch(), limit: 5, userId: "" }, // getValues doesn't work because it subscribe to the latest input changes
+  const { data, fetchNextPage } =
+    api.petSitter.searchPetSitter.useInfiniteQuery(
+      { ...useFormReturn.watch(), limit: 5, userId: "" }, // getValues doesn't work because it subscribe to the latest input changes
 
-    {
-      getNextPageParam: (lastpage) => lastpage.nextCursor,
-      enabled: false,
-      onSuccess: (data) => {
-        console.log("hihihhih...", data?.pages[page]?.items);
-        setMatchedPetSitters(data?.pages[page]?.items);
-      },
-    }
-  );
+      {
+        getNextPageParam: (lastpage) => lastpage.nextCursor,
+        enabled: false,
+        onSuccess: (data) => {
+          console.log("hihihhih...", data?.pages[page + 1]?.items);
+          if (data?.pages[page + 1]?.items == undefined) {
+            setMatchedPetSitters(data?.pages[page]?.items);
+          } else {
+            setPage(page + 1);
+
+            setMatchedPetSitters(data?.pages[page + 1]?.items);
+          }
+        },
+      }
+    );
 
   const onSubmit = async () => {
-    console.log();
-    await query.refetch();
+    setPage(-1);
+    await fetchNextPage();
   };
 
   const contextValue = {
@@ -81,11 +89,47 @@ const MatchingFormProvider: React.FunctionComponent<{
     setMatchedPetSitters,
   };
 
+  const handleFetchNextPage = async () => {
+    await fetchNextPage();
+
+    console.log(page + 1);
+  };
+
+  const handleFetchPreviousPage = () => {
+    console.log("zzz", page - 1);
+    setMatchedPetSitters(data?.pages[page - 1]?.items);
+    setPage(page - 1);
+  };
+
   return (
     <form onSubmit={useFormReturn.handleSubmit(onSubmit)}>
       <MatchingFormContext.Provider value={contextValue}>
         {children}
       </MatchingFormContext.Provider>
+      <div className="testt relative left-[25%] flex h-1/2 w-1/2 justify-center">
+        <button
+          className="mr-5 h-10 w-10 rounded-full border-2 border-white text-white"
+          type="button"
+          onClick={async () => {
+            await handleFetchNextPage();
+          }}
+        >
+          Next
+        </button>
+        <button
+          className={
+            page <= 0
+              ? "hidden h-10 w-10 rounded-full border-2 border-white text-white "
+              : "visible h-10 w-10 rounded-full border-2 border-white text-white"
+          }
+          type="button"
+          onClick={() => {
+            handleFetchPreviousPage();
+          }}
+        >
+          Previous
+        </button>
+      </div>
     </form>
   );
 };

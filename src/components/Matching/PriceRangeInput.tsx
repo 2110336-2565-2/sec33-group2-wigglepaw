@@ -6,8 +6,8 @@ import { MatchingFormContext } from "./MatchingFormProvider";
 const STEP = 100;
 const MIN = 0;
 const MAX = 10000;
-const BEGIN_MIN = 1000;
-const BEGIN_MAX = 4000;
+const BEGIN_MIN = 0;
+const BEGIN_MAX = 10000;
 
 const PriceRangeInput = () => {
   const [values, setValues] = useState([BEGIN_MIN, BEGIN_MAX]);
