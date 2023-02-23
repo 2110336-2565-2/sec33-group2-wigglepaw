@@ -242,7 +242,7 @@ const RegisterPage: NextPage = () => {
               <Button>Back</Button>
               <button
                 className="border-2 p-2"
-                onClick={() => setDialogType("confirm")}
+                onClick={() => setDialogType("success")}
               >
                 Test dialog
               </button>
