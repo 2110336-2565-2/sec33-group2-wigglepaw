@@ -101,7 +101,7 @@ const Post = (props: { post: Post }) => {
     // calc and add width and height field to images
     () => addWidthHeightToImages(imageSrcs),
     // Run only once (this is similar to useEffect's)
-    []
+    props.post.pictureUri
   );
 
   console.log(images);
