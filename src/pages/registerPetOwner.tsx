@@ -12,6 +12,7 @@ import Header from "../components/Header";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
+import RegisterDialog from "../components/RegisterDialog";
 
 // Schema for first page of form
 const formDataSchema1 = z.object({
@@ -95,9 +96,13 @@ const RegisterPage: NextPage = () => {
     }
   };
   const [page, setPage] = useState(0);
+  const [dialogType, setDialogType] = useState<
+    "terms" | "confirm" | "success" | null
+  >(null);
   if (page === 0)
     return (
       <div className="flex h-screen flex-col">
+        <RegisterDialog dialogType={dialogType} setDialogType={setDialogType} />
         <div className="absolute top-[-4rem] -z-10 ">
           <img src="/Ipage1-1.png" width={468} height={315} alt="cat" />
         </div>
@@ -235,6 +240,12 @@ const RegisterPage: NextPage = () => {
             </div>
             <div className="my-5 flex w-full justify-evenly">
               <Button>Back</Button>
+              <button
+                className="border-2 p-2"
+                onClick={() => setDialogType("confirm")}
+              >
+                Test dialog
+              </button>
               <Button
                 type="button"
                 onClick={async () => {
