@@ -16,3 +16,13 @@ export function getRandomIntFromInterval(min: number, max: number) {
   // min and max included
   return Math.floor(rand.next() * (max - min + 1) + min);
 }
+
+export function getRandomDatetime() {
+  const dayToMs = 1000 * 60 * 60 * 24;
+  const monthToMs = 30 * dayToMs;
+  const start = new Date();
+  const end = new Date(start.getTime() + 6 * monthToMs);
+  return new Date(
+    start.getTime() + rand.next() * (end.getTime() - start.getTime())
+  );
+}

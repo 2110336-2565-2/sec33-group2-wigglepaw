@@ -1,5 +1,6 @@
 import { saltHashPassword } from "../pages/api/auth/[...nextauth]";
 import { prisma } from "../server/db";
+import { getRandomDatetime } from "./util";
 
 export async function updateAvgRating(petSitterId: string) {
   const petSitter = await prisma.petSitter.findFirst({
@@ -182,6 +183,7 @@ export async function makeReview(
       petOwnerId: petOwnerId,
       rating: rating,
       text: text,
+      createdAt: getRandomDatetime(),
     },
   });
 
@@ -204,6 +206,7 @@ export async function makePost(
       text: text,
       pictureUri: pictureUri,
       videoUri: videoUri,
+      createdAt: getRandomDatetime(),
     },
   });
   return createPost;
