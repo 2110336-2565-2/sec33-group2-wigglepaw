@@ -11,7 +11,8 @@ import { signIn, useSession } from "next-auth/react";
 import Router, { useRouter } from "next/router";
 import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
-import { Rating } from "react-simple-star-rating";
+import { Rating, RatingView } from "react-simple-star-rating";
+import { Box } from "@mui/material";
 const reviewPage: NextPage = () => {
   const {
     register,
@@ -45,8 +46,29 @@ const reviewPage: NextPage = () => {
       <Header />
       <div className="mt-4 flex h-full flex-col items-center text-xl">
         <h1>Reviews</h1>
-        <h2>Average rating : {avgrate}</h2>
-        <button onClick={openModal}>Write Review</button>
+        <h2>Average rating : {rating}</h2>
+        <Box
+          component="span"
+          sx={{
+            backgroundColor: "primary.main",
+            color: "white",
+            height: "200px",
+            width: "200px",
+            padding: "16px",
+          }}
+        >
+          <button onClick={openModal}>Write Review</button>
+          <Rating
+            initialValue={rating}
+            SVGclassName="inline-block"
+            size={30}
+            readonly
+          ></Rating>
+          <h1 className="text-base">
+            I think this pet sitter is good she is friendly and cost is cheap
+          </h1>
+        </Box>
+
         <h2>Review from other users</h2>
       </div>
       <Transition appear show={isOpen} as={Fragment}>
@@ -89,11 +111,9 @@ const reviewPage: NextPage = () => {
                         onClick={handleRating}
                         className="inline"
                         SVGclassName="inline-block"
+                        initialValue={rating}
                       />
                       <br />
-
-                      {rating}
-                      <button onClick={handleReset}>reset</button>
                       <h1>Enter your review</h1>
                       <input id="review" type="text"></input>
                       <br />

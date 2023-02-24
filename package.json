@@ -22,12 +22,15 @@
     ]
   },
   "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
     "@formkit/auto-animate": "1.0.0-beta.6",
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
     "@fortawesome/free-solid-svg-icons": "^6.3.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@headlessui/react": "^1.7.10",
     "@hookform/resolvers": "^2.9.10",
+    "@mui/material": "^5.11.10",
     "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "^4.8.0",
     "@tanstack/react-query": "^4.20.0",
