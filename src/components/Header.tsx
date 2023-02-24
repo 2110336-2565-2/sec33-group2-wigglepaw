@@ -186,7 +186,7 @@ const Header = () => {
                 src={profileImageUri}
                 alt={"Icon"}
                 fill
-                className="rounded-xl"
+                className="rounded-full object-cover"
               ></Image>
             </button>
             <div

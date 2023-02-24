@@ -40,7 +40,9 @@ specifiers:
   prisma: ^4.8.0
   rand-seed: ^1.0.2
   react: 18.2.0
+  react-async-hook: ^4.0.0
   react-dom: 18.2.0
+  react-grid-gallery: ^1.0.0
   react-hook-form: ^7.42.1
   react-icons: ^4.7.1
   react-image-size: ^2.0.0
@@ -51,6 +53,7 @@ specifiers:
   trpc-playground: ^1.0.4
   tsx: ^3.12.3
   typescript: ^4.9.4
+  yet-another-react-lightbox: ^2.4.3
   zod: ^3.20.2
 
 dependencies:
@@ -78,7 +81,9 @@ dependencies:
   password-salt-and-hash: 1.0.5
   rand-seed: 1.0.2
   react: 18.2.0
+  react-async-hook: 4.0.0_react@18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-grid-gallery: 1.0.0_react@18.2.0
   react-hook-form: 7.42.1_react@18.2.0
   react-icons: 4.7.1_react@18.2.0
   react-image-size: 2.0.0_biqbaboplfbrettd7655fr4n2y
@@ -86,6 +91,7 @@ dependencies:
   superjson: 1.9.1
   trpc-panel: 1.2.8_v7aw5md42ua3rf277jyeogdfny
   trpc-playground: 1.0.4_ymtwjvvropq7rodqtiehjavki4
+  yet-another-react-lightbox: 2.4.3_biqbaboplfbrettd7655fr4n2y
   zod: 3.20.2
 
 devDependencies:
@@ -4500,6 +4506,15 @@ packages:
     resolution: {integrity: sha512-Nu4jxelXx2hKyZJQvkRcUyc1n1ZDQk/VUYmY3hxYfXYGrMfCFqsJ9O6r5jtpt8KjqbllCB8qnIB86Oqy4s5gdw==}
     dev: false
 
+  /react-async-hook/4.0.0_react@18.2.0:
+    resolution: {integrity: sha512-97lgjFkOcHCTYSrsKBpsXg3iVWM0LnzedB749iP76sb3/8Ouu4nHIkCLEOrQWHVYqrYxjF05NN6GHoXWFkB3Kw==}
+    engines: {node: '>=8', npm: '>=5'}
+    peerDependencies:
+      react: '>=16.8'
+    dependencies:
+      react: 18.2.0
+    dev: false
+
   /react-dom/18.2.0_react@18.2.0:
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
     peerDependencies:
@@ -4508,6 +4523,14 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
+
+  /react-grid-gallery/1.0.0_react@18.2.0:
+    resolution: {integrity: sha512-S1gr6WXBlPFVrE0x2BHuu7jhyaB61mabcMQyx+8KCgAyKzGza0WF67AfAnS9Q00aurFEq4IP8eqb2Bk5F4RAmQ==}
+    peerDependencies:
+      react: '>=16.14.0'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-hook-form/7.42.1_react@18.2.0:
@@ -5328,6 +5351,17 @@ packages:
     resolution: {integrity: sha512-e0WHiYql7+9wr4cWMx3TVQrNwejKaEe7/rHNmQmqRjazfOP5W8PB6Jpebb5o6fIapbz9o9+2ipcaTM2ZwDI6lw==}
     engines: {node: '>= 14'}
     dev: true
+
+  /yet-another-react-lightbox/2.4.3_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-w7/jnplKot17dkHSUI8VpgNxWfWqEueiut4hVGvy4fs0e+2ubh9JBdgU+JEpEtxj6tbKIaljGXZoZJGqt7ijpg==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
 
   /yocto-queue/0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}

@@ -9,19 +9,24 @@ import {
   HiX,
 } from "react-icons/hi";
 import { IoPaw } from "react-icons/io5";
+import { GiTumbleweed } from "react-icons/gi";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../utils/api";
-import { Popover } from "@headlessui/react";
+import { Dialog, Popover, Transition } from "@headlessui/react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import {
   FreelancePetSitterProfileType,
   PetSitterProfileType,
   UserProfile,
 } from "../../types/user";
+
+import Post from "./Post";
+import UploadProfilePicture from "./UploadProfilePicture";
+import UploadPost from "./UploadPost";
 
 type FreelancePetSitterProfileProps = {
   editable: boolean;
@@ -38,7 +43,7 @@ const formDataSchema = z.object({
   petTypes: z.string().array(),
 });
 
-type FormData = z.infer<typeof formDataSchema>;
+type FormDataInfomation = z.infer<typeof formDataSchema>;
 
 // A list of pet types
 // TODO: Get this from somewhere else, instead of hardcoding here.
@@ -61,29 +66,25 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
   const updateUser = api.user.update.useMutation();
   const [editing, setEditing] = useState(false);
 
-  const profileImageUri = props.user
-    ? props.user.imageUri
-      ? props.user.imageUri
-      : "/profiledummy.png"
-    : "/profiledummy.png";
-
   const {
     register,
     handleSubmit,
     watch,
     setValue,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<FormDataInfomation>({
     resolver: zodResolver(formDataSchema),
     mode: "onSubmit",
   });
-  const onSubmit = async (data: FormData) => {
-    const [firstName, lastName] = data.firstNameLastName.split(" ");
+
+  const onSubmit = async (data: FormDataInfomation) => {
+    const [firstName, lastName] = data.firstNameLastName.trim().split(" ");
     const petTypesArray: string[] = data.petTypes;
     await updateFreelancePetSitter.mutateAsync({
       userId: props.user.userId,
       data: { firstName: firstName, lastName: lastName },
     });
+
     await updatePetSitter.mutateAsync({
       userId: props.user.userId,
       data: {
@@ -99,6 +100,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
         address: data.address,
       },
     });
+
     // Refetch user data
     // console.log("Invalidating cache");
     await utils.user.getByUsername.invalidate({
@@ -108,18 +110,24 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
     setEditing(false);
   };
 
+  //TODO: Remove
+  const { data: posts, error: userError } = api.post.getAllPostByUser.useQuery({
+    userId: typeof props.user.userId === "string" ? props.user.userId : "",
+  });
+
   return (
     <div>
       <Header></Header>
-      <div className="mx-3 flex flex-wrap">
-        <div className="my-auto flex w-screen flex-col md:mx-4 md:w-1/5 md:min-w-min ">
+      <div className="mx-3 flex flex-wrap justify-center">
+        <div className="my-auto flex w-screen flex-col md:m-4 md:w-1/5 md:min-w-min">
           <div className="relative mx-auto flex h-[6rem] w-[6rem]">
             <Image
-              src={profileImageUri}
+              src={props.user.imageUri ?? "/profile_icon.png"}
               alt={"Icon"}
               fill
-              className="rounded-xl"
-            ></Image>
+              className="rounded-full object-cover"
+            />
+            {props.editable && <UploadProfilePicture user={props.user} />}
           </div>
           <h1 className="mx-auto my-1 text-center text-2xl font-semibold">
             {props.user.username}
@@ -225,14 +233,6 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
                   defaultValue={props.user.petTypes}
                   onChange={(val) => setValue("petTypes", val)}
                 />
-                {/* <input
-                  defaultValue={`${
-                    props.user.petTypes ? props.user.petTypes : ""
-                  }`}
-                  placeholder="Seprate with ,"
-                  className="profile-input"
-                  {...register("petTypes")}
-                /> */}
               </p>
 
               <div className="mt-3 flex">
@@ -252,12 +252,28 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
           </div>
         )}
       </div>
-      <div className="mx-3 mt-2 flex max-w-md justify-center sm:w-1/2">
-        <h1 className="text-xl font-bold">Posts</h1>
-        {/* TODO: Posts display */}
-        {/* {users.map((user: any) => (
-          <PetSitterCard pet_sitter={user}></PetSitterCard>
-        ))} */}
+      <div className="mx-3 mt-2">
+        <div className="mx-auto max-w-lg md:w-2/3 md:max-w-2xl">
+          <div className="w-full text-xl font-bold">Posts</div>
+          {props.editable && (
+            <>
+              <UploadPost user={props.user} />
+              <div className="mx-auto my-1 h-1 w-[80%] border-b-[3px] border-gray-400" />
+            </>
+          )}
+          {/* TODO: Posts display */}
+          {posts ? (
+            posts.length >= 1 ? (
+              posts.map((post: any) => <Post post={post}></Post>)
+            ) : (
+              <div className="w-full text-center font-medium">
+                Currently No Post <GiTumbleweed className="inline" />
+              </div>
+            )
+          ) : (
+            <div>Loading...</div>
+          )}
+        </div>
       </div>
     </div>
   );
