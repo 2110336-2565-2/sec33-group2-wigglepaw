@@ -1,47 +1,10 @@
-import { PetSitter } from "@prisma/client";
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-import {
-  userFields,
-  petOwnerFields,
-  petFields,
-  postFields,
-} from "../../../schema/schema";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import {
-  HeadObjectCommand,
-  PutObjectCommand,
-  S3Client,
-} from "@aws-sdk/client-s3";
-
-/**
- * Make S3 parameter pointing to picture of post, to be used in S3 commands.
- */
-const s3Param = (postId: string, i: number) => ({
-  Bucket: process.env.S3_BUCKET,
-  Key: `post-img/${postId}/${i}.png`,
-});
-
-async function checkIfUploaded(s3: S3Client, uploadUrls: string[]): bool {
-  // Get if files exists in all uploadUrls
-  try {
-    const result = await Promise.all(
-      uploadUrls.map((url) =>
-        s3.send(
-          new HeadObjectCommand({
-            Bucket: process.env.S3_BUCKET,
-            Key: url,
-          })
-        )
-      )
-    );
-
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
+import { createTRPCRouter, publicProcedure } from "../trpc";
+import { postFields } from "../../../schema/schema";
+import { TRPCError } from "@trpc/server";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import postPic from "../logic/s3Op/postPic";
 
 export const postRouter = createTRPCRouter({
   create: publicProcedure
@@ -65,39 +28,30 @@ export const postRouter = createTRPCRouter({
       // Create presigned URL for uploading pictures
       // Generate name of image files
       const postId = createPost.postId;
-      const imageKeys = Array.from(
-        { length: input.pictureCount },
-        (_, i) => s3Param(postId, i).Key
-      );
       // Generate presigned URL for uploading images
-      const uploadUrls = await Promise.all(
-        imageKeys.map((key) =>
-          getSignedUrl(
-            ctx.s3,
-            new PutObjectCommand({
-              Bucket: process.env.S3_BUCKET,
-              Key: key,
-              ContentType: "image/png",
-            }),
-            { expiresIn: 60 * 5 }
-          )
-        )
+      // one for each image, with name 0.png, 1.png, 2.png, ...
+      const imageIdx = Array.from({ length: input.pictureCount }, (_, i) => i);
+      const uploadUrls: string[] = await Promise.all(
+        imageIdx.map((i) => postPic.signedUploadUrl(ctx.s3, postId, i))
       );
-
       // Add picture uri to post, in order to completing it.
+      const pictureUri = imageIdx.map((i) => postPic.publicUrl(postId, i));
       await ctx.prisma.post.update({
         where: {
           postId,
         },
         data: {
-          pictureUri: imageKeys.map(
-            (key) => `${process.env.S3_PUBLIC_URL!}/${key}`
-          ),
+          pictureUri,
         },
       });
 
-      async function run() {
-        if (!(await checkIfUploaded(ctx.s3, imageKeys))) {
+      // Check in 5 minutes (expiresIn) if the frontend has uploaded the to uploadUrls.
+      const uploadCheckTask = async () => {
+        const allUploaded = await Promise.all(
+          imageIdx.map((i) => postPic.checkUploaded(ctx.s3, postId, i))
+        );
+
+        if (!allUploaded) {
           console.error(`Not uploaded, deleteing post ${postId}`);
           // If not uploaded, delete post
           await ctx.prisma.post.delete({
@@ -106,11 +60,9 @@ export const postRouter = createTRPCRouter({
             },
           });
         }
-      }
-
-      // Check in 5 minutes (expiresIn) if the frontend has uploaded the to uploadUrls.
+      };
       setTimeout(() => {
-        run().then().catch(console.error);
+        uploadCheckTask().then().catch(console.error);
       }, 5 * 60 * 1000);
 
       return {
@@ -131,11 +83,10 @@ export const postRouter = createTRPCRouter({
           postId: input.postId,
         },
       });
-      if (!post) return "Post id not found";
       return post;
     }),
 
-  getAllPostByUser: publicProcedure
+  getPostsByUserId: publicProcedure
     .input(
       z.object({
         userId: z.string(),
@@ -157,18 +108,26 @@ export const postRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const post = await ctx.prisma.post.findFirst({
-        where: {
-          postId: input.postId,
-        },
-      });
-      if (!post) return "Post id not found";
-      const del = await ctx.prisma.post.delete({
-        where: {
-          postId: input.postId,
-        },
-      });
-      return del;
+      try {
+        await postPic.deleteOfPost(ctx.s3, input.postId);
+        const post = await ctx.prisma.post.delete({
+          where: {
+            postId: input.postId,
+          },
+        });
+        return post;
+      } catch (err) {
+        if (
+          err instanceof PrismaClientKnownRequestError &&
+          err.code === "P2025"
+        ) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: `Post not found`,
+            cause: err,
+          });
+        }
+      }
     }),
 
   update: publicProcedure
