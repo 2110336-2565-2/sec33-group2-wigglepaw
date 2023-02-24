@@ -23,14 +23,14 @@ export async function addWidthHeightToImages<T extends { src: string }, O>(
         dim = await getImageSize(image.src, {
           timeout: 1000,
         });
-        console.log(JSON.stringify(dim) + " " + image.src);
+        //console.log(JSON.stringify(dim) + " " + image.src);
       } catch (error) {
         // If there is an error, return the replacement image
         return replacementFn(image);
       }
 
-      console.log(image.src);
-      console.log(dim);
+      // console.log(image.src);
+      // console.log(dim);
 
       // Add width and height to image
       const newImage = {

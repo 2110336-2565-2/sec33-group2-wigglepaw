@@ -76,8 +76,9 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
     resolver: zodResolver(formDataSchema),
     mode: "onSubmit",
   });
+
   const onSubmit = async (data: FormDataInfomation) => {
-    const [firstName, lastName] = data.firstNameLastName.split(" ");
+    const [firstName, lastName] = data.firstNameLastName.trim().split(" ");
     const petTypesArray: string[] = data.petTypes;
     await updateFreelancePetSitter.mutateAsync({
       userId: props.user.userId,

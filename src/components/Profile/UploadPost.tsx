@@ -1,5 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState, useMemo } from "react";
+import { Fragment, useState, useMemo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Gallery, Image } from "react-grid-gallery";
@@ -20,6 +20,7 @@ type FormData = z.infer<typeof formDataSchema>;
 
 const UploadPost = (props: any) => {
   const [isPosting, setIsPosting] = useState(false);
+  const [isUploadSuccess, setIsUploadSuccess] = useState(false);
 
   const images: Image[] = [];
   const { data: session, status } = useSession();
@@ -41,17 +42,11 @@ const UploadPost = (props: any) => {
       return;
     }
 
-    console.log(data);
-
     const user = session?.user;
     if (!user) {
       alert("No user found");
       return;
     }
-
-    // TODO: Remove this mock subsitution once form is ready
-    data.title = data.title ?? "Mock title";
-    data.content = data.content ?? "Mock content";
 
     await addNewPost.mutateAsync(
       user.id,
@@ -63,14 +58,20 @@ const UploadPost = (props: any) => {
       },
       image
     );
+    setIsPosting(false);
+    reset();
+    setIsUploadSuccess(true);
+    setTimeout(function () {
+      setIsUploadSuccess(false);
+    }, 2000);
   };
 
+  //Images
   const selectingImgs = watch("image");
   const imagesURLs = useMemo(() => {
     if (!selectingImgs || selectingImgs.length === 0) {
       return null;
     }
-    console.log(selectingImgs);
 
     let imageURLs: string[] = [];
 
@@ -79,7 +80,6 @@ const UploadPost = (props: any) => {
         const img_url = URL.createObjectURL(img);
         imageURLs.push(img_url);
       }
-      console.log(images);
     }
     return imageURLs;
   }, [selectingImgs]);
@@ -130,9 +130,15 @@ const UploadPost = (props: any) => {
                     onSubmit={handleSubmit(onSubmit)}
                     className="flex flex-col"
                   >
+                    <input
+                      className="mb-2 rounded border-2 p-1 text-lg font-bold placeholder-gray-600"
+                      placeholder="Title"
+                      {...register("title", { required: true })}
+                    />
                     <textarea
-                      className="mb-2 min-h-[4rem] w-full border-2"
+                      className="mb-2 min-h-[4rem] w-full border-2 p-1"
                       placeholder="Post something about your pet setting experience!"
+                      {...register("content")}
                     ></textarea>
                     <input
                       {...register("image")}
@@ -168,6 +174,53 @@ const UploadPost = (props: any) => {
           </Transition.Child>
         </Dialog>
       </Transition>
+
+      {/* Upload Success Dialog */}
+      <Transition show={isUploadSuccess} as={Fragment}>
+        <Dialog
+          onClose={() => {
+            setIsUploadSuccess(false);
+          }}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            {/* The backdrop, rendered as a fixed sibling to the panel container */}
+            <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+          </Transition.Child>
+
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-200"
+            enterFrom="opacity-0 scale-95"
+            enterTo="opacity-100 scale-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100 scale-100"
+            leaveTo="opacity-0 scale-95"
+          >
+            {/* Full-screen scrollable container */}
+            <div className="fixed inset-0 overflow-y-auto">
+              {/* Container to center the panel */}
+              <div className="flex min-h-full items-center justify-center">
+                <Dialog.Panel
+                  className="mx-auto box-border w-fit cursor-default rounded bg-green-400 p-6 text-lg text-green-700"
+                  onClick={() => {
+                    setIsUploadSuccess(false);
+                  }}
+                >
+                  <div className="font-bold">Upload Successful</div>
+                </Dialog.Panel>
+              </div>
+            </div>
+          </Transition.Child>
+        </Dialog>
+      </Transition>
     </>
   );
 };
@@ -195,12 +248,14 @@ const ShowImages = (props: {
   if (!imagesURLs || !images) return <></>;
 
   return (
-    <Gallery
-      images={images}
-      enableImageSelection={false}
-      rowHeight={140}
-      margin={2}
-    />
+    <div className="mb-2">
+      <Gallery
+        images={images}
+        enableImageSelection={false}
+        rowHeight={140}
+        margin={2}
+      />
+    </div>
   );
 
   // if (imagesURLs.length == 1) {
