@@ -37,14 +37,19 @@ export function s3Param(postId: string, i: number) {
 /**
  * Make presigned URL for uploading picture of post.
  */
-export async function signedUploadUrl(s3: S3Client, postId: string, i: number) {
+export async function signedUploadUrl(
+  s3: S3Client,
+  postId: string,
+  i: number,
+  expiresIn = 60 * 5
+) {
   return await getSignedUrl(
     s3,
     new PutObjectCommand({
       ...s3Param(postId, i),
       ContentType: "image/png",
     }),
-    { expiresIn: 60 * 5 }
+    { expiresIn }
   );
 }
 /**
