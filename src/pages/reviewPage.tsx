@@ -11,7 +11,7 @@ import { signIn, useSession } from "next-auth/react";
 import Router, { useRouter } from "next/router";
 import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
-import { Rating, RatingView } from "react-simple-star-rating";
+import { Rating } from "react-simple-star-rating";
 import { Box } from "@mui/material";
 const reviewPage: NextPage = () => {
   const {
@@ -47,16 +47,7 @@ const reviewPage: NextPage = () => {
       <div className="mt-4 flex h-full flex-col items-center text-xl">
         <h1>Reviews</h1>
         <h2>Average rating : {rating}</h2>
-        <Box
-          component="span"
-          sx={{
-            backgroundColor: "primary.main",
-            color: "white",
-            height: "200px",
-            width: "200px",
-            padding: "16px",
-          }}
-        >
+        <div className="h-100 w-100 box-content flex flex-col items-center rounded-md border-4 bg-amber-50 p-4">
           <button onClick={openModal}>Write Review</button>
           <Rating
             initialValue={rating}
@@ -67,7 +58,7 @@ const reviewPage: NextPage = () => {
           <h1 className="text-base">
             I think this pet sitter is good she is friendly and cost is cheap
           </h1>
-        </Box>
+        </div>
 
         <h2>Review from other users</h2>
       </div>
