@@ -1,0 +1,216 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Project "WigglePaw" {
+  database_type: 'postgresql'
+  Note: ''
+}
+
+Table Account {
+  id String [pk]
+  userId String [not null]
+  type String [not null]
+  provider String [not null]
+  providerAccountId String [not null]
+  refresh_token String
+  access_token String
+  expires_at Int
+  token_type String
+  scope String
+  id_token String
+  session_state String
+  user User [not null]
+
+  indexes {
+    (provider, providerAccountId) [unique]
+  }
+}
+
+Table Session {
+  id String [pk]
+  sessionToken String [unique, not null]
+  userId String [not null]
+  expires DateTime [not null]
+  user User [not null]
+}
+
+Table User {
+  userId String [pk]
+  petOwner PetOwner
+  petSitter PetSitter
+  username String [unique, not null]
+  password String [not null]
+  email String [unique, not null]
+  emailVerified DateTime
+  phoneNumber String
+  address String
+  imageUri String
+  bankAccount String
+  bankName String
+  accounts Account [not null]
+  sessions Session [not null]
+  createdAt DateTime [default: `now()`, not null]
+  salt String [not null]
+}
+
+Table PetOwner {
+  userId String [pk]
+  user User [not null]
+  petTypes String[] [not null]
+  firstName String [not null]
+  lastName String [not null]
+  pet Pet [not null]
+  booking Booking [not null]
+  review Review [not null]
+  SessionRequest SessionRequest [not null]
+}
+
+Table PetSitter {
+  userId String [pk]
+  user User [not null]
+  freelancePetSitter FreelancePetSitter
+  petHotel PetHotel
+  booking Booking [not null]
+  petTypes String[] [not null]
+  verifyStatus Boolean [not null]
+  certificationUri String
+  startPrice Float
+  endPrice Float
+  post Post [not null]
+  review Review [not null]
+  avgRating Float
+  reviewCount Int [not null, default: 0]
+  SessionRequest SessionRequest [not null]
+}
+
+Table FreelancePetSitter {
+  userId String [pk]
+  petSitter PetSitter [not null]
+  firstName String [not null]
+  lastName String [not null]
+}
+
+Table PetHotel {
+  userId String [pk]
+  petSitter PetSitter [not null]
+  businessLicenseUri String
+  hotelName String [not null]
+}
+
+Table Booking {
+  bookingId String [pk]
+  petOwner PetOwner [not null]
+  petSitter PetSitter [not null]
+  petOwnerId String [not null]
+  petSitterId String [not null]
+  startDate DateTime [not null]
+  endDate DateTime [not null]
+  numberOfPets Int [not null]
+  pet Pet [not null]
+  status BookingStatus [not null]
+  note String
+}
+
+Table Pet {
+  petId String [pk]
+  petOwnerId String [not null]
+  petOwner PetOwner [not null]
+  petType String [not null]
+  name String
+  sex String
+  breed String
+  pet Booking [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table VerificationToken {
+  identifier String [not null]
+  token String [unique, not null]
+  expires DateTime [not null]
+
+  indexes {
+    (identifier, token) [unique]
+  }
+}
+
+Table Review {
+  reviewId String [pk]
+  petOwnerId String [not null]
+  petOwner PetOwner [not null]
+  petSitterId String [not null]
+  petSitter PetSitter [not null]
+  text String
+  rating Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Post {
+  postId String [pk]
+  petSitterId String [not null]
+  petSitter PetSitter [not null]
+  title String [not null]
+  text String
+  pictureUri String[] [not null]
+  videoUri String
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table SessionRequest {
+  srId String [pk]
+  petOwnerId String [not null]
+  petOwner PetOwner [not null]
+  petSitterId String [not null]
+  petSitter PetSitter [not null]
+  status String [not null]
+  text String
+  createdAt DateTime [default: `now()`, not null]
+  Event Event [not null]
+}
+
+Table Schedule {
+  userId String [pk]
+}
+
+Table Event {
+  eventId String [pk]
+  srId String [not null]
+  sessionRequest SessionRequest [not null]
+}
+
+Enum BookingStatus {
+  requested
+  accepted
+  canceled
+  rejected
+}
+
+Ref: Account.userId > User.userId [delete: Cascade]
+
+Ref: Session.userId > User.userId [delete: Cascade]
+
+Ref: PetOwner.userId - User.userId [delete: Cascade]
+
+Ref: PetSitter.userId - User.userId [delete: Cascade]
+
+Ref: FreelancePetSitter.userId - PetSitter.userId [delete: Cascade]
+
+Ref: PetHotel.userId - PetSitter.userId [delete: Cascade]
+
+Ref: Booking.petOwnerId > PetOwner.userId
+
+Ref: Booking.petSitterId > PetSitter.userId
+
+Ref: Pet.petOwnerId > PetOwner.userId [delete: Cascade]
+
+Ref: Review.petOwnerId > PetOwner.userId [delete: Cascade]
+
+Ref: Review.petSitterId > PetSitter.userId [delete: Cascade]
+
+Ref: Post.petSitterId > PetSitter.userId [delete: Cascade]
+
+Ref: SessionRequest.petOwnerId > PetOwner.userId [delete: Cascade]
+
+Ref: SessionRequest.petSitterId > PetSitter.userId [delete: Cascade]
+
+Ref: Event.srId > SessionRequest.srId [delete: Cascade]

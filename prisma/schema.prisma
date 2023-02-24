@@ -5,6 +5,19 @@ generator client {
     provider = "prisma-client-js"
 }
 
+generator dbml {
+    provider            = "prisma-dbml-generator"
+    projectDatabaseType = "postgresql"
+    projectName         = "WigglePaw"
+    output              = "../docs"
+    outputName          = "erd.schema"
+}
+
+generator mermaid {
+    provider = "prisma-erd-generator"
+    output   = "../docs/erd.md"
+}
+
 datasource db {
     provider = "postgresql"
     // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
