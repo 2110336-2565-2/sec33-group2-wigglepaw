@@ -6,6 +6,13 @@ import "yet-another-react-lightbox/styles.css";
 import { addWidthHeightToImages } from "../../utils/image";
 import { Post } from "@prisma/client";
 
+import en from "javascript-time-ago/locale/en";
+import TimeAgo from "javascript-time-ago";
+import ReactTimeAgo from "react-time-ago";
+
+TimeAgo.addLocale(en);
+TimeAgo.addDefaultLocale(en);
+
 const Post = (props: { post: Post }) => {
   const [index, setIndex] = useState(-1);
   const [imagesLeft, setimagesLeft] = useState(0);
@@ -55,7 +62,9 @@ const Post = (props: { post: Post }) => {
     <div className="profile-post">
       <div className="mt-1 flex w-full justify-between ">
         <h1 className="text-lg font-bold">{props.post.title}</h1>
-        <h2>2d ago</h2>
+        <h2>
+          <ReactTimeAgo date={props.post.createdAt} locale="en-US" />
+        </h2>
       </div>
       <p className="my-1 text-gray-700">{props.post.text}</p>
 

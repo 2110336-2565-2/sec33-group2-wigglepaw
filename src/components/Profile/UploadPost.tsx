@@ -63,7 +63,7 @@ const UploadPost = (props: any) => {
     setIsUploadSuccess(true);
     setTimeout(function () {
       setIsUploadSuccess(false);
-    }, 2000);
+    }, 1500);
   };
 
   //Images
@@ -131,7 +131,7 @@ const UploadPost = (props: any) => {
                     className="flex flex-col"
                   >
                     <input
-                      className="mb-2 rounded border-2 p-1 text-lg font-bold placeholder-gray-600"
+                      className="mb-2 rounded border-2 p-1 text-lg font-bold placeholder-gray-400"
                       placeholder="Title"
                       {...register("title", { required: true })}
                     />
