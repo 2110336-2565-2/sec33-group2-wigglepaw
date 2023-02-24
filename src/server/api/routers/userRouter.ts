@@ -22,6 +22,7 @@ import type {
   Prisma,
 } from "@prisma/client";
 import postPic from "../logic/s3Op/postPic";
+import profilePic from "../logic/s3Op/profilePic";
 import { S3Client } from "@aws-sdk/client-s3";
 
 export const userRouter = createTRPCRouter({
@@ -214,7 +215,8 @@ async function deleteByUser(
 
   const { petSitter, ...userData } = user;
 
-  // TODO: Delete profile picture image.
+  // Delete user's profile pic
+  await profilePic.delete(s3, userData.userId);
 
   // If the deleted user is a pet sitter, delete all their post images.
   if (petSitter) {
