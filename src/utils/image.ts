@@ -1,3 +1,4 @@
+import { type Image } from "react-grid-gallery";
 import { getImageSize } from "react-image-size";
 
 /**
@@ -9,7 +10,10 @@ import { getImageSize } from "react-image-size";
  * @param replacementFn Function that returns a replacement image if the original image fails to load
  * @returns Array of images with width and height properties added
  */
-export async function addWidthHeightToImages<T extends { src: string }, O>(
+export async function addWidthHeightToImages<
+  T extends { src: string },
+  O = Image
+>(
   srcImages: T[],
   replacementFn: (src: T) => O = ({ src }) => {
     throw new Error(`Image ${src} failed to load`);
@@ -21,7 +25,7 @@ export async function addWidthHeightToImages<T extends { src: string }, O>(
       let dim;
       try {
         dim = await getImageSize(image.src, {
-          timeout: 1000,
+          timeout: 10000,
         });
         //console.log(JSON.stringify(dim) + " " + image.src);
       } catch (error) {
