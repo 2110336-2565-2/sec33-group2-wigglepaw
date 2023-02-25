@@ -1,4 +1,3 @@
-import { sessionRequestRouter } from "./routers/sessionRequestRouter";
 import { postRouter } from "./routers/postRouter";
 import { reviewRouter } from "./routers/reviewRouter";
 import { seedRouter } from "./routers/seedRouter";
@@ -28,7 +27,6 @@ export const appRouter = createTRPCRouter({
   pet: petRouter,
   review: reviewRouter,
   post: postRouter,
-  sessionRequest: sessionRequestRouter,
   profilePicture: profilePictureRouter,
   // Health check route, return 200 OK if server is up
   healthcheck: publicProcedure

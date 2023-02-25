@@ -109,7 +109,3 @@ export const postFields = z.object({
   pictureUri: z.string().optional(),
   videoUri: z.string().optional(),
 });
-
-export const sessionRequestFields = z.object({
-  text: z.string().optional(),
-});

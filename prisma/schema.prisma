@@ -71,7 +71,6 @@ model PetOwner {
     pet            Pet[]
     booking        Booking[]
     review         Review[]
-    SessionRequest SessionRequest[]
 }
 
 model PetSitter {
@@ -88,7 +87,6 @@ model PetSitter {
     post               Post[]
     review             Review[]
     avgRating          Float?
-    SessionRequest     SessionRequest[]
 }
 
 model FreelancePetSitter {
@@ -117,6 +115,7 @@ model Booking {
     pet             Pet[]   @relation("MyRelationTable")
     status          BookingStatus
     note            String?
+    createdAt       DateTime    @default(now())
 }
 
 enum BookingStatus {
@@ -166,13 +165,3 @@ model Post {
     createdAt   DateTime
 }
 
-model SessionRequest {
-    srId        String    @id @default(cuid())
-    petOwnerId  String
-    petOwner    PetOwner  @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
-    petSitterId String
-    petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
-    status      String // Waiting, Cancelled, Accepted, Declined
-    text        String?
-    createdAt   DateTime
-}
