@@ -270,7 +270,7 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
           {/* Posts display */}
           {posts ? (
             posts.length >= 1 ? (
-              posts.map((post: any) => <Post post={post}></Post>)
+              posts.map((post) => <Post key={post.postId} post={post}></Post>)
             ) : (
               <div className="w-full text-center font-medium">
                 Currently No Post <GiTumbleweed className="inline" />
