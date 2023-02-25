@@ -255,9 +255,6 @@ const ShowImages = (props: {
         enableImageSelection={false}
         rowHeight={140}
         margin={2}
-        thumbnailStyle={{
-          borderRadius: "0.25rem",
-        }}
       />
     </div>
   );

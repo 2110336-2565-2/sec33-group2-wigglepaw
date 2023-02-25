@@ -58,7 +58,7 @@ const Post = (props: { post: Post }) => {
   const currentImage = images[index];
   const handleClickLB = (index: number, item: I2) => setIndex(index);
 
-  const rowHeight = Math.min(150, Math.max(0, window.innerWidth * 0.3));
+  const rowHeight = Math.min(150, Math.max(100, window.innerWidth * 0.2));
 
   return (
     <div className="profile-post">
@@ -80,9 +80,6 @@ const Post = (props: { post: Post }) => {
             maxRows={2}
             rowHeight={rowHeight}
             margin={2}
-            thumbnailStyle={{
-              borderRadius: "0.25rem",
-            }}
           />
         </div>
       )}
