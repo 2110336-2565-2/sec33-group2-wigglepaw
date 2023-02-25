@@ -1,0 +1,108 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Project "WigglePaw" {
+  database_type: 'postgresql'
+  Note: ''
+}
+
+Table Account {
+  id String [pk]
+  userId String [not null]
+  type String [not null]
+  provider String [not null]
+  providerAccountId String [not null]
+  refresh_token String
+  access_token String
+  expires_at Int
+  token_type String
+  scope String
+  id_token String
+  session_state String
+  user User [not null]
+
+  indexes {
+    (provider, providerAccountId) [unique]
+  }
+}
+
+Table Session {
+  id String [pk]
+  sessionToken String [unique, not null]
+  userId String [not null]
+  expires DateTime [not null]
+  user User [not null]
+}
+
+Table User {
+  userId String [pk]
+  petOwner PetOwner
+  petSitter PetSitter
+  username String [unique, not null]
+  password String [not null]
+  email String [unique, not null]
+  emailVerified DateTime
+  phoneNumber String
+  address String
+  imageUri String
+  bankAccount String
+  bankName String
+  accounts Account [not null]
+  sessions Session [not null]
+}
+
+Table PetOwner {
+  userId String [pk]
+  user User [not null]
+  firstName String [not null]
+  lastName String [not null]
+}
+
+Table PetSitter {
+  userId String [pk]
+  user User [not null]
+  freelancePetSitter FreelancePetSitter
+  petHotel PetHotel
+  petTypes String[] [not null]
+  verifyStatus Boolean [not null]
+  certificationUri String
+  startPrice Float
+  endPrice Float
+}
+
+Table FreelancePetSitter {
+  userId String [pk]
+  petSitter PetSitter [not null]
+  firstName String [not null]
+  lastName String [not null]
+}
+
+Table PetHotel {
+  userId String [pk]
+  petSitter PetSitter [not null]
+  businessLicenseUri String
+  hotelName String [not null]
+}
+
+Table VerificationToken {
+  identifier String [not null]
+  token String [unique, not null]
+  expires DateTime [not null]
+
+  indexes {
+    (identifier, token) [unique]
+  }
+}
+
+Ref: Account.userId > User.userId [delete: Cascade]
+
+Ref: Session.userId > User.userId [delete: Cascade]
+
+Ref: PetOwner.userId - User.userId [delete: Cascade]
+
+Ref: PetSitter.userId - User.userId [delete: Cascade]
+
+Ref: FreelancePetSitter.userId - PetSitter.userId [delete: Cascade]
+
+Ref: PetHotel.userId - PetSitter.userId [delete: Cascade]
