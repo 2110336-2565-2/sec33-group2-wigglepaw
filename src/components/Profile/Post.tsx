@@ -72,7 +72,9 @@ const Post = (props: { post: Post }) => {
   const rowHeight = Math.min(150, Math.max(100, window.innerWidth * 0.2));
 
   return (
-    <div className="profile-post">
+    <div
+      className={"profile-post" + (deletePost.isLoading ? " opacity-50" : "")}
+    >
       <div className="mt-1 flex w-full justify-between rounded">
         <h1 className="text-lg font-bold">{props.post.title}</h1>
         <h2>
@@ -81,13 +83,13 @@ const Post = (props: { post: Post }) => {
           {/* Kebab menu (three dots) */}
           {session?.user?.userId == props.post.petSitterId && (
             <Popover className="relative inline">
-              <Popover.Button>
+              <Popover.Button disabled={deletePost.isLoading}>
                 <IoEllipsisVertical className="ml-2 inline" />
               </Popover.Button>
               <Popover.Panel className="absolute z-10 w-32 rounded-md border-2 bg-white shadow-lg">
                 <div className="flex flex-col">
                   {/* Delete button */}
-                  <button
+                  <Popover.Button
                     className="flex items-center justify-center rounded-md p-2 hover:bg-red-100"
                     onClick={() =>
                       deletePost.mutate({ postId: props.post.postId })
@@ -95,7 +97,7 @@ const Post = (props: { post: Post }) => {
                   >
                     <IoTrash className="mr-2 inline" />
                     <span className="text-red-500">Delete</span>
-                  </button>
+                  </Popover.Button>
                 </div>
               </Popover.Panel>
             </Popover>
