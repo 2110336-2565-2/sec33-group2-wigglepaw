@@ -1,8 +1,8 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState, useMemo, useEffect } from "react";
+import { Fragment, useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Gallery, Image } from "react-grid-gallery";
+import { Gallery, type Image } from "react-grid-gallery";
 import { addWidthHeightToImages } from "../../utils/image";
 import { useAsync } from "react-async-hook";
 import { useSession } from "next-auth/react";
@@ -16,12 +16,16 @@ const formDataSchema = z.object({
 
 type FormData = z.infer<typeof formDataSchema>;
 
-const UploadPost = (props: any) => {
+type UploadPostProps = {
+  refetch: () => void;
+};
+
+const UploadPost = (props: UploadPostProps) => {
   const [isPosting, setIsPosting] = useState(false);
   const [isUploadSuccess, setIsUploadSuccess] = useState(false);
 
   const images: Image[] = [];
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const addNewPost = useAddNewPost();
 
   // Form ==================================================
@@ -72,7 +76,7 @@ const UploadPost = (props: any) => {
       return null;
     }
 
-    let imageURLs: string[] = [];
+    const imageURLs: string[] = [];
 
     if (selectingImgs) {
       for (const img of selectingImgs) {
@@ -95,7 +99,7 @@ const UploadPost = (props: any) => {
       </button>
       <div className="mx-auto my-3 h-1 w-[80%] border-b-[3px] border-gray-400" />
       <Transition show={isPosting} as={Fragment}>
-        <Dialog onClose={() => {}}>
+        <Dialog onClose={() => undefined}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"

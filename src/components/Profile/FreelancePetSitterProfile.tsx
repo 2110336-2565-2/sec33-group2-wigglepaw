@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 import { api } from "../../utils/api";
 import { Popover } from "@headlessui/react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import {
+import type {
   FreelancePetSitterProfileType,
   PetSitterProfileType,
   UserProfile,
@@ -261,9 +261,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
       <div className="mx-3 mt-2">
         <div className="mx-auto max-w-lg md:w-2/3 md:max-w-2xl">
           <div className="mb-2 w-full text-xl font-bold">Posts</div>
-          {props.editable && (
-            <UploadPost user={props.user} refetch={refetchPosts} />
-          )}
+          {props.editable && <UploadPost refetch={refetchPosts} />}
           {/* Posts display */}
           {posts ? (
             posts.length >= 1 ? (

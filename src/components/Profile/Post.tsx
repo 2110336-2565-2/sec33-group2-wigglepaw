@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAsync } from "react-async-hook";
-import { Gallery, Image as I2 } from "react-grid-gallery";
+import type { Image as I2 } from "react-grid-gallery";
+import { Gallery } from "react-grid-gallery";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { addWidthHeightToImages } from "../../utils/image";
@@ -47,7 +48,7 @@ const Post = (props: { post: Post }) => {
           height: 225,
         };
       }),
-    // Run only once (this is similar to useEffect's)
+    // Recompute only when this changes
     props.post.pictureUri
   );
 

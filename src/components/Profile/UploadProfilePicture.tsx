@@ -6,12 +6,17 @@ import { useForm } from "react-hook-form";
 import imageCompression from "browser-image-compression";
 import { HiPencilAlt } from "react-icons/hi";
 import { useUpdateProfilePicture } from "../../utils/upload";
+import type { UserProfile } from "../../types/user";
 
 // The type is simple enough so I didn't bother to create zod schema for it.
 // But if you want, try https://zod.dev/?id=custom-schemas + https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof
 type FormDataProfile = { image: FileList };
 
-const UploadProfilePicture = (props: any) => {
+type UploadProfilePictureProps = {
+  user: UserProfile;
+};
+
+const UploadProfilePicture = (props: UploadProfilePictureProps) => {
   const [isUploadingProfile, setIsUploadingProfile] = useState(false);
 
   const profileData = api.user.getForProfilePage.useQuery(
@@ -28,7 +33,6 @@ const UploadProfilePicture = (props: any) => {
     register,
     handleSubmit,
     watch,
-    reset,
     formState: { errors },
   } = useForm<FormDataProfile>();
 
