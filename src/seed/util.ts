@@ -20,8 +20,9 @@ export function getRandomIntFromInterval(min: number, max: number) {
 export function getRandomDatetime() {
   const dayToMs = 1000 * 60 * 60 * 24;
   const monthToMs = 30 * dayToMs;
-  const start = new Date();
-  const end = new Date(start.getTime() + 6 * monthToMs);
+  const now = new Date();
+  const start = new Date(now.getTime() - 3 * monthToMs);
+  const end = new Date(now.getTime() - 1 * dayToMs);
   return new Date(
     start.getTime() + rand.next() * (end.getTime() - start.getTime())
   );
