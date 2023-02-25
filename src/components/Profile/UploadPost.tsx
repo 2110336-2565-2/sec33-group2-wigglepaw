@@ -145,7 +145,6 @@ const UploadPost = (props: any) => {
                       {...register("image")}
                       type="file"
                       multiple
-                      required
                       accept="image/*"
                       className="mb-2"
                     />
