@@ -1,5 +1,4 @@
 import { Dialog, Transition } from "@headlessui/react";
-import axios from "axios";
 import { Fragment, useMemo, useState } from "react";
 import { api } from "../../utils/api";
 import Image from "next/image";

@@ -5,9 +5,7 @@ import { z } from "zod";
 import { Gallery, Image } from "react-grid-gallery";
 import { addWidthHeightToImages } from "../../utils/image";
 import { useAsync } from "react-async-hook";
-import { api } from "../../utils/api";
 import { useSession } from "next-auth/react";
-import axios from "axios";
 import { useAddNewPost } from "../../utils/upload";
 
 const formDataSchema = z.object({
