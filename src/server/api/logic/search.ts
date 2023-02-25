@@ -16,7 +16,7 @@ import { BookingStatus } from "@prisma/client";
 //     return descriptor;
 //   };
 // }
-
+type userIdType = string;
 export abstract class BookingSearchLogic {
   public static byBookingId(bookingId: string): object {
     return { bookingId: bookingId };
@@ -26,18 +26,23 @@ export abstract class BookingSearchLogic {
       OR: bookingIdList.map((bookingId) => this.byBookingId(bookingId)),
     };
   }
-  public static byUserIdAuto(userId: string): object {
+  public static byUserIdListAuto(userIdList: userIdType[]): object {
+    return {
+      OR: userIdList.map((userId) => this.byUserIdAuto(userId)),
+    };
+  }
+  public static byUserIdAuto(userId: userIdType): object {
     return {
       OR: [this.byPetOwnerId(userId), this.byPetSitterId(userId)],
     };
   }
-  public static byUserId(userId: string, isPetSitter: boolean): object {
+  public static byUserId(userId: userIdType, isPetSitter: boolean): object {
     return isPetSitter ? this.byPetSitterId(userId) : this.byPetOwnerId(userId);
   }
-  public static byPetOwnerId(petOwnerId: string): object {
+  public static byPetOwnerId(petOwnerId: userIdType): object {
     return { petOwnerId: petOwnerId };
   }
-  public static byPetSitterId(petSitterId: string): object {
+  public static byPetSitterId(petSitterId: userIdType): object {
     return { petSitterId: petSitterId };
   }
   public static byStatus(status: BookingStatus): object {
@@ -65,8 +70,11 @@ export abstract class BookingSearchLogic {
 
   public static sortBy(sortName: string | undefined): object {
     switch (sortName) {
-      case "date":
+      case "startDate":
         return { startDate: "asc" };
+      case "createdDate": //mean createdDate and createdAt will return same data
+      case "createdAt":
+        return { createdAt: "asc" };
       default:
         return { startDate: "asc" };
     }

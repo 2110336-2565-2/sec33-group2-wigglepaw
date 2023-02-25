@@ -212,14 +212,14 @@ export const bookingRouter = createTRPCRouter({
             input.searchBookingIdList
               ? BookingSearchLogic.byBookingIdList(input.searchBookingIdList)
               : {},
+            input.searchUserIdList
+              ? BookingSearchLogic.byUserIdListAuto(input.searchUserIdList)
+              : {},
             input.searchStatusList
               ? BookingSearchLogic.byStatusList(input.searchStatusList)
               : {},
             input.searchStartDate
               ? BookingSearchLogic.byStartDate(input.searchStartDate)
-              : {},
-            input.searchUserId
-              ? BookingSearchLogic.byUserIdAuto(input.searchUserId)
               : {},
           ],
         },

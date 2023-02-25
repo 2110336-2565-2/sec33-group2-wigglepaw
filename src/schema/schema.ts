@@ -79,10 +79,12 @@ export const bookingStatus = z.enum([
   BookingStatus.rejected,
 ]);
 
+const userId = z.string().cuid();
+
 export const searchBookingField = z.object({
   // searchBookingId: z.string().cuid().optional(),
   searchBookingIdList: z.array(z.string().cuid()).optional(),
-  searchUserId: z.string().cuid().optional(),
+  searchUserIdList: z.array(userId).optional(),
   // searchStatus: bookingStatus,
   searchStatusList: z.array(bookingStatus).optional(),
   searchStartDate: z.date().optional(),
