@@ -63,6 +63,7 @@ const UploadPost = (props: any) => {
     setIsUploadSuccess(true);
     setTimeout(function () {
       setIsUploadSuccess(false);
+      props.refetch();
     }, 1500);
   };
 

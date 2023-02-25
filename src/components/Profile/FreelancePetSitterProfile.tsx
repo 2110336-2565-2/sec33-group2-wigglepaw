@@ -110,10 +110,18 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
     setEditing(false);
   };
 
-  //TODO: Remove
-  const { data: posts, error: userError } = api.post.getPostsByUserId.useQuery({
-    userId: typeof props.user.userId === "string" ? props.user.userId : "",
-  });
+  // Get Posts
+  const {
+    data: posts,
+    error: userError,
+    refetch: refetchPosts,
+  } = api.petSitter.getPostsByUserId.useQuery(
+    {
+      userId: typeof props.user.userId === "string" ? props.user.userId : "",
+      newestFirst: true,
+    },
+    { enabled: false }
+  );
 
   return (
     <div>
@@ -257,11 +265,11 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
           <div className="w-full text-xl font-bold">Posts</div>
           {props.editable && (
             <>
-              <UploadPost user={props.user} />
+              <UploadPost user={props.user} refetch={refetchPosts} />
               <div className="mx-auto my-1 h-1 w-[80%] border-b-[3px] border-gray-400" />
             </>
           )}
-          {/* TODO: Posts display */}
+          {/* Posts display */}
           {posts ? (
             posts.length >= 1 ? (
               posts.map((post: any) => <Post post={post}></Post>)
