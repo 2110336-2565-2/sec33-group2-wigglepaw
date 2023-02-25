@@ -9,6 +9,9 @@ import { Post } from "@prisma/client";
 import en from "javascript-time-ago/locale/en";
 import TimeAgo from "javascript-time-ago";
 import ReactTimeAgo from "react-time-ago";
+import { IoEllipsisVertical, IoTrash } from "react-icons/io5";
+import { Popover } from "@headlessui/react";
+import { api } from "../../utils/api";
 
 TimeAgo.addLocale(en);
 TimeAgo.addDefaultLocale(en);
@@ -16,6 +19,12 @@ TimeAgo.addDefaultLocale(en);
 const Post = (props: { post: Post }) => {
   const [index, setIndex] = useState(-1);
   const [imagesLeft, setimagesLeft] = useState(0);
+
+  // API
+  const utils = api.useContext();
+  const deletePost = api.post.delete.useMutation({
+    onSuccess: () => utils.petSitter.getPostsByUserId.invalidate(),
+  });
 
   //Convert string array to object
   const imageSrcs = props.post.pictureUri.map((uri) => ({ src: uri }));
@@ -66,6 +75,27 @@ const Post = (props: { post: Post }) => {
         <h1 className="text-lg font-bold">{props.post.title}</h1>
         <h2>
           <ReactTimeAgo date={props.post.createdAt} locale="en-US" />
+
+          {/* Kebab menu (three dots) */}
+          <Popover className="relative inline">
+            <Popover.Button>
+              <IoEllipsisVertical className="ml-2 inline" />
+            </Popover.Button>
+            <Popover.Panel className="absolute z-10 w-32 rounded-md border-2 bg-white shadow-lg">
+              <div className="flex flex-col">
+                {/* Delete button */}
+                <button
+                  className="flex items-center justify-center rounded-md p-2 hover:bg-red-100"
+                  onClick={() =>
+                    deletePost.mutate({ postId: props.post.postId })
+                  }
+                >
+                  <IoTrash className="mr-2 inline" />
+                  <span className="text-red-500">Delete</span>
+                </button>
+              </div>
+            </Popover.Panel>
+          </Popover>
         </h2>
       </div>
       <p className="my-1 text-gray-700">{props.post.text}</p>
