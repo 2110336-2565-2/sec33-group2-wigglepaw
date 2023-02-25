@@ -59,6 +59,7 @@ export function useUpdateProfilePicture() {
 }
 
 export function useAddNewPost() {
+  const utils = api.useContext();
   const createPost = api.post.create.useMutation();
 
   const mutateAsync = async (
@@ -83,6 +84,9 @@ export function useAddNewPost() {
 
     // Upload images
     await Promise.all(uploadUrls.map((url, i) => axios.put(url, images[i])));
+
+    // Invalidate cache
+    await utils.post.invalidate();
   };
 
   const { mutate: _mutate, mutateAsync: _mutateAsync, ...rest } = createPost;

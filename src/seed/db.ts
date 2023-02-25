@@ -1,4 +1,6 @@
+import { saltHashPassword } from "../pages/api/auth/[...nextauth]";
 import { prisma } from "../server/db";
+import { getRandomDatetime } from "./util";
 
 export async function updateAvgRating(petSitterId: string) {
   const petSitter = await prisma.petSitter.findFirst({
@@ -48,6 +50,9 @@ export async function makeFree(
   endPrice: number,
   imageUri: string
 ) {
+  const saltHash = saltHashPassword("password" + code);
+  const salt = saltHash.salt;
+  const hash = saltHash.hash;
   return await prisma.freelancePetSitter.create({
     data: {
       petSitter: {
@@ -56,10 +61,11 @@ export async function makeFree(
             create: {
               username: "u" + code,
               email: "email" + code + "@gmail.com",
-              password: "p" + code,
+              password: hash,
               address: address,
               phoneNumber: phone,
               imageUri: imageUri,
+              salt: salt,
             },
           },
           verifyStatus: true,
@@ -92,6 +98,9 @@ export async function makeHotel(
   endPrice: number,
   imageUri: string
 ) {
+  const saltHash = saltHashPassword("password" + code);
+  const salt = saltHash.salt;
+  const hash = saltHash.hash;
   return await prisma.petHotel.create({
     data: {
       petSitter: {
@@ -100,7 +109,8 @@ export async function makeHotel(
             create: {
               username: "u" + code,
               email: "email" + code + "@gmail.com",
-              password: "p" + code,
+              password: hash,
+              salt: salt,
               address: address,
               phoneNumber: phone,
               imageUri: imageUri,
@@ -134,13 +144,17 @@ export async function makeOwner(
   imageUri: string,
   petTypes: string[]
 ) {
+  const saltHash = saltHashPassword("password" + code);
+  const salt = saltHash.salt;
+  const hash = saltHash.hash;
   return await prisma.petOwner.create({
     data: {
       user: {
         create: {
           username: "u" + code,
           email: "email" + code + "@gmail.com",
-          password: "p" + code,
+          password: hash,
+          salt: salt,
           address: address,
           phoneNumber: phone,
           imageUri: imageUri,
@@ -169,6 +183,7 @@ export async function makeReview(
       petOwnerId: petOwnerId,
       rating: rating,
       text: text,
+      createdAt: getRandomDatetime(),
     },
   });
 
@@ -191,6 +206,7 @@ export async function makePost(
       text: text,
       pictureUri: pictureUri,
       videoUri: videoUri,
+      createdAt: getRandomDatetime(),
     },
   });
   return createPost;

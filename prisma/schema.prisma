@@ -61,6 +61,7 @@ model User {
     accounts      Account[] // Needed for Auth
     sessions      Session[] // Needed for Auth
     createdAt     DateTime   @default(now())
+    salt          String
 }
 
 model PetOwner {

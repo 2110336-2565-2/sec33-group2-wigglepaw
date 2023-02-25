@@ -1,5 +1,8 @@
 import NextAuth, { type User, type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+
+import { genSaltSync, hashSync, compareSync } from "bcrypt-ts";
+
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
@@ -7,6 +10,19 @@ import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db";
 
 import { type UserSubType, UserType } from "../../../types/user";
+
+// Call this at create user
+export function saltHashPassword(plainPassword: string) {
+  const saltRounds = 10;
+  const salt = genSaltSync(saltRounds);
+  const hash = hashSync(plainPassword, salt);
+  return { salt: salt, hash: hash };
+}
+
+// Check if password is correct
+export function checkPassword(plainPassword: string, correctHash: string) {
+  return compareSync(plainPassword, correctHash);
+}
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -90,6 +106,7 @@ export const authOptions: NextAuthOptions = {
           address: userDB.address,
           phoneNumber: userDB.phoneNumber,
           imageUri: userDB.imageUri,
+          salt: userDB.salt,
         };
 
         if (userDB.petOwner) {
@@ -178,8 +195,10 @@ async function authenticateUser(
   // User must exist, and have credentials
   if (user === null) return null;
   // Password must match
-  if (user.password !== password) return null;
-
+  // if (user.password !== password) return null;
+  console.log(password, user.password);
+  console.log(checkPassword(password, user.password));
+  if (!checkPassword(password, user.password)) return null;
   // Return user
   return user;
 }
