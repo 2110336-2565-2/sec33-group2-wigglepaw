@@ -88,13 +88,14 @@ const UploadPost = (props: any) => {
   return (
     <>
       <button
-        className="profile-post py-2 text-center font-semibold"
+        className="profile-post mb-0 py-2 text-center font-semibold"
         onClick={() => {
           setIsPosting(true);
         }}
       >
         + New Post
       </button>
+      <div className="mx-auto my-3 h-1 w-[80%] border-b-[3px] border-gray-400" />
       <Transition show={isPosting} as={Fragment}>
         <Dialog onClose={() => {}}>
           <Transition.Child
@@ -254,6 +255,9 @@ const ShowImages = (props: {
         enableImageSelection={false}
         rowHeight={140}
         margin={2}
+        thumbnailStyle={{
+          borderRadius: "0.25rem",
+        }}
       />
     </div>
   );

@@ -13,10 +13,10 @@ import { GiTumbleweed } from "react-icons/gi";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../utils/api";
-import { Dialog, Popover, Transition } from "@headlessui/react";
+import { Popover } from "@headlessui/react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import {
   FreelancePetSitterProfileType,
@@ -43,7 +43,7 @@ const formDataSchema = z.object({
   petTypes: z.string().array(),
 });
 
-type FormDataInfomation = z.infer<typeof formDataSchema>;
+type FormDataInformation = z.infer<typeof formDataSchema>;
 
 // A list of pet types
 // TODO: Get this from somewhere else, instead of hardcoding here.
@@ -69,22 +69,20 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
     formState: { errors },
-  } = useForm<FormDataInfomation>({
+  } = useForm<FormDataInformation>({
     resolver: zodResolver(formDataSchema),
     mode: "onSubmit",
   });
 
-  const onSubmit = async (data: FormDataInfomation) => {
+  const onSubmit = async (data: FormDataInformation) => {
     const [firstName, lastName] = data.firstNameLastName.trim().split(" ");
     const petTypesArray: string[] = data.petTypes;
     await updateFreelancePetSitter.mutateAsync({
       userId: props.user.userId,
       data: { firstName: firstName, lastName: lastName },
     });
-
     await updatePetSitter.mutateAsync({
       userId: props.user.userId,
       data: {
@@ -120,7 +118,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
       userId: typeof props.user.userId === "string" ? props.user.userId : "",
       newestFirst: true,
     },
-    { enabled: false }
+    { enabled: true }
   );
 
   return (
@@ -130,7 +128,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
         <div className="my-auto flex w-screen flex-col md:m-4 md:w-1/5 md:min-w-min">
           <div className="relative mx-auto flex h-[6rem] w-[6rem]">
             <Image
-              src={props.user.imageUri ?? "/profile_icon.png"}
+              src={props.user.imageUri ?? "//profiledummy.png"}
               alt={"Icon"}
               fill
               className="rounded-full object-cover"
@@ -262,12 +260,9 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
       </div>
       <div className="mx-3 mt-2">
         <div className="mx-auto max-w-lg md:w-2/3 md:max-w-2xl">
-          <div className="w-full text-xl font-bold">Posts</div>
+          <div className="mb-2 w-full text-xl font-bold">Posts</div>
           {props.editable && (
-            <>
-              <UploadPost user={props.user} refetch={refetchPosts} />
-              <div className="mx-auto my-1 h-1 w-[80%] border-b-[3px] border-gray-400" />
-            </>
+            <UploadPost user={props.user} refetch={refetchPosts} />
           )}
           {/* Posts display */}
           {posts ? (

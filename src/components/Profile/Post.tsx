@@ -58,9 +58,11 @@ const Post = (props: { post: Post }) => {
   const currentImage = images[index];
   const handleClickLB = (index: number, item: I2) => setIndex(index);
 
+  const rowHeight = Math.min(150, Math.max(0, window.innerWidth * 0.3));
+
   return (
     <div className="profile-post">
-      <div className="mt-1 flex w-full justify-between ">
+      <div className="mt-1 flex w-full justify-between rounded">
         <h1 className="text-lg font-bold">{props.post.title}</h1>
         <h2>
           <ReactTimeAgo date={props.post.createdAt} locale="en-US" />
@@ -76,8 +78,11 @@ const Post = (props: { post: Post }) => {
             onClick={handleClickLB}
             enableImageSelection={false}
             maxRows={2}
-            rowHeight={140}
+            rowHeight={rowHeight}
             margin={2}
+            thumbnailStyle={{
+              borderRadius: "0.25rem",
+            }}
           />
         </div>
       )}
