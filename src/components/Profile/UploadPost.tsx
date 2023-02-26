@@ -50,16 +50,21 @@ const UploadPost = (props: UploadPostProps) => {
       return;
     }
 
-    await addNewPost.mutateAsync(
-      user.id,
-      {
-        title: data.title,
-        text: data.content,
-        // TODO: Add videoUri?
-        videoUri: null,
-      },
-      image
-    );
+    try {
+      await addNewPost.mutateAsync(
+        user.id,
+        {
+          title: data.title,
+          text: data.content,
+          // TODO: Add videoUri?
+          videoUri: null,
+        },
+        image
+      );
+    } catch (e) {
+      alert(e);
+      return;
+    }
     setIsPosting(false);
     reset();
     setIsUploadSuccess(true);
