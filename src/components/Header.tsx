@@ -19,6 +19,10 @@ const Header = () => {
   const router = useRouter();
   const asPath = router.asPath;
 
+  const previousPage = router.query.previousPage
+    ? router.query.previousPage
+    : asPath;
+
   const userData = api.user.getByUsername.useQuery({
     username: username ? username : "",
   });
@@ -58,11 +62,15 @@ const Header = () => {
                 <Link
                   href={{
                     pathname: "/login",
-                    query: { previousPage: asPath },
+                    query: { previousPage: previousPage },
                   }}
                   className={
                     "header-a" +
-                    `${asPath.includes("/login") ? " header-at-page" : ""}`
+                    `${
+                      asPath.includes("/login")
+                        ? " header-at-page pointer-events-none"
+                        : ""
+                    }`
                   }
                 >
                   Login
@@ -136,13 +144,13 @@ const Header = () => {
             <Link
               href={{
                 pathname: "/login",
-                query: { previousPage: asPath },
+                query: { previousPage: previousPage },
               }}
               className={
                 "header-register-link" +
                 `${
                   asPath.includes("/login")
-                    ? " header-at-page"
+                    ? " header-at-page pointer-events-none cursor-default"
                     : " bg-sky-700 hover:bg-sky-600"
                 }`
               }
