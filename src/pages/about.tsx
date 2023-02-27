@@ -20,21 +20,9 @@ const About: NextPage = () => {
   type Insid = { title: string; start: string; end: string };
 
   const [events, setEvents] = useState([]);
-  const { ref: myRef, inView: myVis } = useInView({});
-  const { ref: myRef2, inView: myVis2 } = useInView({});
-  const { ref: myRef3, inView: myVis3 } = useInView({});
-
-  const randcolor = [
-    "#fde047",
-    "#bef264",
-    "#4ade80",
-    "#67e8f9",
-    "#38bdf8",
-    "#a78bfa",
-    "#e879f9",
-    "#4c1d95",
-    "#f472b6",
-  ];
+  const [showUp, setShowup] = useState(false);
+  const [showOn, setShowon] = useState(false);
+  const [showFin, setShowfin] = useState(false);
 
   const eventContent = ({ event, view }) => {
     // Create a new div element for the event
@@ -64,7 +52,17 @@ const About: NextPage = () => {
   const submitEvent = (e: { target: any; preventDefault: () => void }) => {
     e.preventDefault();
     console.log(events);
-    const randcol = randcolor[Math.floor(Math.random() * randcolor.length)];
+    let randcol = "";
+    console.log(new Date());
+    console.log("vs  ", new Date(e.target.start.value));
+    if (new Date() > new Date(e.target.end.value)) {
+      randcol = "#a3e635";
+    } else if (new Date() < new Date(e.target.start.value)) {
+      randcol = "#f87171";
+    } else {
+      randcol = "#fde047";
+    }
+
     setEvents([
       ...events,
       {
@@ -106,55 +104,248 @@ const About: NextPage = () => {
           </div>
           <div className="md:ml-10 md:h-[90%] md:w-[70%] md:border-l-2 md:border-black">
             <div className="my-10 ml-4">
-              {events.map((value, index) => {
-                const bordercolor = " border-[" + value.color + "]";
-                console.log(bordercolor);
+              <div className="center-thing mb-1 border-b-4 border-red-600 bg-red-300 bg-opacity-50 py-2 text-center shadow-md ">
+                Upcoming
+                {!showUp && (
+                  <button
+                    onClick={() => {
+                      setShowup((prev) => !prev);
+                      console.log(showUp);
+                    }}
+                    className="center-thing absolute left-[90%] h-5 w-5 rounded-full text-xl  "
+                  >
+                    +
+                  </button>
+                )}
+                {showUp && (
+                  <button
+                    onClick={() => {
+                      setShowup((prev) => !prev);
+                      console.log(showUp);
+                    }}
+                    className="center-thing absolute left-[90%] h-5 w-5 rounded-full text-xl  "
+                  >
+                    -
+                  </button>
+                )}
+              </div>
+              {showUp &&
+                events.map((value, index) => {
+                  if (new Date(value.start) > new Date()) {
+                    const datetimeString = value.start;
+                    const datetimeString2 = value.end;
+                    const datetime = new Date(datetimeString);
+                    const datetime2 = new Date(datetimeString2);
 
-                const datetimeString = value.start;
-                const datetimeString2 = value.end;
-                const datetime = new Date(datetimeString);
-                const datetime2 = new Date(datetimeString2);
+                    const options = {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    };
 
-                const options = {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                };
+                    options.hour = "numeric";
+                    options.minute = "numeric";
+                    options.hour12 = true;
+                    const timestart = datetime.toLocaleTimeString(
+                      "en-US",
+                      options
+                    );
+                    const timeend = datetime2.toLocaleTimeString(
+                      "en-US",
+                      options
+                    );
 
-                options.hour = "numeric";
-                options.minute = "numeric";
-                options.hour12 = true;
-                const timestart = datetime.toLocaleTimeString("en-US", options);
-                const timeend = datetime2.toLocaleTimeString("en-US", options);
-
-                return (
-                  // eslint-disable-next-line react/jsx-key
-                  <div className="mb-5  border-l-4 border-yellow-300 py-2 shadow-md md:pl-5  ">
-                    <div className="flex">
-                      <div className="text-sm text-gray-500">
-                        {timestart} &nbsp;-{" "}
+                    return (
+                      // eslint-disable-next-line react/jsx-key
+                      <div className="py-2  shadow-inner transition-all md:pl-5  ">
+                        <div className="flex">
+                          <div className="text-sm text-gray-500">
+                            {timestart} &nbsp;-{" "}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {" "}
+                            &nbsp; {timeend}
+                          </div>
+                        </div>
+                        <div className="mt-1 flex">
+                          <span className="mr-5">{value.title} </span>
+                          <div
+                            onClick={() => {
+                              setEvents((current) =>
+                                current.filter((events, i) => i !== index)
+                              );
+                            }}
+                            className="hover:scale-[1.05]"
+                          >
+                            <FontAwesomeIcon size="sm" icon={faTrashCan} />
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-sm text-gray-500">
-                        {" "}
-                        &nbsp; {timeend}
+                    );
+                  }
+                })}
+              <div className="center-thing mt-5 border-b-4 border-yellow-400 bg-yellow-200 bg-opacity-50 py-2 text-center shadow-md ">
+                Ongoing
+                {!showOn && (
+                  <button
+                    onClick={() => {
+                      setShowon((prev) => !prev);
+                    }}
+                    className="center-thing absolute left-[90%] h-5 w-5 rounded-full text-xl  "
+                  >
+                    +
+                  </button>
+                )}
+                {showOn && (
+                  <button
+                    onClick={() => {
+                      setShowon((prev) => !prev);
+                    }}
+                    className="center-thing absolute left-[90%] h-5 w-5 rounded-full text-xl  "
+                  >
+                    -
+                  </button>
+                )}
+              </div>
+              {showOn &&
+                events.map((value, index) => {
+                  if (
+                    new Date(value.start) < new Date() &&
+                    new Date(value.end) > new Date()
+                  ) {
+                    const datetimeString = value.start;
+                    const datetimeString2 = value.end;
+                    const datetime = new Date(datetimeString);
+                    const datetime2 = new Date(datetimeString2);
+
+                    const options = {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    };
+
+                    options.hour = "numeric";
+                    options.minute = "numeric";
+                    options.hour12 = true;
+                    const timestart = datetime.toLocaleTimeString(
+                      "en-US",
+                      options
+                    );
+                    const timeend = datetime2.toLocaleTimeString(
+                      "en-US",
+                      options
+                    );
+
+                    return (
+                      // eslint-disable-next-line react/jsx-key
+                      <div className="py-2   shadow-inner transition-all md:pl-5  ">
+                        <div className="flex">
+                          <div className="text-sm text-gray-500">
+                            {timestart} &nbsp;-{" "}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {" "}
+                            &nbsp; {timeend}
+                          </div>
+                        </div>
+                        <div className="mt-1 flex">
+                          <span className="mr-5">{value.title} </span>
+                          <div
+                            onClick={() => {
+                              setEvents((current) =>
+                                current.filter((events, i) => i !== index)
+                              );
+                            }}
+                            className="hover:scale-[1.05]"
+                          >
+                            <FontAwesomeIcon size="sm" icon={faTrashCan} />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div className="mt-1 flex">
-                      <span className="mr-5">{value.title} </span>
-                      <div
-                        onClick={() => {
-                          setEvents((current) =>
-                            current.filter((events, i) => i !== index)
-                          );
-                        }}
-                        className="hover:scale-[1.05]"
-                      >
-                        <FontAwesomeIcon size="sm" icon={faTrashCan} />
+                    );
+                  }
+                })}
+              <div className="center-thing mt-5 border-b-4 border-lime-400 bg-lime-300 bg-opacity-50 py-2 text-center shadow-md ">
+                Finished
+                {!showFin && (
+                  <button
+                    onClick={() => {
+                      setShowfin((prev) => !prev);
+                    }}
+                    className="center-thing absolute left-[90%] h-5 w-5 rounded-full text-xl  "
+                  >
+                    +
+                  </button>
+                )}
+                {showFin && (
+                  <button
+                    onClick={() => {
+                      setShowfin((prev) => !prev);
+                    }}
+                    className="center-thing absolute left-[90%] h-5 w-5 rounded-full text-xl  "
+                  >
+                    -
+                  </button>
+                )}
+              </div>
+              {showFin &&
+                events.map((value, index) => {
+                  if (new Date(value.end) < new Date()) {
+                    const bordercolor = " border-[" + value.color + "]";
+                    console.log(bordercolor);
+
+                    const datetimeString = value.start;
+                    const datetimeString2 = value.end;
+                    const datetime = new Date(datetimeString);
+                    const datetime2 = new Date(datetimeString2);
+
+                    const options = {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    };
+
+                    options.hour = "numeric";
+                    options.minute = "numeric";
+                    options.hour12 = true;
+                    const timestart = datetime.toLocaleTimeString(
+                      "en-US",
+                      options
+                    );
+                    const timeend = datetime2.toLocaleTimeString(
+                      "en-US",
+                      options
+                    );
+
+                    return (
+                      // eslint-disable-next-line react/jsx-key
+                      <div className="animate-showing py-2   shadow-inner transition-all md:pl-5  ">
+                        <div className="flex">
+                          <div className="text-sm text-gray-500">
+                            {timestart} &nbsp;-{" "}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {" "}
+                            &nbsp; {timeend}
+                          </div>
+                        </div>
+                        <div className="mt-1 flex">
+                          <span className="mr-5">{value.title} </span>
+                          <div
+                            onClick={() => {
+                              setEvents((current) =>
+                                current.filter((events, i) => i !== index)
+                              );
+                            }}
+                            className="hover:scale-[1.05]"
+                          >
+                            <FontAwesomeIcon size="sm" icon={faTrashCan} />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                );
-              })}
+                    );
+                  }
+                })}
             </div>
           </div>
         </div>
@@ -180,6 +371,7 @@ const About: NextPage = () => {
           </button>
         </form>
       </div>
+
       {/* <div className="absolute z-[-20] h-[200%] w-[100%] bg-[#EAE7DC] ">
         <section className="h-full">
           <Header />

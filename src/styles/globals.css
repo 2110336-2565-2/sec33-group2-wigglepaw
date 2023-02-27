@@ -80,6 +80,7 @@
     #ffb2fa 100%
   );
 }
+/* full calendar stuff */
 .fc-daygrid-day-number {
   font-size: 0.6rem;
 }
@@ -88,7 +89,8 @@
 }
 .fc-col-header-cell {
   font-size: 0.8rem;
-  background-color: #fef08a;
+  background-color: black;
+  color: white;
 }
 .fc-widget-header {
 }

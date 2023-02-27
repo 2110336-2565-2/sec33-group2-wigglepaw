@@ -9,7 +9,7 @@ module.exports = {
         },
       },
       animation: {
-        showing: "show 0.8s ease-in-out forwards",
+        showing: "show 0.8s forwards",
       },
       colors: {
         "bg-box-main": "#CCB0A4",

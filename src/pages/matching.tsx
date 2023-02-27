@@ -40,7 +40,7 @@ const Matching: NextPage = () => {
           <MatchingPanel />
         </MatchingFormProvider>
         <div id="main-wrapper" className="pt-8">
-          <p className="mb-5 text-[16px] text-[#485B6F]">
+          <p className="mb-5  text-[16px] text-[#485B6F]">
             📍Explore our list of experienced sitters & hotels for your beloved
             pets.{" "}
             <Link href="/registerPetSitter">
@@ -51,7 +51,7 @@ const Matching: NextPage = () => {
           </p>
           <div
             id="pet-sitter-cards-wrapper"
-            className="flex w-full flex-col gap-6"
+            className=" flex w-full  flex-col gap-6 "
           >
             {matchedPetSitters?.map((matchedPetSitter) => (
               <PetSitterCardFactory
