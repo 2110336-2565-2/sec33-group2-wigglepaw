@@ -70,7 +70,6 @@ const UploadPost = (props: UploadPostProps) => {
     setIsUploadSuccess(true);
     setTimeout(function () {
       setIsUploadSuccess(false);
-      props.refetch();
     }, 1500);
   };
 
@@ -188,6 +187,7 @@ const UploadPost = (props: UploadPostProps) => {
         <Dialog
           onClose={() => {
             setIsUploadSuccess(false);
+            props.refetch();
           }}
         >
           <Transition.Child
