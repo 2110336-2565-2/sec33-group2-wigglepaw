@@ -10,6 +10,7 @@ import MatchingPanel from "../components/Matching/MatchingPanel";
 import PetsitterCard from "../components/Matching/PetsitterCard";
 
 import { useInView } from "react-intersection-observer";
+import NoPetsitterFoundDisplay from "../components/Matching/NoPetsitterFoundDisplay";
 // TODO: document this page structure, use cases
 const Matching: NextPage = () => {
   const [matchedPetSitters, setMatchedPetSitters] = useState<
@@ -31,7 +32,7 @@ const Matching: NextPage = () => {
       <Header />
       <div
         id="content-wrapper"
-        className=" mb-8 flex flex-row justify-start gap-8"
+        className="-mt-4 mb-8 flex flex-row justify-center gap-8 pt-4 max-md:flex-col max-md:px-6"
       >
         <MatchingFormProvider
           num={num}
@@ -40,26 +41,26 @@ const Matching: NextPage = () => {
           <MatchingPanel />
         </MatchingFormProvider>
         <div id="main-wrapper" className="pt-8">
-          <p className="mb-5  text-[16px] text-[#485B6F]">
+          <p className="-ml-5 mb-5  text-[16px] text-[#485B6F] max-md:hidden">
             📍Explore our list of experienced sitters & hotels for your beloved
-            pets.{" "}
+            pets.
             <Link href="/registerPetSitter">
-              <span className="text-[#3C8DE1] underline hover:text-[#285686]">
+              <span className="ml-1 text-[#3C8DE1] underline hover:text-[#285686]">
                 Want to become our sitters ?
               </span>
             </Link>
           </p>
           <div
             id="pet-sitter-cards-wrapper"
-            className=" flex w-full  flex-col gap-6 "
+            className=" flex w-full flex-col gap-6 max-md:-mt-8"
           >
+            {matchedPetSitters.length === 0 && <NoPetsitterFoundDisplay />}
             {matchedPetSitters?.map((matchedPetSitter) => (
               <PetSitterCardFactory
                 key={matchedPetSitter.user.username}
                 petSitter={matchedPetSitter}
               />
             ))}
-            {/* <PetsitterCard /> */}
           </div>
           <div className="invisible">
             <button
