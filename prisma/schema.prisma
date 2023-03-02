@@ -5,6 +5,19 @@ generator client {
     provider = "prisma-client-js"
 }
 
+generator dbml {
+    provider            = "prisma-dbml-generator"
+    projectDatabaseType = "postgresql"
+    projectName         = "WigglePaw"
+    output              = "../docs"
+    outputName          = "erd.schema"
+}
+
+generator mermaid {
+    provider = "prisma-erd-generator"
+    output   = "../docs/erd.md"
+}
+
 datasource db {
     provider = "postgresql"
     // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
@@ -60,6 +73,8 @@ model User {
     bankName      String? // Assume 1 per user
     accounts      Account[] // Needed for Auth
     sessions      Session[] // Needed for Auth
+    createdAt     DateTime   @default(now())
+    salt          String
 }
 
 model PetOwner {
@@ -87,6 +102,7 @@ model PetSitter {
     post               Post[]
     review             Review[]
     avgRating          Float?
+    reviewCount        Int                 @default(0)
 }
 
 model FreelancePetSitter {
@@ -105,8 +121,8 @@ model PetHotel {
 
 model Booking {
     bookingId       String    @id @default(cuid())
-    petOwner        PetOwner    @relation(fields: [petOwnerId], references: [userId])
-    petSitter       PetSitter   @relation(fields: [petSitterId], references: [userId])
+    petOwner        PetOwner    @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
+    petSitter       PetSitter   @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
     petOwnerId      String
     petSitterId     String
     startDate       DateTime
@@ -134,6 +150,7 @@ model Pet {
     sex        String?
     breed      String?
     pet        Booking[]    @relation("MyRelationTable")
+    createdAt  DateTime @default(now())
 }
 
 model VerificationToken {
@@ -152,16 +169,16 @@ model Review {
     petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
     text        String?
     rating      Int
-    createdAt   DateTime
+    createdAt   DateTime  @default(now())
 }
 
 model Post {
     postId      String    @id @default(cuid())
     petSitterId String
     petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
-    text        String
-    pictureUri  String?
+    title       String
+    text        String?
+    pictureUri  String[]
     videoUri    String?
-    createdAt   DateTime
+    createdAt   DateTime  @default(now())
 }
-

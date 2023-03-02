@@ -19,7 +19,7 @@ const zodUserFields = z.object({
 });
 
 export const petSitterRouter = createTRPCRouter({
-  getAllReviewsById: publicProcedure
+  getReviewsByUserId: publicProcedure
     .input(z.object({ petSitterId: z.string() }))
     .query(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findFirst({
@@ -46,6 +46,26 @@ export const petSitterRouter = createTRPCRouter({
           cause: error,
         });
       }
+    }),
+
+  getPostsByUserId: publicProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        newestFirst: z.boolean().optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const orderBy = input.newestFirst ? "desc" : "asc";
+      const posts = await ctx.prisma.post.findMany({
+        where: {
+          petSitterId: input.userId,
+        },
+        orderBy: {
+          createdAt: orderBy,
+        },
+      });
+      return posts;
     }),
 
   update: publicProcedure

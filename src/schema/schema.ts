@@ -107,7 +107,8 @@ export const reviewFields = z.object({
 });
 
 export const postFields = z.object({
-  text: z.string(),
-  pictureUri: z.string().optional(),
+  title: z.string(),
+  text: z.string().optional(),
+  pictureUri: z.array(z.string()),
   videoUri: z.string().optional(),
 });

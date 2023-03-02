@@ -8,33 +8,14 @@ import {
   petFields,
   reviewFields,
 } from "../../../schema/schema";
-
-async function updateAvgRating(petSitterId: string) {
-  const petSitter = await prisma.petSitter.findFirst({
-    where: {
-      userId: petSitterId,
-    },
-    include: {
-      review: true,
-    },
-  });
-  const reviews = petSitter?.review;
-  if (!reviews) return;
-
-  let sum = 0;
-  for (const review of reviews) {
-    sum += review.rating;
-  }
-  const avg = sum / reviews.length;
-
-  const update = await prisma.petSitter.update({
-    where: {
-      userId: petSitterId,
-    },
-    data: { avgRating: avg },
-  });
-  return update;
-}
+import {
+  makeFree,
+  makeHotel,
+  makeOwner,
+  makePost,
+  makeReview,
+  updateAvgRating,
+} from "../../../seed/db";
 
 export const reviewRouter = createTRPCRouter({
   create: publicProcedure
@@ -51,40 +32,12 @@ export const reviewRouter = createTRPCRouter({
           petSitterId: input.petSitterId,
           petOwnerId: input.petOwnerId,
           ...input.review,
-          createdAt: new Date(),
-        },
-      });
-      const reviewId = createReview.reviewId;
-
-      const connectOwner = await ctx.prisma.petOwner.update({
-        where: {
-          userId: input.petOwnerId,
-        },
-        data: {
-          review: {
-            connect: {
-              reviewId: reviewId,
-            },
-          },
-        },
-      });
-
-      const connectSitter = await ctx.prisma.petSitter.update({
-        where: {
-          userId: input.petSitterId,
-        },
-        data: {
-          review: {
-            connect: {
-              reviewId: reviewId,
-            },
-          },
         },
       });
 
       await updateAvgRating(input.petSitterId);
 
-      return;
+      return createReview;
     }),
 
   delete: publicProcedure
