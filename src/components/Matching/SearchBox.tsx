@@ -57,7 +57,7 @@ const SearchBox = () => {
   }, [checkBoxState, setValue]);
 
   return (
-    <div id="search-box" className="relative drop-shadow-md">
+    <div id="search-box" className="relative drop-shadow-md max-md:w-auto">
       <div id="header-search" className="">
         <Image
           alt="could be a shelter roof, could be a bone. who knows"
@@ -65,25 +65,30 @@ const SearchBox = () => {
           width={351}
           height={91}
           priority={true}
-          className="absolute left-0 right-0 mx-auto"
+          className="absolute left-0 right-0 mx-auto max-md:hidden"
         />
-        <p className="absolute left-[2px] top-5 z-20 w-full text-center text-[25px] font-bold text-white drop-shadow-lg">
+        <p className="max-md:w-a absolute left-[2px] top-5 z-20 w-full text-center text-[25px] font-bold text-white drop-shadow-lg max-md:top-0 max-md:left-0 max-md:bg-[#EB945E] max-md:py-2 max-md:text-[18px]">
           Search Pet Sitters
         </p>
       </div>
-      <div id="empty-space" className="mx-auto h-[15px] w-[312px] "></div>
+      <div
+        id="empty-space"
+        className="mx-auto h-[15px] w-[312px] max-md:hidden"
+      ></div>
       <div
         id="search-pane"
-        className="mx-auto flex w-[312px] flex-col rounded-xl border-b-2 border-r border-r-[#dabf888d] border-b-[#d2b67d] bg-[#ffdfa0] px-7 pb-6 pt-[72px]"
+        className="mx-auto flex w-[312px] flex-col rounded-xl border-b-2 border-r border-r-[#dabf888d] border-b-[#d2b67d] bg-[#ffdfa0] px-7 pb-6 pt-[72px] max-md:w-auto max-md:pt-[66px]"
       >
         <div id="search-params-wrapper" className="flex flex-col ">
           <div
             id="name-input-wrapper"
             className="mb-2 flex flex-col border-b-[1px] border-[#c89d48] pb-4"
           >
-            <p className="text-[18px] font-bold text-[#8a5534]">Name</p>
+            <p className="text-[18px] font-bold text-[#8a5534] max-md:text-[14px]">
+              Name
+            </p>
             <input
-              className="rounded-md border border-[#633c015d] px-2 py-1 font-extrabold text-[#633c01] placeholder-[#caa79287] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663] "
+              className="rounded-md border border-[#633c015d] px-2 py-1 font-extrabold text-[#633c01] placeholder-[#caa79287] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663] max-md:text-[14px] "
               placeholder="Sitter Name"
               {...register("searchName")}
             ></input>
@@ -92,7 +97,7 @@ const SearchBox = () => {
             id="pet-types-input-wrapper"
             className="mb-2 flex flex-col border-b-[1px] border-[#c89d48] pb-4 "
           >
-            <p className="my-1 text-[18px] font-bold text-[#8a5534]">
+            <p className="my-1 text-[18px] font-bold text-[#8a5534] max-md:text-[14px]">
               Pet Types
             </p>
             <div
@@ -103,7 +108,7 @@ const SearchBox = () => {
                 <Fragment key={petType}>
                   <div className="flex flex-row gap-2">
                     <div
-                      className="flex h-[25px] w-[25px] select-none flex-col justify-center rounded-md text-center text-xl font-medium text-white shadow-inner drop-shadow-sm"
+                      className="flex h-[25px] w-[25px] select-none flex-col justify-center rounded-md text-center text-xl font-medium text-white shadow-inner drop-shadow-sm max-md:h-[18px] max-md:w-[18px] max-md:text-[14px]"
                       style={{ backgroundColor: getBgColor(petType) }}
                       onClick={() => {
                         toggleState(petType);
@@ -111,7 +116,7 @@ const SearchBox = () => {
                     >
                       {checkBoxState[petType] ? "✓" : ""}
                     </div>
-                    <p className="text-[15px] font-normal text-[#8a5534]">
+                    <p className="text-[15px] font-normal text-[#8a5534] max-md:text-[14px]">
                       {petType}
                     </p>
                   </div>
@@ -121,7 +126,7 @@ const SearchBox = () => {
             </div>
           </div>
           <div id="price-range-input-wrapper" className="flex flex-col ">
-            <p className="mb-1 text-[18px] font-bold text-[#8a5534]">
+            <p className="mb-1 text-[18px] font-bold text-[#8a5534] max-md:text-[15px]">
               Price Range &#40;฿&#41;
             </p>
             <div id="two-thumbs-container" className="mb-6 px-2">
@@ -133,7 +138,7 @@ const SearchBox = () => {
         <div id="search-button-wrapper" className="">
           <button
             type="submit"
-            className="drop-shadow-slg w-full rounded-sm bg-[#2a4764] py-2 text-[20px] font-bold text-white duration-150 hover:bg-[#213951]"
+            className="drop-shadow-slg w-full rounded-sm bg-[#2a4764] py-2 text-[20px] font-bold text-white duration-150 hover:bg-[#213951] max-md:rounded-lg max-md:text-[14px]"
           >
             Search
           </button>

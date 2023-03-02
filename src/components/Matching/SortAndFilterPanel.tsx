@@ -47,15 +47,15 @@ const SortAndFilterPanel = () => {
   return (
     <div
       id="sort-filter-pane"
-      className="w-[312px] rounded-xl border border-[#633c015d] py-5"
+      className="w-[312px] rounded-xl border border-[#633c015d] py-5 max-md:min-w-full"
     >
       <div id="sort-panel" className="px-7">
-        <p className="mb-1 text-[18px] font-bold text-[#633C01]">
+        <p className="mb-1 text-[18px] font-bold text-[#633C01] max-md:text-[14px]">
           Sort Results By
         </p>
         <div className="text-center">
           <select
-            className="font-regular w-full rounded-sm border border-[#633c015d] bg-[#eeeeee] py-2 px-1 text-[15px]  text-[#633c01] duration-150 hover:bg-[#dbdbdb]
+            className="font-regular w-full rounded-sm border border-[#633c015d] bg-[#f7f7f7] py-2 px-1 text-[15px]  text-[#633c01] duration-150 hover:bg-[#dbdbdb]
               focus:border-[#633c01] focus:outline-none focus:ring-1 focus:ring-[#633c01]"
             {...register("searchSortBy")}
           >
@@ -75,13 +75,13 @@ const SortAndFilterPanel = () => {
         className="mt-2 mb-4 h-2 border-b border-[#633c015d]"
       ></div>
       <div id="filter-panel" className="px-7">
-        <p className="my-2 text-[18px] font-bold text-[#633C01]">
+        <p className="my-2 text-[18px] font-bold text-[#633C01] max-md:text-[14px]">
           Filter Pet Sitter Type
         </p>
 
         <div
           id="sitter-type-checkbox-wrapper"
-          className="flex flex-col gap-3 px-2"
+          className="max-md:4 flex flex-col gap-3 px-2 max-md:flex-row max-md:gap-10"
         >
           {petSitterTypeList.map((petSitterType) => (
             <Fragment key={petSitterType}>
@@ -91,14 +91,14 @@ const SortAndFilterPanel = () => {
                     backgroundColor: getBgColor(petSitterType),
                     borderWidth: checkBoxState[petSitterType] ? "0px" : "1.5px",
                   }}
-                  className="flex h-[25px] w-[25px] select-none flex-col justify-center rounded-md text-center text-xl font-medium text-white shadow-inner"
+                  className="flex h-[25px] w-[25px] select-none flex-col justify-center rounded-md text-center text-xl font-medium text-white shadow-inner max-md:h-[18px] max-md:w-[18px] max-md:text-sm"
                   onClick={() => {
                     toggleState(petSitterType);
                   }}
                 >
                   {checkBoxState[petSitterType] ? "✓" : ""}
                 </div>
-                <p className="text-[15px] font-normal text-[#633C01]">
+                <p className="text-[15px] font-normal text-[#633C01] max-md:text-[14px]">
                   {petSitterType}
                 </p>
               </div>

@@ -45,17 +45,13 @@ const PriceRangeInput = () => {
               onTouchStart={props.onTouchStart}
               style={{
                 ...props.style,
-                height: "36px",
                 display: "flex",
-                width: "100%",
               }}
-              className="flex-row justify-center"
+              className="h-[36px] w-full flex-row justify-center max-md:h-[20px]"
             >
               <div
                 ref={props.ref}
                 style={{
-                  height: "10px",
-                  width: "100%",
                   borderRadius: "4px",
                   background: getTrackBackground({
                     values,
@@ -66,6 +62,7 @@ const PriceRangeInput = () => {
                   }),
                   alignSelf: "center",
                 }}
+                className="h-[10px] w-full max-md:h-[6px]"
               >
                 {children}
               </div>
@@ -73,7 +70,7 @@ const PriceRangeInput = () => {
           )}
           renderThumb={({ props }) => (
             <div
-              className="focus:outline-none"
+              className="focus:outline-none max-md:h-[20px] max-md:w-[18px]"
               {...props}
               style={{
                 ...props.style,
@@ -89,10 +86,12 @@ const PriceRangeInput = () => {
         <div id="min-max-label" className="flex flex-row justify-center gap-1">
           <div id="" className="flex flex-col">
             <label>
-              <p className="text-[15px] font-medium text-[#8a5534]">Min</p>
+              <p className="text-[15px] font-medium text-[#8a5534] max-md:text-[13px]">
+                Min
+              </p>
             </label>
             <input
-              className="w-[90px] rounded-md border border-[#633c015d] px-2 py-1 text-center font-extrabold text-[#633c01] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663]"
+              className="w-[90px] rounded-md border border-[#633c015d] px-2 py-1 text-center font-extrabold text-[#633c01] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663] max-md:text-[14px]"
               {...register("searchPriceMin", {
                 value: values[0],
                 valueAsNumber: true,
@@ -121,10 +120,12 @@ const PriceRangeInput = () => {
           </div>
           <div id="" className="flex flex-col">
             <label>
-              <p className="text-[15px] font-medium text-[#8a5534]">Max</p>
+              <p className="text-[15px] font-medium text-[#8a5534] max-md:text-[13px] ">
+                Max
+              </p>
             </label>
             <input
-              className="w-[90px] rounded-md border border-[#633c015d] px-2 py-1 text-center font-extrabold text-[#633c01] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663]"
+              className="w-[90px] rounded-md border border-[#633c015d] px-2 py-1 text-center font-extrabold text-[#633c01] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663] max-md:text-[14px]"
               {...register("searchPriceMax", {
                 value: values[1],
                 valueAsNumber: true,

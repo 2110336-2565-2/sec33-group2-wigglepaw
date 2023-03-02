@@ -6,7 +6,7 @@ const NoPetsitterFoundDisplay: React.FunctionComponent = ({}) => {
   return (
     <div
       id="card"
-      className="relative -ml-4 w-[818px] grow animate-showing rounded-md border border-[#dadadac2] opacity-0 drop-shadow-sm"
+      className="relative -ml-4 w-[818px] grow animate-showing rounded-md border border-[#dadadac2] opacity-0 drop-shadow-sm max-md:ml-0 max-md:w-auto"
     >
       <div className="mx-auto mt-56 mb-32 w-fit text-center drop-shadow-none max-md:mt-24 max-md:mb-10">
         <p className="mb-1 text-[32px] text-[#878787] max-md:text-[16px]">

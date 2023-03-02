@@ -32,7 +32,7 @@ const Matching: NextPage = () => {
       <Header />
       <div
         id="content-wrapper"
-        className="-mt-4 mb-8 flex flex-row justify-center gap-8 pt-4"
+        className="-mt-4 mb-8 flex flex-row justify-center gap-8 pt-4 max-md:flex-col max-md:px-6"
       >
         <MatchingFormProvider
           num={num}
@@ -41,7 +41,7 @@ const Matching: NextPage = () => {
           <MatchingPanel />
         </MatchingFormProvider>
         <div id="main-wrapper" className="pt-8">
-          <p className="-ml-5 mb-5  text-[16px] text-[#485B6F]">
+          <p className="-ml-5 mb-5  text-[16px] text-[#485B6F] max-md:hidden">
             📍Explore our list of experienced sitters & hotels for your beloved
             pets.
             <Link href="/registerPetSitter">
@@ -52,7 +52,7 @@ const Matching: NextPage = () => {
           </p>
           <div
             id="pet-sitter-cards-wrapper"
-            className=" flex w-full  flex-col gap-6 "
+            className=" flex w-full flex-col gap-6 max-md:-mt-8"
           >
             {matchedPetSitters.length === 0 && <NoPetsitterFoundDisplay />}
             {matchedPetSitters?.map((matchedPetSitter) => (
