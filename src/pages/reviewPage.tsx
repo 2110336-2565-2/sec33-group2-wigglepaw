@@ -2,7 +2,7 @@ import * as React from "react";
 import { Fragment, useState, useRef } from "react";
 import type { NextPage } from "next";
 import { api } from "../utils/api";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { PetKind } from "@prisma/client";
@@ -12,8 +12,7 @@ import Router, { useRouter } from "next/router";
 import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { Rating } from "react-simple-star-rating";
-import { Box } from "@mui/material";
-const reviewPage: NextPage = () => {
+const ReviewPage: NextPage = () => {
   const {
     register,
     handleSubmit,
@@ -21,6 +20,7 @@ const reviewPage: NextPage = () => {
   } = useForm();
   const OnSubmit = (data: any) => {
     console.log(data.review);
+    console.log(data.rate);
     setHasReview(true);
     closeModal();
   };
@@ -36,11 +36,6 @@ const reviewPage: NextPage = () => {
   }
   const handleRating = (rate: number) => {
     setRating(rate);
-  };
-
-  const handleReset = () => {
-    // Set the initial value
-    setRating(0);
   };
   return (
     <div>
@@ -98,9 +93,11 @@ const reviewPage: NextPage = () => {
                     Write your review
                   </Dialog.Title>
                   <div className="flex flex-col items-center">
-                    <form onSubmit={OnSubmit}>
+                    <form onSubmit={handleSubmit(OnSubmit)}>
                       <h1>Enter star</h1>
+
                       <Rating
+                        {...register("rate")}
                         transition={true}
                         onClick={handleRating}
                         className="inline"
@@ -110,7 +107,7 @@ const reviewPage: NextPage = () => {
                       <br />
                       <h1>Enter your review</h1>
                       <input
-                        id="review"
+                        {...register("review")}
                         type="text"
                         className="block w-full border border-black bg-gray-50"
                       ></input>
@@ -131,4 +128,4 @@ const reviewPage: NextPage = () => {
   );
 };
 
-export default reviewPage;
+export default ReviewPage;
