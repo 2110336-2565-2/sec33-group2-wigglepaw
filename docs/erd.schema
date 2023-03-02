@@ -50,13 +50,19 @@ Table User {
   bankName String
   accounts Account [not null]
   sessions Session [not null]
+  createdAt DateTime [default: `now()`, not null]
+  salt String [not null]
 }
 
 Table PetOwner {
   userId String [pk]
   user User [not null]
+  petTypes String[] [not null]
   firstName String [not null]
   lastName String [not null]
+  pet Pet [not null]
+  review Review [not null]
+  SessionRequest SessionRequest [not null]
 }
 
 Table PetSitter {
@@ -69,6 +75,11 @@ Table PetSitter {
   certificationUri String
   startPrice Float
   endPrice Float
+  post Post [not null]
+  review Review [not null]
+  avgRating Float
+  reviewCount Int [not null, default: 0]
+  SessionRequest SessionRequest [not null]
 }
 
 Table FreelancePetSitter {
@@ -85,6 +96,17 @@ Table PetHotel {
   hotelName String [not null]
 }
 
+Table Pet {
+  petId String [pk]
+  petOwnerId String [not null]
+  petOwner PetOwner [not null]
+  petType String [not null]
+  name String
+  sex String
+  breed String
+  createdAt DateTime [default: `now()`, not null]
+}
+
 Table VerificationToken {
   identifier String [not null]
   token String [unique, not null]
@@ -93,6 +115,50 @@ Table VerificationToken {
   indexes {
     (identifier, token) [unique]
   }
+}
+
+Table Review {
+  reviewId String [pk]
+  petOwnerId String [not null]
+  petOwner PetOwner [not null]
+  petSitterId String [not null]
+  petSitter PetSitter [not null]
+  text String
+  rating Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Post {
+  postId String [pk]
+  petSitterId String [not null]
+  petSitter PetSitter [not null]
+  title String [not null]
+  text String
+  pictureUri String[] [not null]
+  videoUri String
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table SessionRequest {
+  srId String [pk]
+  petOwnerId String [not null]
+  petOwner PetOwner [not null]
+  petSitterId String [not null]
+  petSitter PetSitter [not null]
+  status String [not null]
+  text String
+  createdAt DateTime [default: `now()`, not null]
+  Event Event [not null]
+}
+
+Table Schedule {
+  userId String [pk]
+}
+
+Table Event {
+  eventId String [pk]
+  srId String [not null]
+  sessionRequest SessionRequest [not null]
 }
 
 Ref: Account.userId > User.userId [delete: Cascade]
@@ -106,3 +172,17 @@ Ref: PetSitter.userId - User.userId [delete: Cascade]
 Ref: FreelancePetSitter.userId - PetSitter.userId [delete: Cascade]
 
 Ref: PetHotel.userId - PetSitter.userId [delete: Cascade]
+
+Ref: Pet.petOwnerId > PetOwner.userId [delete: Cascade]
+
+Ref: Review.petOwnerId > PetOwner.userId [delete: Cascade]
+
+Ref: Review.petSitterId > PetSitter.userId [delete: Cascade]
+
+Ref: Post.petSitterId > PetSitter.userId [delete: Cascade]
+
+Ref: SessionRequest.petOwnerId > PetOwner.userId [delete: Cascade]
+
+Ref: SessionRequest.petSitterId > PetSitter.userId [delete: Cascade]
+
+Ref: Event.srId > SessionRequest.srId [delete: Cascade]

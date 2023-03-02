@@ -34,10 +34,13 @@ erDiagram
     String imageUri  "nullable"
     String bankAccount  "nullable"
     String bankName  "nullable"
+    DateTime createdAt  
+    String salt  
     }
   
 
   PetOwner {
+    String petTypes  
     String firstName  
     String lastName  
     }
@@ -49,6 +52,8 @@ erDiagram
     String certificationUri  "nullable"
     Float startPrice  "nullable"
     Float endPrice  "nullable"
+    Float avgRating  "nullable"
+    Int reviewCount  
     }
   
 
@@ -64,10 +69,56 @@ erDiagram
     }
   
 
+  Pet {
+    String petId PK 
+    String petType  
+    String name  "nullable"
+    String sex  "nullable"
+    String breed  "nullable"
+    DateTime createdAt  
+    }
+  
+
   VerificationToken {
     String identifier  
     String token  
     DateTime expires  
+    }
+  
+
+  Review {
+    String reviewId PK 
+    String text  "nullable"
+    Int rating  
+    DateTime createdAt  
+    }
+  
+
+  Post {
+    String postId PK 
+    String title  
+    String text  "nullable"
+    String pictureUri  
+    String videoUri  "nullable"
+    DateTime createdAt  
+    }
+  
+
+  SessionRequest {
+    String srId PK 
+    String status  
+    String text  "nullable"
+    DateTime createdAt  
+    }
+  
+
+  Schedule {
+    String userId PK 
+    }
+  
+
+  Event {
+    String eventId PK 
     }
   
     Account o{--|| User : "user"
@@ -76,4 +127,11 @@ erDiagram
     PetSitter o|--|| User : "user"
     FreelancePetSitter o|--|| PetSitter : "petSitter"
     PetHotel o|--|| PetSitter : "petSitter"
+    Pet o{--|| PetOwner : "petOwner"
+    Review o{--|| PetOwner : "petOwner"
+    Review o{--|| PetSitter : "petSitter"
+    Post o{--|| PetSitter : "petSitter"
+    SessionRequest o{--|| PetOwner : "petOwner"
+    SessionRequest o{--|| PetSitter : "petSitter"
+    Event o{--|| SessionRequest : "sessionRequest"
 ```

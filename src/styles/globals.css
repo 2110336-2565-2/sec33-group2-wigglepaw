@@ -54,6 +54,9 @@
   .profile-edit-button {
     @apply mx-auto flex whitespace-nowrap rounded-2xl bg-sky-700 px-3 py-1 text-center font-semibold text-white hover:bg-sky-600;
   }
+  .profile-post {
+    @apply mb-2 w-full rounded-2xl border-2 border-gray-300 p-2 md:mb-4 md:p-4;
+  }
 
   /* searchbox */
   .search-input {
