@@ -15,14 +15,42 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { text } from "stream/consumers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import SessionsmallCard from "../components/Calendar/Sessionsmallcard";
+import Image from "next/image";
 
 const About: NextPage = () => {
   type Insid = { title: string; start: string; end: string };
 
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState([
+    {
+      title: "Username1",
+      start: "2023-03-03T16:04",
+      end: "2023-03-05T16:04",
+      color: "#f87171",
+    },
+    {
+      title: "Username2",
+      start: "2023-02-03T16:04",
+      end: "2023-02-05T16:04",
+      color: "#a3e635",
+    },
+    {
+      title: "Username3",
+      start: "2023-02-19T16:04",
+      end: "2023-03-05T16:04",
+      color: "#fde047",
+    },
+  ]);
+  const [upcoming, setUpcoming] = useState([]);
+  const [ongoing, setOngoing] = useState([]);
+  const [finished, setFinished] = useState([]);
   const [showUp, setShowup] = useState(false);
   const [showOn, setShowon] = useState(false);
   const [showFin, setShowfin] = useState(false);
+
+  useEffect(() => {
+    filter();
+  }, []);
 
   const eventContent = ({ event, view }) => {
     // Create a new div element for the event
@@ -53,8 +81,8 @@ const About: NextPage = () => {
     e.preventDefault();
     console.log(events);
     let randcol = "";
-    console.log(new Date());
-    console.log("vs  ", new Date(e.target.start.value));
+    //console.log(new Date());
+    //console.log("vs  ", new Date(e.target.start.value));
     if (new Date() > new Date(e.target.end.value)) {
       randcol = "#a3e635";
     } else if (new Date() < new Date(e.target.start.value)) {
@@ -63,22 +91,100 @@ const About: NextPage = () => {
       randcol = "#fde047";
     }
 
-    setEvents([
-      ...events,
-      {
-        title: e.target.title.value,
-        start: e.target.start.value,
-        end: e.target.end.value,
-        color: randcol,
-      },
-    ]);
+    const data = {
+      title: e.target.title.value,
+      start: e.target.start.value,
+      end: e.target.end.value,
+      color: randcol,
+    };
+
+    setEvents([...events, data]);
+
+    filtertemp(data);
   };
+
+  //filter type of events, this would be very effective with use Quary,
+  const filter = () => {
+    events.forEach((value) => {
+      const datetimeString = value.start;
+      const datetimeString2 = value.end;
+      const datetime = new Date(datetimeString);
+      const datetime2 = new Date(datetimeString2);
+
+      const options = {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      };
+
+      const timestart = datetime.toLocaleDateString("en-US", options);
+      const timeend = datetime2.toLocaleDateString("en-US", options);
+      const data = {
+        timestart: timestart,
+        timeend: timeend,
+        title: value.title,
+      };
+
+      if (
+        //ongoing
+        new Date(value.start) < new Date() &&
+        new Date(value.end) > new Date()
+      ) {
+        setOngoing([...ongoing, data]);
+      } else if (new Date(value.end) < new Date()) {
+        //already finished
+        setFinished([...finished, data]);
+      } else {
+        //upcoming
+        setUpcoming([...upcoming, data]);
+      }
+    });
+  };
+
+  //temp function use with form for test only, must remove this for the real version
+  const filtertemp = (value) => {
+    const datetimeString = value.start;
+    const datetimeString2 = value.end;
+    const datetime = new Date(datetimeString);
+    const datetime2 = new Date(datetimeString2);
+
+    const options = {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    };
+
+    const timestart = datetime.toLocaleDateString("en-US", options);
+    const timeend = datetime2.toLocaleDateString("en-US", options);
+    const data = {
+      timestart: timestart,
+      timeend: timeend,
+      title: value.title,
+    };
+
+    if (
+      //ongoing
+      new Date(value.start) < new Date() &&
+      new Date(value.end) > new Date()
+    ) {
+      setOngoing([...ongoing, data]);
+    } else if (new Date(value.end) < new Date()) {
+      //already finished
+      setFinished([...finished, data]);
+    } else {
+      //upcoming
+      setUpcoming([...upcoming, data]);
+    }
+  };
+
   return (
     <>
       <Header />
-      <div className="w-screen items-center justify-start  md:flex md:h-screen">
-        <div className="mx-4 h-full w-full md:mx-24 md:flex">
-          <div className=" h-[80%] w-full overflow-scroll">
+
+      <div className="relative w-screen items-center justify-start  md:flex md:h-screen">
+        <Image src="/calendarbg.png" alt="bg" fill />
+        <div className="mx-4 h-full w-full md:ml-20 md:mr-10 md:flex">
+          <div className="z-10 h-[80%] w-full overflow-scroll bg-white">
             <FullCalendar
               plugins={[dayGridPlugin, timeGridPlugin]}
               initialView="dayGridMonth"
@@ -102,9 +208,13 @@ const About: NextPage = () => {
               eventContent={eventContent}
             />
           </div>
-          <div className="md:ml-10 md:h-[90%] md:w-[70%] md:border-l-2 md:border-black">
-            <div className="my-10 ml-4">
-              <div className="center-thing mb-1 border-b-4 border-red-600 bg-red-300 bg-opacity-50 py-2 text-center shadow-md ">
+          <div className="z-10 overflow-scroll border-2 border-[#E7E7E7] bg-white md:ml-5 md:h-[90%] md:w-[50%]">
+            <div className="center-thing mb-5 bg-[#7B7B7B] py-2 text-2xl text-white">
+              {" "}
+              My Sessions
+            </div>
+            <div className=" px-5">
+              <div className="center-thing relative mb-1 border-b-4 border-red-600 bg-red-300 bg-opacity-50 px-10 py-2 text-center shadow-md ">
                 Upcoming
                 {!showUp && (
                   <button
@@ -112,7 +222,7 @@ const About: NextPage = () => {
                       setShowup((prev) => !prev);
                       console.log(showUp);
                     }}
-                    className="center-thing absolute left-[90%] h-5 w-5 rounded-full text-xl  "
+                    className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
                   >
                     +
                   </button>
@@ -123,75 +233,27 @@ const About: NextPage = () => {
                       setShowup((prev) => !prev);
                       console.log(showUp);
                     }}
-                    className="center-thing absolute left-[90%] h-5 w-5 rounded-full text-xl  "
+                    className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
                   >
                     -
                   </button>
                 )}
               </div>
               {showUp &&
-                events.map((value, index) => {
-                  if (new Date(value.start) > new Date()) {
-                    const datetimeString = value.start;
-                    const datetimeString2 = value.end;
-                    const datetime = new Date(datetimeString);
-                    const datetime2 = new Date(datetimeString2);
-
-                    const options = {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    };
-
-                    options.hour = "numeric";
-                    options.minute = "numeric";
-                    options.hour12 = true;
-                    const timestart = datetime.toLocaleTimeString(
-                      "en-US",
-                      options
-                    );
-                    const timeend = datetime2.toLocaleTimeString(
-                      "en-US",
-                      options
-                    );
-
-                    return (
-                      // eslint-disable-next-line react/jsx-key
-                      <div className="py-2  shadow-inner transition-all md:pl-5  ">
-                        <div className="flex">
-                          <div className="text-sm text-gray-500">
-                            {timestart} &nbsp;-{" "}
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            {" "}
-                            &nbsp; {timeend}
-                          </div>
-                        </div>
-                        <div className="mt-1 flex">
-                          <span className="mr-5">{value.title} </span>
-                          <div
-                            onClick={() => {
-                              setEvents((current) =>
-                                current.filter((events, i) => i !== index)
-                              );
-                            }}
-                            className="hover:scale-[1.05]"
-                          >
-                            <FontAwesomeIcon size="sm" icon={faTrashCan} />
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  }
+                upcoming.map((value) => {
+                  return (
+                    // eslint-disable-next-line react/jsx-key
+                    <SessionsmallCard data={value} />
+                  );
                 })}
-              <div className="center-thing mt-5 border-b-4 border-yellow-400 bg-yellow-200 bg-opacity-50 py-2 text-center shadow-md ">
+              <div className="center-thing relative mt-5 border-b-4 border-yellow-400 bg-yellow-200 bg-opacity-50 py-2 text-center shadow-md ">
                 Ongoing
                 {!showOn && (
                   <button
                     onClick={() => {
                       setShowon((prev) => !prev);
                     }}
-                    className="center-thing absolute left-[90%] h-5 w-5 rounded-full text-xl  "
+                    className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
                   >
                     +
                   </button>
@@ -201,78 +263,27 @@ const About: NextPage = () => {
                     onClick={() => {
                       setShowon((prev) => !prev);
                     }}
-                    className="center-thing absolute left-[90%] h-5 w-5 rounded-full text-xl  "
+                    className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
                   >
                     -
                   </button>
                 )}
               </div>
               {showOn &&
-                events.map((value, index) => {
-                  if (
-                    new Date(value.start) < new Date() &&
-                    new Date(value.end) > new Date()
-                  ) {
-                    const datetimeString = value.start;
-                    const datetimeString2 = value.end;
-                    const datetime = new Date(datetimeString);
-                    const datetime2 = new Date(datetimeString2);
-
-                    const options = {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    };
-
-                    options.hour = "numeric";
-                    options.minute = "numeric";
-                    options.hour12 = true;
-                    const timestart = datetime.toLocaleTimeString(
-                      "en-US",
-                      options
-                    );
-                    const timeend = datetime2.toLocaleTimeString(
-                      "en-US",
-                      options
-                    );
-
-                    return (
-                      // eslint-disable-next-line react/jsx-key
-                      <div className="py-2   shadow-inner transition-all md:pl-5  ">
-                        <div className="flex">
-                          <div className="text-sm text-gray-500">
-                            {timestart} &nbsp;-{" "}
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            {" "}
-                            &nbsp; {timeend}
-                          </div>
-                        </div>
-                        <div className="mt-1 flex">
-                          <span className="mr-5">{value.title} </span>
-                          <div
-                            onClick={() => {
-                              setEvents((current) =>
-                                current.filter((events, i) => i !== index)
-                              );
-                            }}
-                            className="hover:scale-[1.05]"
-                          >
-                            <FontAwesomeIcon size="sm" icon={faTrashCan} />
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  }
+                ongoing.map((value) => {
+                  return (
+                    // eslint-disable-next-line react/jsx-key
+                    <SessionsmallCard data={value} />
+                  );
                 })}
-              <div className="center-thing mt-5 border-b-4 border-lime-400 bg-lime-300 bg-opacity-50 py-2 text-center shadow-md ">
+              <div className="center-thing relative mt-5 border-b-4 border-lime-400 bg-lime-300 bg-opacity-50 py-2 text-center shadow-md ">
                 Finished
                 {!showFin && (
                   <button
                     onClick={() => {
                       setShowfin((prev) => !prev);
                     }}
-                    className="center-thing absolute left-[90%] h-5 w-5 rounded-full text-xl  "
+                    className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
                   >
                     +
                   </button>
@@ -282,69 +293,18 @@ const About: NextPage = () => {
                     onClick={() => {
                       setShowfin((prev) => !prev);
                     }}
-                    className="center-thing absolute left-[90%] h-5 w-5 rounded-full text-xl  "
+                    className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
                   >
                     -
                   </button>
                 )}
               </div>
               {showFin &&
-                events.map((value, index) => {
-                  if (new Date(value.end) < new Date()) {
-                    const bordercolor = " border-[" + value.color + "]";
-                    console.log(bordercolor);
-
-                    const datetimeString = value.start;
-                    const datetimeString2 = value.end;
-                    const datetime = new Date(datetimeString);
-                    const datetime2 = new Date(datetimeString2);
-
-                    const options = {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    };
-
-                    options.hour = "numeric";
-                    options.minute = "numeric";
-                    options.hour12 = true;
-                    const timestart = datetime.toLocaleTimeString(
-                      "en-US",
-                      options
-                    );
-                    const timeend = datetime2.toLocaleTimeString(
-                      "en-US",
-                      options
-                    );
-
-                    return (
-                      // eslint-disable-next-line react/jsx-key
-                      <div className="animate-showing py-2   shadow-inner transition-all md:pl-5  ">
-                        <div className="flex">
-                          <div className="text-sm text-gray-500">
-                            {timestart} &nbsp;-{" "}
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            {" "}
-                            &nbsp; {timeend}
-                          </div>
-                        </div>
-                        <div className="mt-1 flex">
-                          <span className="mr-5">{value.title} </span>
-                          <div
-                            onClick={() => {
-                              setEvents((current) =>
-                                current.filter((events, i) => i !== index)
-                              );
-                            }}
-                            className="hover:scale-[1.05]"
-                          >
-                            <FontAwesomeIcon size="sm" icon={faTrashCan} />
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  }
+                finished.map((value) => {
+                  return (
+                    // eslint-disable-next-line react/jsx-key
+                    <SessionsmallCard data={value} />
+                  );
                 })}
             </div>
           </div>
