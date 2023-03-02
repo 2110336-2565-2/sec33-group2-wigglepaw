@@ -73,13 +73,19 @@ model User {
     bankName      String? // Assume 1 per user
     accounts      Account[] // Needed for Auth
     sessions      Session[] // Needed for Auth
+    createdAt     DateTime   @default(now())
+    salt          String
 }
 
 model PetOwner {
-    userId    String @id @default(cuid())
-    user      User   @relation(fields: [userId], references: [userId], onDelete: Cascade)
-    firstName String
-    lastName  String
+    userId         String           @id @default(cuid())
+    user           User             @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    petTypes       String[]
+    firstName      String
+    lastName       String
+    pet            Pet[]
+    review         Review[]
+    SessionRequest SessionRequest[]
 }
 
 model PetSitter {
@@ -92,6 +98,11 @@ model PetSitter {
     certificationUri   String?
     startPrice         Float?
     endPrice           Float?
+    post               Post[]
+    review             Review[]
+    avgRating          Float?
+    reviewCount        Int                 @default(0)
+    SessionRequest     SessionRequest[]
 }
 
 model FreelancePetSitter {
@@ -108,10 +119,65 @@ model PetHotel {
     hotelName          String
 }
 
+model Pet {
+    petId      String   @id @default(cuid())
+    petOwnerId String
+    petOwner   PetOwner @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
+    petType    String
+    name       String?
+    sex        String?
+    breed      String?
+    createdAt  DateTime @default(now())
+}
+
 model VerificationToken {
     identifier String
     token      String   @unique
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Review {
+    reviewId    String    @id @default(cuid())
+    petOwnerId  String
+    petOwner    PetOwner  @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
+    petSitterId String
+    petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    text        String?
+    rating      Int
+    createdAt   DateTime  @default(now())
+}
+
+model Post {
+    postId      String    @id @default(cuid())
+    petSitterId String
+    petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    title       String
+    text        String?
+    pictureUri  String[]
+    videoUri    String?
+    createdAt   DateTime  @default(now())
+}
+
+model SessionRequest {
+    srId        String    @id @default(cuid())
+    petOwnerId  String
+    petOwner    PetOwner  @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
+    petSitterId String
+    petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    status      String // Waiting, Cancelled, Accepted, Declined
+    text        String?
+    createdAt   DateTime  @default(now())
+    Event       Event[]
+}
+
+model Schedule {
+    userId String @id @default(cuid())
+}
+
+model Event {
+    eventId        String         @id @default(cuid())
+    srId           String
+    sessionRequest SessionRequest @relation(fields: [srId], references: [srId], onDelete: Cascade)
 }

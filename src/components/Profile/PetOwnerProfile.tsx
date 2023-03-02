@@ -14,6 +14,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../utils/api";
 import type { PetOwnerProfileType, UserProfile } from "../../types/user";
+import UploadProfilePicture from "./UploadProfilePicture";
 
 type PetOwnerProfileProps = {
   editable: boolean;
@@ -29,7 +30,7 @@ const formDataSchema = z.object({
   email: z.string().email(),
 });
 
-type FormData = z.infer<typeof formDataSchema>;
+type FormDataInformation = z.infer<typeof formDataSchema>;
 
 const PetOwnerProfile = (props: PetOwnerProfileProps) => {
   const updatePetOwner = api.petOwner.update.useMutation();
@@ -37,35 +38,21 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
   const updateUser = api.user.update.useMutation();
   const [editing, setEditing] = useState(false);
 
-  const profileImageUri = props.user
-    ? props.user.imageUri
-      ? props.user.imageUri
-      : "/profiledummy.png"
-    : "/profiledummy.png";
-
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<FormDataInformation>({
     resolver: zodResolver(formDataSchema),
     mode: "onSubmit",
   });
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: FormDataInformation) => {
     const [firstName, lastName] = data.firstNameLastName.split(" ");
 
     await updatePetOwner.mutateAsync({
       userId: props.user.userId,
       data: { firstName: firstName, lastName: lastName },
     });
-    // await updatePetSitter.mutateAsync({
-    //   userId: props.user.userId,
-    //   data: {
-    //     petTypes: petTypesArray,
-    //     verifyStatus: props.user.verifyStatus,
-    //   },
-    // });
     await updateUser.mutateAsync({
       userId: props.user.userId,
       data: {
@@ -74,6 +61,7 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
         address: data.address,
       },
     });
+
     // Refetch user data
     // console.log("Invalidating cache");
     await utils.user.getByUsername.invalidate({
@@ -86,15 +74,16 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
   return (
     <div>
       <Header></Header>
-      <div className="mx-3 flex flex-wrap">
-        <div className="my-auto flex w-screen flex-col md:mx-4 md:w-1/5 md:min-w-min">
+      <div className="mx-3 flex flex-wrap justify-center">
+        <div className="my-auto flex w-screen flex-col md:m-4 md:w-1/5 md:min-w-min">
           <div className="relative mx-auto flex h-[6rem] w-[6rem]">
             <Image
-              src={profileImageUri}
+              src={props.user.imageUri ?? "//profiledummy.png"}
               alt={"Icon"}
               fill
-              className="rounded-xl"
-            ></Image>
+              className="rounded-full object-cover"
+            />
+            {props.editable && <UploadProfilePicture user={props.user} />}
           </div>
           <h1 className="mx-auto my-1 text-center text-2xl font-semibold">
             {props.user.username}
