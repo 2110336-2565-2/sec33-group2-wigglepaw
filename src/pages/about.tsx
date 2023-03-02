@@ -14,9 +14,10 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { text } from "stream/consumers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import SessionsmallCard from "../components/Calendar/Sessionsmallcard";
 import Image from "next/image";
+import SessionmediumCard from "../components/Calendar/Sessionmediumcard";
 
 const About: NextPage = () => {
   type Insid = { title: string; start: string; end: string };
@@ -47,6 +48,8 @@ const About: NextPage = () => {
   const [showUp, setShowup] = useState(false);
   const [showOn, setShowon] = useState(false);
   const [showFin, setShowfin] = useState(false);
+
+  const [mode, setMode] = useState(false);
 
   useEffect(() => {
     filter();
@@ -141,6 +144,10 @@ const About: NextPage = () => {
     });
   };
 
+  const changemode = () => {
+    setMode(true);
+  };
+
   //temp function use with form for test only, must remove this for the real version
   const filtertemp = (value) => {
     const datetimeString = value.start;
@@ -209,104 +216,129 @@ const About: NextPage = () => {
             />
           </div>
           <div className="z-10 overflow-scroll border-2 border-[#E7E7E7] bg-white md:ml-5 md:h-[90%] md:w-[50%]">
-            <div className="center-thing mb-5 bg-[#7B7B7B] py-2 text-2xl text-white">
-              {" "}
-              My Sessions
-            </div>
-            <div className=" px-5">
-              <div className="center-thing relative mb-1 border-b-4 border-red-600 bg-red-300 bg-opacity-50 px-10 py-2 text-center shadow-md ">
-                Upcoming
-                {!showUp && (
-                  <button
-                    onClick={() => {
-                      setShowup((prev) => !prev);
-                      console.log(showUp);
-                    }}
-                    className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
-                  >
-                    +
-                  </button>
-                )}
-                {showUp && (
-                  <button
-                    onClick={() => {
-                      setShowup((prev) => !prev);
-                      console.log(showUp);
-                    }}
-                    className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
-                  >
-                    -
-                  </button>
-                )}
+            {mode === false ? (
+              <div className="center-thing mb-5 bg-[#7B7B7B] py-2 text-2xl text-white">
+                {" "}
+                My Sessions
               </div>
-              {showUp &&
-                upcoming.map((value) => {
-                  return (
-                    // eslint-disable-next-line react/jsx-key
-                    <SessionsmallCard data={value} />
-                  );
-                })}
-              <div className="center-thing relative mt-5 border-b-4 border-yellow-400 bg-yellow-200 bg-opacity-50 py-2 text-center shadow-md ">
-                Ongoing
-                {!showOn && (
-                  <button
-                    onClick={() => {
-                      setShowon((prev) => !prev);
-                    }}
-                    className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
-                  >
-                    +
-                  </button>
-                )}
-                {showOn && (
-                  <button
-                    onClick={() => {
-                      setShowon((prev) => !prev);
-                    }}
-                    className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
-                  >
-                    -
-                  </button>
-                )}
+            ) : (
+              <div className="center-thing relative mb-5 bg-[#7B7B7B] py-2 text-2xl text-white">
+                {" "}
+                Session Details
+                <button
+                  onClick={() => {
+                    setMode(false);
+                  }}
+                  className="absolute left-0 ml-2 bg-transparent p-3  text-white"
+                >
+                  <FontAwesomeIcon icon={faArrowLeft} />
+                </button>
               </div>
-              {showOn &&
-                ongoing.map((value) => {
-                  return (
-                    // eslint-disable-next-line react/jsx-key
-                    <SessionsmallCard data={value} />
-                  );
-                })}
-              <div className="center-thing relative mt-5 border-b-4 border-lime-400 bg-lime-300 bg-opacity-50 py-2 text-center shadow-md ">
-                Finished
-                {!showFin && (
-                  <button
-                    onClick={() => {
-                      setShowfin((prev) => !prev);
-                    }}
-                    className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
-                  >
-                    +
-                  </button>
-                )}
-                {showFin && (
-                  <button
-                    onClick={() => {
-                      setShowfin((prev) => !prev);
-                    }}
-                    className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
-                  >
-                    -
-                  </button>
-                )}
+            )}
+            {mode === false ? (
+              <div className=" px-5">
+                <div className="center-thing relative mb-1 border-b-4 border-red-600 bg-red-300 bg-opacity-50 px-10 py-2 text-center shadow-md ">
+                  Upcoming
+                  {!showUp && (
+                    <button
+                      onClick={() => {
+                        setShowup((prev) => !prev);
+                        console.log(showUp);
+                      }}
+                      className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
+                    >
+                      +
+                    </button>
+                  )}
+                  {showUp && (
+                    <button
+                      onClick={() => {
+                        setShowup((prev) => !prev);
+                        console.log(showUp);
+                      }}
+                      className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
+                    >
+                      -
+                    </button>
+                  )}
+                </div>
+                {showUp &&
+                  upcoming.map((value) => {
+                    return (
+                      // eslint-disable-next-line react/jsx-key
+                      <div onClick={changemode}>
+                        <SessionsmallCard data={value} />
+                      </div>
+                    );
+                  })}
+                <div className="center-thing relative mt-5 border-b-4 border-yellow-400 bg-yellow-200 bg-opacity-50 py-2 text-center shadow-md ">
+                  Ongoing
+                  {!showOn && (
+                    <button
+                      onClick={() => {
+                        setShowon((prev) => !prev);
+                      }}
+                      className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
+                    >
+                      +
+                    </button>
+                  )}
+                  {showOn && (
+                    <button
+                      onClick={() => {
+                        setShowon((prev) => !prev);
+                      }}
+                      className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
+                    >
+                      -
+                    </button>
+                  )}
+                </div>
+                {showOn &&
+                  ongoing.map((value) => {
+                    return (
+                      // eslint-disable-next-line react/jsx-key
+                      <div onClick={changemode}>
+                        <SessionsmallCard data={value} />
+                      </div>
+                    );
+                  })}
+                <div className="center-thing relative mt-5 border-b-4 border-lime-400 bg-lime-300 bg-opacity-50 py-2 text-center shadow-md ">
+                  Finished
+                  {!showFin && (
+                    <button
+                      onClick={() => {
+                        setShowfin((prev) => !prev);
+                      }}
+                      className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
+                    >
+                      +
+                    </button>
+                  )}
+                  {showFin && (
+                    <button
+                      onClick={() => {
+                        setShowfin((prev) => !prev);
+                      }}
+                      className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
+                    >
+                      -
+                    </button>
+                  )}
+                </div>
+                {showFin &&
+                  finished.map((value) => {
+                    return (
+                      // eslint-disable-next-line react/jsx-key
+                      <div onClick={changemode}>
+                        <SessionsmallCard data={value} />
+                      </div>
+                    );
+                  })}
               </div>
-              {showFin &&
-                finished.map((value) => {
-                  return (
-                    // eslint-disable-next-line react/jsx-key
-                    <SessionsmallCard data={value} />
-                  );
-                })}
-            </div>
+            ) : (
+              <SessionmediumCard />
+            )}
           </div>
         </div>
       </div>
