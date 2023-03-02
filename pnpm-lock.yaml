@@ -50,6 +50,7 @@ specifiers:
   react-icons: ^4.7.1
   react-image-size: ^2.0.0
   react-range: ^1.8.14
+  react-simple-star-rating: ^5.1.7
   react-time-ago: ^7.2.1
   superjson: 1.9.1
   tailwindcss: ^3.2.0
@@ -93,6 +94,7 @@ dependencies:
   react-icons: 4.7.1_react@18.2.0
   react-image-size: 2.0.0_biqbaboplfbrettd7655fr4n2y
   react-range: 1.8.14_biqbaboplfbrettd7655fr4n2y
+  react-simple-star-rating: 5.1.7_biqbaboplfbrettd7655fr4n2y
   react-time-ago: 7.2.1_eqoz6kcnf5na464z2zfynejspu
   superjson: 1.9.1
   trpc-panel: 1.2.8_v7aw5md42ua3rf277jyeogdfny
@@ -6078,6 +6080,17 @@ packages:
     peerDependencies:
       react: ^16.8.0-0 || ^17.0.0-0 || ^18.0.0-0
       react-dom: ^16.8.0-0 || ^17.0.0-0 || ^18.0.0-0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /react-simple-star-rating/5.1.7_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-NTFkW8W3uwvI82Fv7JW5i7gmDjEZKxJmj+Z9vn+BjYIXT6ILdnU9qnSUP2cWrWN/WAUlue81f9SgM4CQcenltQ==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      react: '>=18.0.0'
+      react-dom: '>=18.0.0'
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
