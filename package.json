@@ -47,6 +47,7 @@
     "react-icons": "^4.7.1",
     "react-image-size": "^2.0.0",
     "react-range": "^1.8.14",
+    "react-simple-star-rating": "^5.1.7",
     "superjson": "1.9.1",
     "trpc-panel": "^1.2.8",
     "trpc-playground": "^1.0.4",
