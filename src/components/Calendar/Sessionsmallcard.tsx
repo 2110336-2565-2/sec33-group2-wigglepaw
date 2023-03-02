@@ -5,7 +5,7 @@ export const SessionsmallCard = ({ data }) => {
       <div className="grid grid-cols-5 px-1">
         <div className="relative m-1 mx-[0.4rem]">
           <Image
-            src="/umadeofstupid.png"
+            src="/umadeofstupid.webp"
             alt="dummy"
             fill
             className="rounded-xl"
