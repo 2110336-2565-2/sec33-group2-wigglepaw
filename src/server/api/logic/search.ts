@@ -22,11 +22,13 @@ export abstract class BookingSearchLogic {
     return { bookingId: bookingId };
   }
   public static byBookingIdList(bookingIdList: string[]): object {
+    if (bookingIdList.length == 0) return {};
     return {
       OR: bookingIdList.map((bookingId) => this.byBookingId(bookingId)),
     };
   }
   public static byUserIdListAuto(userIdList: userIdType[]): object {
+    if (userIdList.length == 0) return {};
     return {
       OR: userIdList.map((userId) => this.byUserIdAuto(userId)),
     };
@@ -49,6 +51,7 @@ export abstract class BookingSearchLogic {
     return { status: status };
   }
   public static byStatusList(statusList: BookingStatus[]): object {
+    if (statusList.length == 0) return {};
     return { OR: statusList.map((status) => this.byStatus(status)) };
   }
   public static byStartDate(startDate: Date): object {

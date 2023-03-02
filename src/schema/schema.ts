@@ -82,24 +82,22 @@ export const bookingStatus = z.enum([
 const userId = z.string().cuid();
 
 export const searchBookingField = z.object({
-  // searchBookingId: z.string().cuid().optional(),
-  searchBookingIdList: z.array(z.string().cuid()).optional(),
-  searchUserIdList: z.array(userId).optional(),
-  // searchStatus: bookingStatus,
-  searchStatusList: z.array(bookingStatus).optional(),
+  searchBookingIdList: z.array(z.string().cuid()).default([]),
+  searchUserIdList: z.array(userId).default([]),
+  searchStatusList: z.array(bookingStatus).default([]),
   searchStartDate: z.date().optional(),
   searchEndDate: z.date().optional(),
   // searchLocation: z.string().default(""),
   searchSortBy: z.string().optional(),
 });
 
-export const returnStatus = z.enum(["ERROR", "SUCCESS"]);
-export const returnField = z.object({
-  status: returnStatus,
-  code: z.string().nullable().default(null),
-  reason: z.string().nullable().default(null),
-  result: z.string().nullable().default(null),
-});
+// export const returnStatus = z.enum(["ERROR", "SUCCESS"]);
+// export const returnField = z.object({
+//   status: returnStatus,
+//   code: z.string().nullable().default(null),
+//   reason: z.string().nullable().default(null),
+//   result: z.string().nullable().default(null),
+// });
 
 export const reviewFields = z.object({
   rating: z.number().gte(1).lte(5),

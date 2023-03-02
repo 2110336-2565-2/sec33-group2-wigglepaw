@@ -207,19 +207,15 @@ export const bookingRouter = createTRPCRouter({
       return await ctx.prisma.booking.findMany({
         where: {
           AND: [
-            // input.searchBookingId?BookingSearchLogic.byBookingId(input.searchBookingId):{},
             BookingSearchLogic.byUserIdAuto(userId),
-            input.searchBookingIdList
-              ? BookingSearchLogic.byBookingIdList(input.searchBookingIdList)
-              : {},
-            input.searchUserIdList
-              ? BookingSearchLogic.byUserIdListAuto(input.searchUserIdList)
-              : {},
-            input.searchStatusList
-              ? BookingSearchLogic.byStatusList(input.searchStatusList)
-              : {},
+            BookingSearchLogic.byBookingIdList(input.searchBookingIdList),
+            BookingSearchLogic.byUserIdListAuto(input.searchUserIdList),
+            BookingSearchLogic.byStatusList(input.searchStatusList),
             input.searchStartDate
               ? BookingSearchLogic.byStartDate(input.searchStartDate)
+              : {},
+            input.searchEndDate
+              ? BookingSearchLogic.byEndDate(input.searchEndDate)
               : {},
           ],
         },
