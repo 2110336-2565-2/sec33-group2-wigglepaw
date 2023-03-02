@@ -5,7 +5,7 @@ import SortAndFilterPanel from "./SortAndFilterPanel";
 
 const MatchingPanel = () => {
   return (
-    <div id="matching-panel" className="mx-auto w-[383px]">
+    <div id="matching-panel" className="mx-auto mt-6 w-[383px]">
       <div id="searchbox-wrapper" className="mb-6">
         <SearchBox />
       </div>

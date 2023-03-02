@@ -60,12 +60,11 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
     "No Reviews": "#8e8e8e",
   };
 
-  /*  TODO: add link to profile */
   return (
     <Link href={profile_link}>
       <div
         id="card"
-        className="hover:border-1  relative flex h-[189px] animate-showing flex-row border border-t-[#ecececc2] border-l-[#ecececc2] border-b-[#cbcbcbc2] border-r-[#cbcbcbc2] bg-[#f6f6f6] opacity-0 shadow-xl drop-shadow-sm transition-all duration-150 hover:border-red-500 hover:bg-[#eeeeee] max-md:h-[115px] max-md:drop-shadow-md md:hover:scale-[1.01]"
+        className="relative flex h-[189px] animate-showing flex-row border border-t-[#ecececc2] border-l-[#ecececc2] border-b-[#cbcbcbc2] border-r-[#cbcbcbc2] bg-[#f6f6f6] opacity-0 shadow-xl drop-shadow-sm transition-all duration-150 hover:border-[1.5px] hover:border-[#2094D6] hover:bg-[#eeeeee] max-md:h-[115px] max-md:drop-shadow-md md:hover:scale-[1.01]"
       >
         <div
           className="absolute -left-4 top-3 z-10 px-2 py-1 text-xs font-bold text-white max-md:py-0.5 max-md:text-[10px]"
@@ -154,11 +153,11 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
           id="book-and-review-part"
           className="ml-10 w-[168px] pr-[18px] max-md:hidden"
         >
-          <div className="flex h-full flex-col justify-center">
+          <div className="flex h-full flex-col justify-center gap-1">
             <div className="text-[18px] font-normal">
               {/* TODO: add link to review page*/}
               <span
-                className="hover:underline"
+                className="mr-1 hover:underline"
                 style={{ color: reviewColors[getReviewStatus(avgRating)] }}
               >
                 {getReviewStatus(avgRating)}
