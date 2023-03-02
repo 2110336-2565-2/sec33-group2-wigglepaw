@@ -10,6 +10,7 @@ import MatchingPanel from "../components/Matching/MatchingPanel";
 import PetsitterCard from "../components/Matching/PetsitterCard";
 
 import { useInView } from "react-intersection-observer";
+import NoPetsitterFoundDisplay from "../components/Matching/NoPetsitterFoundDisplay";
 // TODO: document this page structure, use cases
 const Matching: NextPage = () => {
   const [matchedPetSitters, setMatchedPetSitters] = useState<
@@ -53,13 +54,13 @@ const Matching: NextPage = () => {
             id="pet-sitter-cards-wrapper"
             className=" flex w-full  flex-col gap-6 "
           >
+            <NoPetsitterFoundDisplay />
             {matchedPetSitters?.map((matchedPetSitter) => (
               <PetSitterCardFactory
                 key={matchedPetSitter.user.username}
                 petSitter={matchedPetSitter}
               />
             ))}
-            {/* <PetsitterCard /> */}
           </div>
           <div className="invisible">
             <button
