@@ -74,22 +74,18 @@ const Header = () => {
                 </div>
               )}
               {/* TODO: My Schedule Button for Pet Sitters */}
-              {/* {(session?.user?.userType == UserType.FreelancePetSitter ||
+              {(session?.user?.userType == UserType.FreelancePetSitter ||
                 session?.user?.userType == UserType.PetHotel) && (
                 <div className="my-auto h-fit">
                   <Link
-                    href="/matching"
+                    href="/schedule"
                     className={`header-desktop-button 
-                ${
-                  asPath.includes("/matching")
-                    ? "header-at-page text-yellow-600"
-                    : "bg-yellow-600 hover:bg-yellow-500"
-                }`}
+                ${asPath.includes("/schedule") ? "header-at-page" : ""}`}
                   >
-                    Find Pet Sitters
+                    My Schedule
                   </Link>
                 </div>
-              )} */}
+              )}
             </>
           )}
 
@@ -310,25 +306,23 @@ const Header = () => {
                       </div>
                     )}
                     {/* TODO: My Schedule Button for Pet Sitters */}
-                    {/* {(session?.user?.userType == UserType.FreelancePetSitter ||
+                    {(session?.user?.userType == UserType.FreelancePetSitter ||
                       session?.user?.userType == UserType.PetHotel) && (
                       <div className="px-1 py-[0.1rem]">
                         <Menu.Item>
                           <Link
-                            href="/matching"
+                            href="/schedule"
                             className={`
                         header-dropdown group
                         ${
-                          asPath.includes("/matching")
-                            ? "header-at-page border-yellow-600 text-yellow-600"
-                            : "bg-yellow-600 hover:bg-yellow-500"
+                          asPath.includes("/schedule") ? "header-at-page" : ""
                         }`}
                           >
                             My Schedule
                           </Link>
                         </Menu.Item>
                       </div>
-                    )} */}
+                    )}
                   </>
                 )}
                 <div className="px-1 py-[0.1rem]">
