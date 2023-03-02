@@ -41,11 +41,11 @@ const Matching: NextPage = () => {
           <MatchingPanel />
         </MatchingFormProvider>
         <div id="main-wrapper" className="pt-8">
-          <p className="mb-5  text-[16px] text-[#485B6F]">
+          <p className="-ml-5 mb-5  text-[16px] text-[#485B6F]">
             📍Explore our list of experienced sitters & hotels for your beloved
-            pets.{" "}
+            pets.
             <Link href="/registerPetSitter">
-              <span className="text-[#3C8DE1] underline hover:text-[#285686]">
+              <span className="ml-1 text-[#3C8DE1] underline hover:text-[#285686]">
                 Want to become our sitters ?
               </span>
             </Link>
