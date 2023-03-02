@@ -1,6 +1,13 @@
 ```mermaid
 erDiagram
 
+        BookingStatus {
+            requested requested
+accepted accepted
+canceled canceled
+rejected rejected
+        }
+    
   Account {
     String id PK 
     String type  
@@ -69,6 +76,17 @@ erDiagram
     }
   
 
+  Booking {
+    String bookingId PK 
+    DateTime startDate  
+    DateTime endDate  
+    Int numberOfPets  
+    BookingStatus status  
+    String note  "nullable"
+    DateTime createdAt  
+    }
+  
+
   Pet {
     String petId PK 
     String petType  
@@ -103,35 +121,19 @@ erDiagram
     DateTime createdAt  
     }
   
-
-  SessionRequest {
-    String srId PK 
-    String status  
-    String text  "nullable"
-    DateTime createdAt  
-    }
-  
-
-  Schedule {
-    String userId PK 
-    }
-  
-
-  Event {
-    String eventId PK 
-    }
-  
     Account o{--|| User : "user"
     Session o{--|| User : "user"
     PetOwner o|--|| User : "user"
     PetSitter o|--|| User : "user"
     FreelancePetSitter o|--|| PetSitter : "petSitter"
     PetHotel o|--|| PetSitter : "petSitter"
+    Booking o{--|| PetOwner : "petOwner"
+    Booking o{--|| PetSitter : "petSitter"
+    Booking o{--}o Pet : ""
+    Booking o|--|| BookingStatus : "enum:status"
     Pet o{--|| PetOwner : "petOwner"
+    Pet o{--}o Booking : ""
     Review o{--|| PetOwner : "petOwner"
     Review o{--|| PetSitter : "petSitter"
     Post o{--|| PetSitter : "petSitter"
-    SessionRequest o{--|| PetOwner : "petOwner"
-    SessionRequest o{--|| PetSitter : "petSitter"
-    Event o{--|| SessionRequest : "sessionRequest"
 ```
