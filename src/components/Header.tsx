@@ -5,6 +5,7 @@ import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { api } from "../utils/api";
 import { Menu } from "@headlessui/react";
+import { UserType } from "../types/user";
 
 const Header = () => {
   const { data: session, status } = useSession();
@@ -51,16 +52,47 @@ const Header = () => {
             </Link>
           </div>
           {isLoggedIn && (
-            <div className="my-auto h-fit">
-              <Link
-                href="/Help"
-                className={`header-desktop-button
+            <>
+              <div className="my-auto h-fit">
+                <Link
+                  href="/Help"
+                  className={`header-desktop-button
                 ${asPath.includes("/help") ? "header-at-page" : ""}`}
-              >
-                Help
-              </Link>
-            </div>
+                >
+                  Help
+                </Link>
+              </div>
+              {session?.user?.userType == UserType.PetOwner && (
+                <div className="my-auto h-fit">
+                  <Link
+                    href="/matching"
+                    className={`header-desktop-button 
+                ${asPath.includes("/matching") ? "header-at-page" : ""}`}
+                  >
+                    Find Pet Sitters
+                  </Link>
+                </div>
+              )}
+              {/* TODO: My Schedule Button for Pet Sitters */}
+              {/* {(session?.user?.userType == UserType.FreelancePetSitter ||
+                session?.user?.userType == UserType.PetHotel) && (
+                <div className="my-auto h-fit">
+                  <Link
+                    href="/matching"
+                    className={`header-desktop-button 
+                ${
+                  asPath.includes("/matching")
+                    ? "header-at-page text-yellow-600"
+                    : "bg-yellow-600 hover:bg-yellow-500"
+                }`}
+                  >
+                    Find Pet Sitters
+                  </Link>
+                </div>
+              )} */}
+            </>
           )}
+
           {!isLoggedIn && (
             <>
               <div className="my-auto h-fit">
@@ -261,6 +293,42 @@ const Header = () => {
                         </Link>
                       </Menu.Item>
                     </div>
+                    {session?.user?.userType == UserType.PetOwner && (
+                      <div className="px-1 py-[0.1rem]">
+                        <Menu.Item>
+                          <Link
+                            href="/matching"
+                            className={`
+                        header-dropdown group
+                        ${
+                          asPath.includes("/matching") ? "header-at-page" : ""
+                        }`}
+                          >
+                            Find Pet Sitters
+                          </Link>
+                        </Menu.Item>
+                      </div>
+                    )}
+                    {/* TODO: My Schedule Button for Pet Sitters */}
+                    {/* {(session?.user?.userType == UserType.FreelancePetSitter ||
+                      session?.user?.userType == UserType.PetHotel) && (
+                      <div className="px-1 py-[0.1rem]">
+                        <Menu.Item>
+                          <Link
+                            href="/matching"
+                            className={`
+                        header-dropdown group
+                        ${
+                          asPath.includes("/matching")
+                            ? "header-at-page border-yellow-600 text-yellow-600"
+                            : "bg-yellow-600 hover:bg-yellow-500"
+                        }`}
+                          >
+                            My Schedule
+                          </Link>
+                        </Menu.Item>
+                      </div>
+                    )} */}
                   </>
                 )}
                 <div className="px-1 py-[0.1rem]">
