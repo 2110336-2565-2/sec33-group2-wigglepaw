@@ -54,7 +54,7 @@ const Matching: NextPage = () => {
             id="pet-sitter-cards-wrapper"
             className=" flex w-full  flex-col gap-6 "
           >
-            <NoPetsitterFoundDisplay />
+            {matchedPetSitters.length === 0 && <NoPetsitterFoundDisplay />}
             {matchedPetSitters?.map((matchedPetSitter) => (
               <PetSitterCardFactory
                 key={matchedPetSitter.user.username}
