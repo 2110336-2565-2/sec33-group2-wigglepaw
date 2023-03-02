@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { api } from "../utils/api";
@@ -9,7 +8,7 @@ import { UserType } from "../types/user";
 
 const Header = () => {
   const { data: session, status } = useSession();
-  const isLoggedIn = true; //status === "authenticated"
+  const isLoggedIn = status === "authenticated";
   const logout = () => signOut();
   const username = session?.user?.username;
 
@@ -27,6 +26,8 @@ const Header = () => {
   const profileImageUri = userData?.data?.imageUri
     ? userData?.data?.imageUri
     : "/profiledummy.png";
+
+  const profileLink = username ? "/user/" + username.toString() : "";
 
   return (
     <span className="mb-4 flex h-fit w-screen bg-wp-blue md:pr-2">
@@ -169,13 +170,11 @@ const Header = () => {
                   <div className="px-1 py-[0.1rem]">
                     <Menu.Item>
                       <Link
-                        href={`/user/${username}`}
+                        href={profileLink}
                         className={`
                         header-dropdown group
                         ${
-                          asPath.includes("/user/" + username)
-                            ? "header-at-page"
-                            : ""
+                          asPath.includes(profileLink) ? "header-at-page" : ""
                         }`}
                       >
                         Profile
@@ -276,13 +275,11 @@ const Header = () => {
                     <div className="px-1 py-[0.1rem]">
                       <Menu.Item>
                         <Link
-                          href={`/user/${username}`}
+                          href={profileLink}
                           className={`
                         header-dropdown group
                         ${
-                          asPath.includes("/user/" + username)
-                            ? "header-at-page"
-                            : ""
+                          asPath.includes(profileLink) ? "header-at-page" : ""
                         }`}
                         >
                           Profile
