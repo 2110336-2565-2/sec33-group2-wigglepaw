@@ -23,13 +23,8 @@ export const SessionsmallCard = ({ data }) => {
               </div>
             </span>
             <div className="flex">
-              <div className="text-sm text-gray-500">
-                {data.timestart} &nbsp;-{" "}
-              </div>
-              <div className="text-sm text-gray-500">
-                {" "}
-                &nbsp; {data.timeend}
-              </div>
+              <div className="text-sm text-gray-500">{data.start} &nbsp;- </div>
+              <div className="text-sm text-gray-500"> &nbsp; {data.end}</div>
             </div>
           </div>
         </div>

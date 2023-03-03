@@ -22,32 +22,52 @@ import SessionmediumCard from "../components/Calendar/Sessionmediumcard";
 const About: NextPage = () => {
   type Insid = { title: string; start: string; end: string };
 
+  interface help {
+    title: string;
+    start: string;
+    end: string;
+    color: string;
+    mode: string;
+  }
+
   const [events, setEvents] = useState([
     {
       title: "Username1",
       start: "2023-03-03T16:04",
       end: "2023-03-05T16:04",
       color: "#f87171",
+      mode: "1",
     },
     {
       title: "Username2",
       start: "2023-02-03T16:04",
       end: "2023-02-05T16:04",
       color: "#a3e635",
+      mode: "3",
     },
     {
       title: "Username3",
       start: "2023-02-19T16:04",
       end: "2023-03-05T16:04",
+      color: "#94a3b8",
+      mode: "6",
+    },
+    {
+      title: "Username4",
+      start: "2023-02-09T16:04",
+      end: "2023-02-11T16:04",
       color: "#fde047",
+      mode: "2",
     },
   ]);
-  const [upcoming, setUpcoming] = useState([]);
-  const [ongoing, setOngoing] = useState([]);
-  const [finished, setFinished] = useState([]);
+  const [pending, setpending] = useState<help[]>([]);
+  const [accepted, setaccepted] = useState<help[]>([]);
+  const [finished, setfinished] = useState<help[]>([]);
+  const [cancelled, setcancelled] = useState<help[]>([]);
   const [showUp, setShowup] = useState(false);
   const [showOn, setShowon] = useState(false);
   const [showFin, setShowfin] = useState(false);
+  const [showCan, setShowcan] = useState(false);
 
   const [mode, setMode] = useState(false);
 
@@ -82,16 +102,20 @@ const About: NextPage = () => {
 
   const submitEvent = (e: { target: any; preventDefault: () => void }) => {
     e.preventDefault();
-    console.log(events);
+
     let randcol = "";
+    const modee = (Math.floor(Math.random() * 6) + 1).toString();
+    console.log(modee);
     //console.log(new Date());
     //console.log("vs  ", new Date(e.target.start.value));
-    if (new Date() > new Date(e.target.end.value)) {
-      randcol = "#a3e635";
-    } else if (new Date() < new Date(e.target.start.value)) {
+    if (modee === "1") {
       randcol = "#f87171";
-    } else {
+    } else if (modee === "2") {
       randcol = "#fde047";
+    } else if (modee === "6") {
+      randcol = "#94a3b8";
+    } else {
+      randcol = "#a3e635";
     }
 
     const data = {
@@ -99,6 +123,7 @@ const About: NextPage = () => {
       start: e.target.start.value,
       end: e.target.end.value,
       color: randcol,
+      mode: modee,
     };
 
     setEvents([...events, data]);
@@ -123,23 +148,24 @@ const About: NextPage = () => {
       const timestart = datetime.toLocaleDateString("en-US", options);
       const timeend = datetime2.toLocaleDateString("en-US", options);
       const data = {
-        timestart: timestart,
-        timeend: timeend,
+        start: timestart,
+        end: timeend,
         title: value.title,
+        mode: value.mode,
+        color: value.color,
       };
 
-      if (
-        //ongoing
-        new Date(value.start) < new Date() &&
-        new Date(value.end) > new Date()
-      ) {
-        setOngoing([...ongoing, data]);
-      } else if (new Date(value.end) < new Date()) {
-        //already finished
-        setFinished([...finished, data]);
+      //mode 1 = pending , mode 2 = accepted , mode 3 = finished+unconfirmed , mode 4 = finished+confirmed+unreviewed
+      //mode 5 = done all the process mode 6 = cancelled || denied
+
+      if (value.mode === "1") {
+        setpending([...pending, data]);
+      } else if (value.mode === "2") {
+        setaccepted([...accepted, data]);
+      } else if (value.mode === "6") {
+        setcancelled([...cancelled, data]);
       } else {
-        //upcoming
-        setUpcoming([...upcoming, data]);
+        setfinished([...finished, data]);
       }
     });
   };
@@ -167,20 +193,19 @@ const About: NextPage = () => {
       timestart: timestart,
       timeend: timeend,
       title: value.title,
+      mode: value.mode,
     };
+    //mode 1 = pending , mode 2 = accepted , mode 3 = finished+unconfirmed , mode 4 = finished+confirmed+unreviewed
+    //mode 5 = done all the process mode 6 = cancelled || denied
 
-    if (
-      //ongoing
-      new Date(value.start) < new Date() &&
-      new Date(value.end) > new Date()
-    ) {
-      setOngoing([...ongoing, data]);
-    } else if (new Date(value.end) < new Date()) {
-      //already finished
-      setFinished([...finished, data]);
+    if (value.mode === "1") {
+      setpending([...pending, data]);
+    } else if (value.mode === "2") {
+      setaccepted([...accepted, data]);
+    } else if (value.mode === "6") {
+      setcancelled([...cancelled, data]);
     } else {
-      //upcoming
-      setUpcoming([...upcoming, data]);
+      setfinished([...finished, data]);
     }
   };
 
@@ -238,7 +263,7 @@ const About: NextPage = () => {
             {mode === false ? (
               <div className=" px-5">
                 <div className="center-thing relative mb-1 border-b-4 border-red-600 bg-red-300 bg-opacity-50 px-10 py-2 text-center shadow-md ">
-                  Upcoming
+                  pending
                   {!showUp && (
                     <button
                       onClick={() => {
@@ -263,7 +288,7 @@ const About: NextPage = () => {
                   )}
                 </div>
                 {showUp &&
-                  upcoming.map((value) => {
+                  pending.map((value) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
                       <div onClick={changemode}>
@@ -272,7 +297,7 @@ const About: NextPage = () => {
                     );
                   })}
                 <div className="center-thing relative mt-5 border-b-4 border-yellow-400 bg-yellow-200 bg-opacity-50 py-2 text-center shadow-md ">
-                  Ongoing
+                  Accepted
                   {!showOn && (
                     <button
                       onClick={() => {
@@ -295,7 +320,7 @@ const About: NextPage = () => {
                   )}
                 </div>
                 {showOn &&
-                  ongoing.map((value) => {
+                  accepted.map((value) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
                       <div onClick={changemode}>
@@ -304,7 +329,7 @@ const About: NextPage = () => {
                     );
                   })}
                 <div className="center-thing relative mt-5 border-b-4 border-lime-400 bg-lime-300 bg-opacity-50 py-2 text-center shadow-md ">
-                  Finished
+                  finished
                   {!showFin && (
                     <button
                       onClick={() => {
@@ -328,6 +353,39 @@ const About: NextPage = () => {
                 </div>
                 {showFin &&
                   finished.map((value) => {
+                    return (
+                      // eslint-disable-next-line react/jsx-key
+                      <div onClick={changemode}>
+                        <SessionsmallCard data={value} />
+                      </div>
+                    );
+                  })}
+                <div className="center-thing relative mt-5 border-b-4 border-gray-600 bg-slate-300 bg-opacity-50 py-2 text-center shadow-md ">
+                  Cancelled & Declined
+                  {!showCan && (
+                    <button
+                      onClick={() => {
+                        console.log(cancelled, "ddd");
+                        setShowcan((prev) => !prev);
+                      }}
+                      className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
+                    >
+                      +
+                    </button>
+                  )}
+                  {showCan && (
+                    <button
+                      onClick={() => {
+                        setShowcan((prev) => !prev);
+                      }}
+                      className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
+                    >
+                      -
+                    </button>
+                  )}
+                </div>
+                {showCan &&
+                  cancelled.map((value) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
                       <div onClick={changemode}>
