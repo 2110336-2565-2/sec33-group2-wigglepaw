@@ -1,7 +1,8 @@
 /* eslint-disable react/jsx-key */
-import { faMessage } from "@fortawesome/free-solid-svg-icons";
+import { faMessage, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
+import { useState } from "react";
 export const SessionmediumCard = ({ data }) => {
   const dummyPet = [
     {
@@ -23,6 +24,7 @@ export const SessionmediumCard = ({ data }) => {
       breed: "Pegasus",
     },
   ]; //for testing only
+  const [tickArray, setTickarray] = useState([true, false, true]); //Array for state in pet box, size = number of pets
   return (
     <div>
       <div
@@ -77,17 +79,104 @@ export const SessionmediumCard = ({ data }) => {
             Pet (Number of pets):
           </div>
           <div>
-            {dummyPet.map((value) => (
-              <div className="relative border-b border-gray-400 bg-[#F3F3F3] py-2">
-                <span className="pl-3">{value.name}</span>
-                <span className=" absolute right-0 pr-5 text-sm">
-                  <div className="rounded-full bg-yellow-200 py-0.5 px-3 shadow-sm">
-                    {value.type}
+            {/* color ready to change dinamically, wait for agreement on tag color */}
+            {dummyPet.map((value, index) => (
+              <div className="my-2">
+                <div className="relative flex justify-between border-b border-[#9D9D9D] bg-[#F3F3F3] py-2 ">
+                  <span className="center-thing pl-3" style={{ color: "blue" }}>
+                    {value.name}
+                  </span>
+                  <span className=" pr-5 text-sm">
+                    <div className="center-thing">
+                      <span
+                        className="rounded-full py-0.5 px-3 text-white shadow-sm"
+                        style={{ backgroundColor: "blue" }}
+                      >
+                        {" "}
+                        {value.type}
+                      </span>
+                      {tickArray[index] ? (
+                        <button
+                          onClick={() => {
+                            const newTick = [...tickArray];
+                            if (newTick[index]) {
+                              newTick[index] = false;
+                            } else {
+                              newTick[index] = true;
+                            }
+                            setTickarray(newTick);
+                          }}
+                          className="ml-2 mb-0.5 text-xl"
+                        >
+                          +
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            const newTick = [...tickArray];
+                            if (newTick[index]) {
+                              newTick[index] = false;
+                            } else {
+                              newTick[index] = true;
+                            }
+                            setTickarray(newTick);
+                          }}
+                          className="ml-2 mb-0.5 text-xl"
+                        >
+                          -
+                        </button>
+                      )}
+                    </div>
+                  </span>
+                </div>
+                {!tickArray[index] ? (
+                  <div className="rounded-b-md border border-[#9D9D9D] bg-[#F3F3F3] py-2 px-3.5">
+                    <div className="flex justify-between">
+                      <span className="text-sm font-bold text-[#7B7B7B]">
+                        {" "}
+                        Weight:
+                      </span>
+                      <span className="text-sm  text-[#7B7B7B]">
+                        {" "}
+                        {value.weight} kg
+                      </span>
+                    </div>
+                    <div className="mt-1 flex justify-between">
+                      <span className="text-sm font-bold text-[#7B7B7B]">
+                        {" "}
+                        Breed:
+                      </span>
+                      <span className="text-sm  text-[#7B7B7B]">
+                        {" "}
+                        {value.breed}
+                      </span>
+                    </div>
                   </div>
-                </span>
+                ) : (
+                  <></>
+                )}
               </div>
             ))}
           </div>
+        </div>
+        <div className="mt-5">
+          <div className="flex justify-between">
+            <span className="text-lg font-bold text-[#505050]">
+              Notes to sitter:{" "}
+            </span>
+            <div className="center-thing mr-2 rounded-xl border border-[#7B7B7B] px-3 text-[#7B7B7B]  hover:bg-[#dfdede] ">
+              Edit
+              <FontAwesomeIcon className="ml-2" icon={faPencil} />
+            </div>
+          </div>
+          <div className="mt-2 rounded-lg border border-[#7B7B7B] p-1">
+            <textarea className="box-border h-full w-full text-[#7B7B7B]">
+              GG
+            </textarea>
+          </div>
+        </div>
+        <div className="center-thing mb-5 mt-5 rounded-md  bg-[#FC3737] py-4 text-white">
+          <button className="text-xl">Cancel</button>
         </div>
       </div>
     </div>
