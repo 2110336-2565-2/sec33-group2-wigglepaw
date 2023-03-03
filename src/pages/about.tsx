@@ -30,6 +30,8 @@ const About: NextPage = () => {
     mode: string;
   }
 
+  const [passing, setPassing] = useState<help[]>([]);
+
   const [events, setEvents] = useState([
     {
       title: "Username1",
@@ -170,7 +172,9 @@ const About: NextPage = () => {
     });
   };
 
-  const changemode = () => {
+  const changemode = (data) => {
+    setPassing(data);
+    console.log(passing);
     setMode(true);
   };
 
@@ -190,8 +194,8 @@ const About: NextPage = () => {
     const timestart = datetime.toLocaleDateString("en-US", options);
     const timeend = datetime2.toLocaleDateString("en-US", options);
     const data = {
-      timestart: timestart,
-      timeend: timeend,
+      start: timestart,
+      end: timeend,
       title: value.title,
       mode: value.mode,
     };
@@ -216,7 +220,7 @@ const About: NextPage = () => {
       <div className="relative w-screen items-center justify-start  md:flex md:h-screen">
         <Image src="/calendarbg.png" alt="bg" fill />
         <div className="mx-4 h-full w-full md:ml-20 md:mr-10 md:flex">
-          <div className="z-10 h-[80%] w-full overflow-scroll bg-white">
+          <div className="z-10 h-[80%] w-full  overflow-y-scroll bg-white">
             <FullCalendar
               plugins={[dayGridPlugin, timeGridPlugin]}
               initialView="dayGridMonth"
@@ -240,14 +244,14 @@ const About: NextPage = () => {
               eventContent={eventContent}
             />
           </div>
-          <div className="z-10 overflow-scroll border-2 border-[#E7E7E7] bg-white md:ml-5 md:h-[90%] md:w-[50%]">
+          <div className="relative z-10 overflow-x-hidden overflow-y-scroll border-2 border-[#E7E7E7] bg-white md:ml-5 md:h-[90%] md:w-[50%]">
             {mode === false ? (
-              <div className="center-thing mb-5 bg-[#7B7B7B] py-2 text-2xl text-white">
+              <div className="center-thing mb-5 bg-[#7B7B7B] py-5 py-2 text-2xl text-white">
                 {" "}
                 My Sessions
               </div>
             ) : (
-              <div className="center-thing relative mb-5 bg-[#7B7B7B] py-2 text-2xl text-white">
+              <div className="center-thing relative mb-5 bg-[#7B7B7B] py-5 py-2 text-2xl text-white">
                 {" "}
                 Session Details
                 <button
@@ -268,7 +272,6 @@ const About: NextPage = () => {
                     <button
                       onClick={() => {
                         setShowup((prev) => !prev);
-                        console.log(showUp);
                       }}
                       className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl  "
                     >
@@ -291,7 +294,11 @@ const About: NextPage = () => {
                   pending.map((value) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
-                      <div onClick={changemode}>
+                      <div
+                        onClick={() => {
+                          changemode(value);
+                        }}
+                      >
                         <SessionsmallCard data={value} />
                       </div>
                     );
@@ -323,7 +330,11 @@ const About: NextPage = () => {
                   accepted.map((value) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
-                      <div onClick={changemode}>
+                      <div
+                        onClick={() => {
+                          changemode(value);
+                        }}
+                      >
                         <SessionsmallCard data={value} />
                       </div>
                     );
@@ -355,7 +366,11 @@ const About: NextPage = () => {
                   finished.map((value) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
-                      <div onClick={changemode}>
+                      <div
+                        onClick={() => {
+                          changemode(value);
+                        }}
+                      >
                         <SessionsmallCard data={value} />
                       </div>
                     );
@@ -388,14 +403,18 @@ const About: NextPage = () => {
                   cancelled.map((value) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
-                      <div onClick={changemode}>
+                      <div
+                        onClick={() => {
+                          changemode(value);
+                        }}
+                      >
                         <SessionsmallCard data={value} />
                       </div>
                     );
                   })}
               </div>
             ) : (
-              <SessionmediumCard />
+              <SessionmediumCard data={passing} />
             )}
           </div>
         </div>
