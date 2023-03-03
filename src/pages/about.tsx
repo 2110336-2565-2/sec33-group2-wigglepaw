@@ -37,28 +37,28 @@ const About: NextPage = () => {
       title: "Username1",
       start: "2023-03-03T16:04",
       end: "2023-03-05T16:04",
-      color: "#f87171",
+      color: "#fdba74",
       mode: "1",
     },
     {
       title: "Username2",
       start: "2023-02-03T16:04",
       end: "2023-02-05T16:04",
-      color: "#a3e635",
+      color: "#d9f99d",
       mode: "3",
     },
     {
       title: "Username3",
       start: "2023-02-19T16:04",
       end: "2023-03-05T16:04",
-      color: "#94a3b8",
+      color: "#cbd5e1",
       mode: "6",
     },
     {
       title: "Username4",
       start: "2023-02-09T16:04",
       end: "2023-02-11T16:04",
-      color: "#fde047",
+      color: "#a5f3fc",
       mode: "2",
     },
   ]);
@@ -111,13 +111,13 @@ const About: NextPage = () => {
     //console.log(new Date());
     //console.log("vs  ", new Date(e.target.start.value));
     if (modee === "1") {
-      randcol = "#f87171";
+      randcol = "#fdba74";
     } else if (modee === "2") {
-      randcol = "#fde047";
+      randcol = "#a5f3fc";
     } else if (modee === "6") {
-      randcol = "#94a3b8";
+      randcol = "#cbd5e1";
     } else {
-      randcol = "#a3e635";
+      randcol = "#d9f99d";
     }
 
     const data = {
@@ -246,12 +246,12 @@ const About: NextPage = () => {
           </div>
           <div className="relative z-10 overflow-x-hidden overflow-y-scroll border-2 border-[#E7E7E7] bg-white md:ml-5 md:h-[90%] md:w-[50%]">
             {mode === false ? (
-              <div className="center-thing mb-5 bg-[#7B7B7B] py-5 py-2 text-2xl text-white">
+              <div className="center-thing mb-5 bg-[#7B7B7B] py-5 text-2xl text-white">
                 {" "}
                 My Sessions
               </div>
             ) : (
-              <div className="center-thing relative mb-5 bg-[#7B7B7B] py-5 py-2 text-2xl text-white">
+              <div className="center-thing relative mb-5 bg-[#7B7B7B] py-5 text-2xl text-white">
                 {" "}
                 Session Details
                 <button
@@ -266,8 +266,8 @@ const About: NextPage = () => {
             )}
             {mode === false ? (
               <div className=" px-5">
-                <div className="center-thing relative mb-1 border-b-4 border-red-600 bg-red-300 bg-opacity-50 px-10 py-2 text-center shadow-md ">
-                  pending
+                <div className="center-thing relative mb-1 border-b-4 border-orange-600 bg-orange-300 bg-opacity-50 px-10 py-2 text-center text-orange-600 shadow-md ">
+                  Pending
                   {!showUp && (
                     <button
                       onClick={() => {
@@ -303,7 +303,7 @@ const About: NextPage = () => {
                       </div>
                     );
                   })}
-                <div className="center-thing relative mt-5 border-b-4 border-yellow-400 bg-yellow-200 bg-opacity-50 py-2 text-center shadow-md ">
+                <div className="center-thing relative mt-5 border-b-4 border-blue-400 bg-cyan-200 bg-opacity-50 py-2 text-center text-blue-400 shadow-md ">
                   Accepted
                   {!showOn && (
                     <button
@@ -339,8 +339,8 @@ const About: NextPage = () => {
                       </div>
                     );
                   })}
-                <div className="center-thing relative mt-5 border-b-4 border-lime-400 bg-lime-300 bg-opacity-50 py-2 text-center shadow-md ">
-                  finished
+                <div className="center-thing relative mt-5 border-b-4 border-green-500 bg-lime-300 bg-opacity-50 py-2 text-center text-green-500 shadow-md ">
+                  Finished
                   {!showFin && (
                     <button
                       onClick={() => {
@@ -375,7 +375,7 @@ const About: NextPage = () => {
                       </div>
                     );
                   })}
-                <div className="center-thing relative mt-5 border-b-4 border-gray-600 bg-slate-300 bg-opacity-50 py-2 text-center shadow-md ">
+                <div className="center-thing relative mt-5 border-b-4 border-gray-600 bg-slate-300 bg-opacity-50 py-2 text-center text-gray-600 shadow-md ">
                   Cancelled & Declined
                   {!showCan && (
                     <button
