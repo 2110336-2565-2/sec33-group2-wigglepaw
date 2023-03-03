@@ -48,29 +48,31 @@ export const SessionmediumCard = ({ data }) => {
             <div className=" text-[#7b7b7b]">&nbsp;{data.end} </div>
           </div>
         </div>
-        <div className="mb-5">
+        <div className="mb-5 ">
           <div className="text-lg font-bold text-[#505050]">Pet Sitter:</div>
-          <div className="grid grid-cols-5 rounded-md border border-[#7b7b7b] py-2 ">
-            <div className="relative mx-2 h-[60px] w-[60px]">
-              <Image
-                src="/umadeofstupid.webp"
-                alt="dummy"
-                fill
-                className="relative rounded-xl"
-              />
-            </div>
-            <div className="center-thing col-span-2  text-[#7b7b7b]">
-              PetSitterName
-            </div>
-            <div className="center-thing col-span-2">
-              <button className="center-thing rounded-md bg-[#357CC2] py-1 px-4 text-white">
-                Chat
-                <FontAwesomeIcon
-                  className="ml-3 scale-y-75 scale-x-110"
-                  size="xl"
-                  icon={faMessage}
+          <div className="testt rounded-lg p-0.5">
+            <div className="  grid grid-cols-5 rounded-md border border-[#7b7b7b] bg-[#F3F3F3] py-2 ">
+              <div className="relative mx-2 h-[60px] w-[60px]">
+                <Image
+                  src="/umadeofstupid.webp"
+                  alt="dummy"
+                  fill
+                  className="relative rounded-xl"
                 />
-              </button>
+              </div>
+              <div className="center-thing col-span-2  text-[#7b7b7b]">
+                PetSitterName
+              </div>
+              <div className="center-thing col-span-2">
+                <button className="center-thing drop-s rounded-md bg-[#357CC2] py-1 px-4 text-white  shadow-lg drop-shadow-lg">
+                  Chat
+                  <FontAwesomeIcon
+                    className="ml-3 scale-y-75 scale-x-110"
+                    size="xl"
+                    icon={faMessage}
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -170,7 +172,7 @@ export const SessionmediumCard = ({ data }) => {
             </div>
           </div>
           <div className="mt-2 rounded-lg border border-[#7B7B7B] p-1">
-            <textarea className="box-border h-full w-full text-[#7B7B7B]">
+            <textarea className="box-border h-full w-full rounded-lg px-1 text-[#7B7B7B]">
               GG
             </textarea>
           </div>
