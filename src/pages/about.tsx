@@ -198,6 +198,7 @@ const About: NextPage = () => {
       end: timeend,
       title: value.title,
       mode: value.mode,
+      color: value.color,
     };
     //mode 1 = pending , mode 2 = accepted , mode 3 = finished+unconfirmed , mode 4 = finished+confirmed+unreviewed
     //mode 5 = done all the process mode 6 = cancelled || denied

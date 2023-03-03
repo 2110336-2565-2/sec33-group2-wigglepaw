@@ -132,7 +132,7 @@ export const SessionmediumCard = ({ data }) => {
                   </span>
                 </div>
                 {!tickArray[index] ? (
-                  <div className="rounded-b-md border border-[#9D9D9D] bg-[#F3F3F3] py-2 px-3.5">
+                  <div className="animate-showing rounded-b-md border border-[#9D9D9D] bg-[#F3F3F3] py-2 px-3.5 opacity-0 ">
                     <div className="flex justify-between">
                       <span className="text-sm font-bold text-[#7B7B7B]">
                         {" "}
