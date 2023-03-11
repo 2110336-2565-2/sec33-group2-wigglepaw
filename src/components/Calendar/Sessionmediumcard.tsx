@@ -24,6 +24,8 @@ export const SessionmediumCard = ({ data }) => {
       breed: "Pegasus",
     },
   ]; //for testing only
+
+  //use to define each mode from backend, can add onClick event into these element
   const Lastbox = () => {
     console.log(data.mode);
     switch (data.mode) {

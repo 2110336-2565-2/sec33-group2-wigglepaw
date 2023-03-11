@@ -219,13 +219,18 @@ const About: NextPage = () => {
       <Header />
 
       <div className="relative w-screen items-center justify-start  md:flex md:h-screen">
-        <Image src="/calendarbg.png" alt="bg" fill />
+        <Image
+          src="/calendarbg.png"
+          className="hidden md:visible"
+          alt="bg"
+          fill
+        />
         <div className="mx-4 h-full w-full md:ml-20 md:mr-10 md:flex">
-          <div className="z-10 h-[80%] w-full  overflow-y-scroll bg-white">
+          <div className="z-10 h-[90%] w-[92%] overflow-y-scroll  bg-white md:w-full">
             <FullCalendar
               plugins={[dayGridPlugin, timeGridPlugin]}
               initialView="dayGridMonth"
-              contentHeight={600}
+              contentHeight={"auto"}
               stickyFooterScrollbar={true}
               weekNumbers={true}
               headerToolbar={
@@ -245,7 +250,7 @@ const About: NextPage = () => {
               eventContent={eventContent}
             />
           </div>
-          <div className="relative z-10 overflow-x-hidden overflow-y-scroll border-2 border-[#E7E7E7] bg-white md:ml-5 md:h-[90%] md:w-[50%]">
+          <div className="relative z-10 mt-10 w-[90%] overflow-x-hidden overflow-y-scroll border-2 border-[#E7E7E7] bg-white md:mt-0 md:ml-5 md:h-[90%] md:w-[50%]">
             {mode === false ? (
               <div className="center-thing mb-5 bg-[#7B7B7B] py-5 text-2xl text-white">
                 {" "}
