@@ -24,6 +24,7 @@ export const SessionmediumCard = ({ data }) => {
       breed: "Pegasus",
     },
   ]; //for testing only
+  const sitter = true; //for testing, use to set the value of usertype
   const [tickArray, setTickarray] = useState([true, false, true]); //Array for state in pet box, size = number of pets
   return (
     <div>
@@ -32,6 +33,7 @@ export const SessionmediumCard = ({ data }) => {
         className="center-thing border-l-5 absolute top-0 right-[-0.5rem] h-7 skew-x-[30deg] bg-black  px-5 text-black shadow-xl"
       >
         <div className="-skew-x-[30deg] text-xs">{data.title}</div>
+        {/* change to status instead, 'Pending' forn example */}
       </div>
       <div className="px-5">
         <div className="">
@@ -49,7 +51,11 @@ export const SessionmediumCard = ({ data }) => {
           </div>
         </div>
         <div className="mb-5 ">
-          <div className="text-lg font-bold text-[#505050]">Pet Sitter:</div>
+          {sitter ? (
+            <div className="text-lg font-bold text-[#505050]">Pet Sitter:</div>
+          ) : (
+            <div className="text-lg font-bold text-[#505050]">Pet Owner:</div>
+          )}
           <div className="testt rounded-lg p-0.5">
             <div className="  grid grid-cols-5 rounded-md border border-[#7b7b7b] bg-[#F3F3F3] py-2 ">
               <div className="relative mx-2 h-[60px] w-[60px]">
@@ -166,10 +172,14 @@ export const SessionmediumCard = ({ data }) => {
             <span className="text-lg font-bold text-[#505050]">
               Notes to sitter:{" "}
             </span>
-            <div className="center-thing mr-2 rounded-xl border border-[#7B7B7B] px-3 text-[#7B7B7B]  hover:bg-[#dfdede] ">
-              Edit
-              <FontAwesomeIcon className="ml-2" icon={faPencil} />
-            </div>
+            {sitter ? (
+              <div></div>
+            ) : (
+              <div className="center-thing mr-2 rounded-xl border border-[#7B7B7B] px-3 text-[#7B7B7B]  hover:bg-[#dfdede] ">
+                Edit
+                <FontAwesomeIcon className="ml-2" icon={faPencil} />
+              </div>
+            )}
           </div>
           <div className="mt-2 rounded-lg border border-[#7B7B7B] p-1">
             <textarea className="box-border h-full w-full rounded-lg px-1 text-[#7B7B7B]">
@@ -177,9 +187,20 @@ export const SessionmediumCard = ({ data }) => {
             </textarea>
           </div>
         </div>
-        <div className="center-thing mb-5 mt-5 rounded-md  bg-[#FC3737] py-4 text-white">
-          <button className="text-xl">Cancel</button>
-        </div>
+        {sitter ? (
+          <div className="mt-5 grid grid-cols-2">
+            <div className="center-thing mb-5 mr-3  rounded-md  bg-[#FC3737] py-4 text-white">
+              <button className="text-xl">Decline</button>
+            </div>
+            <div className="center-thing mb-5 ml-3  rounded-md  bg-[#54A900] py-4 text-white">
+              <button className="text-xl">Accept</button>
+            </div>
+          </div>
+        ) : (
+          <div className=" center-thing mb-5 mt-5 rounded-md  bg-[#FC3737] py-4 text-white">
+            <button className="text-xl">Cancel</button>
+          </div>
+        )}
       </div>
     </div>
   );
