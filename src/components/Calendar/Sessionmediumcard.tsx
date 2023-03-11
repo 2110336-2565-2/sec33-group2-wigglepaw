@@ -24,7 +24,73 @@ export const SessionmediumCard = ({ data }) => {
       breed: "Pegasus",
     },
   ]; //for testing only
-  const sitter = true; //for testing, use to set the value of usertype
+  const Lastbox = () => {
+    console.log(data.mode);
+    switch (data.mode) {
+      case "1":
+        if (sitter) {
+          return (
+            <div className="mt-5 grid grid-cols-2">
+              <div className="center-thing mb-5 mr-3  rounded-md  bg-[#FC3737] py-4 text-white">
+                <button className="text-xl">Decline</button>
+              </div>
+              <div className="center-thing mb-5 ml-3  rounded-md  bg-[#54A900] py-4 text-white">
+                <button className="text-xl">Accept</button>
+              </div>
+            </div>
+          );
+        } else {
+          return (
+            <div className=" center-thing mb-5 mt-5 rounded-md  bg-[#FC3737] py-4 text-white">
+              <button className="text-xl">Cancel</button>
+            </div>
+          );
+        }
+      case "2":
+        if (sitter) {
+        } else {
+          return (
+            <div className=" center-thing mb-5 mt-5 rounded-md  bg-[#FC3737] py-4 text-white">
+              <button className="text-xl">Cancel</button>
+            </div>
+          );
+        }
+      case "3":
+        if (sitter) {
+        } else {
+          return (
+            <div className=" center-thing mb-5 mt-5 rounded-md  bg-[#2A4764] py-4 text-white">
+              <button className="text-xl">Confirm and Pay</button>
+            </div>
+          );
+        }
+      case "4":
+        if (sitter) {
+        } else {
+          return (
+            <div className="mt-5 grid grid-cols-2">
+              <div className="center-thing mb-5 mr-3  rounded-md  bg-[#DB438C] py-4 text-white">
+                <button className="text-xl">Write A Review</button>
+              </div>
+              <div className="center-thing mb-5 ml-3  rounded-md  bg-[#54A900] py-4 text-white">
+                <button className="text-xl">Rebook</button>
+              </div>
+            </div>
+          );
+        }
+      default:
+        if (sitter) {
+        } else {
+          return (
+            <div className=" center-thing mb-5 mt-5 rounded-md  bg-[#54A900] py-4 text-white">
+              <button className="text-xl">Rebook</button>
+            </div>
+          );
+        }
+    }
+  };
+
+  const sitter = false; //for testing, use to set the value of usertype
   const [tickArray, setTickarray] = useState([true, false, true]); //Array for state in pet box, size = number of pets
   return (
     <div>
@@ -187,20 +253,7 @@ export const SessionmediumCard = ({ data }) => {
             </textarea>
           </div>
         </div>
-        {sitter ? (
-          <div className="mt-5 grid grid-cols-2">
-            <div className="center-thing mb-5 mr-3  rounded-md  bg-[#FC3737] py-4 text-white">
-              <button className="text-xl">Decline</button>
-            </div>
-            <div className="center-thing mb-5 ml-3  rounded-md  bg-[#54A900] py-4 text-white">
-              <button className="text-xl">Accept</button>
-            </div>
-          </div>
-        ) : (
-          <div className=" center-thing mb-5 mt-5 rounded-md  bg-[#FC3737] py-4 text-white">
-            <button className="text-xl">Cancel</button>
-          </div>
-        )}
+        <Lastbox />
       </div>
     </div>
   );

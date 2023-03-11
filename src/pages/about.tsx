@@ -45,7 +45,7 @@ const About: NextPage = () => {
       start: "2023-02-03T16:04",
       end: "2023-02-05T16:04",
       color: "#d9f99d",
-      mode: "3",
+      mode: "4",
     },
     {
       title: "Username3",
