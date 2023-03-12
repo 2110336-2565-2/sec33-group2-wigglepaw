@@ -6,7 +6,7 @@ import { api } from "../utils/api";
 import { Menu } from "@headlessui/react";
 import { UserType } from "../types/user";
 
-const Header = () => {
+const Header = (props: any) => {
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated";
   const logout = () => signOut();
@@ -30,7 +30,9 @@ const Header = () => {
   const profileLink = username ? "/user/" + username.toString() : "";
 
   return (
-    <span className="mb-4 flex h-fit w-screen bg-wp-blue md:pr-2">
+    <span
+      className={"flex h-fit w-screen bg-wp-blue md:pr-2 " + props.className}
+    >
       <nav className="flex w-full justify-between">
         <Link href={"/"} className="flex shrink-0">
           <div className="relative m-2 flex h-[4rem] w-[5rem]">
@@ -115,7 +117,7 @@ const Header = () => {
                     Register
                   </Menu.Button>
                 </div>
-                <Menu.Items className="absolute right-0 mt-2 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <Menu.Items className="absolute right-0 z-20 mt-2 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div className="px-1 py-[0.1rem]">
                     <Menu.Item>
                       <Link
@@ -166,7 +168,7 @@ const Header = () => {
                     ></Image>
                   </Menu.Button>
                 </div>
-                <Menu.Items className="absolute right-0 mt-2 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <Menu.Items className="absolute right-0 z-20 mt-2 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div className="px-1 py-[0.1rem]">
                     <Menu.Item>
                       <Link
@@ -216,7 +218,7 @@ const Header = () => {
                 </Menu.Button>
               )}
 
-              <Menu.Items className="absolute right-0 mt-2 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Menu.Items className="absolute right-0 z-20 mt-2 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 {!isLoggedIn && (
                   <>
                     <div className="px-1 py-[0.1rem]">
