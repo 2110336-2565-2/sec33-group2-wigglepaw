@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-import { userFields, petOwnerFields } from "../../../schema/schema";
+import { userFields, petOwnerFields, petFields } from "../../../schema/schema";
+import { saltHashPassword } from "../../../pages/api/auth/[...nextauth]";
 
 export const petOwnerRouter = createTRPCRouter({
   //public procedure that get petOwner by ID
@@ -11,6 +12,11 @@ export const petOwnerRouter = createTRPCRouter({
       return ctx.prisma.petOwner.findUnique({
         where: {
           userId: input.id,
+        },
+        include: {
+          user: true,
+          pet: true,
+          review: true,
         },
       });
     }),
@@ -27,6 +33,8 @@ export const petOwnerRouter = createTRPCRouter({
         },
         include: {
           user: true,
+          pet: true,
+          review: true,
         },
       });
     }),
@@ -49,6 +57,9 @@ export const petOwnerRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const saltHash = saltHashPassword("password");
+      const salt = saltHash.salt;
+      const hash = saltHash.hash;
       const code = input.code;
       return await ctx.prisma.petOwner.create({
         data: {
@@ -56,7 +67,8 @@ export const petOwnerRouter = createTRPCRouter({
             create: {
               username: "username" + code,
               email: "email" + code + "@gmail.com",
-              password: "password" + code,
+              password: hash,
+              salt: salt,
             },
           },
 
@@ -65,6 +77,8 @@ export const petOwnerRouter = createTRPCRouter({
         },
         include: {
           user: true,
+          pet: true,
+          review: true,
         },
       });
     }),
@@ -96,10 +110,18 @@ export const petOwnerRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      return await ctx.prisma.petOwner.create({
+      const user = input.user;
+      const saltHash = saltHashPassword(user.password);
+      const salt = saltHash.salt;
+      const hash = saltHash.hash;
+      user.password = hash;
+      await ctx.prisma.petOwner.create({
         data: {
           user: {
-            create: input.user,
+            create: {
+              ...input.user,
+              salt: salt,
+            },
           },
           ...input.petOwner,
         },
@@ -107,5 +129,40 @@ export const petOwnerRouter = createTRPCRouter({
           user: true,
         },
       });
+      return;
+    }),
+
+  //public procedure that create petOwner
+  updatePetTypes: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const petOwner = await ctx.prisma.petOwner.findFirst({
+        where: {
+          userId: input.userId,
+        },
+        include: {
+          pet: true, // Return all fields
+        },
+      });
+      if (!petOwner) return "petOwnerId doens't exist";
+
+      const pets = petOwner?.pet;
+      if (!pets) return "Internal server error SHIT";
+
+      const petTypes = new Set<string>();
+      for (const pet of pets) {
+        petTypes.add(pet.petType);
+      }
+
+      const update = await ctx.prisma.petOwner.update({
+        where: {
+          userId: input.userId,
+        },
+        data: {
+          petTypes: Array.from(petTypes.values()),
+        },
+      });
+
+      return "Updated pet types of this pet owner successfully!";
     }),
 });

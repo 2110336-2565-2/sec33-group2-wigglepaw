@@ -11,6 +11,7 @@ import { createTRPCContext } from "../../../server/api/trpc";
 import { appRouter } from "../../../server/api/root";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+import { saltHashPassword } from "../../../pages/api/auth/[...nextauth]";
 
 export const petHotelRouter = createTRPCRouter({
   create: publicProcedure
@@ -22,12 +23,20 @@ export const petHotelRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      return await ctx.prisma.petHotel.create({
+      const user = input.user;
+      const saltHash = saltHashPassword(user.password);
+      const salt = saltHash.salt;
+      const hash = saltHash.hash;
+      user.password = hash;
+      await ctx.prisma.petHotel.create({
         data: {
           petSitter: {
             create: {
               user: {
-                create: input.user,
+                create: {
+                  ...input.user,
+                  salt: salt,
+                },
               },
               ...input.petSitter,
             },
@@ -42,6 +51,7 @@ export const petHotelRouter = createTRPCRouter({
           },
         },
       });
+      return;
     }),
 
   createDummy: publicProcedure
@@ -52,6 +62,9 @@ export const petHotelRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const code = input.code;
+      const saltHash = saltHashPassword("password");
+      const salt = saltHash.salt;
+      const hash = saltHash.hash;
       return await ctx.prisma.petHotel.create({
         data: {
           petSitter: {
@@ -60,7 +73,8 @@ export const petHotelRouter = createTRPCRouter({
                 create: {
                   username: "username" + code,
                   email: "email" + code + "@gmail.com",
-                  password: "password" + code,
+                  password: hash,
+                  salt: salt,
                 },
               },
               verifyStatus: true,
@@ -109,7 +123,7 @@ export const petHotelRouter = createTRPCRouter({
       console.log("gg:   ", input);
 
       //PAI JOBS
-      const user = await ctx.prisma.user.findMany({
+      const user = await ctx.prisma.user.findFirst({
         where: {
           username: input.username,
         },
