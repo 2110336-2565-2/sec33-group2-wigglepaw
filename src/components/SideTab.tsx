@@ -9,7 +9,7 @@ export default function SideTab() {
   const [openTab, setOpenTab] = React.useState(false);
   return (
     <div>
-      <div className="visible sm:hidden">
+      <div className="visible">
         <button
           className={`flex items-center justify-center border hover:bg-gray-500`}
           onClick={() => {
