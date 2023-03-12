@@ -7,9 +7,11 @@ import { HiUser } from "react-icons/hi";
 export default function SideTab() {
   const [tab, setTab] = useState("Profile");
   const [openTab, setOpenTab] = React.useState(false);
+
   return (
     <div>
-      <div className="visible">
+      {/* TAB BUTTON HERE */}
+      <div className="visible sm:hidden">
         <button
           className={`flex items-center justify-center border hover:bg-gray-500`}
           onClick={() => {
@@ -22,26 +24,23 @@ export default function SideTab() {
           />
         </button>
       </div>
-      <div>
-        <div
-          className={
-            openTab
-              ? "visible min-h-screen w-[219px] border-2 bg-[#E5D4C2] sm:visible"
-              : "hidden sm:visible"
-          }
-        >
-          <div className="mx-auto flex h-[135px] w-[135px]  items-center rounded-full border-8 text-center">
-            Profile pic goes here
-          </div>
-          <div className="border text-center">Username goes here</div>
-          <div className="my-16">
-            <div className="flex flex-col border ">
-              {["Profile", "Information", "booking", "Review", "Contact"].map(
-                (tabName) => (
-                  <Tab tabName={tabName}></Tab>
-                )
-              )}
-            </div>
+      {/* SIDE TAB HERE */}
+      <div
+        className={`min-h-screen w-[219px] border-2 bg-[#E5D4C2] ${
+          !openTab ? "max-sm:hidden" : ""
+        }`}
+      >
+        <div className="mx-auto flex h-[135px] w-[135px]  items-center rounded-full border-8 text-center">
+          Profile pic goes here
+        </div>
+        <div className="border text-center">Username goes here</div>
+        <div className="my-16">
+          <div className="flex flex-col border ">
+            {["Profile", "Information", "booking", "Review", "Contact"].map(
+              (tabName) => (
+                <Tab tabName={tabName}></Tab>
+              )
+            )}
           </div>
         </div>
       </div>
