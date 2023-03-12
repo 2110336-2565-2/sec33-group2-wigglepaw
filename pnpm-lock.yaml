@@ -27,7 +27,7 @@ specifiers:
   bcrypt: ^5.1.0
   bcrypt-ts: ^3.0.0
   browser-image-compression: ^2.0.0
-  eslint: ^8.32.0
+  eslint: ^8.30.0
   eslint-config-next: 13.1.2
   husky: ^8.0.0
   javascript-time-ago: ^2.5.9
