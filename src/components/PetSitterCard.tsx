@@ -20,7 +20,7 @@ const PetSitterCard = ({ pet_sitter }: PetSitterCardProps) => {
   const name = pet_sitter ? pet_sitter.user.username : "NAME";
   const petTypes = pet_sitter ? pet_sitter.petTypes : ["Husky"];
   const profile_link = pet_sitter
-    ? "/user/" + pet_sitter.user.username
+    ? "/user/" + pet_sitter.user.username + "/profile"
     : "/user/lmao";
   const profileImageUri = pet_sitter?.user.imageUri ?? "/profiledummy.png";
   return (

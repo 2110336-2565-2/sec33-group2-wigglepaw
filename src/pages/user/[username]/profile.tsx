@@ -2,13 +2,13 @@ import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
-import FreelancePetSitterProfile from "../../components/Profile/FreelancePetSitterProfile";
-import PetHotelProfile from "../../components/Profile/PetHotelProfile";
-import PetOwnerProfile from "../../components/Profile/PetOwnerProfile";
-import { UserType } from "../../types/user";
-import { api } from "../../utils/api";
+import FreelancePetSitterProfile from "../../../components/Profile/FreelancePetSitterProfile";
+import PetHotelProfile from "../../../components/Profile/PetHotelProfile";
+import PetOwnerProfile from "../../../components/Profile/PetOwnerProfile";
+import { UserType } from "../../../types/user";
+import { api } from "../../../utils/api";
 
-const Profile: NextPage = () => {
+const ProfilePage: NextPage = () => {
   const router = useRouter();
   const { username } = router.query;
   const { data: session } = useSession();
@@ -51,4 +51,4 @@ const Profile: NextPage = () => {
   }
 };
 
-export default Profile;
+export default ProfilePage;
