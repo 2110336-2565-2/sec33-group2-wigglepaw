@@ -1,6 +1,8 @@
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import ErrorComponent from "../../../components/ErrorComponent";
+import Header from "../../../components/Header";
 
 import FreelancePetSitterProfile from "../../../components/Profile/FreelancePetSitterProfile";
 import PetHotelProfile from "../../../components/Profile/PetHotelProfile";
@@ -23,9 +25,17 @@ const ProfilePage: NextPage = () => {
     }
   );
 
-  if (userError) return <div>Error จ้า: {userError.message}</div>;
-  if (data === undefined) return <div>Loading...</div>;
-  if (data === null) return <div>Not found</div>;
+  if (userError)
+    return <ErrorComponent message={userError.message}></ErrorComponent>;
+  if (data === undefined)
+    return (
+      <div>
+        <Header></Header>
+        Loading...
+      </div>
+    );
+  if (data === null)
+    return <ErrorComponent message={"User Not Found"}></ErrorComponent>;
 
   switch (data.userType) {
     case UserType.PetOwner:
@@ -47,7 +57,7 @@ const ProfilePage: NextPage = () => {
       );
 
     default:
-      return <div>Error จ้า</div>;
+      return <ErrorComponent message={"User Type Not Found"}></ErrorComponent>;
   }
 };
 
