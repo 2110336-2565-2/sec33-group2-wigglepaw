@@ -28,5 +28,14 @@ const config = {
   eslint: {
     ignoreDuringBuilds: !!process.env.SKIP_ESLINT,
   },
+  async redirects() {
+    return [
+      {
+        source: "/user/[username]",
+        destination: "/user/[username]/profile",
+        statusCode: 301,
+      },
+    ];
+  },
 };
 export default config;
