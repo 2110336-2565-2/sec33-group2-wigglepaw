@@ -7,6 +7,7 @@ import { bookingFields, searchBookingField } from "../../../schema/schema";
 import { Return } from "../../../schema/returnSchema";
 import { UserTypeLogic } from "../logic/session";
 import { BookingSearchLogic } from "../logic/search";
+import { BookingReturnLogic } from "../logic/return";
 
 const NO_USER_IN_SESSION = {
   status: "ERROR",
@@ -204,7 +205,7 @@ export const bookingRouter = createTRPCRouter({
       if (!userTypeLogic.isPetSitter() && !userTypeLogic.isPetOwner())
         return [];
       const userId = ctx.session.user.id;
-      return await ctx.prisma.booking.findMany({
+      const bookings = await ctx.prisma.booking.findMany({
         where: {
           AND: [
             BookingSearchLogic.byUserIdAuto(userId),
@@ -222,5 +223,6 @@ export const bookingRouter = createTRPCRouter({
         orderBy: [BookingSearchLogic.sortBy(input.searchSortBy)],
         select: Return.booking,
       });
+      return bookings.map(BookingReturnLogic.makeState);
     }),
 });
