@@ -12,16 +12,16 @@ module.exports = {
         showing: "show 0.8s forwards",
       },
       colors: {
-        "bg-box-main": "#CCB0A4",
-        "bg-main": "#E5D4C4",
-        "wp-blue": "#213951",
-        "wp-light-blue": "#3b6691",
-      },
-      fontFamily: {
-        sans: ["Ubuntu", "sans-serif"],
-        mono: ['"Ubuntu Condensed"', "ui-monospace"],
-      },
+      'bg-box-main': '#CCB0A4',
+      'bg-main': '#E5D4C4',
+      "wp-blue": "#213951",
+      "wp-light-blue": "#3b6691",
+    }, fontFamily: {
+      sans: ["Ubuntu", "sans-serif"],
+      mono: ['"Ubuntu Condensed"', "ui-monospace"],
     },
+
+  },
   },
   plugins: [],
 };

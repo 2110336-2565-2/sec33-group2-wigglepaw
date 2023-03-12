@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { userFields, petOwnerFields, petFields } from "../../../schema/schema";
+import { saltHashPassword } from "../../../pages/api/auth/[...nextauth]";
 
 export const petOwnerRouter = createTRPCRouter({
   //public procedure that get petOwner by ID
@@ -56,6 +57,9 @@ export const petOwnerRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const saltHash = saltHashPassword("password");
+      const salt = saltHash.salt;
+      const hash = saltHash.hash;
       const code = input.code;
       return await ctx.prisma.petOwner.create({
         data: {
@@ -63,7 +67,8 @@ export const petOwnerRouter = createTRPCRouter({
             create: {
               username: "username" + code,
               email: "email" + code + "@gmail.com",
-              password: "password" + code,
+              password: hash,
+              salt: salt,
             },
           },
 
@@ -105,11 +110,17 @@ export const petOwnerRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      return await ctx.prisma.petOwner.create({
+      const user = input.user;
+      const saltHash = saltHashPassword(user.password);
+      const salt = saltHash.salt;
+      const hash = saltHash.hash;
+      user.password = hash;
+      await ctx.prisma.petOwner.create({
         data: {
           user: {
             create: {
               ...input.user,
+              salt: salt,
             },
           },
           ...input.petOwner,
@@ -118,7 +129,9 @@ export const petOwnerRouter = createTRPCRouter({
           user: true,
         },
       });
+      return;
     }),
+
   //public procedure that create petOwner
   updatePetTypes: publicProcedure
     .input(z.object({ userId: z.string() }))

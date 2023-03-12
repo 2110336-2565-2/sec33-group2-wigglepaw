@@ -1,4 +1,3 @@
-import { sessionRequestRouter } from "./routers/sessionRequestRouter";
 import { postRouter } from "./routers/postRouter";
 import { reviewRouter } from "./routers/reviewRouter";
 import { seedRouter } from "./routers/seedRouter";
@@ -8,6 +7,7 @@ import { petOwnerRouter } from "./routers/petOwnerRouter";
 import { userRouter } from "./routers/userRouter";
 import { createTRPCRouter, publicProcedure } from "./trpc";
 import { petSitterRouter } from "./routers/petSitterRouter";
+import { bookingRouter } from "./routers/bookingRouter";
 import { petRouter } from "./routers/petRouter";
 import { profilePictureRouter } from "./routers/profilePictureRouter";
 
@@ -22,11 +22,11 @@ export const appRouter = createTRPCRouter({
   petOwner: petOwnerRouter,
   freelancePetSitter: freelancePetSitterRouter,
   petHotel: petHotelRouter,
+  booking: bookingRouter,
   seed: seedRouter,
   pet: petRouter,
   review: reviewRouter,
   post: postRouter,
-  sessionRequest: sessionRequestRouter,
   profilePicture: profilePictureRouter,
   // Health check route, return 200 OK if server is up
   healthcheck: publicProcedure

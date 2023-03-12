@@ -13,6 +13,7 @@ const config = {
         hostname: "*",
       },
     ],
+    domains: ["picsum.photos"],
   },
   reactStrictMode: true,
   /* If trying out the experimental appDir, comment the i18n config out
@@ -26,6 +27,15 @@ const config = {
   },
   eslint: {
     ignoreDuringBuilds: !!process.env.SKIP_ESLINT,
+  },
+  async redirects() {
+    return [
+      {
+        source: "/user/[username]",
+        destination: "/user/[username]/profile",
+        statusCode: 301,
+      },
+    ];
   },
 };
 export default config;

@@ -5,6 +5,19 @@ generator client {
     provider = "prisma-client-js"
 }
 
+generator dbml {
+    provider            = "prisma-dbml-generator"
+    projectDatabaseType = "postgresql"
+    projectName         = "WigglePaw"
+    output              = "../docs"
+    outputName          = "erd.schema"
+}
+
+generator mermaid {
+    provider = "prisma-erd-generator"
+    output   = "../docs/erd.md"
+}
+
 datasource db {
     provider = "postgresql"
     // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
@@ -61,17 +74,18 @@ model User {
     accounts      Account[] // Needed for Auth
     sessions      Session[] // Needed for Auth
     createdAt     DateTime   @default(now())
+    salt          String
 }
 
 model PetOwner {
-    userId         String           @id @default(cuid())
-    user           User             @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    userId         String   @id @default(cuid())
+    user           User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
     petTypes       String[]
     firstName      String
     lastName       String
     pet            Pet[]
+    booking        Booking[]
     review         Review[]
-    SessionRequest SessionRequest[]
 }
 
 model PetSitter {
@@ -79,6 +93,7 @@ model PetSitter {
     user               User                @relation(fields: [userId], references: [userId], onDelete: Cascade)
     freelancePetSitter FreelancePetSitter?
     petHotel           PetHotel?
+    booking            Booking[]
     petTypes           String[]
     verifyStatus       Boolean
     certificationUri   String?
@@ -88,7 +103,6 @@ model PetSitter {
     review             Review[]
     avgRating          Float?
     reviewCount        Int                 @default(0)
-    SessionRequest     SessionRequest[]
 }
 
 model FreelancePetSitter {
@@ -105,6 +119,28 @@ model PetHotel {
     hotelName          String
 }
 
+model Booking {
+    bookingId       String    @id @default(cuid())
+    petOwner        PetOwner    @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
+    petSitter       PetSitter   @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    petOwnerId      String
+    petSitterId     String
+    startDate       DateTime
+    endDate         DateTime
+    numberOfPets    Int
+    pet             Pet[]   @relation("MyRelationTable")
+    status          BookingStatus
+    note            String?
+    createdAt       DateTime    @default(now())
+}
+
+enum BookingStatus {
+    requested
+    accepted
+    canceled
+    rejected
+}
+
 model Pet {
     petId      String   @id @default(cuid())
     petOwnerId String
@@ -113,6 +149,8 @@ model Pet {
     name       String?
     sex        String?
     breed      String?
+    weight     Float?
+    pet        Booking[]    @relation("MyRelationTable")
     createdAt  DateTime @default(now())
 }
 
@@ -144,26 +182,4 @@ model Post {
     pictureUri  String[]
     videoUri    String?
     createdAt   DateTime  @default(now())
-}
-
-model SessionRequest {
-    srId        String    @id @default(cuid())
-    petOwnerId  String
-    petOwner    PetOwner  @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
-    petSitterId String
-    petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
-    status      String // Waiting, Cancelled, Accepted, Declined
-    text        String?
-    createdAt   DateTime  @default(now())
-    Event       Event[]
-}
-
-model Schedule {
-    userId String @id @default(cuid())
-}
-
-model Event {
-    eventId        String         @id @default(cuid())
-    srId           String
-    sessionRequest SessionRequest @relation(fields: [srId], references: [srId], onDelete: Cascade)
 }

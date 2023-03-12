@@ -17,8 +17,13 @@ import type {
   PetHotel,
   PetOwner,
   PetSitter,
+  PrismaClient,
   User,
+  Prisma,
 } from "@prisma/client";
+import postPic from "../logic/s3Op/postPic";
+import profilePic from "../logic/s3Op/profilePic";
+import { S3Client } from "@aws-sdk/client-s3";
 
 export const userRouter = createTRPCRouter({
   getByUsername: publicProcedure
@@ -155,30 +160,24 @@ export const userRouter = createTRPCRouter({
   deleteByUserId: publicProcedure
     .input(z.object({ userId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.user.delete({
-        where: {
-          userId: input.userId,
-        },
+      return await deleteByUser(ctx.s3, ctx.prisma, {
+        userId: input.userId,
       });
     }),
 
   deleteByUsername: publicProcedure
     .input(z.object({ username: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.user.delete({
-        where: {
-          username: input.username,
-        },
+      return await deleteByUser(ctx.s3, ctx.prisma, {
+        username: input.username,
       });
     }),
 
   deleteByEmail: publicProcedure
     .input(z.object({ email: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.user.delete({
-        where: {
-          email: input.email,
-        },
+      return await deleteByUser(ctx.s3, ctx.prisma, {
+        email: input.email,
       });
     }),
 
@@ -194,6 +193,40 @@ export const userRouter = createTRPCRouter({
       return update;
     }),
 });
+
+async function deleteByUser(
+  s3: S3Client,
+  prisma: PrismaClient,
+  where: Prisma.UserWhereUniqueInput
+) {
+  // Delete user in db
+  const user = await prisma.user.delete({
+    where,
+    include: {
+      petSitter: {
+        select: {
+          post: {
+            select: { postId: true },
+          },
+        },
+      },
+    },
+  });
+
+  const { petSitter, ...userData } = user;
+
+  // Delete user's profile pic
+  await profilePic.delete(s3, userData.userId);
+
+  // If the deleted user is a pet sitter, delete all their post images.
+  if (petSitter) {
+    await Promise.allSettled(
+      petSitter.post.map(({ postId }) => postPic.deleteOfPost(s3, postId))
+    );
+  }
+
+  return userData as User;
+}
 
 function flattenUser(
   user: User & {

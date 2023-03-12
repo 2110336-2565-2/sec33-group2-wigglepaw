@@ -83,6 +83,7 @@ const RegisterPage: NextPage = () => {
       petOwner: {
         firstName: data.firstname,
         lastName: data.lastname,
+        petTypes: [data.type], // TODO: Please correct this, it's currently just a placeholder
       },
     });
 
