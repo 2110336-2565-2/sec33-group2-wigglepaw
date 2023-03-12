@@ -13,6 +13,7 @@ const config = {
         hostname: "*",
       },
     ],
+    domains: ["picsum.photos"],
   },
   reactStrictMode: true,
   /* If trying out the experimental appDir, comment the i18n config out

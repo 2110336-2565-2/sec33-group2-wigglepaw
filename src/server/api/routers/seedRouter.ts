@@ -1,228 +1,77 @@
-import { initTRPC } from "@trpc/server";
-import { createNextApiHandler } from "@trpc/server/adapters/next";
-import { env } from "../../../env/server.mjs";
-import { createTRPCContext } from "../../../server/api/trpc";
-import { appRouter } from "../../../server/api/root";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-import {
-  freelancePetSitterFields,
-  petSitterFields,
-  userFields,
-} from "../../../schema/schema";
-import { Prisma } from "@prisma/client";
 import { prisma } from "../../db";
-
-async function makeFree(
-  code: string,
-  firstname: string,
-  lastname: string,
-  phone: string,
-  address: string,
-  petTypes: string[],
-  startPrice: number,
-  endPrice: number,
-  imageUri: string
-) {
-  return await prisma.freelancePetSitter.create({
-    data: {
-      petSitter: {
-        create: {
-          user: {
-            create: {
-              username: "u" + code,
-              email: "email" + code + "@gmail.com",
-              password: "p" + code,
-              address: address,
-              phoneNumber: phone,
-              imageUri: imageUri,
-            },
-          },
-          verifyStatus: true,
-          certificationUri: "uri" + code,
-          petTypes: petTypes,
-          startPrice: startPrice,
-          endPrice: endPrice,
-        },
-      },
-      firstName: firstname,
-      lastName: lastname,
-    },
-    include: {
-      petSitter: {
-        include: {
-          user: true,
-        },
-      },
-    },
-  });
-}
-
-async function makeHotel(
-  code: string,
-  hotelName: string,
-  phone: string,
-  address: string,
-  petTypes: string[],
-  startPrice: number,
-  endPrice: number,
-  imageUri: string
-) {
-  return await prisma.petHotel.create({
-    data: {
-      petSitter: {
-        create: {
-          user: {
-            create: {
-              username: "u" + code,
-              email: "email" + code + "@gmail.com",
-              password: "p" + code,
-              address: address,
-              phoneNumber: phone,
-              imageUri: imageUri,
-            },
-          },
-          verifyStatus: true,
-          certificationUri: "uri" + code,
-          petTypes: petTypes,
-          startPrice: startPrice,
-          endPrice: endPrice,
-        },
-      },
-      hotelName: hotelName,
-    },
-    include: {
-      petSitter: {
-        include: {
-          user: true,
-        },
-      },
-    },
-  });
-}
-
-async function makeOwner(
-  code: string,
-  firstName: string,
-  lastName: string,
-  phone: string,
-  address: string,
-  imageUri: string
-) {
-  return await prisma.petOwner.create({
-    data: {
-      user: {
-        create: {
-          username: "u" + code,
-          email: "email" + code + "@gmail.com",
-          password: "p" + code,
-          address: address,
-          phoneNumber: phone,
-          imageUri: imageUri,
-        },
-      },
-      firstName: firstName,
-      lastName: lastName,
-    },
-    include: {
-      user: true,
-    },
-  });
-}
-
-// UTILITY
-function getMultipleRandom(arr: string[], num: number) {
-  const shuffled = [...arr].sort(() => 0.5 - Math.random());
-
-  return shuffled.slice(0, num);
-}
-
-function randomIntFromInterval(min: number, max: number) {
-  // min and max included
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-// UTILITY
-
-// INFO
-var firstNames: string[] = [
-  "Tokino",
-  "Kanata",
-  "Watame",
-  "Roboco",
-  "Suisei",
-  "Azki",
-  "Aki",
-  "Akai",
-  "Matsuri",
-  "Mei",
-];
-var lastNames: string[] = [
-  "Amane",
-  "Kiryuu",
-  "Sora",
-  "Haato",
-  "Rosenthal",
-  "Sung086",
-];
-var addresses: string[] = [
-  "Home",
-  "Bangkok somewhere",
-  "USA",
-  "OHIO",
-  "Chiangmai",
-  "Isekai",
-  "OtakuRoom",
-];
-var petTypes: string[] = [
-  "Dog",
-  "Cat",
-  "Goldfish",
-  "Panda",
-  "Snake",
-  "Bat",
-  "Lizard",
-  "Hamster",
-];
-// INFO
+import {
+  firstNames,
+  lastNames,
+  addresses,
+  imageUris,
+  petTypes,
+  reviewTexts,
+  postPictures,
+  postTexts,
+  postTitles,
+} from "../../../seed/pool";
+import {
+  getMultipleRandom,
+  getRandomIntFromInterval,
+} from "../../../seed/util";
+import {
+  makeFree,
+  makeHotel,
+  makeOwner,
+  makePost,
+  makeReview,
+  updateAvgRating,
+} from "../../../seed/db";
+import Rand, { PRNG } from "rand-seed";
+import { resetRand } from "../../../seed/util";
 
 export const seedRouter = createTRPCRouter({
-  seed1: publicProcedure
+  seedUsers: publicProcedure
     .input(
       z.object({
-        clearDatabase: z.boolean(),
+        clearUsers: z.boolean(),
         numberOfUsers: z.number(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      if (input.clearDatabase) {
-        await prisma.user.deleteMany({});
+      if (input.clearUsers) {
+        await ctx.prisma.user.deleteMany({});
       }
-      for (var i = 0; i < input.numberOfUsers; i++) {
-        var firstName = getMultipleRandom(firstNames, 1)[0] ?? "";
-        var lastName = getMultipleRandom(lastNames, 1)[0] ?? "";
-        var hotelName = firstName + " " + lastName + " Hotel";
-        var address = getMultipleRandom(addresses, 1)[0] ?? "";
-        var phoneNumber = "1234569780";
-        var petType = getMultipleRandom(petTypes, randomIntFromInterval(1, 3));
-        var startPrice = randomIntFromInterval(100, 300);
-        var endPrice = startPrice + randomIntFromInterval(100, 3000);
-        var imageUri = "https://picsum.photos/200";
-        switch (randomIntFromInterval(1, 3)) {
+      resetRand();
+      for (let i = 0; i < input.numberOfUsers; i++) {
+        const firstName = getMultipleRandom(firstNames, 1)[0] ?? "";
+        const lastName = getMultipleRandom(lastNames, 1)[0] ?? "";
+        const hotelName = firstName + " " + lastName + " Hotel";
+        const address = getMultipleRandom(addresses, 1)[0] ?? "";
+        const phoneNumber = "1234569780";
+        const petType = getMultipleRandom(
+          petTypes,
+          getRandomIntFromInterval(1, 3)
+        );
+        const startPrice = getRandomIntFromInterval(100, 300);
+        const endPrice = startPrice + getRandomIntFromInterval(100, 3000);
+        const imageUri = getMultipleRandom(imageUris, 1)[0] ?? "";
+
+        switch (getRandomIntFromInterval(1, 3)) {
           case 1: {
-            var code = "Owner" + randomIntFromInterval(100, 999);
-            makeOwner(
+            const code =
+              "Owner" + getRandomIntFromInterval(100, 999).toString();
+            await makeOwner(
               code,
               firstName,
               lastName,
               phoneNumber,
               address,
-              imageUri
+              imageUri,
+              petType
             );
             break;
           }
           case 2: {
-            var code = "Free" + randomIntFromInterval(100, 999);
-            makeFree(
+            const code = "Free" + getRandomIntFromInterval(100, 999).toString();
+            await makeFree(
               code,
               firstName,
               lastName,
@@ -236,8 +85,9 @@ export const seedRouter = createTRPCRouter({
             break;
           }
           default: {
-            var code = "Hotel" + randomIntFromInterval(100, 999);
-            makeHotel(
+            const code =
+              "Hotel" + getRandomIntFromInterval(100, 999).toString();
+            await makeHotel(
               code,
               hotelName,
               phoneNumber,
@@ -251,6 +101,78 @@ export const seedRouter = createTRPCRouter({
           }
         }
       }
-      return;
+    }),
+
+  seedReviews: publicProcedure
+    .input(
+      z.object({
+        clearReviews: z.boolean(),
+        numberOfReviews: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const sitters = await prisma.petSitter.findMany();
+      const owners = await prisma.petOwner.findMany();
+
+      if (input.clearReviews) {
+        await ctx.prisma.review.deleteMany({});
+        for (const sitter of sitters) {
+          await updateAvgRating(sitter.userId);
+        }
+      }
+
+      const N = input.numberOfReviews;
+      const sitterIds = new Array<string>(N);
+      const ownerIds = new Array<string>(N);
+
+      for (let i = 0; i < Math.min(N, sitters.length); i++) {
+        sitterIds[i] = sitters[i]?.userId ?? "";
+      }
+
+      for (let i = 0; i < Math.min(N, owners.length); i++) {
+        ownerIds[i] = owners[i]?.userId ?? "";
+      }
+      resetRand();
+      for (let i = 0; i < N; i++) {
+        const sitterId = getMultipleRandom(sitterIds, 1)[0] ?? "";
+        const ownerId = getMultipleRandom(ownerIds, 1)[0] ?? "";
+        const rating = getRandomIntFromInterval(1, 5);
+        const text = getMultipleRandom(reviewTexts, 1)[0] ?? "";
+
+        await makeReview(sitterId, ownerId, rating, text);
+      }
+    }),
+
+  seedPosts: publicProcedure
+    .input(
+      z.object({
+        clearPosts: z.boolean(),
+        numberOfPosts: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.clearPosts) {
+        await ctx.prisma.post.deleteMany({});
+      }
+
+      const sitters = await prisma.petSitter.findMany();
+
+      const N = input.numberOfPosts;
+      const sitterIds = new Array<string>(N);
+
+      for (let i = 0; i < Math.min(N, sitters.length); i++) {
+        sitterIds[i] = sitters[i]?.userId ?? "";
+      }
+
+      resetRand();
+      for (let i = 0; i < N; i++) {
+        const sitterId = getMultipleRandom(sitterIds, 1)[0] ?? "";
+        const title = getMultipleRandom(postTitles, 1)[0] ?? "";
+        const text = getMultipleRandom(postTexts, 1)[0] ?? "";
+        const pics = getRandomIntFromInterval(0, 4);
+        const pictureUri = getMultipleRandom(postPictures, pics) ?? [];
+
+        await makePost(sitterId, title, text, pictureUri, "vdoUri");
+      }
     }),
 });
