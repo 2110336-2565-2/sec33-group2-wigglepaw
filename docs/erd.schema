@@ -119,6 +119,7 @@ Table Pet {
   name String
   sex String
   breed String
+  weight Float
   pet Booking [not null]
   createdAt DateTime [default: `now()`, not null]
 }

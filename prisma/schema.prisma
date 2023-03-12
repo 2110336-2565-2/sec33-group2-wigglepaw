@@ -149,6 +149,7 @@ model Pet {
     name       String?
     sex        String?
     breed      String?
+    weight     Float?
     pet        Booking[]    @relation("MyRelationTable")
     createdAt  DateTime @default(now())
 }

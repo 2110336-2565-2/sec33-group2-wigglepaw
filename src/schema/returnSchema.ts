@@ -40,6 +40,7 @@ abstract class InnerReturn {
     name: true,
     sex: true,
     breed: true,
+    weight: true,
   };
   public static booking: object = {
     bookingId: true,

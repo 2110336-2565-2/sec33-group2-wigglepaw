@@ -93,6 +93,7 @@ rejected rejected
     String name  "nullable"
     String sex  "nullable"
     String breed  "nullable"
+    Float weight  "nullable"
     DateTime createdAt  
     }
   
