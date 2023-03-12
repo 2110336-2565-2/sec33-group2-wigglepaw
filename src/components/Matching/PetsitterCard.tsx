@@ -43,7 +43,7 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
   const startPriceSign = getPriceLogo(startPrice);
   const endPriceSign = getPriceLogo(endPrice);
 
-  const profile_link = "/user/" + username;
+  const profile_link = "/user/" + username + "/profile";
 
   // handle Review Display
   const getReviewStatus = (review: number | null): string => {

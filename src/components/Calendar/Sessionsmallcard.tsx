@@ -1,7 +1,7 @@
 import Image from "next/image";
-export const SessionsmallCard = ({ data }) => {
+export const SessionSmallCard = ({ data }) => {
   return (
-    <div className="my-1 animate-showing rounded-xl border-2 border-[#E7E7E7] p-1 opacity-0 shadow-inner transition-all transition-all hover:bg-[#F4F4F4]  ">
+    <div className="my-1 animate-showing rounded-xl border-2 border-[#E7E7E7] p-1 opacity-0 shadow-inner transition-all hover:bg-[#F4F4F4]  ">
       <div className="grid grid-cols-5 px-1">
         <div className="relative m-1 mx-[0.4rem]">
           <Image
@@ -32,4 +32,4 @@ export const SessionsmallCard = ({ data }) => {
     </div>
   );
 };
-export default SessionsmallCard;
+export default SessionSmallCard;

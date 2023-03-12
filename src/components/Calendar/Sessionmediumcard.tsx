@@ -3,7 +3,7 @@ import { faMessage, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useState } from "react";
-export const SessionmediumCard = ({ data }) => {
+export const SessionMediumCard = ({ data }) => {
   const dummyPet = [
     {
       name: "Eren",
@@ -260,4 +260,4 @@ export const SessionmediumCard = ({ data }) => {
     </div>
   );
 };
-export default SessionmediumCard;
+export default SessionMediumCard;

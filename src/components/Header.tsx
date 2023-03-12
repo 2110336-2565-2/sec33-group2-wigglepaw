@@ -27,7 +27,9 @@ const Header = () => {
     ? userData?.data?.imageUri
     : "/profiledummy.png";
 
-  const profileLink = username ? "/user/" + username.toString() : "";
+  const profileLink = username
+    ? "/user/" + username.toString() + "/profile"
+    : "";
 
   return (
     <span className="mb-4 flex h-fit w-screen bg-wp-blue md:pr-2">
@@ -56,7 +58,7 @@ const Header = () => {
             <>
               <div className="my-auto h-fit">
                 <Link
-                  href="/Help"
+                  href="/help"
                   className={`header-desktop-button
                 ${asPath.includes("/help") ? "header-at-page" : ""}`}
                 >
@@ -115,7 +117,7 @@ const Header = () => {
                     Register
                   </Menu.Button>
                 </div>
-                <Menu.Items className="absolute right-0 mt-2 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <Menu.Items className="absolute right-0 z-20 mt-2 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div className="px-1 py-[0.1rem]">
                     <Menu.Item>
                       <Link
@@ -166,7 +168,7 @@ const Header = () => {
                     ></Image>
                   </Menu.Button>
                 </div>
-                <Menu.Items className="absolute right-0 mt-2 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <Menu.Items className="absolute right-0 z-20 mt-2 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div className="px-1 py-[0.1rem]">
                     <Menu.Item>
                       <Link
@@ -216,7 +218,7 @@ const Header = () => {
                 </Menu.Button>
               )}
 
-              <Menu.Items className="absolute right-0 mt-2 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Menu.Items className="absolute right-0 z-20 mt-2 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 {!isLoggedIn && (
                   <>
                     <div className="px-1 py-[0.1rem]">

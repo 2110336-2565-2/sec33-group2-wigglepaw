@@ -24,7 +24,7 @@ const PetSitterCard = ({ pet_sitter }: PetSitterCardProps) => {
     : "/user/lmao";
   const profileImageUri = pet_sitter?.user.imageUri ?? "/profiledummy.png";
   return (
-    <div className="drop-shadow-md transition-all hover:scale-[1.03] ">
+    <div className="z-0 drop-shadow-md transition-all hover:scale-[1.03]">
       <Link
         href={profile_link}
         className="m-3 flex h-fit rounded-2xl border-2 border-solid border-black bg-yellow-50 p-4 transition-colors hover:bg-yellow-200"
