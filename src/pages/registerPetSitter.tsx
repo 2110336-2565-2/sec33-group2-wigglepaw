@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import type { NextPage } from "next";
+import type { GetServerSidePropsContext, NextPage } from "next";
 import { api } from "../utils/api";
 import {
   FieldValues,
@@ -13,6 +13,7 @@ import { z } from "zod";
 import { PetKind } from "@prisma/client";
 import Header from "../components/Header";
 import { useRouter } from "next/router";
+import { getServerAuthSession } from "../server/auth";
 
 export default function RegisterPetSitter() {
   const createFreelancePetSitter = api.freelancePetSitter.create.useMutation();
@@ -577,3 +578,19 @@ const Input: React.FC<InputProps> = ({
     />
   </>
 );
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  // Redirect to home page if user is already logged in
+  const session = await getServerAuthSession(ctx);
+  if (session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  // Default return
+  return { props: {} };
+}
