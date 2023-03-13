@@ -1,17 +1,12 @@
 import { faArrowLeft, faPaw, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Image from "next/image";
-import {
-  FreelancePetSitterProfileType,
-  PetSitterProfileType,
-  UserProfile,
-} from "../types/user";
+
 import Link from "next/link";
 
 type SideTabProps = {
-  user?: UserProfile & PetSitterProfileType & FreelancePetSitterProfileType;
+  user?: any;
   isPetOwner?: boolean;
 };
 

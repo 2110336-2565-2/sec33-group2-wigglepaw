@@ -125,9 +125,9 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
   );
 
   return (
-    <div>
+    <div className="min-h-screen">
       <Header></Header>
-      <div className="flex">
+      <div className="flex min-h-[90vh]">
         <SideTab user={props.user} isPetOwner={props.isPetOwner} />
         <div className="mt-3 max-w-[100vw] px-2">
           <div className="mt-2 flex flex-wrap justify-center">
