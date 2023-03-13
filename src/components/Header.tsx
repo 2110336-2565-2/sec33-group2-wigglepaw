@@ -379,7 +379,8 @@ const ReminderBar = () => {
   const remindableBooking = booking.data?.filter((book) => {
     return (
       book.status === BookingStatus.accepted &&
-      book.startDate.getTime() - new Date().getTime() < 24 * 60 * 60 * 1000
+      book.startDate.getTime() - new Date().getTime() < 24 * 60 * 60 * 1000 &&
+      book.startDate.getTime() - new Date().getTime() > 0
     );
   });
   const nRemindable = (remindableBooking ?? []).length;
