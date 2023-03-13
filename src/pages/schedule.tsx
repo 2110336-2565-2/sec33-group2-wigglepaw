@@ -193,7 +193,7 @@ const Scheulde: NextPage = () => {
                 <div
                   className="center-thing relative mb-1 border-b-4 border-orange-600 bg-orange-300 bg-opacity-50 px-10 py-2 text-center font-semibold text-orange-600 shadow-md "
                   onClick={() => {
-                    console.log(events, "Mine");
+                    //console.log(events, "Mine");
                     setShowup((prev) => !prev);
                   }}
                 >
@@ -201,6 +201,9 @@ const Scheulde: NextPage = () => {
                   <p className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl font-semibold">
                     {showUp ? "-" : "+"}
                   </p>
+                  <div className="ml-5 h-6 w-6 rounded-full bg-white ">
+                    {pending.length}
+                  </div>
                 </div>
                 {showUp &&
                   pending.map((value) => {
@@ -225,6 +228,9 @@ const Scheulde: NextPage = () => {
                   <p className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl font-semibold">
                     {showOn ? "-" : "+"}
                   </p>
+                  <div className="ml-5 h-6 w-6 rounded-full bg-white ">
+                    {accepted.length}
+                  </div>
                 </div>
                 {showOn &&
                   accepted.map((value) => {
@@ -249,6 +255,9 @@ const Scheulde: NextPage = () => {
                   <p className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl font-semibold">
                     {showFin ? "-" : "+"}
                   </p>
+                  <div className="ml-5 h-6 w-6 rounded-full bg-white ">
+                    {finished.length}
+                  </div>
                 </div>
                 {showFin &&
                   finished.map((value) => {
@@ -273,6 +282,9 @@ const Scheulde: NextPage = () => {
                   <p className="center-thing absolute right-[10%] h-5 w-5 rounded-full text-xl font-semibold">
                     {showCan ? "-" : "+"}
                   </p>
+                  <div className="ml-5 h-6 w-6 rounded-full bg-white ">
+                    {cancelled.length}
+                  </div>
                 </div>
                 {showCan &&
                   cancelled.map((value) => {
