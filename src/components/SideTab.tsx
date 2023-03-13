@@ -8,6 +8,7 @@ import {
   PetSitterProfileType,
   UserProfile,
 } from "../types/user";
+import Link from "next/link";
 
 type SideTabProps = {
   user?: UserProfile & PetSitterProfileType & FreelancePetSitterProfileType;
@@ -35,7 +36,7 @@ export default function SideTab(props: SideTabProps) {
       </div>
       {/* SIDE TAB */}
       <div
-        className={`fixed top-0 z-30 h-screen  w-[219px] bg-[#E5D4C2] pt-[30%] sm:relative  ${
+        className={`s fixed top-0 z-30 h-screen  w-[219px] bg-[#E5D4C2] pt-[30%] sm:relative sm:h-full  ${
           !openTab ? "max-sm:hidden" : ""
         }`}
       >
@@ -66,11 +67,26 @@ export default function SideTab(props: SideTabProps) {
         </div>
         <div className="my-16">
           <div className="flex flex-col border ">
-            {["Profile", "Information", "Booking", "Review", "Contact"].map(
-              (tabName) => (
-                <Tab tabName={tabName}></Tab>
-              )
-            )}
+            {/*Profile Tab*/}
+            <div className="flex h-[58px] w-[219px] items-center justify-center border bg-[#B77B59] text-lg font-medium hover:bg-[#A96037]">
+              <Link href={`/user/${props.user?.username}/profile`}>
+                Profile
+              </Link>
+            </div>
+            {/*Booking Tab*/}
+            <div className="flex h-[58px] w-[219px] items-center justify-center border bg-[#B77B59] text-lg font-medium hover:bg-[#A96037]">
+              <Link href={`/user/${props.user?.username}/booking`}>
+                Booking
+              </Link>
+            </div>
+            {/*Review Tab*/}
+            <div className="flex h-[58px] w-[219px] items-center justify-center border bg-[#B77B59] text-lg font-medium hover:bg-[#A96037]">
+              <Link href={`/user/${props.user?.username}/review`}>Review</Link>
+            </div>
+            {/*Contact Tab*/}
+            <div className="flex h-[58px] w-[219px] items-center justify-center border bg-[#B77B59] text-lg font-medium hover:bg-[#A96037]">
+              <Link href={`/user/${props.user?.username}/chat`}>Chat</Link>
+            </div>
           </div>
         </div>
       </div>
@@ -80,21 +96,6 @@ export default function SideTab(props: SideTabProps) {
 
 interface TabProps {
   tabName: string;
-}
-
-function Tab({ tabName }: TabProps) {
-  const router = useRouter();
-  return (
-    <button
-      className={`h-[58px] w-[219px] border bg-[#B77B59] text-lg font-medium hover:bg-[#A96037]  ${
-        null
-        // router.query. === tabName && "h-[58px] w-[239px] bg-[#A96037]"
-      } `}
-      onClick={() => router.push(`/${tabName}`)}
-    >
-      {tabName}
-    </button>
-  );
 }
 
 interface TabButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
