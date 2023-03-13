@@ -13,7 +13,7 @@ export const SessionSmallCard = ({ data }) => {
         </div>
         <div className="col-span-4 py-2">
           <div className="relative ml-3 mt-1">
-            <span className="mr-5">{data.title} </span>
+            <span className="mr-5">{data.petOwner.firstName} </span>
             <span className="absolute right-1">
               {" "}
               <div className="rounded-xl bg-[#F4F4F4] py-[5px] px-[5px]">
@@ -23,8 +23,8 @@ export const SessionSmallCard = ({ data }) => {
               </div>
             </span>
             <div className="flex">
-              <div className="text-sm text-gray-500">{data.start} &nbsp;- </div>
-              <div className="text-sm text-gray-500"> &nbsp; {data.end}</div>
+              <div className="text-sm text-gray-500">Date1 &nbsp;- </div>
+              <div className="text-sm text-gray-500"> &nbsp; Date2</div>
             </div>
           </div>
         </div>

@@ -11,6 +11,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import SessionSmallCard from "../components/Calendar/Sessionsmallcard";
 import SessionMediumCard from "../components/Calendar/Sessionmediumcard";
 import Image from "next/image";
+import { api } from "../utils/api";
 
 const Scheulde: NextPage = () => {
   type Insid = { title: string; start: string; end: string };
@@ -55,6 +56,7 @@ const Scheulde: NextPage = () => {
       mode: "2",
     },
   ]);
+  const gg = api.booking.getMyBooking.useQuery().data;
   const [pending, setpending] = useState<help[]>([]);
   const [accepted, setaccepted] = useState<help[]>([]);
   const [finished, setfinished] = useState<help[]>([]);
@@ -66,8 +68,41 @@ const Scheulde: NextPage = () => {
 
   const [mode, setMode] = useState(false);
 
+  api.booking.getMyBooking.useQuery([], {
+    onSuccess: (gg) => {
+      const updatedPending = [];
+      const updatedAccepted = [];
+      const updatedCancelled = [];
+      const updatedFinished = [];
+      gg.forEach((value) => {
+        console.log(value);
+
+        const date1 = new Date(value.startDate.toString());
+        value.startDate = date1.toDateString();
+
+        const date2 = new Date(value.endDate.toString());
+        value.endDate = date2.toDateString();
+
+        if (value.status === "requested") {
+          updatedPending.push(value);
+        } else if (value.status === "accepted") {
+          updatedAccepted.push(value);
+        } else if (value.status === "rejected") {
+          updatedCancelled.push(value);
+        } else {
+          updatedFinished.push(value);
+        }
+      });
+      setpending(updatedPending);
+      setaccepted(updatedAccepted);
+      setcancelled(updatedCancelled);
+      setfinished(updatedFinished);
+    },
+  });
+
   useEffect(() => {
-    filter();
+    // api.booking.getMyBooking.useQuery({
+    //   onSuccess: (data) => {
   }, []);
 
   const eventContent = ({ event, view }) => {
@@ -127,84 +162,11 @@ const Scheulde: NextPage = () => {
   };
 
   //filter type of events, this would be very effective with use Quary,
-  const filter = () => {
-    events.forEach((value) => {
-      const datetimeString = value.start;
-      const datetimeString2 = value.end;
-      const datetime = new Date(datetimeString);
-      const datetime2 = new Date(datetimeString2);
-
-      const options = {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      };
-
-      const timestart = datetime.toLocaleDateString("en-US", options);
-      const timeend = datetime2.toLocaleDateString("en-US", options);
-      const data = {
-        start: timestart,
-        end: timeend,
-        title: value.title,
-        mode: value.mode,
-        color: value.color,
-      };
-
-      //mode 1 = pending , mode 2 = accepted , mode 3 = finished+unconfirmed , mode 4 = finished+confirmed+unreviewed
-      //mode 5 = done all the process mode 6 = cancelled || denied
-
-      if (value.mode === "1") {
-        setpending([...pending, data]);
-      } else if (value.mode === "2") {
-        setaccepted([...accepted, data]);
-      } else if (value.mode === "6") {
-        setcancelled([...cancelled, data]);
-      } else {
-        setfinished([...finished, data]);
-      }
-    });
-  };
 
   const changemode = (data) => {
     setPassing(data);
     console.log(passing);
     setMode(true);
-  };
-
-  //temp function use with form for test only, must remove this for the real version
-  const filtertemp = (value) => {
-    const datetimeString = value.start;
-    const datetimeString2 = value.end;
-    const datetime = new Date(datetimeString);
-    const datetime2 = new Date(datetimeString2);
-
-    const options = {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    };
-
-    const timestart = datetime.toLocaleDateString("en-US", options);
-    const timeend = datetime2.toLocaleDateString("en-US", options);
-    const data = {
-      start: timestart,
-      end: timeend,
-      title: value.title,
-      mode: value.mode,
-      color: value.color,
-    };
-    //mode 1 = pending , mode 2 = accepted , mode 3 = finished+unconfirmed , mode 4 = finished+confirmed+unreviewed
-    //mode 5 = done all the process mode 6 = cancelled || denied
-
-    if (value.mode === "1") {
-      setpending([...pending, data]);
-    } else if (value.mode === "2") {
-      setaccepted([...accepted, data]);
-    } else if (value.mode === "6") {
-      setcancelled([...cancelled, data]);
-    } else {
-      setfinished([...finished, data]);
-    }
   };
 
   return (
@@ -268,6 +230,7 @@ const Scheulde: NextPage = () => {
                 <div
                   className="center-thing relative mb-1 border-b-4 border-orange-600 bg-orange-300 bg-opacity-50 px-10 py-2 text-center font-semibold text-orange-600 shadow-md "
                   onClick={() => {
+                    console.log(gg);
                     setShowup((prev) => !prev);
                   }}
                 >
@@ -283,6 +246,7 @@ const Scheulde: NextPage = () => {
                       <div
                         onClick={() => {
                           changemode(value);
+                          console.log(gg, "Mine");
                         }}
                       >
                         <SessionSmallCard data={value} />

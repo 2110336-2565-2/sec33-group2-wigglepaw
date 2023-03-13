@@ -3,7 +3,22 @@ import { faMessage, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useState } from "react";
+import { api } from "../../utils/api";
 export const SessionMediumCard = ({ data }) => {
+  const colorbg = () => {
+    if (data.status === "requested") {
+      return "#fdba74";
+    } else if (data.status === "accepted") {
+      return "#a5f3fc";
+    } else if (data.status === "canceled") {
+      return "#bef264";
+    } else {
+      return "#cbd5e1";
+    }
+  };
+  const mutate = api.booking.accept.useMutation();
+  const mutatecan = api.booking.reject.useMutation();
+
   const dummyPet = [
     {
       name: "Eren",
@@ -27,17 +42,36 @@ export const SessionMediumCard = ({ data }) => {
 
   //use to define each mode from backend, can add onClick event into these element
   const Lastbox = () => {
-    console.log(data.mode);
-    switch (data.mode) {
-      case "1":
+    switch (data.status) {
+      case "requested":
         if (sitter) {
           return (
             <div className="mt-5 grid grid-cols-2">
-              <div className="center-thing mb-5 mr-3  rounded-md  bg-[#FC3737] py-4 text-white">
+              <div
+                onClick={() => {
+                  const gg = {
+                    bookingId: data.bookingId,
+                  };
+                  const res = mutatecan.mutate(gg);
+                  console.log("click", res);
+                }}
+                className="center-thing mb-5 mr-3  rounded-md  bg-[#FC3737] py-4 text-white"
+              >
                 <button className="text-xl">Decline</button>
               </div>
               <div className="center-thing mb-5 ml-3  rounded-md  bg-[#54A900] py-4 text-white">
-                <button className="text-xl">Accept</button>
+                <button
+                  onClick={() => {
+                    const gg = {
+                      bookingId: data.bookingId,
+                    };
+                    const res = mutate.mutate(gg);
+                    console.log("click", res);
+                  }}
+                  className="text-xl"
+                >
+                  Accept
+                </button>
               </div>
             </div>
           );
@@ -48,7 +82,7 @@ export const SessionMediumCard = ({ data }) => {
             </div>
           );
         }
-      case "2":
+      case "accepted":
         if (sitter) {
         } else {
           return (
@@ -92,37 +126,41 @@ export const SessionMediumCard = ({ data }) => {
     }
   };
 
-  const sitter = false; //for testing, use to set the value of usertype
+  const sitter = true; //for testing, use to set the value of usertype
   const [tickArray, setTickarray] = useState([true, false, true]); //Array for state in pet box, size = number of pets
   return (
     <div>
       <div
-        style={{ backgroundColor: data.color.toString() }}
+        style={{ backgroundColor: colorbg() }}
         className="center-thing border-l-5 absolute top-0 right-[-0.5rem] h-7 skew-x-[30deg] bg-black  px-5 text-black shadow-xl"
       >
-        <div className="-skew-x-[30deg] text-xs">{data.title}</div>
+        <div className="-skew-x-[30deg] text-xs">{data.status}</div>
         {/* change to status instead, 'Pending' forn example */}
       </div>
       <div className="px-5">
         <div className="">
           <div className="text-lg font-bold text-[#505050]">Session Id:</div>
-          <div className=" text-[#7b7b7b]">&nbsp;CsxS32JS&sasSdwWW02C </div>
+          <div className=" text-[#7b7b7b]">&nbsp;{data.bookingId} </div>
         </div>
         <div className=" grid grid-cols-2 py-5 pb-5">
           <div>
             <div className="text-lg font-bold text-[#505050]">Start Time:</div>
-            <div className=" text-[#7b7b7b]">&nbsp;{data.start} </div>
+            <div className=" text-[#7b7b7b]">
+              &nbsp;{data.startDate.toString()}{" "}
+            </div>
           </div>
           <div>
             <div className="text-lg font-bold text-[#505050]">End Time:</div>
-            <div className=" text-[#7b7b7b]">&nbsp;{data.end} </div>
+            <div className=" text-[#7b7b7b]">
+              &nbsp;{data.endDate.toString()}{" "}
+            </div>
           </div>
         </div>
         <div className="mb-5 ">
           {sitter ? (
-            <div className="text-lg font-bold text-[#505050]">Pet Sitter:</div>
-          ) : (
             <div className="text-lg font-bold text-[#505050]">Pet Owner:</div>
+          ) : (
+            <div className="text-lg font-bold text-[#505050]">Pet Sitter:</div>
           )}
           <div className="testt rounded-lg p-0.5">
             <div className="  grid grid-cols-5 rounded-md border border-[#7b7b7b] bg-[#F3F3F3] py-2 ">
@@ -135,7 +173,7 @@ export const SessionMediumCard = ({ data }) => {
                 />
               </div>
               <div className="center-thing col-span-2  text-[#7b7b7b]">
-                PetSitterName
+                {data.petOwner.firstName}
               </div>
               <div className="center-thing col-span-2">
                 <button className="center-thing drop-s rounded-md bg-[#357CC2] py-1 px-4 text-white  shadow-lg drop-shadow-lg">
@@ -251,7 +289,7 @@ export const SessionMediumCard = ({ data }) => {
           </div>
           <div className="mt-2 rounded-lg border border-[#7B7B7B] p-1">
             <textarea className="box-border h-full w-full rounded-lg px-1 text-[#7B7B7B]">
-              GG
+              {data.note}
             </textarea>
           </div>
         </div>
