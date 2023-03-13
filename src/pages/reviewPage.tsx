@@ -13,19 +13,40 @@ import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { Rating } from "react-simple-star-rating";
 const ReviewPage: NextPage = () => {
+  const { data: session } = useSession();
+  const formDataSchema = z.object({
+    petOwnerId: z.string().min(10),
+    petSisterId: z.string().min(10),
+    review: z.string(),
+    rate: z.number().int(),
+  });
+  type FormData = z.infer<typeof formDataSchema>;
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const OnSubmit = (data: any) => {
-    console.log(data.review);
-    console.log(data.rate);
+  const mutation = api.review.create.useMutation();
+  const user = session?.user;
+  const OnSubmit = async (data: FormData) => {
     setHasReview(true);
+    if (user) {
+      await mutation.mutateAsync({
+        petOwnerId: user?.userId,
+        petSitterId: "clf6bdley00064hi78idsnqcz",
+        review: {
+          rating: rating,
+          text: data.review,
+        },
+      });
+    }
+
+    setText(data.review);
     closeModal();
   };
   const [isOpen, setIsOpen] = useState(false);
   const [rating, setRating] = useState(0);
+  const [text, setText] = useState("");
   const [hasReview, setHasReview] = useState(false);
   function closeModal() {
     setIsOpen(false);
@@ -53,9 +74,7 @@ const ReviewPage: NextPage = () => {
               size={30}
               readonly
             ></Rating>
-            <h1 className="text-base">
-              I think this pet sitter is good she is friendly and cost is cheap
-            </h1>
+            <h1 className="text-base">{text}</h1>
           </div>
         )}
 

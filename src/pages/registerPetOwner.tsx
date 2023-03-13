@@ -1,5 +1,9 @@
 import * as React from "react";
-import type { NextPage } from "next";
+import type {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  NextPage,
+} from "next";
 import { api } from "../utils/api";
 import {
   type FieldErrorsImpl,
@@ -12,6 +16,7 @@ import Header from "../components/Header";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
+import { getServerAuthSession } from "../server/auth";
 
 // Schema for first page of form
 const formDataSchema1 = z.object({
@@ -485,3 +490,19 @@ const Button: React.FC<ButtonProps> = ({ children, ...props }) => (
 );
 
 export default RegisterPage;
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  // Redirect to home page if user is already logged in
+  const session = await getServerAuthSession(ctx);
+  if (session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  // Default return
+  return { props: {} };
+}

@@ -78,14 +78,14 @@ model User {
 }
 
 model PetOwner {
-    userId         String   @id @default(cuid())
-    user           User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
-    petTypes       String[]
-    firstName      String
-    lastName       String
-    pet            Pet[]
-    booking        Booking[]
-    review         Review[]
+    userId    String    @id @default(cuid())
+    user      User      @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    petTypes  String[]
+    firstName String
+    lastName  String
+    pet       Pet[]
+    booking   Booking[]
+    review    Review[]
 }
 
 model PetSitter {
@@ -120,18 +120,18 @@ model PetHotel {
 }
 
 model Booking {
-    bookingId       String    @id @default(cuid())
-    petOwner        PetOwner    @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
-    petSitter       PetSitter   @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
-    petOwnerId      String
-    petSitterId     String
-    startDate       DateTime
-    endDate         DateTime
-    numberOfPets    Int
-    pet             Pet[]   @relation("MyRelationTable")
-    status          BookingStatus
-    note            String?
-    createdAt       DateTime    @default(now())
+    bookingId    String        @id @default(cuid())
+    petOwner     PetOwner      @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
+    petSitter    PetSitter     @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    petOwnerId   String
+    petSitterId  String
+    startDate    DateTime
+    endDate      DateTime
+    numberOfPets Int
+    pet          Pet[]         @relation("MyRelationTable")
+    status       BookingStatus
+    note         String?
+    createdAt    DateTime      @default(now())
 }
 
 enum BookingStatus {
@@ -142,16 +142,16 @@ enum BookingStatus {
 }
 
 model Pet {
-    petId      String   @id @default(cuid())
+    petId      String    @id @default(cuid())
     petOwnerId String
-    petOwner   PetOwner @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
+    petOwner   PetOwner  @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
     petType    String
     name       String?
     sex        String?
     breed      String?
     weight     Float?
-    pet        Booking[]    @relation("MyRelationTable")
-    createdAt  DateTime @default(now())
+    booking    Booking[] @relation("MyRelationTable")
+    createdAt  DateTime  @default(now())
 }
 
 model VerificationToken {
