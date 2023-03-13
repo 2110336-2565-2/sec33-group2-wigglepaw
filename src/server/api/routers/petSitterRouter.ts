@@ -48,6 +48,35 @@ export const petSitterRouter = createTRPCRouter({
       }
     }),
 
+  getAvgRatingByUserId: publicProcedure
+    .input(z.object({ petSitterId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findFirst({
+        where: {
+          userId: input.petSitterId,
+        },
+        include: {
+          petSitter: {
+            include: {
+              review: true,
+            },
+          },
+        },
+      });
+
+      if (!user) return null;
+
+      try {
+        return user.petSitter?.avgRating;
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "petSitterRouter fucked up",
+          cause: error,
+        });
+      }
+    }),
+
   getPostsByUserId: publicProcedure
     .input(
       z.object({

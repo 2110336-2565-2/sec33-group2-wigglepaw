@@ -13,10 +13,14 @@ import {
   postTitles,
 } from "../../../seed/pool";
 import {
+  getAllOwnerId,
+  getAllSitterId,
   getMultipleRandom,
   getRandomIntFromInterval,
+  getRandomStartEndDate,
 } from "../../../seed/util";
 import {
+  makeBooking,
   makeFree,
   makeHotel,
   makeOwner,
@@ -112,7 +116,6 @@ export const seedRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const sitters = await prisma.petSitter.findMany();
-      const owners = await prisma.petOwner.findMany();
 
       if (input.clearReviews) {
         await ctx.prisma.review.deleteMany({});
@@ -122,16 +125,9 @@ export const seedRouter = createTRPCRouter({
       }
 
       const N = input.numberOfReviews;
-      const sitterIds = new Array<string>(N);
-      const ownerIds = new Array<string>(N);
+      const sitterIds = await getAllSitterId();
+      const ownerIds = await getAllOwnerId();
 
-      for (let i = 0; i < Math.min(N, sitters.length); i++) {
-        sitterIds[i] = sitters[i]?.userId ?? "";
-      }
-
-      for (let i = 0; i < Math.min(N, owners.length); i++) {
-        ownerIds[i] = owners[i]?.userId ?? "";
-      }
       resetRand();
       for (let i = 0; i < N; i++) {
         const sitterId = getMultipleRandom(sitterIds, 1)[0] ?? "";
@@ -155,14 +151,8 @@ export const seedRouter = createTRPCRouter({
         await ctx.prisma.post.deleteMany({});
       }
 
-      const sitters = await prisma.petSitter.findMany();
-
       const N = input.numberOfPosts;
-      const sitterIds = new Array<string>(N);
-
-      for (let i = 0; i < Math.min(N, sitters.length); i++) {
-        sitterIds[i] = sitters[i]?.userId ?? "";
-      }
+      const sitterIds = await getAllSitterId();
 
       resetRand();
       for (let i = 0; i < N; i++) {
@@ -173,6 +163,37 @@ export const seedRouter = createTRPCRouter({
         const pictureUri = getMultipleRandom(postPictures, pics) ?? [];
 
         await makePost(sitterId, title, text, pictureUri, "vdoUri");
+      }
+    }),
+
+  seedBookings: publicProcedure
+    .input(
+      z.object({
+        clearBookings: z.boolean(),
+        numberOfBookings: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.clearBookings) {
+        await ctx.prisma.booking.deleteMany({});
+      }
+
+      const N = input.numberOfBookings;
+      const sitterIds = await getAllSitterId();
+
+      resetRand();
+      for (let i = 0; i < N; i++) {
+        const ownerId = getMultipleRandom(ownerIds, 1)[0] ?? "";
+        const sitterId = getMultipleRandom(sitterIds, 1)[0] ?? "";
+        const dates = getRandomStartEndDate();
+        const startDate = dates["startDate"];
+        const endDate = dates["endDate"];
+        const title = getMultipleRandom(postTitles, 1)[0] ?? "";
+        const text = getMultipleRandom(postTexts, 1)[0] ?? "";
+        const pics = getRandomIntFromInterval(0, 4);
+        const pictureUri = getMultipleRandom(postPictures, pics) ?? [];
+
+        await makeBooking(sitterId, title, text, pictureUri, "vdoUri");
       }
     }),
 });

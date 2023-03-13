@@ -1,6 +1,8 @@
+import { BookingStatus } from "@prisma/client";
 import { saltHashPassword } from "../pages/api/auth/[...nextauth]";
 import { prisma } from "../server/db";
-import { getRandomDatetime } from "./util";
+import { getRandomBookingStatus, getRandomDatetime } from "./util";
+import { Return } from "../schema/returnSchema";
 
 export async function updateAvgRating(petSitterId: string) {
   const petSitter = await prisma.petSitter.findFirst({
@@ -210,4 +212,30 @@ export async function makePost(
     },
   });
   return createPost;
+}
+
+export async function makeBooking(
+  petOwnerId: string,
+  petSitterId: string,
+  startDate: Date,
+  endDate: Date,
+  note: string,
+  petIdList: string[]
+) {
+  const createBooking = await prisma.booking.create({
+    data: {
+      petOwnerId: petOwnerId,
+      petSitterId: petSitterId,
+      startDate: startDate,
+      endDate: endDate,
+      note: note,
+      numberOfPets: petIdList.length,
+      status: getRandomBookingStatus(),
+      pet: {
+        connect: petIdList.map((petId) => ({ petId: petId })),
+      },
+    },
+    select: Return.booking,
+  });
+  return createBooking;
 }
