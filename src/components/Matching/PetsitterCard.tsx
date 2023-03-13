@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 interface PetSitterCardProps {
   name: string;
   typeTagText: string;
@@ -44,6 +45,7 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
   const endPriceSign = getPriceLogo(endPrice);
 
   const profile_link = "/user/" + username + "/profile";
+  const booking_link = "/user/" + username + "/booking";
 
   // handle Review Display
   const getReviewStatus = (review: number | null): string => {
@@ -59,6 +61,8 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
     Bad: "#A7233B",
     "No Reviews": "#8e8e8e",
   };
+
+  const router = useRouter();
 
   return (
     <Link href={profile_link}>
@@ -164,7 +168,14 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
               </span>
               <span className="font-light text-[#8e8e8e]">({reviewCount})</span>
             </div>
-            <button className="font-mono text-[30px]" /* TODO: add handler */>
+            <button
+              className="font-mono text-[30px]"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                router.push(booking_link);
+              }}
+            >
               <div className="w-[119px] bg-[#2a4764] py-1 text-center text-white duration-150 hover:bg-[#213951]">
                 Book
               </div>

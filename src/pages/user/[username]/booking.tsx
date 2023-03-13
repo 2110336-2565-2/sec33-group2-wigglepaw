@@ -20,11 +20,6 @@ const formDataSchema = z.object({
   datetimefrom: z.date(),
   datetimeto: z.date(),
 
-  numpet: z.number().nonnegative(),
-  typepet: z.string().min(1),
-  breedpet: z.string().optional(),
-  weightpet: z.number().gte(0),
-
   note: z.string().optional(),
 });
 
@@ -56,93 +51,56 @@ const booking: NextPage = () => {
     }
   };
 
-  // FOR SMALLER BREAKPOINTS ONLY!
-  const [openTab, setOpenTab] = React.useState(false);
-
   return (
     <div className="min-h-screen">
       <Header />
-      <div className="-mt-2 flex w-full max-md:flex-col">
-        <DummySideTab openTab={openTab} setOpenTab={setOpenTab} />
-        <div className="w-full border-2 max-lg:w-full">
-          <div className="relative flex items-center justify-center border-2">
-            <TabButton
-              openTab={openTab}
-              setOpenTab={setOpenTab}
-              className="absolute left-2 z-20 lg:hidden"
-            />
+      <div className="flex">
+        <div className="mx-auto mt-4 w-[90%] max-w-[96rem] rounded-md border-[3px] border-blue-500 px-2 py-4">
+          <div className="relative mb-3 flex justify-center">
             <h1 className="text-2xl font-semibold">Booking</h1>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="mx-6 mt-6 mb-8 flex flex-col gap-6 border sm:mx-12 lg:mb-4 lg:mr-32">
-              {/* I DON'T THINK THIS IS NEEDED 
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
+            <div className="flex justify-between">
               <Input
-                id="numberofday"
-                label="Number of day* :"
+                id="datetimefrom"
+                label="Start Date* :"
                 register={register}
-                type="number"
-                inputClass="w-full md:w-36 max-w-full"
-              /> */}
-              <div className="flex flex-col items-end gap-6">
-                <div className="flex w-full max-md:gap-4">
-                  <Input
-                    id="datetimefrom"
-                    label="Start Date* :"
-                    register={register}
-                    type="datetime-local"
-                    className="w-1/2"
-                    inputClass="w-full md:w-64 max-w-full"
-                  />
-                  <Input
-                    id="datetimeto"
-                    label="End Date* :"
-                    register={register}
-                    type="datetime-local"
-                    className="w-1/2 md:-ml-12"
-                    inputClass="w-full md:w-64 max-w-full"
-                  />
-                </div>
-              </div>
-              <Input
-                id="numpet"
-                label="Number of pet* :"
-                register={register}
-                type="number"
-                min="1"
-                inputClass="w-full md:w-48  max-w-full"
+                type="datetime-local"
+                className="w-[45%]"
+                inputClass=""
               />
               <Input
-                id="typepet"
-                label="Type of pet* :"
+                id="datetimeto"
+                label="End Date* :"
                 register={register}
-                inputClass="w-full md:w-80 max-w-full"
+                type="datetime-local"
+                className="w-[45%]"
+                inputClass=""
               />
-              <Input
-                id="breedpet"
-                label="Breed of pet* :"
-                register={register}
-                inputClass="w-full md:w-80 max-w-full"
-              />
-              <Input
-                id="weightpet"
-                label="Weight of pet* :"
-                register={register}
-                inputClass="w-full md:w-80 max-w-full"
-              />
-              <TextArea
-                id="note"
-                label="Note :"
-                register={register}
-                textAreaClass="w-full md:w-[24rem] max-md:h-16 max-w-full max-h-24 min-h-[2rem]"
-              />
-              <div className="flex justify-evenly border-2 max-lg:flex-col max-lg:items-center max-lg:justify-center max-lg:gap-4">
-                <button className="border bg-[#213951] px-2 py-1 text-white max-lg:w-1/2 max-md:w-full">
-                  Preview Booking Request
-                </button>
-                <button className="border bg-[#213951] px-2 py-1 text-white max-lg:w-1/2 max-md:w-full">
-                  Send Booking Request
-                </button>
-              </div>
+            </div>
+            {/* TODO: Pets */}
+            <Input
+              id="Pets"
+              label="Pets* :"
+              register={register}
+              placeholder="PETS"
+            />
+            <TextArea
+              id="note"
+              label="Note :"
+              register={register}
+              textAreaClass=""
+            />
+            <div className="flex justify-evenly max-lg:flex-col max-lg:items-center max-lg:justify-center max-lg:gap-4">
+              <button className="rounded-md bg-wp-blue px-2 py-1 text-white hover:bg-wp-light-blue max-lg:w-1/2 max-md:w-full">
+                Preview Booking Request
+              </button>
+              <button className="rounded-md bg-wp-blue px-2 py-1 text-white hover:bg-wp-light-blue max-lg:w-1/2 max-md:w-full">
+                Send Booking Request
+              </button>
             </div>
           </form>
         </div>
