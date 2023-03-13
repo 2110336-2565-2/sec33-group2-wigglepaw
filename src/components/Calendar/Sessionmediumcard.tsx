@@ -3,8 +3,11 @@ import { faMessage, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
+
 import { api } from "../../utils/api";
 export const SessionMediumCard = ({ data }) => {
+  const { data: session, status } = useSession();
   const colorbg = () => {
     if (data.status === "requested") {
       return "#fdba74";
@@ -89,11 +92,25 @@ export const SessionMediumCard = ({ data }) => {
       case "accepted":
         if (sitter) {
         } else {
-          return (
-            <div className=" center-thing mb-5 mt-5 rounded-md  bg-[#FC3737] py-4 text-white">
-              <button className="text-xl">Cancel</button>
-            </div>
-          );
+          // under maintance
+          // return (
+          //   <div className=" center-thing mb-5 mt-5 rounded-md  bg-[#FC3737] py-4 text-white">
+          //     <button
+          //       className="text-xl"
+          //       onClick={() => {
+          //         const gg = {
+          //           bookingId: data.bookingId,
+          //         };
+          //         const res = mutatecan.mutate(gg);
+          //         setTimeout(function () {
+          //           window.location.reload();
+          //         }, 500);
+          //       }}
+          //     >
+          //       Cancel
+          //     </button>
+          //   </div>
+          // );
         }
       case "3":
         if (sitter) {
@@ -119,18 +136,25 @@ export const SessionMediumCard = ({ data }) => {
           );
         }
       default:
-        if (sitter) {
-        } else {
-          return (
-            <div className=" center-thing mb-5 mt-5 rounded-md  bg-[#54A900] py-4 text-white">
-              <button className="text-xl">Rebook</button>
-            </div>
-          );
-        }
+      //under maintainance
+      // if (sitter) {
+      // } else {
+      //   return (
+      //     <div className=" center-thing mb-5 mt-5 rounded-md  bg-[#54A900] py-4 text-white">
+      //       <button className="text-xl">Rebook</button>
+      //     </div>
+      //   );
+      // }
     }
   };
 
-  const sitter = true; //for testing, use to set the value of usertype
+  const sitter =
+    session?.user?.userType === "PetHotel" ||
+    session?.user?.userType === "FreelancePetSitter"
+      ? true
+      : false;
+  //for testing, use to set the value of usertype
+
   const [tickArray, setTickarray] = useState([true, false, true]); //Array for state in pet box, size = number of pets
   return (
     <div>

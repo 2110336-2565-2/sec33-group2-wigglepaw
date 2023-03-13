@@ -27,7 +27,7 @@ const Scheulde: NextPage = () => {
   const [passing, setPassing] = useState<help[]>([]);
 
   const [events, setEvents] = useState([]);
-  const gg = api.booking.getMyBooking.useQuery().data;
+
   const [pending, setpending] = useState<help[]>([]);
   const [accepted, setaccepted] = useState<help[]>([]);
   const [finished, setfinished] = useState<help[]>([]);
@@ -36,7 +36,7 @@ const Scheulde: NextPage = () => {
   const [showOn, setShowon] = useState(false);
   const [showFin, setShowfin] = useState(false);
   const [showCan, setShowcan] = useState(false);
-  const [savelen, setSavelen] = useState(2);
+  const [savelen, setSavelen] = useState(-2);
 
   const [mode, setMode] = useState(false);
 
@@ -48,6 +48,7 @@ const Scheulde: NextPage = () => {
       const updatedFinished = [];
       if (gg.length === savelen) {
       } else {
+        setEvents([]);
         setSavelen(gg.length);
         gg.forEach((value) => {
           //console.log(value);
