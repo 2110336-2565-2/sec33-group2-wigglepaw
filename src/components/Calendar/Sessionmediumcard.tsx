@@ -53,7 +53,9 @@ export const SessionMediumCard = ({ data }) => {
                     bookingId: data.bookingId,
                   };
                   const res = mutatecan.mutate(gg);
-                  console.log("click", res);
+                  setTimeout(function () {
+                    window.location.reload();
+                  }, 500);
                 }}
                 className="center-thing mb-5 mr-3  rounded-md  bg-[#FC3737] py-4 text-white"
               >
@@ -61,12 +63,14 @@ export const SessionMediumCard = ({ data }) => {
               </div>
               <div className="center-thing mb-5 ml-3  rounded-md  bg-[#54A900] py-4 text-white">
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     const gg = {
                       bookingId: data.bookingId,
                     };
                     const res = mutate.mutate(gg);
-                    console.log("click", res);
+                    setTimeout(function () {
+                      window.location.reload();
+                    }, 500);
                   }}
                   className="text-xl"
                 >

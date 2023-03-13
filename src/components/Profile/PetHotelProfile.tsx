@@ -27,10 +27,12 @@ import type {
 import Post from "./Post";
 import UploadProfilePicture from "./UploadProfilePicture";
 import UploadPost from "./UploadPost";
+import SideTab from "../SideTab";
 
 type PetHotelProfileProps = {
   editable: boolean;
   user: UserProfile & PetSitterProfileType & PetHotelProfileType;
+  isPetOwner: boolean;
 };
 
 const formDataSchema = z.object({
@@ -118,164 +120,173 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
   );
 
   return (
-    <div>
+    <div className="min-h-screen">
       <Header></Header>
-      <div className="mx-3 flex flex-wrap justify-center">
-        <div className="my-auto flex w-screen flex-col md:m-4 md:w-1/5 md:min-w-min">
-          <div className="relative mx-auto flex h-[6rem] w-[6rem]">
-            <Image
-              src={props.user.imageUri ?? "/profiledummy.png"}
-              alt={"Icon"}
-              fill
-              className="rounded-full object-cover"
-            />
-            {props.editable && <UploadProfilePicture user={props.user} />}
-          </div>
-          <h1 className="mx-auto my-1 text-center text-2xl font-semibold">
-            {props.user.username}
-          </h1>
+      <div className="flex min-h-[90vh]">
+        <SideTab user={props.user} isPetOwner={props.isPetOwner} />
+        <div className="mt-3 max-w-[100vw] px-2">
+          <div className="mx-3 flex flex-wrap justify-center">
+            <div className="my-auto flex w-screen flex-col md:m-4 md:w-1/5 md:min-w-min">
+              <div className="relative mx-auto flex h-[6rem] w-[6rem]">
+                <Image
+                  src={props.user.imageUri ?? "/profiledummy.png"}
+                  alt={"Icon"}
+                  fill
+                  className="rounded-full object-cover"
+                />
+                {props.editable && <UploadProfilePicture user={props.user} />}
+              </div>
+              <h1 className="mx-auto my-1 text-center text-2xl font-semibold">
+                {props.user.username}
+              </h1>
 
-          {props.editable && !editing && (
-            <button
-              onClick={() => setEditing(true)}
-              className="profile-edit-button"
-            >
-              Edit my profile&nbsp;
-              <HiPencilAlt className="mt-auto mb-[0.2rem] ml-1 fill-white" />
-            </button>
-          )}
-        </div>
-
-        {!editing && (
-          <div className="profile-information">
-            <p className="data-field">
-              <HiUserCircle className="profile-icon" />
-              &nbsp;Hotel Name: {props.user.hotelName}
-            </p>
-            <p className="data-field">
-              <HiPhone className="profile-icon" />
-              &nbsp;Phone: {props.user.phoneNumber}
-            </p>
-            <p className="data-field">
-              <HiMap className="profile-icon" />
-              &nbsp;Address: {props.user.address}
-            </p>
-            <p className="data-field">
-              <HiAtSymbol className="profile-icon" />
-              &nbsp;Email: {props.user.email}
-            </p>
-            <p className="data-field">
-              <IoPaw className="profile-icon" />
-              &nbsp;Pet Types:&nbsp;
-              <span className="mt-1 inline-flex flex-wrap gap-2">
-                {props.user.petTypes.map((petType) => (
-                  <span
-                    key={petType}
-                    className="rounded-xl bg-slate-200 pl-2 pr-2"
-                  >
-                    {petType}
-                  </span>
-                ))}
-              </span>
-            </p>
-          </div>
-        )}
-        {editing && (
-          <div className="justify-auto mt-2 flex w-screen flex-wrap rounded-md border-[3px] border-sky-500 p-2 md:mt-0 md:w-3/5">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              {/* register your input into the hook by invoking the "register" function */}
-              <p className="data-field">
-                <HiUserCircle className="profile-icon" />
-                &nbsp;Hotel Name:&nbsp;
-                <input
-                  defaultValue={`${props.user.hotelName}`}
-                  placeholder="Hotel Name"
-                  className="profile-input"
-                  {...register("hotelName", { required: true })}
-                />
-              </p>
-              <p className="data-field">
-                <HiPhone className="profile-icon" />
-                &nbsp;Phone:&nbsp;
-                <input
-                  defaultValue={`${
-                    props.user.phoneNumber ? props.user.phoneNumber : ""
-                  }`}
-                  placeholder="Phone Number"
-                  className="profile-input"
-                  {...register("phoneNumber", { required: true })}
-                />
-              </p>
-              <p className="data-field">
-                <HiMap className="profile-icon" />
-                &nbsp;Address:&nbsp;
-                <textarea
-                  defaultValue={`${
-                    props.user.address ? props.user.address : ""
-                  }`}
-                  placeholder="Address"
-                  className="profile-input max-h-40 min-h-[2rem]"
-                  {...register("address", { required: true })}
-                />
-              </p>
-              <p className="data-field">
-                <HiAtSymbol className="profile-icon" />
-                &nbsp;Email:&nbsp;
-                <input
-                  defaultValue={`${props.user.email ? props.user.email : ""}`}
-                  placeholder="Email"
-                  className="profile-input"
-                  {...register("email", { required: true })}
-                />
-              </p>
-              <p className="data-field">
-                <IoPaw className="profile-icon" />
-                &nbsp;Pet Types:&nbsp;
-                <span className="mt-1 inline-flex flex-wrap gap-2">
-                  {props.user.petTypes.map((petType) => (
-                    <span
-                      key={petType}
-                      className="rounded-xl bg-slate-200 pl-2 pr-2"
-                    >
-                      {petType}
-                    </span>
-                  ))}
-                </span>
-              </p>
-
-              <div className="mt-3 flex">
+              {props.editable && !editing && (
                 <button
-                  onClick={() => setEditing(false)}
-                  className="profile-edit-button bg-red-600 hover:bg-red-500"
-                >
-                  Cancel
-                </button>
-                <input
+                  onClick={() => setEditing(true)}
                   className="profile-edit-button"
-                  type="submit"
-                  value="Save profile"
-                />
+                >
+                  Edit my profile&nbsp;
+                  <HiPencilAlt className="mt-auto mb-[0.2rem] ml-1 fill-white" />
+                </button>
+              )}
+            </div>
+
+            {!editing && (
+              <div className="profile-information">
+                <p className="data-field">
+                  <HiUserCircle className="profile-icon" />
+                  &nbsp;Hotel Name: {props.user.hotelName}
+                </p>
+                <p className="data-field">
+                  <HiPhone className="profile-icon" />
+                  &nbsp;Phone: {props.user.phoneNumber}
+                </p>
+                <p className="data-field">
+                  <HiMap className="profile-icon" />
+                  &nbsp;Address: {props.user.address}
+                </p>
+                <p className="data-field">
+                  <HiAtSymbol className="profile-icon" />
+                  &nbsp;Email: {props.user.email}
+                </p>
+                <p className="data-field">
+                  <IoPaw className="profile-icon" />
+                  &nbsp;Pet Types:&nbsp;
+                  <span className="mt-1 inline-flex flex-wrap gap-2">
+                    {props.user.petTypes.map((petType) => (
+                      <span
+                        key={petType}
+                        className="rounded-xl bg-slate-200 pl-2 pr-2"
+                      >
+                        {petType}
+                      </span>
+                    ))}
+                  </span>
+                </p>
               </div>
-            </form>
+            )}
+            {editing && (
+              <div className="justify-auto mt-2 flex w-screen flex-wrap rounded-md border-[3px] border-sky-500 p-2 md:mt-0 md:w-3/5">
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  {/* register your input into the hook by invoking the "register" function */}
+                  <p className="data-field">
+                    <HiUserCircle className="profile-icon" />
+                    &nbsp;Hotel Name:&nbsp;
+                    <input
+                      defaultValue={`${props.user.hotelName}`}
+                      placeholder="Hotel Name"
+                      className="profile-input"
+                      {...register("hotelName", { required: true })}
+                    />
+                  </p>
+                  <p className="data-field">
+                    <HiPhone className="profile-icon" />
+                    &nbsp;Phone:&nbsp;
+                    <input
+                      defaultValue={`${
+                        props.user.phoneNumber ? props.user.phoneNumber : ""
+                      }`}
+                      placeholder="Phone Number"
+                      className="profile-input"
+                      {...register("phoneNumber", { required: true })}
+                    />
+                  </p>
+                  <p className="data-field">
+                    <HiMap className="profile-icon" />
+                    &nbsp;Address:&nbsp;
+                    <textarea
+                      defaultValue={`${
+                        props.user.address ? props.user.address : ""
+                      }`}
+                      placeholder="Address"
+                      className="profile-input max-h-40 min-h-[2rem]"
+                      {...register("address", { required: true })}
+                    />
+                  </p>
+                  <p className="data-field">
+                    <HiAtSymbol className="profile-icon" />
+                    &nbsp;Email:&nbsp;
+                    <input
+                      defaultValue={`${
+                        props.user.email ? props.user.email : ""
+                      }`}
+                      placeholder="Email"
+                      className="profile-input"
+                      {...register("email", { required: true })}
+                    />
+                  </p>
+                  <p className="data-field">
+                    <IoPaw className="profile-icon" />
+                    &nbsp;Pet Types:&nbsp;
+                    <span className="mt-1 inline-flex flex-wrap gap-2">
+                      {props.user.petTypes.map((petType) => (
+                        <span
+                          key={petType}
+                          className="rounded-xl bg-slate-200 pl-2 pr-2"
+                        >
+                          {petType}
+                        </span>
+                      ))}
+                    </span>
+                  </p>
+
+                  <div className="mt-3 flex">
+                    <button
+                      onClick={() => setEditing(false)}
+                      className="profile-edit-button bg-red-600 hover:bg-red-500"
+                    >
+                      Cancel
+                    </button>
+                    <input
+                      className="profile-edit-button"
+                      type="submit"
+                      value="Save profile"
+                    />
+                  </div>
+                </form>
+              </div>
+            )}
           </div>
-        )}
-      </div>
-      <div className="mx-3 mt-2">
-        <div className="mx-auto max-w-lg md:w-2/3 md:max-w-2xl">
-          <div className="mb-2 w-full text-xl font-bold">Posts</div>
-          {props.editable && <UploadPost refetch={refetchPosts} />}
-          {/* Posts display */}
-          {posts ? (
-            posts.length >= 1 ? (
-              posts.map((post) => <Post key={post.postId} post={post}></Post>)
-            ) : (
-              <div className="w-full text-center font-medium">
-                Currently No Post <GiTumbleweed className="inline" />
-              </div>
-            )
-          ) : (
-            <div>Loading...</div>
-          )}
+          <div className="mx-3 mt-2">
+            <div className="mx-auto max-w-lg md:w-2/3 md:max-w-2xl">
+              <div className="mb-2 w-full text-xl font-bold">Posts</div>
+              {props.editable && <UploadPost refetch={refetchPosts} />}
+              {/* Posts display */}
+              {posts ? (
+                posts.length >= 1 ? (
+                  posts.map((post) => (
+                    <Post key={post.postId} post={post}></Post>
+                  ))
+                ) : (
+                  <div className="w-full text-center font-medium">
+                    Currently No Post <GiTumbleweed className="inline" />
+                  </div>
+                )
+              ) : (
+                <div>Loading...</div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

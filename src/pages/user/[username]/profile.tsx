@@ -1,3 +1,4 @@
+import { setDefaultResultOrder } from "dns";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -9,12 +10,9 @@ import { UserType } from "../../../types/user";
 import { api } from "../../../utils/api";
 
 const ProfilePage: NextPage = () => {
+  const { data: session } = useSession();
   const router = useRouter();
   const { username } = router.query;
-  const { data: session } = useSession();
-  const editable = session?.user?.username
-    ? session?.user?.username == username
-    : false;
 
   const { data, error: userError } = api.user.getForProfilePage.useQuery(
     { username: typeof username === "string" ? username : "" },
@@ -27,6 +25,11 @@ const ProfilePage: NextPage = () => {
   if (data === undefined) return <div>Loading...</div>;
   if (data === null) return <div>Not found</div>;
 
+  const editable = session?.user?.username
+    ? session?.user?.username == username
+    : false;
+  const isPetOwner = session?.user?.userType == UserType.PetOwner;
+
   switch (data.userType) {
     case UserType.PetOwner:
       return (
@@ -38,6 +41,7 @@ const ProfilePage: NextPage = () => {
         <FreelancePetSitterProfile
           user={data}
           editable={editable}
+          isPetOwner={isPetOwner}
         ></FreelancePetSitterProfile>
       );
 

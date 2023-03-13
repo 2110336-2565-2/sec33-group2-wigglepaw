@@ -23,8 +23,13 @@ export const SessionSmallCard = ({ data }) => {
               </div>
             </span>
             <div className="flex">
-              <div className="text-sm text-gray-500">Date1 &nbsp;- </div>
-              <div className="text-sm text-gray-500"> &nbsp; Date2</div>
+              <div className="text-xs text-gray-500">
+                {data.startDate} &nbsp;-{" "}
+              </div>
+              <div className="text-xs text-gray-500">
+                {" "}
+                &nbsp; {data.endDate}
+              </div>
             </div>
           </div>
         </div>

@@ -44,8 +44,11 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
   const startPriceSign = getPriceLogo(startPrice);
   const endPriceSign = getPriceLogo(endPrice);
 
-  const profile_link = "/user/" + username + "/profile";
-  const booking_link = "/user/" + username + "/booking";
+  const user_url_prefix = "/user/" + username;
+
+  const profile_link = user_url_prefix + "/profile";
+  const booking_link = user_url_prefix + "/booking";
+  const review_link = user_url_prefix + "/review";
 
   // handle Review Display
   const getReviewStatus = (review: number | null): string => {
@@ -159,10 +162,14 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
         >
           <div className="flex h-full flex-col justify-center gap-1">
             <div className="text-[18px] font-normal">
-              {/* TODO: add link to review page*/}
               <span
                 className="mr-1 hover:underline"
                 style={{ color: reviewColors[getReviewStatus(avgRating)] }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  void router.push(review_link);
+                }}
               >
                 {getReviewStatus(avgRating)}
               </span>
@@ -173,7 +180,7 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                router.push(booking_link);
+                void router.push(booking_link);
               }}
             >
               <div className="w-[119px] bg-[#2a4764] py-1 text-center text-white duration-150 hover:bg-[#213951]">
