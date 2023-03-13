@@ -120,7 +120,7 @@ Table Pet {
   sex String
   breed String
   weight Float
-  pet Booking [not null]
+  booking Booking [not null]
   createdAt DateTime [default: `now()`, not null]
 }
 
@@ -158,7 +158,7 @@ Table Post {
 
 Table MyRelationTable {
   petId String [ref: > Pet.petId]
-  petId String [ref: > Booking.bookingId]
+  bookingId String [ref: > Booking.bookingId]
 }
 
 Enum BookingStatus {

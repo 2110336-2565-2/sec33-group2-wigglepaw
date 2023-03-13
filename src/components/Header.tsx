@@ -27,7 +27,9 @@ const Header = (props: any) => {
     ? userData?.data?.imageUri
     : "/profiledummy.png";
 
-  const profileLink = username ? "/user/" + username.toString() : "";
+  const profileLink = username
+    ? "/user/" + username.toString() + "/profile"
+    : "";
 
   return (
     <span
@@ -58,7 +60,7 @@ const Header = (props: any) => {
             <>
               <div className="my-auto h-fit">
                 <Link
-                  href="/Help"
+                  href="/help"
                   className={`header-desktop-button
                 ${asPath.includes("/help") ? "header-at-page" : ""}`}
                 >
@@ -164,7 +166,7 @@ const Header = (props: any) => {
                       src={profileImageUri}
                       alt={"Icon"}
                       fill
-                      className="rounded-full"
+                      className="rounded-full object-cover"
                     ></Image>
                   </Menu.Button>
                 </div>
@@ -209,7 +211,7 @@ const Header = (props: any) => {
                     src={profileImageUri}
                     alt={"Icon"}
                     fill
-                    className="rounded-full"
+                    className="rounded-full object-cover"
                   ></Image>
                 </Menu.Button>
               ) : (

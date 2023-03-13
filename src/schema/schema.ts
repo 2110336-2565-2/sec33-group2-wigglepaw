@@ -23,6 +23,8 @@ export const petSitterFields = z.object({
   certificationUri: z.string().optional(),
   startPrice: z.number().optional(),
   endPrice: z.number().optional(),
+  // location: z.string().default("Laem Thong Rd, Thung Sukhla, Si Racha, Chon Buri 20110")
+  // location might be duplicated with userFields.address
 });
 
 export const petOwnerFields = z.object({
@@ -60,16 +62,22 @@ export const bookingFields = z.object({
 });
 
 export const searchField = z.object({
-  searchName: z.string().default(""),
-  searchRating: z.number().nullable().default(null),
-  searchPriceMin: z.number().nullable().default(null),
-  searchPriceMax: z.number().nullable().default(null),
-  searchLocation: z.string().default(""),
-  searchPetType: z.string().default(""),
-  searchStartSchedule: z.string().default(""),
-  searchEndSchedule: z.string().default(""),
-  searchIncludePetSitterType: z.string().default(""),
+  searchName: z.string().optional(),
+  searchRating: z.number().optional(),
+  searchPriceMin: z.number().optional(),
+  searchPriceMax: z.number().optional(),
+  searchLocation: z.string().optional(),
+  searchPetTypes: z.array(z.string()).optional(),
+  searchStartSchedule: z.string().optional(),
+  searchEndSchedule: z.string().optional(),
+  searchIncludePetSitterType: z.string().optional(),
+  searchIncludePetHotel: z.boolean().default(true),
+  searchIncludeFreelancePetSitter: z.boolean().default(true),
   searchSortBy: z.string().default(""),
+  limit: z.number(),
+  cursor: z.string().nullish(),
+  skip: z.number().optional(),
+  userId: z.string().optional(),
 });
 
 export const bookingStatus = z.enum([

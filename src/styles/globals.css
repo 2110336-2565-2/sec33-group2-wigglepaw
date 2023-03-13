@@ -5,7 +5,7 @@
 @layer base {
   /* main */
   .find-link {
-    @apply mx-2 block w-fit rounded bg-sky-900 py-2 px-2 text-xl text-white transition-colors hover:bg-sky-700 md:mx-4 md:px-5;
+    @apply mx-2 block w-fit rounded bg-wp-blue py-2 px-2 text-xl text-white transition-colors hover:bg-wp-light-blue md:mx-4 md:px-5;
   }
 }
 
@@ -31,6 +31,15 @@
   .errorstyle {
     @apply mt-1 text-xs italic text-red-500;
   }
+  .header-register-link {
+    @apply my-1 flex h-fit w-[11rem] rounded bg-green-700 p-2 text-base font-semibold text-white transition-all hover:bg-green-600;
+  }
+  .header-menu-link {
+    @apply my-1 flex h-fit w-[7rem] rounded bg-wp-blue p-2 text-base font-semibold text-white transition-all hover:bg-wp-light-blue;
+  }
+  .header-at-page {
+    @apply bg-white text-wp-blue hover:bg-white;
+  }
 
   /* profile */
   .profile-information {
@@ -46,7 +55,7 @@
     @apply mb-1 mt-[0.1rem] w-full rounded-md border-2 border-sky-200 focus:ring-sky-700;
   }
   .profile-edit-button {
-    @apply mx-auto flex whitespace-nowrap rounded-2xl bg-sky-700 px-3 py-1 text-center font-semibold text-white hover:bg-sky-600;
+    @apply mx-auto flex whitespace-nowrap rounded-2xl bg-wp-blue px-3 py-1 text-center font-semibold text-white hover:bg-wp-light-blue;
   }
   .profile-post {
     @apply mb-2 w-full rounded-2xl border-2 border-gray-300 p-2 md:mb-4 md:p-4;
@@ -60,6 +69,11 @@
   .center-thing {
     @apply flex items-center justify-center;
   }
+
+  /* Index */
+  .circlerec {
+    @apply h-[8rem] w-[8rem];
+  }
 }
 /* nice color */
 .testt {
@@ -72,6 +86,21 @@
     #ffb2fa 100%
   );
 }
+/* full calendar stuff */
+.fc-daygrid-day-number {
+  font-size: 0.6rem;
+}
+.fc-daygrid-week-number {
+  font-size: 0.6rem;
+}
+.fc-col-header-cell {
+  font-size: 0.8rem;
+  background-color: black;
+  color: white;
+}
+.fc-widget-header {
+}
+
 html {
   font-size: 16px;
   /* font-family: 'Ubuntu', sans-serif; */

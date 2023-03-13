@@ -32,7 +32,7 @@ export default function SideTab(props: SideTabProps) {
       </div>
       {/* SIDE TAB */}
       <div
-        className={`s fixed top-0 z-30 h-screen  w-[219px] bg-[#E5D4C2] pt-[30%] sm:relative sm:h-full  ${
+        className={`fixed top-0 z-20 h-screen w-[219px] bg-[#E5D4C2] pt-[30%] sm:relative sm:z-0 sm:h-full ${
           !openTab ? "max-sm:hidden" : ""
         }`}
       >
