@@ -11,10 +11,13 @@ import Router, { useRouter } from "next/router";
 import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { Rating } from "react-simple-star-rating";
+import ReviewBox from "../../../components/ReviewBox";
+import { UserType } from "../../../types/user";
 const ReviewPage: NextPage = () => {
   const router = useRouter();
   const { username } = router.query;
   const { data: session } = useSession();
+
   const formDataSchema = z.object({
     petOwnerId: z.string().min(10),
     petSisterId: z.string().min(10),
@@ -28,6 +31,26 @@ const ReviewPage: NextPage = () => {
         enabled: typeof username === "string",
       }
     );
+  const { data: petSitterReview, error: userError2 } =
+    api.petSitter.getReviewsByUserId.useQuery({
+      petSitterId: petSitterData?.userId ?? "Error",
+    });
+  const Review = () => {
+    if (petSitterReview) {
+      return petSitterReview.map((review) => (
+        <ReviewBox
+          rating={review.rating}
+          text={review.text ?? ""}
+          userid={review.petOwnerId}
+        />
+      ));
+    }
+    return <div></div>;
+  };
+  const petSitterRating = api.petSitter.getAvgRatingByUserId.useQuery({
+    petSitterId: petSitterData?.userId ?? "Error",
+  });
+  const Rate = petSitterRating.data;
   type FormData = z.infer<typeof formDataSchema>;
   const {
     register,
@@ -71,7 +94,7 @@ const ReviewPage: NextPage = () => {
       <Header />
       <div className="mt-4 flex h-full flex-col items-center text-xl">
         <h1>Reviews</h1>
-        <h2>Average rating : {rating}</h2>
+        <h2>Average rating : {Rate}</h2>
         {!hasReview && <button onClick={openModal}>Write Review</button>}
         {hasReview && <button onClick={openModal}>Edit Review</button>}
         {hasReview && (
@@ -87,6 +110,10 @@ const ReviewPage: NextPage = () => {
         )}
 
         <h2>Review from other users</h2>
+
+        <div>
+          <Review />
+        </div>
       </div>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
