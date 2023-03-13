@@ -20,11 +20,6 @@ const formDataSchema = z.object({
   datetimefrom: z.date(),
   datetimeto: z.date(),
 
-  numpet: z.number().nonnegative(),
-  typepet: z.string().min(1),
-  breedpet: z.string().optional(),
-  weightpet: z.number().gte(0),
-
   note: z.string().optional(),
 });
 
@@ -103,31 +98,12 @@ const booking: NextPage = () => {
                   />
                 </div>
               </div>
+              {/* TODO: Pets */}
               <Input
-                id="numpet"
-                label="Number of pet* :"
+                id="Pets"
+                label="Pets* :"
                 register={register}
-                type="number"
-                min="1"
-                inputClass="w-full md:w-48  max-w-full"
-              />
-              <Input
-                id="typepet"
-                label="Type of pet* :"
-                register={register}
-                inputClass="w-full md:w-80 max-w-full"
-              />
-              <Input
-                id="breedpet"
-                label="Breed of pet* :"
-                register={register}
-                inputClass="w-full md:w-80 max-w-full"
-              />
-              <Input
-                id="weightpet"
-                label="Weight of pet* :"
-                register={register}
-                inputClass="w-full md:w-80 max-w-full"
+                placeholder="PETS"
               />
               <TextArea
                 id="note"
