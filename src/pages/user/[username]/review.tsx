@@ -13,6 +13,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Rating } from "react-simple-star-rating";
 import ReviewBox from "../../../components/ReviewBox";
 import { UserType } from "../../../types/user";
+import ReviewImage from "../../../components/Profile/ReviewImage";
 const ReviewPage: NextPage = () => {
   const router = useRouter();
   const { username } = router.query;
@@ -89,30 +90,36 @@ const ReviewPage: NextPage = () => {
   const handleRating = (rate: number) => {
     setRating(rate);
   };
+  const img = petSitterData?.imageUri;
   return (
     <div>
       <Header />
       <div className="mt-4 flex h-full flex-col items-center text-xl">
-        <h1>Reviews</h1>
-        <h2>Average rating : {Rate}</h2>
-        {!hasReview && <button onClick={openModal}>Write Review</button>}
-        {hasReview && <button onClick={openModal}>Edit Review</button>}
-        {hasReview && (
-          <div className="h-100 w-100 box-content flex flex-col items-center rounded-md border-4 bg-amber-50 p-4">
-            <Rating
-              initialValue={rating}
-              SVGclassName="inline-block"
-              size={30}
-              readonly
-            ></Rating>
-            <h1 className="text-base">{text}</h1>
+        <ReviewImage img={img ?? ""}></ReviewImage>
+        <h1 className="font-bold">{petSitterData?.username}</h1>
+        <div className="h-100 w-100 box-content flex flex-col items-center rounded-md border-4 bg-green-300 p-4">
+          <h1>Reviews</h1>
+          <h2>Average rating : {Rate}</h2>
+          <button onClick={openModal} className="font-bold">
+            Write Review
+          </button>
+          {hasReview && (
+            <div className="h-100 w-100 box-content flex flex-col items-center rounded-md border-4 bg-amber-50 p-4">
+              <Rating
+                initialValue={rating}
+                SVGclassName="inline-block"
+                size={30}
+                readonly
+              ></Rating>
+              <h1 className="text-base">{text}</h1>
+            </div>
+          )}
+
+          <h2>User reviews</h2>
+
+          <div>
+            <Review />
           </div>
-        )}
-
-        <h2>Review from other users</h2>
-
-        <div>
-          <Review />
         </div>
       </div>
       <Transition appear show={isOpen} as={Fragment}>

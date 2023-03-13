@@ -78,7 +78,7 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
         <div className="my-auto flex w-screen flex-col md:m-4 md:w-1/5 md:min-w-min">
           <div className="relative mx-auto flex h-[6rem] w-[6rem]">
             <Image
-              src={props.user.imageUri ?? "//profiledummy.png"}
+              src={props.user.imageUri ?? "/profiledummy.png"}
               alt={"Icon"}
               fill
               className="rounded-full object-cover"

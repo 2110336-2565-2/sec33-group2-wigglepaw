@@ -6,7 +6,7 @@ import { api } from "../utils/api";
 import { Menu } from "@headlessui/react";
 import { UserType } from "../types/user";
 
-const Header = () => {
+const Header = (props: any) => {
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated";
   const logout = () => signOut();
@@ -32,7 +32,9 @@ const Header = () => {
     : "";
 
   return (
-    <span className="mb-4 flex h-fit w-screen bg-wp-blue md:pr-2">
+    <span
+      className={"flex h-fit w-screen bg-wp-blue md:pr-2 " + props.className}
+    >
       <nav className="flex w-full justify-between">
         <Link href={"/"} className="flex shrink-0">
           <div className="relative m-2 flex h-[4rem] w-[5rem]">
