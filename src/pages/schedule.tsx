@@ -36,6 +36,7 @@ const Scheulde: NextPage = () => {
   const [showOn, setShowon] = useState(false);
   const [showFin, setShowfin] = useState(false);
   const [showCan, setShowcan] = useState(false);
+  const [savelen, setSavelen] = useState(2);
 
   const [mode, setMode] = useState(false);
 
@@ -45,52 +46,56 @@ const Scheulde: NextPage = () => {
       const updatedAccepted = [];
       const updatedCancelled = [];
       const updatedFinished = [];
-      gg.forEach((value) => {
-        //console.log(value);
+      if (gg.length === savelen) {
+      } else {
+        setSavelen(gg.length);
+        gg.forEach((value) => {
+          //console.log(value);
 
-        const date1 = new Date(value.startDate.toString());
-        value.startDate = date1.toDateString();
+          const date1 = new Date(value.startDate.toString());
+          value.startDate = date1.toDateString();
 
-        const date2 = new Date(value.endDate.toString());
-        value.endDate = date2.toDateString();
+          const date2 = new Date(value.endDate.toString());
+          value.endDate = date2.toDateString();
 
-        const colorbg = (status) => {
-          if (status === "requested") {
-            return "#fdba74";
-          } else if (status === "accepted") {
-            return "#a5f3fc";
-          } else if (status === "canceled") {
-            return "#bef264";
+          const colorbg = (status) => {
+            if (status === "requested") {
+              return "#fdba74";
+            } else if (status === "accepted") {
+              return "#a5f3fc";
+            } else if (status === "canceled") {
+              return "#bef264";
+            } else {
+              return "#cbd5e1";
+            }
+          };
+
+          const add = {
+            title: value.petOwner.firstName,
+            start: date1,
+            end: date2,
+            color: colorbg(value.status),
+          };
+          //console.log(events);
+
+          setEvents((prevevents) => [...prevevents, add]);
+
+          if (value.status === "requested") {
+            updatedPending.push(value);
+          } else if (value.status === "accepted") {
+            updatedAccepted.push(value);
+          } else if (value.status === "rejected") {
+            updatedCancelled.push(value);
           } else {
-            return "#cbd5e1";
+            updatedFinished.push(value);
           }
-        };
+        });
 
-        const add = {
-          title: value.petOwner.firstName,
-          start: date1,
-          end: date2,
-          color: colorbg(value.status),
-        };
-        //console.log(events);
-
-        setEvents((prevevents) => [...prevevents, add]);
-
-        if (value.status === "requested") {
-          updatedPending.push(value);
-        } else if (value.status === "accepted") {
-          updatedAccepted.push(value);
-        } else if (value.status === "rejected") {
-          updatedCancelled.push(value);
-        } else {
-          updatedFinished.push(value);
-        }
-      });
-
-      setpending(updatedPending);
-      setaccepted(updatedAccepted);
-      setcancelled(updatedCancelled);
-      setfinished(updatedFinished);
+        setpending(updatedPending);
+        setaccepted(updatedAccepted);
+        setcancelled(updatedCancelled);
+        setfinished(updatedFinished);
+      }
     },
   });
 
