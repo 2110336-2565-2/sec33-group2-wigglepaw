@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { BookingStatus } from "@prisma/client";
 
 export const userFields = z.object({
   //userId: z.string().cuid().optional(),
@@ -50,6 +51,14 @@ export const freelancePetSitterFields = z.object({
   lastName: z.string(),
 });
 
+export const bookingFields = z.object({
+  petSitterId: z.string().cuid(),
+  startDate: z.date().default(new Date("1-1-1")),
+  endDate: z.date().default(new Date("1-1-1")),
+  petIdList: z.array(z.string().cuid()).default([]),
+  note: z.string().nullable().default(null),
+});
+
 export const searchField = z.object({
   searchName: z.string().default(""),
   searchRating: z.number().nullable().default(null),
@@ -63,6 +72,33 @@ export const searchField = z.object({
   searchSortBy: z.string().default(""),
 });
 
+export const bookingStatus = z.enum([
+  BookingStatus.requested,
+  BookingStatus.accepted,
+  BookingStatus.canceled,
+  BookingStatus.rejected,
+]);
+
+const userId = z.string().cuid();
+
+export const searchBookingField = z.object({
+  searchBookingIdList: z.array(z.string().cuid()).default([]),
+  searchUserIdList: z.array(userId).default([]),
+  searchStatusList: z.array(bookingStatus).default([]),
+  searchStartDate: z.date().optional(),
+  searchEndDate: z.date().optional(),
+  // searchLocation: z.string().default(""),
+  searchSortBy: z.string().optional(),
+});
+
+// export const returnStatus = z.enum(["ERROR", "SUCCESS"]);
+// export const returnField = z.object({
+//   status: returnStatus,
+//   code: z.string().nullable().default(null),
+//   reason: z.string().nullable().default(null),
+//   result: z.string().nullable().default(null),
+// });
+
 export const reviewFields = z.object({
   rating: z.number().gte(1).lte(5),
   text: z.string().optional(),
@@ -73,8 +109,4 @@ export const postFields = z.object({
   text: z.string().optional(),
   pictureUri: z.array(z.string()),
   videoUri: z.string().optional(),
-});
-
-export const sessionRequestFields = z.object({
-  text: z.string().optional(),
 });

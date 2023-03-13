@@ -1,3 +1,89 @@
+// import { bookingStatus } from "../../../schema/schema";
+import { BookingStatus } from "@prisma/client";
+
+// function makeOptional() {
+//   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+//     const originalMethod = descriptor.value;
+//     descriptor.value = function (...args: any[]) {
+//       if (args.every(arg=> arg==null)) {
+//         return {}
+//       } else {
+//         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+//         return originalMethod.apply(this, args);
+//       }
+//     };
+//     return descriptor;
+//   };
+// }
+type userIdType = string;
+export abstract class BookingSearchLogic {
+  public static byBookingId(bookingId: string): object {
+    return { bookingId: bookingId };
+  }
+  public static byBookingIdList(bookingIdList: string[]): object {
+    if (bookingIdList.length == 0) return {};
+    return {
+      OR: bookingIdList.map((bookingId) => this.byBookingId(bookingId)),
+    };
+  }
+  public static byUserIdListAuto(userIdList: userIdType[]): object {
+    if (userIdList.length == 0) return {};
+    return {
+      OR: userIdList.map((userId) => this.byUserIdAuto(userId)),
+    };
+  }
+  public static byUserIdAuto(userId: userIdType): object {
+    return {
+      OR: [this.byPetOwnerId(userId), this.byPetSitterId(userId)],
+    };
+  }
+  public static byUserId(userId: userIdType, isPetSitter: boolean): object {
+    return isPetSitter ? this.byPetSitterId(userId) : this.byPetOwnerId(userId);
+  }
+  public static byPetOwnerId(petOwnerId: userIdType): object {
+    return { petOwnerId: petOwnerId };
+  }
+  public static byPetSitterId(petSitterId: userIdType): object {
+    return { petSitterId: petSitterId };
+  }
+  public static byStatus(status: BookingStatus): object {
+    return { status: status };
+  }
+  public static byStatusList(statusList: BookingStatus[]): object {
+    if (statusList.length == 0) return {};
+    return { OR: statusList.map((status) => this.byStatus(status)) };
+  }
+  public static byStartDate(startDate: Date): object {
+    return {
+      // startDate: {
+      endDate: {
+        gte: startDate,
+      },
+    };
+  }
+  public static byEndDate(endDate: Date): object {
+    return {
+      // endDate: {
+      startDate: {
+        lte: endDate,
+      },
+    };
+  }
+
+  public static sortBy(sortName: string | undefined): object {
+    switch (sortName) {
+      case "startDate":
+        return { startDate: "asc" };
+      case "createdDate": //mean createdDate and createdAt will return same data
+      case "createdAt":
+        return { createdAt: "asc" };
+      default:
+        return { startDate: "asc" };
+    }
+  }
+}
+
 // search by first name, last name, hotel name
 export function searchByName(text: string): object {
   if (text == "") return {};

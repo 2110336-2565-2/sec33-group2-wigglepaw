@@ -61,8 +61,8 @@ Table PetOwner {
   firstName String [not null]
   lastName String [not null]
   pet Pet [not null]
+  booking Booking [not null]
   review Review [not null]
-  SessionRequest SessionRequest [not null]
 }
 
 Table PetSitter {
@@ -70,6 +70,7 @@ Table PetSitter {
   user User [not null]
   freelancePetSitter FreelancePetSitter
   petHotel PetHotel
+  booking Booking [not null]
   petTypes String[] [not null]
   verifyStatus Boolean [not null]
   certificationUri String
@@ -79,7 +80,6 @@ Table PetSitter {
   review Review [not null]
   avgRating Float
   reviewCount Int [not null, default: 0]
-  SessionRequest SessionRequest [not null]
 }
 
 Table FreelancePetSitter {
@@ -96,6 +96,21 @@ Table PetHotel {
   hotelName String [not null]
 }
 
+Table Booking {
+  bookingId String [pk]
+  petOwner PetOwner [not null]
+  petSitter PetSitter [not null]
+  petOwnerId String [not null]
+  petSitterId String [not null]
+  startDate DateTime [not null]
+  endDate DateTime [not null]
+  numberOfPets Int [not null]
+  pet Pet [not null]
+  status BookingStatus [not null]
+  note String
+  createdAt DateTime [default: `now()`, not null]
+}
+
 Table Pet {
   petId String [pk]
   petOwnerId String [not null]
@@ -104,6 +119,8 @@ Table Pet {
   name String
   sex String
   breed String
+  weight Float
+  pet Booking [not null]
   createdAt DateTime [default: `now()`, not null]
 }
 
@@ -139,26 +156,16 @@ Table Post {
   createdAt DateTime [default: `now()`, not null]
 }
 
-Table SessionRequest {
-  srId String [pk]
-  petOwnerId String [not null]
-  petOwner PetOwner [not null]
-  petSitterId String [not null]
-  petSitter PetSitter [not null]
-  status String [not null]
-  text String
-  createdAt DateTime [default: `now()`, not null]
-  Event Event [not null]
+Table MyRelationTable {
+  petId String [ref: > Pet.petId]
+  petId String [ref: > Booking.bookingId]
 }
 
-Table Schedule {
-  userId String [pk]
-}
-
-Table Event {
-  eventId String [pk]
-  srId String [not null]
-  sessionRequest SessionRequest [not null]
+Enum BookingStatus {
+  requested
+  accepted
+  canceled
+  rejected
 }
 
 Ref: Account.userId > User.userId [delete: Cascade]
@@ -173,6 +180,10 @@ Ref: FreelancePetSitter.userId - PetSitter.userId [delete: Cascade]
 
 Ref: PetHotel.userId - PetSitter.userId [delete: Cascade]
 
+Ref: Booking.petOwnerId > PetOwner.userId [delete: Cascade]
+
+Ref: Booking.petSitterId > PetSitter.userId [delete: Cascade]
+
 Ref: Pet.petOwnerId > PetOwner.userId [delete: Cascade]
 
 Ref: Review.petOwnerId > PetOwner.userId [delete: Cascade]
@@ -180,9 +191,3 @@ Ref: Review.petOwnerId > PetOwner.userId [delete: Cascade]
 Ref: Review.petSitterId > PetSitter.userId [delete: Cascade]
 
 Ref: Post.petSitterId > PetSitter.userId [delete: Cascade]
-
-Ref: SessionRequest.petOwnerId > PetOwner.userId [delete: Cascade]
-
-Ref: SessionRequest.petSitterId > PetSitter.userId [delete: Cascade]
-
-Ref: Event.srId > SessionRequest.srId [delete: Cascade]
