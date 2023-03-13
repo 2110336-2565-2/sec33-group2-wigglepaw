@@ -10,6 +10,7 @@ import { petSitterRouter } from "./routers/petSitterRouter";
 import { bookingRouter } from "./routers/bookingRouter";
 import { petRouter } from "./routers/petRouter";
 import { profilePictureRouter } from "./routers/profilePictureRouter";
+import { recommendRouter } from "./routers/recommendRouter";
 
 /**
  * This is the primary router for your server.
@@ -28,6 +29,7 @@ export const appRouter = createTRPCRouter({
   review: reviewRouter,
   post: postRouter,
   profilePicture: profilePictureRouter,
+  recommend: recommendRouter,
   // Health check route, return 200 OK if server is up
   healthcheck: publicProcedure
     .meta({ description: "Health check route, return 200 OK if server is up" })
