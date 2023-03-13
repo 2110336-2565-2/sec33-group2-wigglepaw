@@ -11,12 +11,20 @@ import {
   postPictures,
   postTexts,
   postTitles,
+  notes,
 } from "../../../seed/pool";
 import {
+  createRandomPets,
+  getAllOwnerId,
+  getAllPetIds,
+  getAllSitterId,
   getMultipleRandom,
   getRandomIntFromInterval,
+  getRandomStartEndDate,
+  updateOwnerPetTypes,
 } from "../../../seed/util";
 import {
+  makeBooking,
   makeFree,
   makeHotel,
   makeOwner,
@@ -101,6 +109,31 @@ export const seedRouter = createTRPCRouter({
           }
         }
       }
+      return "Seeded Users";
+    }),
+
+  seedPets: publicProcedure
+    .input(
+      z.object({
+        clearPets: z.boolean(),
+        numberOfPets: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.clearPets) {
+        await ctx.prisma.pet.deleteMany({});
+      }
+
+      const N = input.numberOfPets;
+      const ownerIds = await getAllOwnerId();
+
+      resetRand();
+      for (let i = 0; i < N; i++) {
+        const ownerId = getMultipleRandom(ownerIds, 1)[0] ?? "";
+        //const numPets = getRandomIntFromInterval(1, 4);
+        await createRandomPets(1, ownerId);
+      }
+      return "Seeded Pets";
     }),
 
   seedReviews: publicProcedure
@@ -112,7 +145,6 @@ export const seedRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const sitters = await prisma.petSitter.findMany();
-      const owners = await prisma.petOwner.findMany();
 
       if (input.clearReviews) {
         await ctx.prisma.review.deleteMany({});
@@ -122,16 +154,9 @@ export const seedRouter = createTRPCRouter({
       }
 
       const N = input.numberOfReviews;
-      const sitterIds = new Array<string>(N);
-      const ownerIds = new Array<string>(N);
+      const sitterIds = await getAllSitterId();
+      const ownerIds = await getAllOwnerId();
 
-      for (let i = 0; i < Math.min(N, sitters.length); i++) {
-        sitterIds[i] = sitters[i]?.userId ?? "";
-      }
-
-      for (let i = 0; i < Math.min(N, owners.length); i++) {
-        ownerIds[i] = owners[i]?.userId ?? "";
-      }
       resetRand();
       for (let i = 0; i < N; i++) {
         const sitterId = getMultipleRandom(sitterIds, 1)[0] ?? "";
@@ -141,6 +166,7 @@ export const seedRouter = createTRPCRouter({
 
         await makeReview(sitterId, ownerId, rating, text);
       }
+      return "Seeded Reviews";
     }),
 
   seedPosts: publicProcedure
@@ -155,14 +181,8 @@ export const seedRouter = createTRPCRouter({
         await ctx.prisma.post.deleteMany({});
       }
 
-      const sitters = await prisma.petSitter.findMany();
-
       const N = input.numberOfPosts;
-      const sitterIds = new Array<string>(N);
-
-      for (let i = 0; i < Math.min(N, sitters.length); i++) {
-        sitterIds[i] = sitters[i]?.userId ?? "";
-      }
+      const sitterIds = await getAllSitterId();
 
       resetRand();
       for (let i = 0; i < N; i++) {
@@ -174,5 +194,39 @@ export const seedRouter = createTRPCRouter({
 
         await makePost(sitterId, title, text, pictureUri, "vdoUri");
       }
+      return "Seeded Posts";
+    }),
+
+  seedBookings: publicProcedure
+    .input(
+      z.object({
+        clearBookings: z.boolean(),
+        numberOfBookings: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.clearBookings) {
+        await ctx.prisma.booking.deleteMany({});
+      }
+
+      const N = input.numberOfBookings;
+      const sitterIds = await getAllSitterId();
+      const ownerIds = await getAllOwnerId();
+
+      resetRand();
+      for (let i = 0; i < N; i++) {
+        const ownerId = getMultipleRandom(ownerIds, 1)[0] ?? "";
+        const sitterId = getMultipleRandom(sitterIds, 1)[0] ?? "";
+        const dates = getRandomStartEndDate();
+        const startDate = dates["startDate"];
+        const endDate = dates["endDate"];
+        const note = getMultipleRandom(notes, 1)[0] ?? "";
+        const allPetIds = await getAllPetIds(ownerId);
+        const numPets = getRandomIntFromInterval(1, allPetIds.length);
+        const petIds = getMultipleRandom(allPetIds, numPets);
+
+        await makeBooking(ownerId, sitterId, startDate, endDate, note, petIds);
+      }
+      return "Seeded Bookings";
     }),
 });
