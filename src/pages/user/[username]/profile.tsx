@@ -10,6 +10,7 @@ import { UserType } from "../../../types/user";
 import { api } from "../../../utils/api";
 
 const ProfilePage: NextPage = () => {
+  const { data: session } = useSession();
   const router = useRouter();
   const { username } = router.query;
 
@@ -24,7 +25,6 @@ const ProfilePage: NextPage = () => {
   if (data === undefined) return <div>Loading...</div>;
   if (data === null) return <div>Not found</div>;
 
-  const { data: session } = useSession();
   const editable = session?.user?.username
     ? session?.user?.username == username
     : false;

@@ -1,4 +1,4 @@
-import { faPaw, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faPaw, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -10,7 +10,6 @@ import {
 } from "../types/user";
 
 type SideTabProps = {
-  className?: string;
   user?: UserProfile & PetSitterProfileType & FreelancePetSitterProfileType;
 };
 
@@ -19,9 +18,9 @@ export default function SideTab(props: SideTabProps) {
   const [openTab, setOpenTab] = React.useState(false);
 
   return (
-    <div className={props.className}>
+    <div>
       {/* TAB BUTTON */}
-      <div className="top-50 absolute left-0 block sm:hidden">
+      <div className="top-50 fixed left-0 block sm:hidden">
         <button
           className={`flex items-center justify-center`}
           onClick={() => {
@@ -30,17 +29,30 @@ export default function SideTab(props: SideTabProps) {
         >
           <FontAwesomeIcon
             icon={faUser}
-            className={`rounded-full border ${openTab} bg-yellow-200 p-1`}
+            className={`rounded-full border ${openTab} bg-gray-400 p-1`}
           />
         </button>
       </div>
-
       {/* SIDE TAB */}
       <div
-        className={`fixed z-30 h-full min-h-screen w-[219px] bg-[#E5D4C2] pt-4 sm:relative ${
+        className={`fixed top-0 z-30 h-screen  w-[219px] bg-[#E5D4C2] pt-[30%] sm:relative  ${
           !openTab ? "max-sm:hidden" : ""
         }`}
       >
+        {/* Close Button */}
+        <div className="top-50 absolute right-0 block sm:hidden">
+          <button
+            className={`flex items-center justify-center`}
+            onClick={() => {
+              setOpenTab((prev) => !prev);
+            }}
+          >
+            <FontAwesomeIcon
+              icon={faArrowLeft}
+              className={`rounded-full border ${openTab} bg-gray-400 p-1`}
+            />
+          </button>
+        </div>
         <div className="relative mx-auto flex h-[135px] w-[135px]">
           <Image
             src={props.user?.imageUri ?? "/profiledummy.png"}
@@ -54,7 +66,7 @@ export default function SideTab(props: SideTabProps) {
         </div>
         <div className="my-16">
           <div className="flex flex-col border ">
-            {["Profile", "Information", "booking", "Review", "Contact"].map(
+            {["Profile", "Information", "Booking", "Review", "Contact"].map(
               (tabName) => (
                 <Tab tabName={tabName}></Tab>
               )
