@@ -12,6 +12,7 @@ import Link from "next/link";
 
 type SideTabProps = {
   user?: UserProfile & PetSitterProfileType & FreelancePetSitterProfileType;
+  isPetOwner?: boolean;
 };
 
 export default function SideTab(props: SideTabProps) {
@@ -68,25 +69,37 @@ export default function SideTab(props: SideTabProps) {
         <div className="my-16">
           <div className="flex flex-col border ">
             {/*Profile Tab*/}
-            <div className="flex h-[58px] w-[219px] items-center justify-center border bg-[#B77B59] text-lg font-medium hover:bg-[#A96037]">
-              <Link href={`/user/${props.user?.username}/profile`}>
-                Profile
-              </Link>
-            </div>
+            <Link
+              href={`/user/${props.user?.username}/profile`}
+              className="flex h-[58px] w-[219px] items-center justify-center border bg-[#B77B59] text-lg font-medium hover:bg-[#A96037]"
+            >
+              Profile
+            </Link>
             {/*Booking Tab*/}
-            <div className="flex h-[58px] w-[219px] items-center justify-center border bg-[#B77B59] text-lg font-medium hover:bg-[#A96037]">
-              <Link href={`/user/${props.user?.username}/booking`}>
+            {props.isPetOwner && (
+              <Link
+                href={`/user/${props.user?.username}/booking`}
+                className="flex h-[58px] w-[219px] items-center justify-center border bg-[#B77B59] text-lg font-medium hover:bg-[#A96037]"
+              >
                 Booking
               </Link>
-            </div>
+            )}
             {/*Review Tab*/}
-            <div className="flex h-[58px] w-[219px] items-center justify-center border bg-[#B77B59] text-lg font-medium hover:bg-[#A96037]">
-              <Link href={`/user/${props.user?.username}/review`}>Review</Link>
-            </div>
+            <Link
+              href={`/user/${props.user?.username}/review`}
+              className="flex h-[58px] w-[219px] items-center justify-center border bg-[#B77B59] text-lg font-medium hover:bg-[#A96037]"
+            >
+              Review
+            </Link>
             {/*Contact Tab*/}
-            <div className="flex h-[58px] w-[219px] items-center justify-center border bg-[#B77B59] text-lg font-medium hover:bg-[#A96037]">
-              <Link href={`/user/${props.user?.username}/chat`}>Chat</Link>
-            </div>
+            {props.isPetOwner && (
+              <Link
+                href={`/user/${props.user?.username}/chat`}
+                className="flex h-[58px] w-[219px] items-center justify-center border bg-[#B77B59] text-lg font-medium hover:bg-[#A96037]"
+              >
+                Chat
+              </Link>
+            )}
           </div>
         </div>
       </div>

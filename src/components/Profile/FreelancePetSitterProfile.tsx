@@ -128,7 +128,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
     <div>
       <Header></Header>
       <div className="flex">
-        {props.isPetOwner && <SideTab user={props.user} />}
+        <SideTab user={props.user} isPetOwner={props.isPetOwner} />
         <div className="mt-3 max-w-[100vw] px-2">
           <div className="mt-2 flex flex-wrap justify-center">
             <div className="my-auto flex w-full flex-col md:m-4 md:w-1/5 md:min-w-min">
