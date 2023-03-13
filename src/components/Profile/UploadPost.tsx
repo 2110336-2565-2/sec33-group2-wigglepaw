@@ -222,7 +222,7 @@ const UploadPost = (props: UploadPostProps) => {
                     setIsUploadSuccess(false);
                   }}
                 >
-                  <div className="font-bold">Upload Successful</div>
+                  <div className="font-bold">Upload Successful!</div>
                 </Dialog.Panel>
               </div>
             </div>

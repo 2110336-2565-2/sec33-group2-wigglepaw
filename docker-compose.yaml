@@ -21,9 +21,9 @@ services:
     image: minio/minio:latest
     restart: always
     environment:
-      MINIO_ROOT_USER: 'root'
-      MINIO_ROOT_PASSWORD: 'password'
-      MINIO_API_CORS_ALLOW_ORIGIN: '*'
+      MINIO_ROOT_USER: "root"
+      MINIO_ROOT_PASSWORD: "password"
+      MINIO_API_CORS_ALLOW_ORIGIN: "*"
     volumes:
       # Map the local storage folder to the container's /data/minio directory
       - ./s3-data:/data/minio
@@ -47,4 +47,3 @@ services:
         mc anonymous set download minio/wigglepaw;
         mc admin user svcacct add --access-key J9jiu0i7jrqoJEwO --secret-key 29oOdS0Buo99jA4KXeKwLfbK1cTbIDpm minio root
       "
-

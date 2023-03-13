@@ -120,7 +120,7 @@ const GeneratePetSitterPage: NextPage = () => {
       },
       petSitter: {
         petTypes: ["cat", "dog"],
-        startPrice: 100,
+        startPrice: 90,
         endPrice: 1000,
         verifyStatus: true,
       },
@@ -137,7 +137,7 @@ const GeneratePetSitterPage: NextPage = () => {
       },
       petSitter: {
         petTypes: ["cat", "dog"],
-        startPrice: 1000,
+        startPrice: 99,
         endPrice: 1000,
         verifyStatus: true,
       },
@@ -154,7 +154,7 @@ const GeneratePetSitterPage: NextPage = () => {
       },
       petSitter: {
         petTypes: ["cat", "dog", "rat", "Hamster"],
-        startPrice: 10000,
+        startPrice: 100,
         endPrice: 10000000,
         verifyStatus: true,
       },

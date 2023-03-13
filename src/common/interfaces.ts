@@ -1,6 +1,8 @@
 export interface SearchValues {
   name: string;
-  priceRange: number;
+  searchPriceMin: number;
+  searchPriceMax: number;
   sortby: string;
   petSitterType: string;
+  petType: string;
 }
