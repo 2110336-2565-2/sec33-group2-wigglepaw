@@ -18,7 +18,7 @@ const ReviewPage: NextPage = () => {
   const router = useRouter();
   const { username } = router.query;
   const { data: session } = useSession();
-
+  const utils = api.useContext();
   const formDataSchema = z.object({
     petOwnerId: z.string().min(10),
     petSisterId: z.string().min(10),
@@ -48,6 +48,22 @@ const ReviewPage: NextPage = () => {
     }
     return <div></div>;
   };
+  const LastReview = () => {
+    if (petSitterReview && user) {
+      for (let i = petSitterReview.length; i >= 0; --i) {
+        if (petSitterReview[i]?.petOwnerId == user?.userId) {
+          return (
+            <ReviewBox
+              rating={petSitterReview[i]?.rating ?? 0}
+              text={petSitterReview[i]?.text ?? ""}
+              userid={petSitterReview[i]?.petOwnerId ?? ""}
+            />
+          );
+        }
+      }
+    }
+    return <div></div>;
+  };
   const petSitterRating = api.petSitter.getAvgRatingByUserId.useQuery({
     petSitterId: petSitterData?.userId ?? "Error",
   });
@@ -71,6 +87,7 @@ const ReviewPage: NextPage = () => {
           text: data.review,
         },
       });
+      utils.review.invalidate();
     }
 
     setText(data.review);
@@ -103,17 +120,7 @@ const ReviewPage: NextPage = () => {
           <button onClick={openModal} className="font-bold">
             Write Review
           </button>
-          {hasReview && (
-            <div className="h-100 w-100 box-content flex flex-col items-center rounded-md border-4 bg-amber-50 p-4">
-              <Rating
-                initialValue={rating}
-                SVGclassName="inline-block"
-                size={30}
-                readonly
-              ></Rating>
-              <h1 className="text-base">{text}</h1>
-            </div>
-          )}
+          <LastReview></LastReview>
 
           <h2>User reviews</h2>
 
