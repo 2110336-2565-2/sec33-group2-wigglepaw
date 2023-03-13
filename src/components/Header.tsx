@@ -164,7 +164,7 @@ const Header = () => {
                       src={profileImageUri}
                       alt={"Icon"}
                       fill
-                      className="rounded-full"
+                      className="rounded-full object-cover"
                     ></Image>
                   </Menu.Button>
                 </div>
@@ -209,7 +209,7 @@ const Header = () => {
                     src={profileImageUri}
                     alt={"Icon"}
                     fill
-                    className="rounded-full"
+                    className="rounded-full object-cover"
                   ></Image>
                 </Menu.Button>
               ) : (

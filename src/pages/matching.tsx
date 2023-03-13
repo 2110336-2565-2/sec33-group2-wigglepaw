@@ -46,7 +46,7 @@ const Matching: NextPage = () => {
             pets.
             <Link href="/registerPetSitter">
               <span className="ml-1 text-[#3C8DE1] underline hover:text-[#285686]">
-                Want to become our sitters ?
+                Want to become our sitters?
               </span>
             </Link>
           </p>

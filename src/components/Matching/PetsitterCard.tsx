@@ -78,7 +78,7 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
         >
           <div className="relative h-full w-full">
             <Image
-              alt="sitter profile image"
+              alt="Pet Sitter Profile Picture"
               src={profileImageUri}
               fill
               className="object-cover"
