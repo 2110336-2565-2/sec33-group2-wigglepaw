@@ -1,6 +1,7 @@
 import { prisma } from "./../server/db";
 import { BookingStatus } from "@prisma/client";
 import Rand, { PRNG } from "rand-seed";
+import { petBreeds, petNames, petTypes, sexes } from "./pool";
 
 let rand = new Rand("6969");
 
@@ -70,4 +71,72 @@ export async function getAllOwnerId() {
     ownerIds[i] = owners[i]?.userId ?? "";
   }
   return ownerIds;
+}
+
+export async function getAllPetIds(petOwnerId: string) {
+  const owner = await prisma.petOwner.findFirst({
+    where: {
+      userId: petOwnerId,
+    },
+    include: {
+      pet: true,
+    },
+  });
+
+  const pets = owner?.pet ?? [];
+  const petIds = new Array<string>(pets.length);
+
+  for (let i = 0; i < pets.length; i++) {
+    petIds[i] = pets[i]?.petId ?? "";
+  }
+  return petIds;
+}
+
+export async function updateOwnerPetTypes(ownerId: string) {
+  const owner = await prisma.petOwner.findFirst({
+    where: {
+      userId: ownerId,
+    },
+    include: {
+      user: true,
+      pet: true,
+    },
+  });
+  const pets = owner?.pet ?? [];
+  const petSet = new Set<string>();
+  for (const pet of pets) {
+    petSet.add(pet.petType);
+  }
+  const petArray = Array.from(petSet);
+  await prisma.petOwner.update({
+    where: {
+      userId: ownerId,
+    },
+    data: {
+      petTypes: petArray,
+    },
+  });
+  return "Updated owner's pet types successfully.";
+}
+
+export async function createRandomPets(
+  numberOfPets: number,
+  petOwnerId: string
+) {
+  for (let i = 0; i < numberOfPets; i++) {
+    const petType = getMultipleRandom(petTypes, 1)[0] ?? "";
+    const createPet = await prisma.pet.create({
+      data: {
+        petOwnerId: petOwnerId,
+        petType: petType,
+        name: getMultipleRandom(petNames, 1)[0] ?? "",
+        sex: getMultipleRandom(sexes, 1)[0] ?? "",
+        breed: getMultipleRandom(petBreeds[petType] ?? ["breed"], 1)[0] ?? "",
+        weight: getRandomIntFromInterval(1, 100) / 10,
+        createdAt: new Date(),
+      },
+    });
+  }
+  await updateOwnerPetTypes(petOwnerId);
+  return;
 }

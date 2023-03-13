@@ -1,7 +1,11 @@
 import { BookingStatus } from "@prisma/client";
 import { saltHashPassword } from "../pages/api/auth/[...nextauth]";
 import { prisma } from "../server/db";
-import { getRandomBookingStatus, getRandomDatetime } from "./util";
+import {
+  createRandomPets,
+  getRandomBookingStatus,
+  getRandomDatetime,
+} from "./util";
 import { Return } from "../schema/returnSchema";
 
 export async function updateAvgRating(petSitterId: string) {
@@ -149,7 +153,7 @@ export async function makeOwner(
   const saltHash = saltHashPassword("p" + code);
   const salt = saltHash.salt;
   const hash = saltHash.hash;
-  return await prisma.petOwner.create({
+  const owner = await prisma.petOwner.create({
     data: {
       user: {
         create: {
@@ -171,6 +175,9 @@ export async function makeOwner(
       user: true,
     },
   });
+  const ownerId = owner.userId;
+  createRandomPets(1, ownerId);
+  return;
 }
 
 export async function makeReview(

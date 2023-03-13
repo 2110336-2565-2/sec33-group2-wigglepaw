@@ -11,13 +11,17 @@ import {
   postPictures,
   postTexts,
   postTitles,
+  notes,
 } from "../../../seed/pool";
 import {
+  createRandomPets,
   getAllOwnerId,
+  getAllPetIds,
   getAllSitterId,
   getMultipleRandom,
   getRandomIntFromInterval,
   getRandomStartEndDate,
+  updateOwnerPetTypes,
 } from "../../../seed/util";
 import {
   makeBooking,
@@ -105,6 +109,31 @@ export const seedRouter = createTRPCRouter({
           }
         }
       }
+      return "Seeded Users";
+    }),
+
+  seedPets: publicProcedure
+    .input(
+      z.object({
+        clearPets: z.boolean(),
+        numberOfPets: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.clearPets) {
+        await ctx.prisma.pet.deleteMany({});
+      }
+
+      const N = input.numberOfPets;
+      const ownerIds = await getAllOwnerId();
+
+      resetRand();
+      for (let i = 0; i < N; i++) {
+        const ownerId = getMultipleRandom(ownerIds, 1)[0] ?? "";
+        //const numPets = getRandomIntFromInterval(1, 4);
+        await createRandomPets(1, ownerId);
+      }
+      return "Seeded Pets";
     }),
 
   seedReviews: publicProcedure
@@ -137,6 +166,7 @@ export const seedRouter = createTRPCRouter({
 
         await makeReview(sitterId, ownerId, rating, text);
       }
+      return "Seeded Reviews";
     }),
 
   seedPosts: publicProcedure
@@ -164,6 +194,7 @@ export const seedRouter = createTRPCRouter({
 
         await makePost(sitterId, title, text, pictureUri, "vdoUri");
       }
+      return "Seeded Posts";
     }),
 
   seedBookings: publicProcedure
@@ -180,6 +211,7 @@ export const seedRouter = createTRPCRouter({
 
       const N = input.numberOfBookings;
       const sitterIds = await getAllSitterId();
+      const ownerIds = await getAllOwnerId();
 
       resetRand();
       for (let i = 0; i < N; i++) {
@@ -188,12 +220,13 @@ export const seedRouter = createTRPCRouter({
         const dates = getRandomStartEndDate();
         const startDate = dates["startDate"];
         const endDate = dates["endDate"];
-        const title = getMultipleRandom(postTitles, 1)[0] ?? "";
-        const text = getMultipleRandom(postTexts, 1)[0] ?? "";
-        const pics = getRandomIntFromInterval(0, 4);
-        const pictureUri = getMultipleRandom(postPictures, pics) ?? [];
+        const note = getMultipleRandom(notes, 1)[0] ?? "";
+        const allPetIds = await getAllPetIds(ownerId);
+        const numPets = getRandomIntFromInterval(1, allPetIds.length);
+        const petIds = getMultipleRandom(allPetIds, numPets);
 
-        await makeBooking(sitterId, title, text, pictureUri, "vdoUri");
+        await makeBooking(ownerId, sitterId, startDate, endDate, note, petIds);
       }
+      return "Seeded Bookings";
     }),
 });
