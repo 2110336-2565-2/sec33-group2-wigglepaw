@@ -40,6 +40,7 @@ const ReviewPage: NextPage = () => {
     if (petSitterReview) {
       return petSitterReview.map((review) => (
         <ReviewBox
+          key={review.reviewId}
           rating={review.rating}
           text={review.text ?? ""}
           userid={review.petOwnerId}
@@ -87,7 +88,8 @@ const ReviewPage: NextPage = () => {
           text: data.review,
         },
       });
-      utils.review.invalidate();
+
+      await utils.petSitter.getReviewsByUserId.invalidate();
     }
 
     setText(data.review);
