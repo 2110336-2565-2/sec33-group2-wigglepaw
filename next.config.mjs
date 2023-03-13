@@ -31,9 +31,9 @@ const config = {
   async redirects() {
     return [
       {
-        source: "/user/[username]",
-        destination: "/user/[username]/profile",
-        statusCode: 301,
+        source: "/user/:username",
+        destination: "/user/:username/profile",
+        permanent: true,
       },
     ];
   },
