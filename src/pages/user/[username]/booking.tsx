@@ -1,4 +1,4 @@
-import * as React from "react";
+import { Fragment, useState } from "react";
 import type { NextPage } from "next";
 import { api } from "../../../utils/api";
 import {
@@ -15,6 +15,9 @@ import Router, { useRouter } from "next/router";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaw } from "@fortawesome/free-solid-svg-icons";
+import { Dialog, Transition } from "@headlessui/react";
+import SideTab from "../../../components/SideTab";
+import { UserType } from "../../../types/user";
 
 const formDataSchema = z.object({
   datetimefrom: z.date(),
@@ -27,85 +30,152 @@ type FormData = z.infer<typeof formDataSchema>;
 
 const booking: NextPage = () => {
   const router = useRouter();
+  const { data: session } = useSession();
   const { username } = router.query;
+  const requestBooking = api.booking.request.useMutation();
+
+  const [isBookSuccess, setIsBookSuccess] = useState(false);
+
   const { data: petSitterData, error: userError } =
     api.user.getByUsername.useQuery(
       { username: typeof username === "string" ? username : "" },
       { enabled: typeof username === "string" }
     );
-  const requestBooking = api.booking.request.useMutation();
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>();
   const onSubmit = async (data: FormData) => {
-    alert(data);
     if (petSitterData) {
       await requestBooking.mutateAsync({
         petSitterId: petSitterData?.userId,
+        startDate: new Date(data.datetimefrom),
+        endDate: new Date(data.datetimeto),
         petIdList: [], //TODO: Add Pets
         note: data.note,
       });
+      setIsBookSuccess(true);
+      setTimeout(function () {
+        setIsBookSuccess(false);
+        router.push("/schedule");
+      }, 1500);
     }
   };
 
   return (
-    <div className="min-h-screen">
-      <Header />
-      <div className="flex">
-        <div className="mx-auto mt-4 w-[90%] max-w-[96rem] rounded-md border-[3px] border-blue-500 px-2 py-4">
-          <div className="relative mb-3 flex justify-center">
-            <h1 className="text-2xl font-semibold">Booking</h1>
+    <>
+      <div className="min-h-screen">
+        <Header />
+        <div className="flex min-h-[90vh]">
+          <SideTab
+            user={petSitterData}
+            isPetOwner={session?.user?.userType == UserType.PetOwner}
+          />
+          <div className="mx-auto flex">
+            <div className="mt-10 max-h-72 w-[90%] max-w-[96rem] rounded-md border-[4px] border-blue-500 px-2 py-4">
+              <div className="relative mb-3 flex justify-center">
+                <h1 className="text-2xl font-semibold">Booking</h1>
+              </div>
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="flex flex-col gap-4"
+              >
+                <div className="flex justify-between">
+                  <Input
+                    id="datetimefrom"
+                    label="Start Date* :"
+                    register={register}
+                    type="datetime-local"
+                    className="w-[45%]"
+                    inputClass=""
+                  />
+                  <Input
+                    id="datetimeto"
+                    label="End Date* :"
+                    register={register}
+                    type="datetime-local"
+                    className="w-[45%]"
+                    inputClass=""
+                  />
+                </div>
+                {/* TODO: Pets */}
+                <Input
+                  id="Pets"
+                  label="Pets* :"
+                  register={register}
+                  placeholder="PETS"
+                />
+                <TextArea
+                  id="note"
+                  label="Note :"
+                  register={register}
+                  textAreaClass=""
+                />
+                <div className="flex justify-evenly max-lg:flex-col max-lg:items-center max-lg:justify-center max-lg:gap-4">
+                  <button className="rounded-md bg-wp-blue px-2 py-1 text-white hover:bg-wp-light-blue max-lg:w-1/2 max-md:w-full">
+                    Preview Booking Request
+                  </button>
+                  <button className="rounded-md bg-wp-blue px-2 py-1 text-white hover:bg-wp-light-blue max-lg:w-1/2 max-md:w-full">
+                    Send Booking Request
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-4"
-          >
-            <div className="flex justify-between">
-              <Input
-                id="datetimefrom"
-                label="Start Date* :"
-                register={register}
-                type="datetime-local"
-                className="w-[45%]"
-                inputClass=""
-              />
-              <Input
-                id="datetimeto"
-                label="End Date* :"
-                register={register}
-                type="datetime-local"
-                className="w-[45%]"
-                inputClass=""
-              />
-            </div>
-            {/* TODO: Pets */}
-            <Input
-              id="Pets"
-              label="Pets* :"
-              register={register}
-              placeholder="PETS"
-            />
-            <TextArea
-              id="note"
-              label="Note :"
-              register={register}
-              textAreaClass=""
-            />
-            <div className="flex justify-evenly max-lg:flex-col max-lg:items-center max-lg:justify-center max-lg:gap-4">
-              <button className="rounded-md bg-wp-blue px-2 py-1 text-white hover:bg-wp-light-blue max-lg:w-1/2 max-md:w-full">
-                Preview Booking Request
-              </button>
-              <button className="rounded-md bg-wp-blue px-2 py-1 text-white hover:bg-wp-light-blue max-lg:w-1/2 max-md:w-full">
-                Send Booking Request
-              </button>
-            </div>
-          </form>
         </div>
       </div>
-    </div>
+
+      {/* Book Success Dialog */}
+      <Transition show={isBookSuccess} as={Fragment}>
+        <Dialog
+          onClose={() => {
+            setIsBookSuccess(false);
+          }}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            {/* The backdrop, rendered as a fixed sibling to the panel container */}
+            <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+          </Transition.Child>
+
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-200"
+            enterFrom="opacity-0 scale-95"
+            enterTo="opacity-100 scale-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100 scale-100"
+            leaveTo="opacity-0 scale-95"
+          >
+            {/* Full-screen scrollable container */}
+            <div className="fixed inset-0 overflow-y-auto">
+              {/* Container to center the panel */}
+              <div className="flex min-h-full items-center justify-center">
+                <Dialog.Panel
+                  className="mx-auto box-border w-fit cursor-default rounded bg-green-400 p-6 text-lg text-green-700"
+                  onClick={() => {
+                    setIsBookSuccess(false);
+                    router.push("/schedule");
+                  }}
+                >
+                  <div className="font-bold">Book Successful!</div>
+                </Dialog.Panel>
+              </div>
+            </div>
+          </Transition.Child>
+        </Dialog>
+      </Transition>
+    </>
   );
 };
 export default booking;
