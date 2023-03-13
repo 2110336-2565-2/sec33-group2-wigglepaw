@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { api } from "../utils/api";
 import { Menu } from "@headlessui/react";
 import { UserType } from "../types/user";
+import { BookingStatus } from "@prisma/client";
 
 const Header = (props: any) => {
   const { data: session, status } = useSession();
@@ -33,7 +34,9 @@ const Header = (props: any) => {
 
   return (
     <span
-      className={"flex h-fit w-screen bg-wp-blue md:pr-2 " + props.className}
+      className={
+        "flex h-fit w-screen flex-col bg-wp-blue md:pr-2 " + props.className
+      }
     >
       <nav className="flex w-full justify-between">
         <Link href={"/"} className="flex shrink-0">
@@ -365,8 +368,34 @@ const Header = (props: any) => {
           </div>
         )}
       </nav>
+
+      <ReminderBar />
     </span>
   );
+};
+
+const ReminderBar = () => {
+  const booking = api.booking.getMyBooking.useQuery();
+
+  // Filter out only bookings that are accepted and start within 24 hours
+  const remindableBooking = booking.data?.filter((book) => {
+    return (
+      book.status === BookingStatus.accepted &&
+      book.startDate.getTime() - new Date().getTime() < 24 * 60 * 60 * 1000 &&
+      book.startDate.getTime() - new Date().getTime() > 0
+    );
+  });
+  const nRemindable = (remindableBooking ?? []).length;
+
+  return nRemindable > 0 ? (
+    <Link
+      href="/schedule"
+      className="bg-green-500 p-1 text-center text-sm text-white"
+    >
+      FYI, there exists {nRemindable} upcoming appointment within the next 24
+      hours, <span className="underline">check out your schedule!</span>
+    </Link>
+  ) : null;
 };
 
 export default Header;
