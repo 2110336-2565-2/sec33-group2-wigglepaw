@@ -118,7 +118,16 @@ const ReviewPage: NextPage = () => {
         <h1 className="font-bold">{petSitterData?.username}</h1>
         <div className="h-100 w-100 box-content flex flex-col items-center rounded-md border-4 bg-green-300 p-4">
           <h1>Reviews</h1>
-          <h2>Average rating : {Rate}</h2>
+          <h2>
+            Average rating :{" "}
+            <Rating
+              initialValue={Rate ?? 0}
+              SVGclassName="inline-block"
+              size={30}
+              readonly
+            />
+            ({Rate})
+          </h2>
           <button onClick={openModal} className="font-bold">
             Write Review
           </button>
@@ -183,7 +192,9 @@ const ReviewPage: NextPage = () => {
                       ></input>
                       <br />
                       <div className="grid grid-cols-2">
-                        <button onClick={closeModal}>Cancel</button>
+                        <button type="reset" onClick={closeModal}>
+                          Cancel
+                        </button>
                         <button type="submit">Submit</button>
                       </div>
                     </form>
