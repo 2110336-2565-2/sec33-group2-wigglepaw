@@ -124,7 +124,7 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
       <Header></Header>
       <div className="flex min-h-[90vh]">
         <SideTab user={props.user} isPetOwner={props.isPetOwner} />
-        <div className="mt-3 max-w-[100vw] px-2">
+        <div className="mt-6 max-w-[100vw] px-2">
           <div className="mx-3 flex flex-wrap justify-center">
             <div className="my-auto flex w-screen flex-col md:m-4 md:w-1/5 md:min-w-min">
               <div className="relative mx-auto flex h-[6rem] w-[6rem]">
