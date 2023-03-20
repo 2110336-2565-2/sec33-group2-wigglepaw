@@ -4,7 +4,7 @@ import type { NextPage } from "next";
 import { api } from "../../../utils/api";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { date, z, ZodDate } from "zod";
 import Header from "../../../components/Header";
 import { signIn, useSession } from "next-auth/react";
 import Router, { useRouter } from "next/router";
@@ -44,6 +44,7 @@ const ReviewPage: NextPage = () => {
           rating={review.rating}
           text={review.text ?? ""}
           userid={review.petOwnerId}
+          date={review.createdAt ?? new Date("September 30, 2020 11:28:00")}
         />
       ));
     }
@@ -58,6 +59,10 @@ const ReviewPage: NextPage = () => {
               rating={petSitterReview[i]?.rating ?? 0}
               text={petSitterReview[i]?.text ?? ""}
               userid={petSitterReview[i]?.petOwnerId ?? ""}
+              date={
+                petSitterReview[i]?.createdAt ??
+                new Date("September 30, 2020 11:28:00")
+              }
             />
           );
         }
@@ -113,10 +118,10 @@ const ReviewPage: NextPage = () => {
   return (
     <div>
       <Header />
-      <div className="mt-4 flex h-full flex-col items-center text-xl">
-        <ReviewImage img={img ?? ""}></ReviewImage>
+      <div className="h-100 w-100 mt-4 flex flex-col items-center text-xl">
+        <ReviewImage img={img ?? ""} size={6}></ReviewImage>
         <h1 className="font-bold">{petSitterData?.username}</h1>
-        <div className="h-100 w-100 box-content flex flex-col items-center rounded-md border-4 bg-green-300 p-4">
+        <div className="h-100 w-100 box-border flex min-w-[50%] flex-col items-center rounded-md border-4 bg-green-300 p-4">
           <h1>Reviews</h1>
           <h2>
             Average rating :{" "}

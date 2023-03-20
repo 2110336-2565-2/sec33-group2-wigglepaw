@@ -10,26 +10,43 @@ import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { Rating } from "react-simple-star-rating";
 import { api } from "../utils/api";
+import ReviewImage from "./Profile/ReviewImage";
+import { stringify } from "querystring";
 const formDataSchema = z.object({
   rating: z.number(),
   text: z.string(),
   userid: z.string(),
+  date: z.date(),
 });
 type FormData = z.infer<typeof formDataSchema>;
 
-const ReviewBox = ({ rating, text, userid }: FormData) => {
+const ReviewBox = ({ rating, text, userid, date }: FormData) => {
   const user = api.user.getByUserId.useQuery({ userId: userid ?? "Error" });
   const username = user.data?.username;
+  const img = user.data?.imageUri;
+  const day = date.toDateString().substring(4);
+  const datearray = day.split(" ");
   return (
-    <div className="h-100 w-100 box-content flex flex-col items-center rounded-md border-4 bg-amber-50 p-4">
-      <Rating
-        initialValue={rating}
-        SVGclassName="inline-block"
-        size={30}
-        readonly
-      ></Rating>
-      <h1 className="text-l">- by {username}</h1>
-      <h1 className="text-base">{text}</h1>
+    <div className="h-100 w-100 box-content flex min-w-full flex-col items-center rounded-md border-4 bg-amber-50 p-4">
+      <div className="grid-rows-8 mx-auto grid w-full grid-cols-2 gap-5">
+        <ReviewImage img={img ?? ""} size={4} />
+        <div>
+          <br />
+          <h1 className="text-l">{username}</h1>
+        </div>
+      </div>
+      <div className="grid-rows-8 mx-auto grid w-full grid-cols-2 gap-5">
+        <Rating
+          initialValue={rating}
+          SVGclassName="inline-block"
+          size={30}
+          readonly
+        ></Rating>
+        <div>
+          {datearray[1]} {datearray[0]} {datearray[2]}
+        </div>
+      </div>
+      <h1 className="text-l h-100 w-100">{text}</h1>
     </div>
   );
 };
