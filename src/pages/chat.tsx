@@ -1,4 +1,5 @@
 import Header from "../components/Header";
+import { useSession } from "next-auth/react";
 
 import io from "socket.io-client";
 import { useState, useEffect } from "react";
@@ -12,7 +13,10 @@ const Chat = () => {
     socketInitializer();
   }, []);
 
+  const { data: session } = useSession();
+
   const [msg, setMSG] = useState<string>();
+  const [listmsg, Setlistmsg] = useState([]);
 
   const socketInitializer = async () => {
     // We just call it because we don't need anything else out of it
@@ -21,14 +25,11 @@ const Chat = () => {
     socket = io();
 
     socket.on("newIncomingMessage", (msg1) => {
-      console.log(msg1);
-      console.log(socket.id);
+      // console.log(msg1);
+      // console.log(socket.id);
       setMSG(msg1);
+      Setlistmsg((prev) => [...prev, msg1]);
     });
-  };
-
-  const sendMessage = async () => {
-    console.log("to");
   };
 
   const sendForm = (e) => {
@@ -41,7 +42,7 @@ const Chat = () => {
     <>
       <Header></Header>
       {msg}
-      <div onClick={sendMessage} className="h-8 w-8 bg-black "></div>
+
       <div className="pl-20">
         <span>
           <form onSubmit={sendForm}>
@@ -55,6 +56,10 @@ const Chat = () => {
       <button
         onClick={() => {
           socket.emit("joinroom1", "room1");
+          Setlistmsg((prev) => [
+            ...prev,
+            "User " + session?.user?.id.toString() + " has joined room1",
+          ]);
         }}
         className="h-5 w-20 bg-red-300"
       >
@@ -63,11 +68,20 @@ const Chat = () => {
       <button
         onClick={() => {
           socket.emit("joinroom2", "room2");
+          Setlistmsg((prev) => [
+            ...prev,
+            "User " + session?.user?.id.toString() + " has joined room2",
+          ]);
         }}
         className="h-5 w-20 bg-blue-300"
       >
         Room2
       </button>
+      <div className="bg-blue-100">
+        {listmsg.map((data) => {
+          return <li>{data}</li>;
+        })}
+      </div>
     </>
   );
 };

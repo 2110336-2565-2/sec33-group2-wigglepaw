@@ -13,21 +13,27 @@ export default function SocketHandler(req, res) {
   res.socket.server.io = io;
 
   const onConnection = (socket) => {
+    let currentroom = "1";
     console.log("conected", socket.id);
 
     socket.on("joinroom1", (msg) => {
       //join mechanic working as expected!!
-      console.log("join room 1");
+      //console.log("join room 1");
+      currentroom = "1";
       socket.join("1");
+      socket.leave("2");
     });
 
     socket.on("joinroom2", (msg) => {
-      console.log("join room 2");
+      //console.log("join room 2");
+      currentroom = "2";
       socket.join("2");
+      socket.leave("1");
     });
 
     socket.on("createdMessage", (msg) => {
-      io.to("1").emit("newIncomingMessage", msg + "sss");
+      console.log(socket.room);
+      io.to(currentroom).emit("newIncomingMessage", msg);
       console.log(socket.id);
       console.log(msg);
     });
