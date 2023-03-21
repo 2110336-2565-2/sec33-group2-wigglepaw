@@ -1,57 +1,43 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import Header from "../../../components/Header";
+import Header from "../components/Header";
 import { useSession } from "next-auth/react";
 
 import io from "socket.io-client";
 import { useState, useEffect } from "react";
-import { api } from "../../../utils/api";
 
 let socket;
+
+//THis is for PetHotel  (like all chat)
 
 const ChatRoomPage: NextPage = () => {
   const router = useRouter();
   const { username } = router.query;
-
   const { data: session } = useSession();
   const [started, setStarted] = useState(false);
   const [sessionReady, setSessionReady] = useState(false);
 
-  const { data: petSitterData } = api.user.getByUsername.useQuery(
-    {
-      username: typeof username === "string" ? username : "",
-    },
-    {
-      onSuccess: (data) => {
-        if (data) window.localStorage.setItem("id", data.userId); //on Success that return real Petsitter,
-        //set localstorage to prevent data loss
-      },
-    }
-  );
   // We just call it because we don't need anything else out of it
   useEffect(() => {
     socketInitializer();
   }, []);
 
   useEffect(() => {
-    //Notice when session become usable
     if (session) {
       setSessionReady(true);
     }
   }, [session]);
 
   useEffect(() => {
-    //emit Startchat, so that client can enter the room
     if (sessionReady && socket && !started) {
       setStarted(true);
-
       const msg = {
         host: session?.user?.id.toString(),
-        to: localStorage.getItem("id"),
+        to: "clf5hrxrq002bpassbxledq37", //just for testing
       };
       socket.emit("startChat", msg);
     }
-  }, [sessionReady, socket, petSitterData]);
+  }, [sessionReady, socket]);
 
   const [msg, setMSG] = useState<string>();
   const [listmsg, Setlistmsg] = useState([]);
@@ -77,22 +63,18 @@ const ChatRoomPage: NextPage = () => {
     e.preventDefault();
 
     if (!started) {
-      //if already emit startchat, don't do it again
       setStarted(true);
       const msg = {
         host: session?.user?.id.toString(),
         to: petSitterData?.userId.toString(),
       };
-      socket.emit("startChat", msg); //There is a bug where first message won't send,
-      //so I emit startchat here too, just in case
+      socket.emit("startChat", msg);
     }
 
     const msg = e.target.chat.value;
-    //console.log(e.target.chat.value);
+    console.log(e.target.chat.value);
 
     Setlistmsg((prev) => [...prev, msg]);
-
-    //send message
     socket.emit("createdMessage", msg);
     e.target.chat.value = "";
   };
@@ -100,9 +82,9 @@ const ChatRoomPage: NextPage = () => {
   return (
     <>
       <Header></Header>
-      HGGG
+      {msg}
       {username}
-      <div>{petSitterData?.userId}</div>
+
       <div className=" h-[90vh]   ">
         <div className="h-[80%] px-32">
           <div className="bg-blue-100">
