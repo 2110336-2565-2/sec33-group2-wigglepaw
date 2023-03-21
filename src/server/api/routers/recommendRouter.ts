@@ -3,7 +3,7 @@ import { TypeOf, z } from "zod";
 import { BookingStatus } from "@prisma/client";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { Return } from "../../../schema/returnSchema";
-import { BookingSearchLogic } from "../logic/search";
+import { BookingSearchLogic } from "../logic/search/booking";
 
 export const recommendRouter = createTRPCRouter({
   // recommend by recent booking

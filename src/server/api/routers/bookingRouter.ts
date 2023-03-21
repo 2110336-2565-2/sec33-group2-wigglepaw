@@ -6,8 +6,7 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { bookingFields, searchBookingField } from "../../../schema/schema";
 import { Return } from "../../../schema/returnSchema";
 import { UserTypeLogic } from "../logic/session";
-import { BookingSearchLogic } from "../logic/search";
-import { BookingReturnLogic } from "../logic/return";
+import { BookingSearchLogic } from "../logic/search/booking";
 
 const NO_USER_IN_SESSION = {
   status: "ERROR",
@@ -63,8 +62,7 @@ export const bookingRouter = createTRPCRouter({
     .input(bookingFields)
     .mutation(async ({ ctx, input }) => {
       const userType: UserType = ctx.session.user?.userType ?? null;
-      const userTypeLogic = new UserTypeLogic(userType);
-      if (!userTypeLogic.isPetOwner()) return USER_TYPE_MISMATCH;
+      if (!UserTypeLogic.isPetOwner(userType)) return USER_TYPE_MISMATCH;
       const petOwnerId = ctx.session.user.id;
       const uniquePetIdList = [...new Set(input.petIdList)];
 
@@ -95,8 +93,7 @@ export const bookingRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       if (ctx.session.user == null) return NO_USER_IN_SESSION;
       const userType: UserType = ctx.session.user?.userType ?? null;
-      const userTypeLogic = new UserTypeLogic(userType);
-      if (!userTypeLogic.isPetSitter()) return USER_TYPE_MISMATCH;
+      if (!UserTypeLogic.isPetSitter(userType)) return USER_TYPE_MISMATCH;
       const userId = ctx.session.user.id;
       const qualified = await ctx.prisma.booking.findFirst({
         where: {
@@ -131,8 +128,7 @@ export const bookingRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       if (ctx.session.user == null) return NO_USER_IN_SESSION;
       const userType: UserType = ctx.session.user?.userType ?? null;
-      const userTypeLogic = new UserTypeLogic(userType);
-      if (!userTypeLogic.isPetOwner()) return USER_TYPE_MISMATCH;
+      if (!UserTypeLogic.isPetOwner(userType)) return USER_TYPE_MISMATCH;
       const userId = ctx.session.user.id;
       const qualified = await ctx.prisma.booking.findFirst({
         where: {
@@ -168,8 +164,7 @@ export const bookingRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       if (ctx.session.user == null) return NO_USER_IN_SESSION;
       const userType: UserType = ctx.session.user?.userType ?? null;
-      const userTypeLogic = new UserTypeLogic(userType);
-      if (!userTypeLogic.isPetSitter()) return USER_TYPE_MISMATCH;
+      if (!UserTypeLogic.isPetSitter(userType)) return USER_TYPE_MISMATCH;
       const userId = ctx.session.user.id;
       const qualified = await ctx.prisma.booking.findFirst({
         where: {
@@ -201,9 +196,6 @@ export const bookingRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       if (ctx.session.user == null) return [];
       const userType: UserType = ctx.session.user?.userType ?? null;
-      const userTypeLogic = new UserTypeLogic(userType);
-      if (!userTypeLogic.isPetSitter() && !userTypeLogic.isPetOwner())
-        return [];
       const userId = ctx.session.user.id;
       const bookings = await ctx.prisma.booking.findMany({
         where: {
@@ -223,6 +215,6 @@ export const bookingRouter = createTRPCRouter({
         orderBy: [BookingSearchLogic.sortBy(input.searchSortBy)],
         select: Return.booking,
       });
-      return bookings.map(BookingReturnLogic.makeState);
+      return bookings;
     }),
 });

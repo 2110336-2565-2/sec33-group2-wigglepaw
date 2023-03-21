@@ -68,6 +68,7 @@ export const searchField = z.object({
   searchPriceMax: z.number().optional(),
   searchLocation: z.string().optional(),
   searchPetTypes: z.array(z.string()).optional(),
+  searchVerifyStatus: z.boolean().optional(),
   searchStartSchedule: z.string().optional(),
   searchEndSchedule: z.string().optional(),
   searchIncludePetSitterType: z.string().optional(),
