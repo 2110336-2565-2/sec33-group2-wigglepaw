@@ -1,7 +1,6 @@
 import { Server } from "socket.io";
 
 export default function SocketHandler(req, res) {
-  console.log("hi");
   // It means that socket server was already initialised
   if (res.socket.server.io) {
     console.log("Already set up");
@@ -14,25 +13,16 @@ export default function SocketHandler(req, res) {
 
   const onConnection = (socket) => {
     let currentroom = "1";
+
     console.log("conected", socket.id);
 
-    socket.on("joinroom1", (msg) => {
-      //join mechanic working as expected!!
-      //console.log("join room 1");
-      currentroom = "1";
-      socket.join("1");
-      socket.leave("2");
-    });
-
-    socket.on("joinroom2", (msg) => {
-      //console.log("join room 2");
-      currentroom = "2";
-      socket.join("2");
-      socket.leave("1");
+    socket.on("startChat", (msg) => {
+      console.log("now your id is: ", msg);
+      currentroom = msg;
+      socket.join(currentroom); //now will send to room itself
     });
 
     socket.on("createdMessage", (msg) => {
-      console.log(socket.room);
       io.to(currentroom).emit("newIncomingMessage", msg);
       console.log(socket.id);
       console.log(msg);
