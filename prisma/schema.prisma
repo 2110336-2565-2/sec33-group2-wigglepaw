@@ -75,6 +75,28 @@ model User {
     sessions      Session[] // Needed for Auth
     createdAt     DateTime   @default(now())
     salt          String
+    blockedUsers    BlockedUser[]@relation("blockedUser")
+    blockedBy       BlockedUser[]@relation("blockedBy")
+    mutedUser      MutedUser[]@relation("mutedUser")
+    mutedBy      MutedUser[]@relation("mutedBy")
+}
+
+model BlockedUser {
+  id            String  @id @default(cuid())
+  blockedBy     User    @relation("blockedBy", fields: [blockedById], references: [userId])
+  blockedById   String
+  blockedUser   User    @relation("blockedUser", fields: [blockedUserId], references: [userId])
+  blockedUserId String
+  createdAt     DateTime @default(now())
+}
+
+model MutedUser {
+  id            String  @id @default(cuid())
+  mutedBy       User    @relation("mutedBy", fields: [mutedById], references: [userId])
+  mutedById     String
+  mutedUser     User    @relation("mutedUser", fields: [mutedUserId], references: [userId])
+  mutedUserId   String
+  createdAt     DateTime @default(now())
 }
 
 model PetOwner {
