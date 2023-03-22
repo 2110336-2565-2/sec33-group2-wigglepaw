@@ -100,13 +100,13 @@ export const searchBookingField = z.object({
   searchSortBy: z.string().optional(),
 });
 
-// export const returnStatus = z.enum(["ERROR", "SUCCESS"]);
-// export const returnField = z.object({
-//   status: returnStatus,
-//   code: z.string().nullable().default(null),
-//   reason: z.string().nullable().default(null),
-//   result: z.string().nullable().default(null),
-// });
+export const returnStatus = z.enum(["ERROR", "SUCCESS"]);
+export const returnField = z.object({
+  status: returnStatus,
+  code: z.string().optional(),
+  reason: z.string().optional(),
+  result: z.string().optional(),
+});
 
 export const reviewFields = z.object({
   rating: z.number().gte(1).lte(5),

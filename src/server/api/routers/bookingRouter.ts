@@ -9,35 +9,46 @@ import {
 } from "@prisma/client";
 import { UserProfile, UserSubType, UserType } from "../../../types/user";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-import { bookingFields, searchBookingField } from "../../../schema/schema";
+import {
+  bookingFields,
+  searchBookingField,
+  returnField,
+} from "../../../schema/schema";
 import { Return } from "../../../schema/returnSchema";
 import { UserTypeLogic } from "../logic/session";
 import { BookingSearchLogic } from "../logic/search/bookingSearchLogic";
-import { BookingStateLogic } from "../logic/bookingStateLogic";
+import { BookingStateLogic, BookingState } from "../logic/bookingStateLogic";
 
-const USER_TYPE_MISMATCH = {
+type returnFieldType = z.TypeOf<typeof returnField>;
+
+const USER_TYPE_MISMATCH: returnFieldType = {
   status: "ERROR",
   reason: "this user type can not perform this operation",
 };
-const NO_BOOKING_FOUND = {
+const NO_BOOKING_FOUND: returnFieldType = {
   status: "ERROR",
   reason: "no booking that matched booking Id and your user Id found",
 };
-const BOOKING_STATUS_UNAVAILABLE = {
+const BOOKING_STATUS_UNAVAILABLE: returnFieldType = {
   status: "ERROR",
   reason:
     "booking status can not be changed ( it may already be either canceled or accepted )",
 };
-function getSuccessResponse(result: string): object {
+const INPUT_DATE_NOT_SUPPORT: returnFieldType = {
+  status: "ERROR",
+  reason:
+    "Please avoid setting the start date to be earlier than the current date or later than the end date. The start date should be equal to or later than the current date and earlier than or equal to the end date.",
+};
+function getSuccessResponse(result: string): returnFieldType {
   return { status: "SUCCESS", result: result };
 }
 
-function findBookingById(
+async function findBookingById(
   prisma: PrismaClient,
   userId: string,
   bookingId: string
-): Promise<Booking | null> {
-  const booking = prisma.booking.findFirst({
+) {
+  const booking = await prisma.booking.findFirst({
     where: {
       AND: [
         BookingSearchLogic.byUserIdAuto(userId),
@@ -45,7 +56,7 @@ function findBookingById(
       ],
     },
   });
-  return booking;
+  return booking === null ? null : BookingStateLogic.makeState(booking);
 }
 
 async function searchBooking(
@@ -85,6 +96,9 @@ export const bookingRouter = createTRPCRouter({
       if (!UserTypeLogic.isPetOwner(userType)) return USER_TYPE_MISMATCH;
       const petOwnerId = ctx.session.user.id;
       const uniquePetIdList = [...new Set(input.petIdList)];
+
+      if (input.startDate < new Date() || input.endDate <= input.startDate)
+        return INPUT_DATE_NOT_SUPPORT;
 
       return await ctx.prisma.booking.create({
         data: {

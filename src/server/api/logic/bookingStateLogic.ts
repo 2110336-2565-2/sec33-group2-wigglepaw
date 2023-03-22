@@ -1,12 +1,12 @@
 import type { Booking } from "@prisma/client";
 
-enum BookingState {
+export enum BookingState {
   upcoming = "upcoming",
   ongoing = "ongoing",
   finished = "finished",
 }
 
-type BookingWithState = Booking & { state: BookingState };
+export type BookingWithState = Booking & { state: BookingState };
 
 export abstract class BookingStateLogic {
   public static getState(
