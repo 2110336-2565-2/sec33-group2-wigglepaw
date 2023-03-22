@@ -1,4 +1,4 @@
-import { BookingStatus } from "@prisma/client";
+import type { BookingStatus } from "@prisma/client";
 
 type userIdType = string;
 export abstract class BookingSearchLogic {

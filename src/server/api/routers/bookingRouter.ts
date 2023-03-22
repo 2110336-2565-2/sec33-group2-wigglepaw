@@ -13,6 +13,7 @@ import { bookingFields, searchBookingField } from "../../../schema/schema";
 import { Return } from "../../../schema/returnSchema";
 import { UserTypeLogic } from "../logic/session";
 import { BookingSearchLogic } from "../logic/search/bookingSearchLogic";
+import { BookingStateLogic } from "../logic/bookingStateLogic";
 
 const USER_TYPE_MISMATCH = {
   status: "ERROR",
@@ -35,7 +36,7 @@ function findBookingById(
   prisma: PrismaClient,
   userId: string,
   bookingId: string
-) {
+): Promise<Booking | null> {
   const booking = prisma.booking.findFirst({
     where: {
       AND: [
@@ -45,6 +46,13 @@ function findBookingById(
     },
   });
   return booking;
+}
+
+function searchBooking(
+  prisma: PrismaClient,
+  args: Prisma.BookingFindManyArgs
+): Promise<Booking[]> {
+  return prisma.booking.findMany(args);
 }
 
 export const bookingRouter = createTRPCRouter({
@@ -194,7 +202,7 @@ export const bookingRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       if (ctx.session.user == null) return [];
       const userId = ctx.session.user.id;
-      const bookings = await ctx.prisma.booking.findMany({
+      const args = {
         where: {
           AND: [
             BookingSearchLogic.byUserIdAuto(userId),
@@ -211,7 +219,8 @@ export const bookingRouter = createTRPCRouter({
         },
         orderBy: [BookingSearchLogic.sortBy(input.searchSortBy)],
         select: Return.booking,
-      });
-      return bookings;
+      };
+      const bookings: Booking[] = await searchBooking(ctx.prisma, args);
+      return bookings.map(BookingStateLogic.makeState);
     }),
 });

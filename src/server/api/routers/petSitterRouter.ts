@@ -11,7 +11,7 @@ import {
   userFields,
   searchField,
 } from "../../../schema/schema";
-import { petSitterSearchLogic } from "../logic/search/petSitter";
+import { PetSitterSearchLogic } from "../logic/search/petSitterSearchLogic";
 
 const zodUserFields = z.object({
   verifyStatus: z.boolean(),
@@ -118,32 +118,32 @@ export const petSitterRouter = createTRPCRouter({
         where: {
           AND: [
             input.searchName
-              ? petSitterSearchLogic.petSitterName(input.searchName)
+              ? PetSitterSearchLogic.petSitterName(input.searchName)
               : {},
             input.searchPriceMin
-              ? petSitterSearchLogic.priceMin(input.searchPriceMin)
+              ? PetSitterSearchLogic.priceMin(input.searchPriceMin)
               : {},
             input.searchPriceMax
-              ? petSitterSearchLogic.priceMax(input.searchPriceMax)
+              ? PetSitterSearchLogic.priceMax(input.searchPriceMax)
               : {},
             input.searchPetTypes
-              ? petSitterSearchLogic.petTypes(input.searchPetTypes)
+              ? PetSitterSearchLogic.petTypes(input.searchPetTypes)
               : {},
             input.searchVerifyStatus
-              ? petSitterSearchLogic.verifyStatus(input.searchVerifyStatus)
+              ? PetSitterSearchLogic.verifyStatus(input.searchVerifyStatus)
               : {},
             input.searchIncludePetSitterType
-              ? petSitterSearchLogic.petSitterTypes(
+              ? PetSitterSearchLogic.petSitterTypes(
                   input.searchIncludePetSitterType
                 )
               : {},
-            petSitterSearchLogic.petSitterType(
+            PetSitterSearchLogic.petSitterType(
               input.searchIncludePetHotel,
               input.searchIncludeFreelancePetSitter
             ),
           ],
         },
-        orderBy: [petSitterSearchLogic.sortBy(input.searchSortBy)],
+        orderBy: [PetSitterSearchLogic.sortBy(input.searchSortBy)],
         include: {
           user: true,
           petHotel: true,
