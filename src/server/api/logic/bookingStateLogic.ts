@@ -1,9 +1,9 @@
 import type { Booking } from "@prisma/client";
 
 enum BookingState {
-  Upcoming = "Upcoming",
-  Ongoing = "Ongoing",
-  Finished = "Finished",
+  upcoming = "upcoming",
+  ongoing = "ongoing",
+  finished = "finished",
 }
 
 type BookingWithState = Booking & { state: BookingState };
@@ -16,9 +16,9 @@ export abstract class BookingStateLogic {
     now?: Date
   ): BookingState {
     now = now ?? new Date();
-    let state = BookingState.Ongoing;
-    if (endDate < now) state = BookingState.Finished;
-    if (now < startDate) state = BookingState.Upcoming;
+    let state = BookingState.ongoing;
+    if (endDate < now) state = BookingState.finished;
+    if (now < startDate) state = BookingState.upcoming;
     return state;
   }
   public static makeState(this: void, booking: Booking): BookingWithState {

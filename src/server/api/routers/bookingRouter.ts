@@ -48,11 +48,13 @@ function findBookingById(
   return booking;
 }
 
-function searchBooking(
+async function searchBooking(
   prisma: PrismaClient,
   args: Prisma.BookingFindManyArgs
-): Promise<Booking[]> {
-  return prisma.booking.findMany(args);
+) {
+  // return prisma.booking.findMany(args);
+  const bookings: Booking[] = await prisma.booking.findMany(args);
+  return bookings.map(BookingStateLogic.makeState);
 }
 
 export const bookingRouter = createTRPCRouter({
@@ -68,7 +70,7 @@ export const bookingRouter = createTRPCRouter({
   //public procedure that get booking by logged in user ID
   getMyBooking: protectedProcedure.query(({ ctx }) => {
     const userId = ctx.session.user.id;
-    const result = ctx.prisma.booking.findMany({
+    const result = searchBooking(ctx.prisma, {
       where: BookingSearchLogic.byUserIdAuto(userId),
       select: Return.booking,
     });
@@ -220,7 +222,6 @@ export const bookingRouter = createTRPCRouter({
         orderBy: [BookingSearchLogic.sortBy(input.searchSortBy)],
         select: Return.booking,
       };
-      const bookings: Booking[] = await searchBooking(ctx.prisma, args);
-      return bookings.map(BookingStateLogic.makeState);
+      return await searchBooking(ctx.prisma, args);
     }),
 });
