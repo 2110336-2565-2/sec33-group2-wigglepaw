@@ -72,28 +72,28 @@ const Scheulde: NextPage = () => {
                 return "#cbd5e1";
               }
             };
+            const status =
+              value.state === "finished" && value.status === "accepted"
+                ? value.state
+                : value.status;
 
             const add = {
               title: value.petOwner.firstName,
               start: date1,
               end: date2,
-              color: colorbg(
-                value.state === "finished" ? value.state : value.status
-              ),
+              color: colorbg(status),
             };
             //console.log(events);
 
             setEvents((prevevents) => [...prevevents, add]);
 
-            if (value.status === "requested") {
+            if (status === "requested") {
               updatedPending.push(value);
-            } else if (value.status === "accepted") {
-              if (value.state === "finished") updatedFinished.push(value);
-              else updatedAccepted.push(value);
-            } else if (
-              value.status === "rejected" ||
-              value.status === "canceled"
-            ) {
+            } else if (status === "accepted") {
+              updatedAccepted.push(value);
+            } else if (status === "finished") {
+              updatedFinished.push(value);
+            } else if (status === "rejected" || status === "canceled") {
               updatedCancelled.push(value);
             }
           });
