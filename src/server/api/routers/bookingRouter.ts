@@ -1,6 +1,12 @@
 import { TypeOf, z } from "zod";
 
-import { BookingStatus } from "@prisma/client";
+import {
+  Booking,
+  BookingStatus,
+  PrismaClient,
+  User,
+  Prisma,
+} from "@prisma/client";
 import { UserProfile, UserSubType, UserType } from "../../../types/user";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { bookingFields, searchBookingField } from "../../../schema/schema";
@@ -8,10 +14,6 @@ import { Return } from "../../../schema/returnSchema";
 import { UserTypeLogic } from "../logic/session";
 import { BookingSearchLogic } from "../logic/search/booking";
 
-const NO_USER_IN_SESSION = {
-  status: "ERROR",
-  reason: "this session does not have user",
-};
 const USER_TYPE_MISMATCH = {
   status: "ERROR",
   reason: "this user type can not perform this operation",
@@ -29,21 +31,29 @@ function getSuccessResponse(result: string): object {
   return { status: "SUCCESS", result: result };
 }
 
+function findBookingById(
+  prisma: PrismaClient,
+  userId: string,
+  bookingId: string
+) {
+  const booking = prisma.booking.findFirst({
+    where: {
+      AND: [
+        BookingSearchLogic.byUserIdAuto(userId),
+        BookingSearchLogic.byBookingId(bookingId),
+      ],
+    },
+  });
+  return booking;
+}
+
 export const bookingRouter = createTRPCRouter({
   //public procedure that get booking by ID
   getById: protectedProcedure
     .input(z.object({ bookingId: z.string() }))
     .query(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      const result = await ctx.prisma.booking.findFirst({
-        where: {
-          AND: [
-            BookingSearchLogic.byUserIdAuto(userId),
-            BookingSearchLogic.byBookingId(input.bookingId),
-          ],
-        },
-        select: Return.booking,
-      });
+      const result = await findBookingById(ctx.prisma, userId, input.bookingId);
       return result;
     }),
 
@@ -91,18 +101,14 @@ export const bookingRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      if (ctx.session.user == null) return NO_USER_IN_SESSION;
       const userType: UserType = ctx.session.user?.userType ?? null;
       if (!UserTypeLogic.isPetSitter(userType)) return USER_TYPE_MISMATCH;
       const userId = ctx.session.user.id;
-      const qualified = await ctx.prisma.booking.findFirst({
-        where: {
-          AND: [
-            BookingSearchLogic.byUserIdAuto(userId),
-            BookingSearchLogic.byBookingId(input.bookingId),
-          ],
-        },
-      });
+      const qualified = await findBookingById(
+        ctx.prisma,
+        userId,
+        input.bookingId
+      );
       if (qualified == null || input.bookingId != qualified.bookingId)
         return NO_BOOKING_FOUND;
       if (qualified.status != BookingStatus.requested)
@@ -126,18 +132,14 @@ export const bookingRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      if (ctx.session.user == null) return NO_USER_IN_SESSION;
       const userType: UserType = ctx.session.user?.userType ?? null;
       if (!UserTypeLogic.isPetOwner(userType)) return USER_TYPE_MISMATCH;
       const userId = ctx.session.user.id;
-      const qualified = await ctx.prisma.booking.findFirst({
-        where: {
-          AND: [
-            BookingSearchLogic.byUserIdAuto(userId),
-            BookingSearchLogic.byBookingId(input.bookingId),
-          ],
-        },
-      });
+      const qualified = await findBookingById(
+        ctx.prisma,
+        userId,
+        input.bookingId
+      );
       if (qualified == null || input.bookingId != qualified.bookingId)
         return NO_BOOKING_FOUND;
       if (qualified.status != BookingStatus.requested)
@@ -162,18 +164,14 @@ export const bookingRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      if (ctx.session.user == null) return NO_USER_IN_SESSION;
       const userType: UserType = ctx.session.user?.userType ?? null;
       if (!UserTypeLogic.isPetSitter(userType)) return USER_TYPE_MISMATCH;
       const userId = ctx.session.user.id;
-      const qualified = await ctx.prisma.booking.findFirst({
-        where: {
-          AND: [
-            BookingSearchLogic.byUserIdAuto(userId),
-            BookingSearchLogic.byBookingId(input.bookingId),
-          ],
-        },
-      });
+      const qualified = await findBookingById(
+        ctx.prisma,
+        userId,
+        input.bookingId
+      );
       if (qualified == null || input.bookingId != qualified.bookingId)
         return NO_BOOKING_FOUND;
       if (qualified.status != BookingStatus.requested)
@@ -195,7 +193,6 @@ export const bookingRouter = createTRPCRouter({
     .input(searchBookingField)
     .query(async ({ ctx, input }) => {
       if (ctx.session.user == null) return [];
-      const userType: UserType = ctx.session.user?.userType ?? null;
       const userId = ctx.session.user.id;
       const bookings = await ctx.prisma.booking.findMany({
         where: {
