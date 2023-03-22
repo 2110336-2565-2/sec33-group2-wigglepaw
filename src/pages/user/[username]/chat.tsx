@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import Header from "../../../components/Header";
 import { useSession } from "next-auth/react";
-
+import { messageFields } from "../../../schema/schema";
 import io from "socket.io-client";
 import { useState, useEffect } from "react";
 import { api } from "../../../utils/api";
@@ -28,6 +28,8 @@ const ChatRoomPage: NextPage = () => {
       },
     }
   );
+  const sendchat = api.chat.createMessage.useMutation();
+
   // We just call it because we don't need anything else out of it
   useEffect(() => {
     socketInitializer();
@@ -73,7 +75,7 @@ const ChatRoomPage: NextPage = () => {
     });
   };
 
-  const sendForm = (e) => {
+  const sendForm = async (e) => {
     e.preventDefault();
 
     if (!started) {
@@ -89,6 +91,19 @@ const ChatRoomPage: NextPage = () => {
 
     const msg = e.target.chat.value;
     //console.log(e.target.chat.value);
+
+    const packageja = {
+      petOwnerId: session?.user?.userId,
+      petSitterId: window.localStorage.getItem("id"),
+      data: e.target.chat.value,
+      senderId: session?.user?.userId,
+    };
+
+    await sendchat.mutateAsync(packageja, {
+      onSuccess: (data) => {
+        console.log(data);
+      },
+    });
 
     Setlistmsg((prev) => [...prev, msg]);
 
