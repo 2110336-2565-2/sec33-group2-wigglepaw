@@ -4,7 +4,7 @@ type userIdType = string;
 function capitalizeFirstLetter(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
-export abstract class petSitterSearchLogic {
+export abstract class PetSitterSearchLogic {
   // search by first name, last name, hotel name
   public static petSitterName(text: string): object {
     const words = text.split(" ");

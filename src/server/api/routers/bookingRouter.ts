@@ -12,7 +12,7 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { bookingFields, searchBookingField } from "../../../schema/schema";
 import { Return } from "../../../schema/returnSchema";
 import { UserTypeLogic } from "../logic/session";
-import { BookingSearchLogic } from "../logic/search/booking";
+import { BookingSearchLogic } from "../logic/search/bookingSearchLogic";
 
 const USER_TYPE_MISMATCH = {
   status: "ERROR",
