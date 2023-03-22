@@ -61,7 +61,7 @@ export const bookingFields = z.object({
   note: z.string().nullable().default(null),
 });
 
-export const searchField = z.object({
+export const searchPetSitterField = z.object({
   searchName: z.string().optional(),
   searchRating: z.number().optional(),
   searchPriceMin: z.number().optional(),

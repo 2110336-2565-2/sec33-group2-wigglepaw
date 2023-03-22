@@ -9,7 +9,7 @@ import {
   freelancePetSitterFields,
   petSitterFields,
   userFields,
-  searchField,
+  searchPetSitterField,
 } from "../../../schema/schema";
 import { PetSitterSearchLogic } from "../logic/search/petSitterSearchLogic";
 
@@ -109,7 +109,7 @@ export const petSitterRouter = createTRPCRouter({
       return update;
     }),
   searchPetSitter: publicProcedure
-    .input(searchField)
+    .input(searchPetSitterField)
     .query(async ({ ctx, input }) => {
       const items = await ctx.prisma.petSitter.findMany({
         take: input.limit + 1,
