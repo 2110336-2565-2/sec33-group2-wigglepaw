@@ -27,14 +27,17 @@ export const Chatmain = (props: ChatMainProps) => {
   const getAllmessage = api.chat.getAllChatMessage.useMutation();
 
   useEffect(() => {
-    getAllmessage.mutateAsync(
-      { chatroomid: props.chatroomid },
-      {
-        onSuccess: (data) => {
-          setListmsg(data);
-        },
-      }
-    );
+    if (props.chatroomid === "") {
+    } else {
+      void getAllmessage.mutateAsync(
+        { chatroomid: props.chatroomid },
+        {
+          onSuccess: (data) => {
+            setListmsg(data);
+          },
+        }
+      );
+    }
   }, [props.chatroomid]);
 
   const socketInitializer = async () => {

@@ -13,25 +13,10 @@ export const chatRouter = createTRPCRouter({
   createMessage: publicProcedure
     .input(messageFields)
     .mutation(async ({ ctx, input }) => {
-      let newchatroomid = "";
-
-      if (input.chatroomId === "") {
-        //do not have chatroomid yet, have to initialize a new one
-        const newone = await ctx.prisma.chatroom.create({
-          data: {
-            petOwnerId: input.petOwnerId,
-            petSitterId: input.petSitterId,
-          },
-        });
-        newchatroomid = newone.chatroomId;
-      } else {
-        newchatroomid = input.chatroomId;
-      }
-
       const newmessage = await ctx.prisma.message.create({
         data: {
           senderId: input.senderId,
-          chatroomId: newchatroomid,
+          chatroomId: input.chatroomId,
           data: input.data,
         },
       });
@@ -41,14 +26,24 @@ export const chatRouter = createTRPCRouter({
   checkChatroomid: publicProcedure
     .input(z.object({ petSitterid: z.string(), petOwnerid: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const found = await ctx.prisma.chatroom.findFirst({
-        where: {
-          petOwnerId: input.petOwnerid,
-          petSitterId: input.petSitterid,
-        },
-      });
-      if (found) {
-        return found.chatroomId;
+      if (input.petSitterid && input.petOwnerid) {
+        const found = await ctx.prisma.chatroom.findFirst({
+          where: {
+            petOwnerId: input.petOwnerid,
+            petSitterId: input.petSitterid,
+          },
+        });
+        if (found) {
+          return found.chatroomId;
+        } else {
+          const newone = await ctx.prisma.chatroom.create({
+            data: {
+              petOwnerId: input.petOwnerid,
+              petSitterId: input.petSitterid,
+            },
+          });
+          return newone.chatroomId;
+        }
       } else {
         return "";
       }
@@ -61,7 +56,7 @@ export const chatRouter = createTRPCRouter({
         petOwnerid: z.string().optional(),
       })
     )
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       let Result = [];
       if (input.petSitterid) {
         const chatroomlist = await ctx.prisma.chatroom.findMany({
@@ -70,7 +65,7 @@ export const chatRouter = createTRPCRouter({
           },
         });
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        chatroomlist.forEach(async (element) => {
+        const promises = chatroomlist.map(async (element) => {
           const usernamela = await ctx.prisma.user.findFirst({
             where: {
               userId: element.petOwnerId,
@@ -83,20 +78,22 @@ export const chatRouter = createTRPCRouter({
             petOwnerId: element.petOwnerId,
             username: usernamela?.username,
           };
-          Result.push(smallresult);
+          return smallresult;
         });
 
-        return Result;
+        const results = await Promise.all(promises);
+        return results;
       } else {
         const chatroomlist = await ctx.prisma.chatroom.findMany({
           where: {
             petOwnerId: input.petOwnerid,
           },
         });
-        chatroomlist.forEach(async (element) => {
+
+        const promises = chatroomlist.map(async (element) => {
           const usernamela = await ctx.prisma.user.findFirst({
             where: {
-              userId: element.petOwnerId,
+              userId: element.petSitterId,
             },
           });
 
@@ -106,10 +103,11 @@ export const chatRouter = createTRPCRouter({
             petOwnerId: element.petOwnerId,
             username: usernamela?.username,
           };
-          Result.push(smallresult);
+          return smallresult;
         });
 
-        return Result;
+        const results = await Promise.all(promises);
+        return results;
       }
     }),
 

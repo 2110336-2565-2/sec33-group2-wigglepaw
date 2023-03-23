@@ -27,20 +27,65 @@ const ChatRoomPage: NextPage = () => {
   const { username } = router.query;
   const { data: session } = useSession();
 
-  const [sessionReady, setSessionReady] = useState(false);
-
-  //const alreadyChatroom = api.chat.checkChatroomid.useMutation();  No need to use anymore, since all chatroom in
+  const alreadyChatroom = api.chat.checkChatroomid.useMutation();
   //here will be initialed no matter how
 
-  const getAllChatroom = api.chat.getAllChatroom.useQuery(
-    session?.user?.userType === "PetHotel" ||
-      session?.user?.userType === "FreelancePetSitter"
-      ? { petSitterid: session.user.userId }
-      : { petOwnerid: session?.user?.userId }
-  ); //beware some case that session is not yet finishing initialed, and this won't query anything
-
+  const getAllChatroom = api.chat.getAllChatroom.useMutation(); //beware some case that session is not yet finishing initialed, and this won't query anything
+  const [allchatroom, setAllchatroom] = useState();
   const [currentChatroomid, setCurrentChatroomid] = useState<string>("");
+  const [check, setCheck] = useState(false);
+  const [rdy, setRdy] = useState(false);
+  const [rdyforchat, setRdyforchat] = useState(false);
   const [toid, setToid] = useState<string>("");
+
+  useEffect(() => {
+    if (session?.user?.userId) {
+      console.log(session.user.userId);
+      setRdy(true);
+    }
+  }, [session]);
+
+  useEffect(() => {
+    if (rdy && rdyforchat) {
+      void getAllChatroom.mutateAsync(
+        session?.user?.userType === "PetHotel" ||
+          session?.user?.userType === "FreelancePetSitter"
+          ? { petSitterid: session.user.userId }
+          : { petOwnerid: session?.user?.userId },
+        {
+          onSuccess(data) {
+            setAllchatroom(data);
+          },
+        }
+      ),
+        {};
+    }
+  }, [rdy, rdyforchat]);
+
+  useEffect(() => {
+    setCheck(true);
+  }, [username]);
+
+  useEffect(() => {
+    if (check) {
+      if (username) {
+        void alreadyChatroom.mutateAsync(
+          {
+            petOwnerid: session?.user?.userId,
+            petSitterid: username,
+          },
+          {
+            onSuccess: (data) => {
+              setCurrentChatroomid(data);
+              setRdyforchat(true);
+            },
+          }
+        );
+      } else {
+        setRdyforchat(true);
+      }
+    }
+  }, [check]);
 
   // We just call it because we don't need anything else out of it
 
@@ -51,7 +96,7 @@ const ChatRoomPage: NextPage = () => {
       <div className=" flex h-[90vh]   ">
         <div className="h-full w-[20%] bg-blue-200">
           <div>
-            {getAllChatroom.data?.map((data: DataAllchat) => {
+            {allchatroom?.map((data: DataAllchat) => {
               return (
                 <li
                   onClick={() => {
