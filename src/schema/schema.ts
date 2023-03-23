@@ -90,12 +90,17 @@ export const bookingStatus = z.enum([
 
 const userId = z.string().cuid();
 
+const date_from_to = z.object({
+  from: z.date().nullable(),
+  to: z.date().nullable(),
+});
+
 export const searchBookingField = z.object({
   searchBookingIdList: z.array(z.string().cuid()).default([]),
   searchUserIdList: z.array(userId).default([]),
   searchStatusList: z.array(bookingStatus).default([]),
-  searchStartDate: z.date().optional(),
-  searchEndDate: z.date().optional(),
+  searchStartDate: date_from_to.optional(),
+  searchEndDate: date_from_to.optional(),
   // searchLocation: z.string().default(""),
   searchSortBy: z.string().optional(),
 });

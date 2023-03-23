@@ -226,10 +226,16 @@ export const bookingRouter = createTRPCRouter({
             BookingSearchLogic.byUserIdListAuto(input.searchUserIdList),
             BookingSearchLogic.byStatusList(input.searchStatusList),
             input.searchStartDate
-              ? BookingSearchLogic.byStartDate(input.searchStartDate)
+              ? BookingSearchLogic.byStartDate(
+                  input.searchStartDate.from,
+                  input.searchStartDate.to
+                )
               : {},
             input.searchEndDate
-              ? BookingSearchLogic.byEndDate(input.searchEndDate)
+              ? BookingSearchLogic.byEndDate(
+                  input.searchEndDate.from,
+                  input.searchEndDate.to
+                )
               : {},
           ],
         },

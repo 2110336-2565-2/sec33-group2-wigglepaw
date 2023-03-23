@@ -38,20 +38,47 @@ export abstract class BookingSearchLogic {
     if (statusList.length == 0) return {};
     return { OR: statusList.map((status) => this.byStatus(status)) };
   }
-  public static byStartDate(startDate: Date): object {
+  public static byStartDate(
+    fromDate: Date | null,
+    toDate: Date | null
+  ): object {
     return {
-      // startDate: {
-      endDate: {
-        gte: startDate,
-      },
+      AND: [
+        fromDate
+          ? {
+              startDate: {
+                gte: fromDate,
+              },
+            }
+          : {},
+        toDate
+          ? {
+              startDate: {
+                lte: toDate,
+              },
+            }
+          : {},
+      ],
     };
   }
-  public static byEndDate(endDate: Date): object {
+  public static byEndDate(fromDate: Date | null, toDate: Date | null): object {
     return {
-      // endDate: {
-      startDate: {
-        lte: endDate,
-      },
+      AND: [
+        fromDate
+          ? {
+              endDate: {
+                gte: fromDate,
+              },
+            }
+          : {},
+        toDate
+          ? {
+              endDate: {
+                lte: toDate,
+              },
+            }
+          : {},
+      ],
     };
   }
 
