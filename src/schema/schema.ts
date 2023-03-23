@@ -126,3 +126,10 @@ export const messageFields = z.object({
   petSitterId: z.string().optional().default(""),
   petOwnerId: z.string().optional().default(""),
 });
+
+export const dataAllchat = z.object({
+  chatroomId: z.string().optional().default(""),
+  data: z.string(),
+  petSitterId: z.string().optional().default(""),
+  petOwnerId: z.string().optional().default(""),
+});

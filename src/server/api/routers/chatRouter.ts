@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { z } from "zod";
 import { api } from "../../../utils/api";
 
@@ -61,6 +62,7 @@ export const chatRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
+      let Result = [];
       if (input.petSitterid) {
         const chatroomlist = await ctx.prisma.chatroom.findMany({
           where: {
@@ -75,16 +77,39 @@ export const chatRouter = createTRPCRouter({
             },
           });
 
-          element.username = usernamela?.username;
+          const smallresult = {
+            chatroomId: element.chatroomId,
+            petSitterId: element.petSitterId,
+            petOwnerId: element.petOwnerId,
+            username: usernamela?.username,
+          };
+          Result.push(smallresult);
         });
 
-        return chatroomlist;
+        return Result;
       } else {
-        return await ctx.prisma.chatroom.findMany({
+        const chatroomlist = await ctx.prisma.chatroom.findMany({
           where: {
             petOwnerId: input.petOwnerid,
           },
         });
+        chatroomlist.forEach(async (element) => {
+          const usernamela = await ctx.prisma.user.findFirst({
+            where: {
+              userId: element.petOwnerId,
+            },
+          });
+
+          const smallresult = {
+            chatroomId: element.chatroomId,
+            petSitterId: element.petSitterId,
+            petOwnerId: element.petOwnerId,
+            username: usernamela?.username,
+          };
+          Result.push(smallresult);
+        });
+
+        return Result;
       }
     }),
 
@@ -94,6 +119,11 @@ export const chatRouter = createTRPCRouter({
       return ctx.prisma.message.findMany({
         where: {
           chatroomId: input.chatroomid,
+        },
+        select: {
+          data: true,
+          sender: true,
+          createdAt: true,
         },
       });
     }),
