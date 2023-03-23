@@ -1,9 +1,13 @@
-import SideTab from "../components/SideTab";
+import AdminSideTab from "../components/AdminSideTab";
+import Header from "../components/Header";
 
 export default function info() {
   return (
-    <div className="flex">
-      <SideTab></SideTab>GOOMBA
+    <div className="min-h-screen">
+      <Header></Header>
+      <div className="flex min-h-[90vh]">
+        <AdminSideTab></AdminSideTab>GOOMBA
+      </div>
     </div>
   );
 }
