@@ -118,15 +118,20 @@ export const Chatmain = (props: ChatMainProps) => {
   };
 
   return (
-    <div className="relative h-full w-full overflow-y-hidden">
+    <div className="relative h-full w-full ">
       <div className=" flex w-full items-center border-b-2 border-[#F0A21F] py-1">
         <span className=" px-4 py-2">Current Username is:{props.username}</span>
       </div>
 
-      <div className=" w-full px-10">
-        <div className=" w-full">
+      <div className=" h-[85%] w-full  px-10">
+        <div className=" h-full w-full  overflow-y-scroll ">
           {listmsg.map((data: ChatMessage, index) => {
             let who = false;
+            const date = new Date(data.createdAt.toString());
+            const formattedDate = date.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
             if (data.sender.username === props.username) {
               who = true;
             }
@@ -147,7 +152,7 @@ export const Chatmain = (props: ChatMainProps) => {
                     }
                   >
                     <span className={who ? "text-[#909090]" : "text-white"}>
-                      {data.createdAt.toString()}
+                      {formattedDate}
                     </span>
                     <br />
                     <span
@@ -163,7 +168,7 @@ export const Chatmain = (props: ChatMainProps) => {
             );
           })}
         </div>
-        <div className="absolute inset-x-0 bottom-0 flex items-center justify-center">
+        <div className="absolute  inset-x-0 bottom-0 z-10 flex items-center justify-center">
           <div
             className={
               props.chatroomid

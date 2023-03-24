@@ -96,7 +96,7 @@ const ChatRoomPage: NextPage = () => {
     <>
       <Header></Header>
 
-      <div className=" flex h-[90vh]   ">
+      <div className=" flex h-[89vh]   ">
         <div className="relative h-full w-[25%] border-r-2 border-[#F0A21F]">
           <div>
             {allchatroom?.map((data: DataAllchat) => {
