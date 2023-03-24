@@ -1,7 +1,7 @@
 import { faMessage, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -26,10 +26,12 @@ export const Chatmain = (props: ChatMainProps) => {
   const { data: session } = useSession();
 
   const [listmsg, setListmsg] = useState([]);
+
   const [sessionReady, setSessionReady] = useState(false);
 
-  const sendchat = api.chat.createMessage.useMutation();
+  const messageEndRef = useRef(null);
 
+  const sendchat = api.chat.createMessage.useMutation();
   const getAllmessage = api.chat.getAllChatMessage.useMutation();
 
   useEffect(() => {
@@ -61,6 +63,8 @@ export const Chatmain = (props: ChatMainProps) => {
 
       const obj127 = {
         data: msg1,
+        sender: { username: props.username || "Unknown" },
+        createdAt: new Date(),
       };
 
       setListmsg((oldArray) => [...oldArray, obj127]);
@@ -86,6 +90,12 @@ export const Chatmain = (props: ChatMainProps) => {
       socket.emit("startChat", msg);
     }
   }, [props.chatroomid]);
+
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [listmsg]);
 
   const sendForm = async (e) => {
     e.preventDefault();
@@ -127,44 +137,89 @@ export const Chatmain = (props: ChatMainProps) => {
         <div className=" h-full w-full  overflow-y-scroll ">
           {listmsg.map((data: ChatMessage, index) => {
             let who = false;
+            let last = false;
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            let newday: boolean = false;
+
             const date = new Date(data.createdAt.toString());
             const formattedDate = date.toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
             });
-            if (data.sender.username === props.username) {
+            const formattedDate2 = date.toLocaleString([], {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            });
+            if (index === listmsg.length - 1) {
+              console.log(data);
+              last = true;
+            }
+            if (data.sender.username === session?.user?.username) {
               who = true;
             }
+
+            const date2: Date = listmsg[index].createdAt;
+            if (index !== 0) {
+              const date1: Date = listmsg[index - 1].createdAt;
+
+              if (
+                date1.getFullYear() === date2.getFullYear() &&
+                date1.getMonth() === date2.getMonth() &&
+                date1.getDate() === date2.getDate()
+              ) {
+                newday = false;
+              } else {
+                newday = true;
+              }
+            } else {
+              newday = true;
+            }
+
             return (
-              <div key={index} className="grid grid-cols-3">
-                <div
-                  className={
-                    who
-                      ? "col-span-2 "
-                      : "col-span-2 col-start-2  place-self-end"
-                  }
-                >
+              <>
+                {newday && (
+                  <div className="center-thing relative">
+                    <div className=" relative z-10 my-3 bg-white px-3 ">
+                      <span className="z-10 text-[#909090]">
+                        {formattedDate2}
+                      </span>
+                    </div>
+                    <hr className="absolute z-[-10] h-0.5 w-[60%] bg-black"></hr>
+                  </div>
+                )}
+                <div key={index} className="grid grid-cols-3">
                   <div
                     className={
                       who
-                        ? "my-1 inline-block  bg-[#E9E9E9] px-3"
-                        : "my-1 inline-block  bg-[#F0A21F] px-3"
+                        ? "col-span-2 col-start-2  place-self-end"
+                        : "col-span-2 "
                     }
                   >
-                    <span className={who ? "text-[#909090]" : "text-white"}>
-                      {formattedDate}
-                    </span>
-                    <br />
-                    <span
+                    <div
                       className={
-                        who ? "  text-black" : " break-all  text-white"
+                        who
+                          ? "my-1 inline-block  bg-[#F0A21F] px-3"
+                          : "my-1 inline-block  bg-[#E9E9E9] px-3"
                       }
                     >
-                      {data.data}
-                    </span>
+                      <span className={who ? "text-white" : "text-[#909090]"}>
+                        {formattedDate}
+                      </span>
+                      <br />
+                      <span
+                        className={
+                          who ? " break-all  text-white" : "  text-black"
+                        }
+                      >
+                        {data.data}
+                      </span>
+                    </div>
                   </div>
+                  {last && <div ref={messageEndRef} />}
                 </div>
-              </div>
+              </>
             );
           })}
         </div>
