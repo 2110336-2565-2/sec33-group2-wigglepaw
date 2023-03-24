@@ -77,6 +77,7 @@ export const chatRouter = createTRPCRouter({
             petSitterId: element.petSitterId,
             petOwnerId: element.petOwnerId,
             username: usernamela?.username,
+            imageuri: usernamela?.imageUri,
           };
           return smallresult;
         });
@@ -102,6 +103,7 @@ export const chatRouter = createTRPCRouter({
             petSitterId: element.petSitterId,
             petOwnerId: element.petOwnerId,
             username: usernamela?.username,
+            imageuri: usernamela?.imageUri,
           };
           return smallresult;
         });

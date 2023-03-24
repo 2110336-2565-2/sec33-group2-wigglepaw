@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Header from "../components/Header";
 import { useSession } from "next-auth/react";
 import { api } from "../utils/api";
+import Image from "next/image";
 
 import io from "socket.io-client";
 import { useState, useEffect } from "react";
@@ -17,6 +18,7 @@ type DataAllchat = {
   data: string;
   petSitterId: string;
   petOwnerId: string;
+  imageuri: string;
 };
 
 //THis is for PetHotel  (like all chat)
@@ -33,6 +35,7 @@ const ChatRoomPage: NextPage = () => {
   const getAllChatroom = api.chat.getAllChatroom.useMutation(); //beware some case that session is not yet finishing initialed, and this won't query anything
   const [allchatroom, setAllchatroom] = useState();
   const [currentChatroomid, setCurrentChatroomid] = useState<string>("");
+  const [sendusername, setSendusername] = useState<string>("");
   const [check, setCheck] = useState(false);
   const [rdy, setRdy] = useState(false);
   const [rdyforchat, setRdyforchat] = useState(false);
@@ -94,45 +97,61 @@ const ChatRoomPage: NextPage = () => {
       <Header></Header>
 
       <div className=" flex h-[90vh]   ">
-        <div className="h-full w-[20%] bg-blue-200">
+        <div className="relative h-full w-[25%] border-r-2 border-[#F0A21F]">
           <div>
             {allchatroom?.map((data: DataAllchat) => {
               return (
-                <li
-                  onClick={() => {
-                    setCurrentChatroomid(data.chatroomId);
-                    if (
-                      session?.user?.userType === "PetHotel" ||
-                      session?.user?.userType === "FreelancePetSitter"
-                    ) {
-                      setToid(data.petOwnerId);
-                    } else {
-                      setToid(data.petSitterId);
-                    }
-                  }}
-                  className="bg-green-300 px-2 py-2"
-                  key={data.chatroomId}
-                >
-                  {data.username}
-                </li>
+                <>
+                  <div
+                    onClick={() => {
+                      setCurrentChatroomid(data.chatroomId);
+                      if (
+                        session?.user?.userType === "PetHotel" ||
+                        session?.user?.userType === "FreelancePetSitter"
+                      ) {
+                        setToid(data.petOwnerId);
+                      } else {
+                        setToid(data.petSitterId);
+                      }
+                      setSendusername(data.username);
+                    }}
+                    className=" flex items-center px-4 py-2"
+                    key={data.chatroomId}
+                  >
+                    <div className="relative h-[50px] w-[50px]">
+                      <Image
+                        src={data.imageuri}
+                        alt={"Icon"}
+                        fill
+                        className="rounded-full object-cover"
+                      ></Image>
+                    </div>
+                    <div className="ml-2">
+                      <span className="">{data.username}</span>
+                      <div className="text-[0.6rem] text-[#A5A5A5]">WHTW</div>
+                    </div>
+                  </div>
+                  <hr className="h-[0.01rem] w-full bg-[#F5F5F5]" />
+                </>
               );
             })}
           </div>
+          <div className="absolute bottom-0 left-[90%] z-10 h-[156px] w-[64px] bg-white">
+            <Image
+              src={"/cuteto.png"}
+              alt={"Icon"}
+              width="64"
+              height="116"
+              className=" absolute bottom-0 object-cover"
+            ></Image>
+          </div>
         </div>
 
-        <Chatmain chatroomid={currentChatroomid} toid={toid} />
-        {/* <div className="flex items-end justify-center">
-            <span
-              className={currentChatroomid === "" ? "invisible" : "visible"}
-            >
-              <form onSubmit={sendForm}>
-                <input id="chat" className="border-2 border-black"></input>
-                <button className="ml-4 border-2 border-blue-700 bg-blue-300 px-2">
-                  Send
-                </button>
-              </form>
-            </span>
-          </div> */}
+        <Chatmain
+          chatroomid={currentChatroomid}
+          username={sendusername}
+          toid={toid}
+        />
       </div>
     </>
   );

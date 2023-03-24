@@ -10,10 +10,16 @@ import io from "socket.io-client";
 import { api } from "../../utils/api";
 
 let socket;
+type ChatMessage = {
+  data: string;
+  sender: object;
+  createdAt: Date;
+};
 
 type ChatMainProps = {
   chatroomid: string;
   toid: string;
+  username: string;
 };
 
 export const Chatmain = (props: ChatMainProps) => {
@@ -101,6 +107,8 @@ export const Chatmain = (props: ChatMainProps) => {
     await sendchat.mutateAsync(packageja);
     const obj127 = {
       data: text,
+      sender: { username: session?.user?.username },
+      createdAt: new Date(),
     };
 
     setListmsg((oldArray) => [...oldArray, obj127]);
@@ -110,29 +118,98 @@ export const Chatmain = (props: ChatMainProps) => {
   };
 
   return (
-    <>
-      <div className="h-full w-full px-32">
-        <div>Current Chatroom is:{props.chatroomid}</div>
-        <div className=" h-[80%] ">
-          {listmsg.map((data, index) => {
+    <div className="relative h-full w-full overflow-y-hidden">
+      <div className=" flex w-full items-center border-b-2 border-[#F0A21F] py-1">
+        <span className=" px-4 py-2">Current Username is:{props.username}</span>
+      </div>
+
+      <div className=" w-full px-10">
+        <div className=" w-full">
+          {listmsg.map((data: ChatMessage, index) => {
+            let who = false;
+            if (data.sender.username === props.username) {
+              who = true;
+            }
             return (
-              <li key={index} className="bg-blue-100">
-                {data.data}
-              </li>
+              <div key={index} className="grid grid-cols-3">
+                <div
+                  className={
+                    who
+                      ? "col-span-2 "
+                      : "col-span-2 col-start-2  place-self-end"
+                  }
+                >
+                  <div
+                    className={
+                      who
+                        ? "my-1 inline-block  bg-[#E9E9E9] px-3"
+                        : "my-1 inline-block  bg-[#F0A21F] px-3"
+                    }
+                  >
+                    <span className={who ? "text-[#909090]" : "text-white"}>
+                      {data.createdAt.toString()}
+                    </span>
+                    <br />
+                    <span
+                      className={
+                        who ? "  text-black" : " break-all  text-white"
+                      }
+                    >
+                      {data.data}
+                    </span>
+                  </div>
+                </div>
+              </div>
             );
           })}
         </div>
-        <div className="flex items-end justify-center">
-          <span className={props.chatroomid ? "visible" : "invisible"}>
-            <form onSubmit={sendForm}>
-              <input id="chat" className="border-2 border-black"></input>
-              <button className="ml-4 border-2 border-blue-700 bg-blue-300 px-2">
-                Send
-              </button>
-            </form>
-          </span>
+        <div className="absolute inset-x-0 bottom-0 flex items-center justify-center">
+          <div
+            className={
+              props.chatroomid
+                ? "visible relative w-full"
+                : "invisible relative w-full"
+            }
+          >
+            <div className="mb-2 flex   ">
+              <span className="relative ml-10 h-[40px] w-[40px]">
+                <Image
+                  src={"/icon-pic.png"}
+                  alt={"Icon"}
+                  fill
+                  className="mt-0.5"
+                ></Image>
+              </span>
+              <span className="relative mx-2 h-[40px] w-[40px]">
+                {" "}
+                <Image
+                  src={"/icon-paperclip.png"}
+                  alt={"Icon"}
+                  fill
+                  className=" p-0.5"
+                ></Image>
+              </span>
+
+              <form className="center-thing w-full" onSubmit={sendForm}>
+                <input
+                  placeholder="What do you want to say?"
+                  id="chat"
+                  className="text- my-1 mr-5 w-[90%] rounded-xl border  border-[#CCCCCC] bg-[#F8F8F8] px-2 py-1"
+                ></input>
+
+                <button className="relative h-[40px] w-[40px]">
+                  <Image
+                    src={"/icon-send.png"}
+                    alt={"Icon"}
+                    fill
+                    className=" p-0.5"
+                  ></Image>
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
