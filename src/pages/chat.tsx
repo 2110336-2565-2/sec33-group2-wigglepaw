@@ -16,7 +16,7 @@ type DataAllchat = {
   username: string;
   chatroomId: string;
   data: string;
-  firstmsg: object;
+  firstmsg: { data: string; createdAt: Date };
   petSitterId: string;
   petOwnerId: string;
   imageuri: string;
@@ -103,24 +103,26 @@ const ChatRoomPage: NextPage = () => {
             {allchatroom?.map((data: DataAllchat) => {
               const date1 = new Date();
               const date2 = data.firstmsg.createdAt;
-              let formattedDate;
+              let formattedDate = "";
               let usedate = false;
-              if (
-                date1.getFullYear() === date2.getFullYear() &&
-                date1.getMonth() === date2.getMonth() &&
-                date1.getDate() === date2.getDate()
-              ) {
-                formattedDate = data.firstmsg.createdAt.toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                });
-              } else {
-                formattedDate = date.toLocaleString([], {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                });
+              if (data.firstmsg.createdAt) {
+                if (
+                  date1.getFullYear() === date2.getFullYear() &&
+                  date1.getMonth() === date2.getMonth() &&
+                  date1.getDate() === date2.getDate()
+                ) {
+                  formattedDate = date2.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  });
+                } else {
+                  formattedDate = date2.toLocaleString([], {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  });
+                }
               }
 
               return (
