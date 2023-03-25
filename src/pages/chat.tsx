@@ -16,6 +16,7 @@ type DataAllchat = {
   username: string;
   chatroomId: string;
   data: string;
+  firstmsg: object;
   petSitterId: string;
   petOwnerId: string;
   imageuri: string;
@@ -100,6 +101,28 @@ const ChatRoomPage: NextPage = () => {
         <div className="relative h-full w-[25%] border-r-2 border-[#F0A21F]">
           <div>
             {allchatroom?.map((data: DataAllchat) => {
+              const date1 = new Date();
+              const date2 = data.firstmsg.createdAt;
+              let formattedDate;
+              let usedate = false;
+              if (
+                date1.getFullYear() === date2.getFullYear() &&
+                date1.getMonth() === date2.getMonth() &&
+                date1.getDate() === date2.getDate()
+              ) {
+                formattedDate = data.firstmsg.createdAt.toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                });
+              } else {
+                formattedDate = date.toLocaleString([], {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                });
+              }
+
               return (
                 <>
                   <div
@@ -126,9 +149,12 @@ const ChatRoomPage: NextPage = () => {
                         className="rounded-full object-cover"
                       ></Image>
                     </div>
-                    <div className="ml-2">
+                    <div className="ml-2 w-full">
                       <span className="">{data.username}</span>
-                      <div className="text-[0.6rem] text-[#A5A5A5]">WHTW</div>
+                      <div className="flex justify-between text-[0.6rem] text-[#A5A5A5]">
+                        <div>{data.firstmsg.data}</div>
+                        <div className="">{formattedDate}</div>
+                      </div>
                     </div>
                   </div>
                   <hr className="h-[0.01rem] w-full bg-[#F5F5F5]" />

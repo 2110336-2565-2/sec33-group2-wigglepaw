@@ -130,10 +130,10 @@ export const Chatmain = (props: ChatMainProps) => {
   return (
     <div className="relative h-full w-full ">
       <div className=" flex w-full items-center border-b-2 border-[#F0A21F] py-1">
-        <span className=" px-4 py-2">Current Username is:{props.username}</span>
+        <span className=" px-4 py-2">{props.username}</span>
       </div>
 
-      <div className=" h-[85%] w-full  px-10">
+      <div className=" h-[82%] w-full  px-10">
         <div className=" h-full w-full  overflow-y-scroll ">
           {listmsg.map((data: ChatMessage, index) => {
             let who = false;
