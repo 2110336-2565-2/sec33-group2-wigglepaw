@@ -71,8 +71,8 @@ export const chatRouter = createTRPCRouter({
               userId: element.petOwnerId,
             },
           });
-
-          const firstmsg = await ctx.prisma.message.findMany({
+          let firstmsg;
+          const firstmsg1 = await ctx.prisma.message.findMany({
             where: {
               chatroomId: element.chatroomId,
             },
@@ -81,12 +81,17 @@ export const chatRouter = createTRPCRouter({
             },
             take: 1,
           });
+          if (firstmsg1) {
+            firstmsg = firstmsg1;
+          } else {
+            firstmsg = [{ data: "" }];
+          }
 
           const smallresult = {
             chatroomId: element.chatroomId,
             petSitterId: element.petSitterId,
             petOwnerId: element.petOwnerId,
-            firstmsg: firstmsg ? firstmsg[0] : "",
+            firstmsg: firstmsg[0],
             username: usernamela?.username,
             imageuri: usernamela?.imageUri,
           };
@@ -123,7 +128,7 @@ export const chatRouter = createTRPCRouter({
             chatroomId: element.chatroomId,
             petSitterId: element.petSitterId,
             petOwnerId: element.petOwnerId,
-            firstmsg: firstmsg ? firstmsg[0] : {},
+            firstmsg: firstmsg ? firstmsg[0] : { data: "" },
             username: usernamela?.username,
             imageuri: usernamela?.imageUri,
           };

@@ -100,12 +100,17 @@ const ChatRoomPage: NextPage = () => {
       <div className=" flex h-[89vh]   ">
         <div className="relative h-full w-[25%] border-r-2 border-[#F0A21F]">
           <div>
-            {allchatroom?.map((data: DataAllchat) => {
+            {allchatroom?.map((data: DataAllchat, index) => {
               const date1 = new Date();
-              const date2 = data.firstmsg.createdAt;
+
               let formattedDate = "";
-              let usedate = false;
-              if (data.firstmsg.createdAt) {
+              let formattedData = "";
+
+              console.log(data.firstmsg, index);
+
+              if (data.firstmsg) {
+                const date2 = data.firstmsg.createdAt;
+                formattedData = data.firstmsg.data;
                 if (
                   date1.getFullYear() === date2.getFullYear() &&
                   date1.getMonth() === date2.getMonth() &&
@@ -154,7 +159,7 @@ const ChatRoomPage: NextPage = () => {
                     <div className="ml-2 w-full">
                       <span className="">{data.username}</span>
                       <div className="flex justify-between text-[0.6rem] text-[#A5A5A5]">
-                        <div>{data.firstmsg.data}</div>
+                        <div>{formattedData}</div>
                         <div className="">{formattedDate}</div>
                       </div>
                     </div>
