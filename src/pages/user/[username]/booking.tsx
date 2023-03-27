@@ -23,7 +23,7 @@ import ResponsePopup from "../../../components/ResponsePopup";
 const formDataSchema = z.object({
   datetimefrom: z.date(),
   datetimeto: z.date(),
-
+  petIdList: z.any(),
   note: z.string().optional(),
 });
 
@@ -75,56 +75,78 @@ const booking: NextPage = () => {
             user={petSitterData}
             isPetOwner={session?.user?.userType == UserType.PetOwner}
           />
-          <div className="mx-auto flex">
-            <div className="mt-10 max-h-72 w-[90%] max-w-[96rem] rounded-md border-[4px] border-blue-500 px-2 py-4">
-              <div className="relative mb-3 flex justify-center">
-                <h1 className="text-2xl font-semibold">Booking</h1>
-              </div>
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col gap-4"
-              >
-                <div className="flex justify-between">
-                  <Input
-                    id="datetimefrom"
-                    label="Start Date* :"
-                    register={register}
-                    type="datetime-local"
-                    className="w-[45%]"
-                    inputClass=""
-                  />
-                  <Input
-                    id="datetimeto"
-                    label="End Date* :"
-                    register={register}
-                    type="datetime-local"
-                    className="w-[45%]"
-                    inputClass=""
-                  />
-                </div>
-                {/* TODO: Pets */}
-                <Input
-                  id="Pets"
-                  label="Pets* :"
-                  register={register}
-                  placeholder="PETS"
-                />
-                <TextArea
-                  id="note"
-                  label="Note :"
-                  register={register}
-                  textAreaClass=""
-                />
-                <div className="flex justify-evenly max-lg:flex-col max-lg:items-center max-lg:justify-center max-lg:gap-4">
-                  <button className="rounded-md bg-wp-blue px-2 py-1 text-white hover:bg-wp-light-blue max-lg:w-1/2 max-md:w-full">
-                    Preview Booking Request
-                  </button>
-                  <button className="rounded-md bg-wp-blue px-2 py-1 text-white hover:bg-wp-light-blue max-lg:w-1/2 max-md:w-full">
-                    Send Booking Request
-                  </button>
-                </div>
-              </form>
+          <div className="mx-auto mt-10 h-fit w-5/12 min-w-fit max-w-[96rem] rounded-md border-[4px] border-blue-500 px-2 py-4">
+            <div className="relative mb-2 flex justify-center">
+              <h1 className="text-2xl font-bold">Booking</h1>
             </div>
+            <h2 className="text-lg font-semibold sm:hidden">
+              Pet Sitter: {username}
+            </h2>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="mt-1 flex flex-col gap-1"
+            >
+              <div>
+                <label htmlFor="datetimefrom" className="">
+                  Start Date*:
+                </label>
+                <input
+                  id="datetimefrom"
+                  className=""
+                  type="datetime-local"
+                  {...register("datetimefrom", { required: true })}
+                />
+              </div>
+              <div>
+                <label htmlFor="datetimeto" className="">
+                  End Date*:
+                </label>
+                <input
+                  id="datetimeto"
+                  className=""
+                  type="datetime-local"
+                  {...register("datetimeto", { required: true })}
+                />
+              </div>
+              <div>
+                <label htmlFor="petIdList" className="">
+                  Pets:
+                </label>
+                <input
+                  id="petIdList"
+                  className=""
+                  type="checkbox"
+                  {...register("petIdList", { required: true })}
+                />
+              </div>
+
+              <label htmlFor="note" className="">
+                Note:
+              </label>
+              <textarea
+                id="note"
+                className="mb-2 max-h-[10rem] min-h-[2rem] w-full border-2 p-1"
+                placeholder="Note to the pet sitter"
+                {...register("note")}
+              />
+              <div className="flex w-full justify-between">
+                <button
+                  className="rounded-full bg-red-800 px-2 py-1 font-semibold text-white hover:bg-red-600"
+                  onClick={() => {
+                    reset();
+                  }}
+                  type="reset"
+                >
+                  Cancel Request
+                </button>
+                <button
+                  className="rounded-full bg-sky-800 px-2 py-1 font-semibold text-white hover:bg-sky-600"
+                  type="submit"
+                >
+                  Send Request
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>

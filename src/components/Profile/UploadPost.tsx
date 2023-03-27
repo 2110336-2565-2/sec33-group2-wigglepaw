@@ -145,7 +145,7 @@ const UploadPost = (props: UploadPostProps) => {
                       {...register("title", { required: true })}
                     />
                     <textarea
-                      className="mb-2 min-h-[4rem] w-full border-2 p-1"
+                      className="mb-2 max-h-[15rem] min-h-[4rem] w-full border-2 p-1"
                       placeholder="Post something about your pet setting experience!"
                       {...register("content")}
                     ></textarea>
