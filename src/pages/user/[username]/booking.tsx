@@ -23,7 +23,8 @@ import ResponsePopup from "../../../components/ResponsePopup";
 const formDataSchema = z.object({
   datetimefrom: z.date(),
   datetimeto: z.date(),
-  petIdList: z.any(),
+  petIdList: z.array(z.string()), //TODO: Use state
+  totalPrice: z.number().gt(0),
   note: z.string().optional(),
 });
 
@@ -87,8 +88,8 @@ const booking: NextPage = () => {
               className="mt-1 flex flex-col gap-1"
             >
               <div>
-                <label htmlFor="datetimefrom" className="">
-                  Start Date*:
+                <label htmlFor="datetimefrom" className="mr-1">
+                  Start Date:
                 </label>
                 <input
                   id="datetimefrom"
@@ -98,8 +99,8 @@ const booking: NextPage = () => {
                 />
               </div>
               <div>
-                <label htmlFor="datetimeto" className="">
-                  End Date*:
+                <label htmlFor="datetimeto" className="mr-1">
+                  End Date:
                 </label>
                 <input
                   id="datetimeto"
@@ -108,18 +109,38 @@ const booking: NextPage = () => {
                   {...register("datetimeto", { required: true })}
                 />
               </div>
-              <div>
-                <label htmlFor="petIdList" className="">
+              <div className="flex">
+                <label htmlFor="petIdList" className="mr-1">
                   Pets:
                 </label>
+                <span className="block">
+                  <input
+                    id="petIdList"
+                    className=""
+                    type="checkbox"
+                    {...register("petIdList", { required: true })}
+                  />
+                  <br />
+                  <input
+                    id="petIdList"
+                    className=""
+                    type="checkbox"
+                    {...register("petIdList", { required: true })}
+                  />
+                </span>
+              </div>
+              <div>
+                <label htmlFor="totalPrice" className="mr-1">
+                  Total Price:
+                </label>
                 <input
-                  id="petIdList"
+                  id="totalPrice"
+                  type="number"
                   className=""
-                  type="checkbox"
-                  {...register("petIdList", { required: true })}
+                  step="0.01"
+                  {...register("totalPrice", { required: true })}
                 />
               </div>
-
               <label htmlFor="note" className="">
                 Note:
               </label>
