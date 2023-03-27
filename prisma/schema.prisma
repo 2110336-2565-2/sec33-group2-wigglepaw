@@ -105,6 +105,7 @@ model PetSitter {
     review             Review[]
     avgRating          Float?
     reviewCount        Int                 @default(0)
+    ApprovalRequest    ApprovalRequest[]
 }
 
 model FreelancePetSitter {
@@ -208,4 +209,19 @@ model ReportTicket {
     status     ReportTicketStatus
     notes      String?
     createdAt  DateTime           @default(now())
+}
+
+enum ApprovalRequestStatus {
+    pending
+    declined
+    approved
+}
+
+model ApprovalRequest {
+    requestId        String    @id @default(cuid())
+    petsitterId      String
+    petSitter        PetSitter @relation(fields: [petsitterId], references: [userId], onDelete: Cascade)
+    certificationUri String
+    notes            String?
+    createdAt        DateTime  @default(now())
 }
