@@ -63,7 +63,7 @@ const ResponsePopup = (props: ResponsePopupProps) => {
                   }
                 }}
               >
-                <div className="font-bold">Upload Successful!</div>
+                {props.children}
               </Dialog.Panel>
             </div>
           </div>
