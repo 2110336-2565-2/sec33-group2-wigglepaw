@@ -150,6 +150,7 @@ model Booking {
     petSitter    PetSitter     @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
     petOwnerId   String
     petSitterId  String
+    totalPrice   Float
     startDate    DateTime
     endDate      DateTime
     numberOfPets Int

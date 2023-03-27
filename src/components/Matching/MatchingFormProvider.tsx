@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
-import { searchField } from "../../schema/schema";
+import { searchPetSitterField } from "../../schema/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { api } from "../../utils/api";

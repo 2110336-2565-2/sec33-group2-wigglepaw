@@ -53,6 +53,28 @@ Table User {
   createdAt DateTime [default: `now()`, not null]
   salt String [not null]
   messages Message [not null]
+  blockedUsers BlockedUser [not null]
+  blockedBy BlockedUser [not null]
+  mutedUser MutedUser [not null]
+  mutedBy MutedUser [not null]
+}
+
+Table BlockedUser {
+  id String [pk]
+  blockedBy User [not null]
+  blockedById String [not null]
+  blockedUser User [not null]
+  blockedUserId String [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table MutedUser {
+  id String [pk]
+  mutedBy User [not null]
+  mutedById String [not null]
+  mutedUser User [not null]
+  mutedUserId String [not null]
+  createdAt DateTime [default: `now()`, not null]
 }
 
 Table PetOwner {
@@ -105,6 +127,7 @@ Table Booking {
   petSitter PetSitter [not null]
   petOwnerId String [not null]
   petSitterId String [not null]
+  totalPrice Float [not null]
   startDate DateTime [not null]
   endDate DateTime [not null]
   numberOfPets Int [not null]
@@ -199,6 +222,14 @@ Enum MessageType {
 Ref: Account.userId > User.userId [delete: Cascade]
 
 Ref: Session.userId > User.userId [delete: Cascade]
+
+Ref: BlockedUser.blockedById > User.userId
+
+Ref: BlockedUser.blockedUserId > User.userId
+
+Ref: MutedUser.mutedById > User.userId
+
+Ref: MutedUser.mutedUserId > User.userId
 
 Ref: PetOwner.userId - User.userId [delete: Cascade]
 

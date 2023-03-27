@@ -53,6 +53,18 @@ image image
     }
   
 
+  BlockedUser {
+    String id PK 
+    DateTime createdAt  
+    }
+  
+
+  MutedUser {
+    String id PK 
+    DateTime createdAt  
+    }
+  
+
   PetOwner {
     String petTypes  
     String firstName  
@@ -85,6 +97,7 @@ image image
 
   Booking {
     String bookingId PK 
+    Float totalPrice  
     DateTime startDate  
     DateTime endDate  
     Int numberOfPets  
@@ -144,6 +157,10 @@ image image
   
     Account o{--|| User : "user"
     Session o{--|| User : "user"
+    BlockedUser o{--|| User : "blockedBy"
+    BlockedUser o{--|| User : "blockedUser"
+    MutedUser o{--|| User : "mutedBy"
+    MutedUser o{--|| User : "mutedUser"
     PetOwner o|--|| User : "user"
     PetSitter o|--|| User : "user"
     FreelancePetSitter o|--|| PetSitter : "petSitter"
