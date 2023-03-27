@@ -19,6 +19,8 @@ import { Dialog, Transition } from "@headlessui/react";
 import SideTab from "../../../components/SideTab";
 import { UserType } from "../../../types/user";
 import ResponsePopup from "../../../components/ResponsePopup";
+import { Pet } from "@prisma/client";
+import AddPet from "../../../components/AddPet";
 
 const formDataSchema = z.object({
   datetimefrom: z.date(),
@@ -39,6 +41,7 @@ const booking: NextPage = () => {
 
   const requestBooking = api.booking.request.useMutation();
   const myPetList = api.pet.getMyPetList.useQuery().data;
+  console.log(myPetList);
 
   const selectedPetList = new Array();
 
@@ -119,19 +122,16 @@ const booking: NextPage = () => {
                   Pets:
                 </label>
                 <span className="block">
-                  <input
-                    id="petIdList"
-                    className=""
-                    type="checkbox"
-                    {...register("petIdList", { required: true })}
-                  />
-                  <br />
-                  <input
-                    id="petIdList"
-                    className=""
-                    type="checkbox"
-                    {...register("petIdList", { required: true })}
-                  />
+                  <ul>
+                    {myPetList != undefined &&
+                      myPetList.map((pet: Pet, index) => (
+                        <li key={index}>
+                          <input id={pet.petId} className="" type="checkbox" />
+                          {pet.name}
+                        </li>
+                      ))}
+                  </ul>
+                  <AddPet />
                 </span>
               </div>
               <div>
@@ -192,142 +192,3 @@ const booking: NextPage = () => {
   );
 };
 export default booking;
-
-interface TabButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  // id: keyof FormData;
-  openTab: boolean;
-  setOpenTab: (value: React.SetStateAction<boolean>) => void;
-}
-
-function TabButton({
-  openTab,
-  setOpenTab,
-  className,
-  ...rest
-}: TabButtonProps) {
-  return (
-    <button
-      className={`flex items-center justify-center rounded-full border hover:bg-gray-200 ${className}`}
-      onClick={() => {
-        setOpenTab((prev) => !prev);
-      }}
-    >
-      <FontAwesomeIcon
-        icon={faPaw}
-        className={`rounded-full border ${openTab && "bg-gray-200"} p-1`}
-      />
-    </button>
-  );
-}
-
-interface DummySideTabProps {
-  openTab: boolean;
-  setOpenTab: (value: React.SetStateAction<boolean>) => void;
-}
-
-function DummySideTab({ openTab, setOpenTab }: DummySideTabProps) {
-  if (openTab)
-    return (
-      <>
-        <div className="absolute z-20 flex w-full flex-col items-center justify-center border-2 bg-white">
-          <p>Profile</p>
-          <p>Information</p>
-          <p className="text-2xl font-semibold">Booking</p>
-          <p>Review</p>
-          <p>Contact</p>
-        </div>
-      </>
-    );
-  return (
-    <div className="w-1/5 border-2 max-lg:hidden">
-      <p>Side tab under development bruh!</p>
-    </div>
-  );
-}
-
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  // id: keyof FormData;
-  id: string;
-  label: string;
-  register: UseFormRegister<FieldValues>; // declare register props
-  // errors: FieldErrorsImpl<FieldValues>; // declare errors props
-  validationRules?: object;
-  inputClass?: string;
-}
-
-const Input: React.FC<InputProps> = ({
-  id,
-  label,
-  register,
-  // errors,
-  validationRules,
-  type = "text",
-  className,
-  inputClass,
-  ...rest
-}) => (
-  <div className={`flex gap-2 max-md:flex-col md:items-center ${className}`}>
-    <label htmlFor={id} className="flex w-32 md:justify-end">
-      {label}
-    </label>
-
-    <input
-      id={id}
-      type={type}
-      {...rest}
-      {...register(id, validationRules)}
-      className={`border-[1px] border-black p-1 px-2 text-sm text-gray-900 drop-shadow-md focus:ring focus:ring-blue-400 ${inputClass}`}
-    />
-
-    {/* <span className=" text-sm text-red-500">{errors[id]?.message}</span> */}
-  </div>
-);
-
-interface TextAreaProps extends React.InputHTMLAttributes<HTMLTextAreaElement> {
-  // id: keyof FormData;
-  id: string;
-  label: string;
-  register: UseFormRegister<FieldValues>; // declare register props
-  // errors: FieldErrorsImpl<FieldValues>; // declare errors props
-  validationRules?: object;
-  textAreaClass?: string;
-}
-
-const TextArea: React.FC<TextAreaProps> = ({
-  id,
-  label,
-  register,
-  // errors,
-  validationRules,
-  className,
-  textAreaClass,
-  ...rest
-}) => (
-  <div className={`flex gap-2 max-md:flex-col ${className}`}>
-    <label htmlFor={id} className="flex w-32 md:justify-end">
-      {label}
-    </label>
-
-    <textarea
-      id={id}
-      {...rest}
-      {...register(id, validationRules)}
-      className={`border-[1px] border-black p-1 px-2 text-sm text-gray-900 drop-shadow-md focus:bg-white focus:ring-blue-300 ${textAreaClass}`}
-    />
-
-    {/* <span className=" text-sm text-red-500">{errors[id]?.message}</span> */}
-  </div>
-);
-
-// FIX WHEN TAILWIND DOES NOT LOAD CLASS STYLES WHEN USING VARIABLE CLASSNAMES
-// function TailwindBugFix() {
-//   return (
-//     <>
-//       <div className="hidden w-40"></div>
-//       <div className="hidden w-48"></div>
-//       <div className="hidden w-60"></div>
-//       <div className="hidden w-80"></div>
-//       <div className="hidden w-[24rem]"></div>
-//     </>
-//   );
-// }
