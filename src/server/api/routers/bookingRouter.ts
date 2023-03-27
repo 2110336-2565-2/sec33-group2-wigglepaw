@@ -104,6 +104,7 @@ export const bookingRouter = createTRPCRouter({
         data: {
           petOwnerId: petOwnerId,
           petSitterId: input.petSitterId,
+          totalPrice: input.totalPrice,
           startDate: input.startDate,
           endDate: input.endDate,
           note: input.note,
