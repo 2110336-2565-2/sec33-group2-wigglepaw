@@ -188,9 +188,9 @@ model Post {
 }
 
 model Admin {
-    userId       String         @id @default(cuid())
-    user         User           @relation(fields: [userId], references: [userId], onDelete: Cascade)
-    ReportTicket ReportTicket[]
+    userId        String         @id @default(cuid())
+    user          User           @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    ActiveTickets ReportTicket[]
 }
 
 enum ReportTicketStatus {
