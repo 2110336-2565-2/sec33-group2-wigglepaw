@@ -18,6 +18,7 @@ import { faPaw } from "@fortawesome/free-solid-svg-icons";
 import { Dialog, Transition } from "@headlessui/react";
 import SideTab from "../../../components/SideTab";
 import { UserType } from "../../../types/user";
+import ResponsePopup from "../../../components/ResponsePopup";
 
 const formDataSchema = z.object({
   datetimefrom: z.date(),
@@ -128,53 +129,16 @@ const booking: NextPage = () => {
         </div>
       </div>
 
-      {/* Book Success Dialog */}
-      <Transition show={isBookSuccess} as={Fragment}>
-        <Dialog
-          onClose={() => {
-            setIsBookSuccess(false);
-          }}
-        >
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            {/* The backdrop, rendered as a fixed sibling to the panel container */}
-            <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-          </Transition.Child>
-
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-200"
-            enterFrom="opacity-0 scale-95"
-            enterTo="opacity-100 scale-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100 scale-100"
-            leaveTo="opacity-0 scale-95"
-          >
-            {/* Full-screen scrollable container */}
-            <div className="fixed inset-0 overflow-y-auto">
-              {/* Container to center the panel */}
-              <div className="flex min-h-full items-center justify-center">
-                <Dialog.Panel
-                  className="mx-auto box-border w-fit cursor-default rounded bg-green-400 p-6 text-lg text-green-700"
-                  onClick={() => {
-                    setIsBookSuccess(false);
-                    router.push("/schedule");
-                  }}
-                >
-                  <div className="font-bold">Book Successful!</div>
-                </Dialog.Panel>
-              </div>
-            </div>
-          </Transition.Child>
-        </Dialog>
-      </Transition>
+      <ResponsePopup
+        show={isBookSuccess}
+        setShow={setIsBookSuccess}
+        doBeforeClose={() => {
+          router.push("/schedule");
+        }}
+        panelCSS={"bg-green-400 text-green-700"}
+      >
+        <div className="font-bold">Book Successful!</div>
+      </ResponsePopup>
     </>
   );
 };
