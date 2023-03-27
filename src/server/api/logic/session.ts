@@ -1,21 +1,15 @@
 import { UserProfile, UserSubType, UserType } from "../../../types/user";
-export class UserTypeLogic {
-  userType: UserType;
-
-  constructor(userType: UserType) {
-    this.userType = userType;
-  }
-
-  isPetOwner() {
-    const isPetOwner: boolean = [UserType.PetOwner].includes(this.userType);
+export abstract class UserTypeLogic {
+  public static isPetOwner(userType: UserType): boolean {
+    const isPetOwner: boolean = [UserType.PetOwner].includes(userType);
     return isPetOwner;
   }
 
-  isPetSitter() {
+  public static isPetSitter(userType: UserType): boolean {
     const isPetSitter: boolean = [
       UserType.FreelancePetSitter,
       UserType.PetHotel,
-    ].includes(this.userType);
+    ].includes(userType);
     return isPetSitter;
   }
 }

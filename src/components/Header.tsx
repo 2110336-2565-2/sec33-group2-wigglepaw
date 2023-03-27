@@ -376,16 +376,14 @@ const Header = (props: any) => {
 };
 
 const ReminderBar = () => {
-  const booking = api.booking.getMyBooking.useQuery();
+  const remindableBooking = api.booking.search.useQuery({
+    searchStatusList: [BookingStatus.accepted],
+    searchStartDate: {
+      from: new Date(),
+      to: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+    },
+  }).data;
 
-  // Filter out only bookings that are accepted and start within 24 hours
-  const remindableBooking = booking.data?.filter((book) => {
-    return (
-      book.status === BookingStatus.accepted &&
-      book.startDate.getTime() - new Date().getTime() < 24 * 60 * 60 * 1000 &&
-      book.startDate.getTime() - new Date().getTime() > 0
-    );
-  });
   const nRemindable = (remindableBooking ?? []).length;
 
   return nRemindable > 0 ? (
