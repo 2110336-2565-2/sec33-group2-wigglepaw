@@ -34,9 +34,13 @@ const booking: NextPage = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const { username } = router.query;
-  const requestBooking = api.booking.request.useMutation();
 
   const [isBookSuccess, setIsBookSuccess] = useState(false);
+
+  const requestBooking = api.booking.request.useMutation();
+  const myPetList = api.pet.getMyPetList.useQuery().data;
+
+  const selectedPetList = new Array();
 
   const { data: petSitterData, error: userError } =
     api.user.getByUsername.useQuery(
@@ -57,6 +61,7 @@ const booking: NextPage = () => {
         startDate: new Date(data.datetimefrom),
         endDate: new Date(data.datetimeto),
         petIdList: [], //TODO: Add Pets
+        totalPrice: data.totalPrice,
         note: data.note,
       });
       setIsBookSuccess(true);
@@ -76,7 +81,7 @@ const booking: NextPage = () => {
             user={petSitterData}
             isPetOwner={session?.user?.userType == UserType.PetOwner}
           />
-          <div className="mx-auto mt-10 h-fit w-5/12 min-w-fit max-w-[96rem] rounded-md border-[4px] border-blue-500 px-2 py-4">
+          <div className="mx-auto mt-10 h-fit w-5/12 min-w-fit max-w-[96rem] rounded-md border-[4px] border-blue-500 px-3 py-4">
             <div className="relative mb-2 flex justify-center">
               <h1 className="text-2xl font-bold">Booking</h1>
             </div>
@@ -93,7 +98,7 @@ const booking: NextPage = () => {
                 </label>
                 <input
                   id="datetimefrom"
-                  className=""
+                  className="rounded-md border-2"
                   type="datetime-local"
                   {...register("datetimefrom", { required: true })}
                 />
@@ -104,7 +109,7 @@ const booking: NextPage = () => {
                 </label>
                 <input
                   id="datetimeto"
-                  className=""
+                  className="rounded-md border-2"
                   type="datetime-local"
                   {...register("datetimeto", { required: true })}
                 />
@@ -136,8 +141,9 @@ const booking: NextPage = () => {
                 <input
                   id="totalPrice"
                   type="number"
-                  className=""
+                  className="w-40 rounded-md border-2 px-1 text-right"
                   step="0.01"
+                  min={0}
                   {...register("totalPrice", { required: true })}
                 />
               </div>
