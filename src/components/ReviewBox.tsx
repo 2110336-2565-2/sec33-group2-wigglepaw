@@ -27,7 +27,7 @@ const ReviewBox = ({ rating, text, userid, date }: FormData) => {
   const day = date.toDateString().substring(4);
   const datearray = day.split(" ");
   return (
-    <div className="h-100 w-100 box-content flex min-w-full flex-col items-center rounded-md border-4 bg-amber-50 p-4">
+    <div className="flex w-full min-w-fit flex-col items-center rounded-md border-4 bg-amber-50 p-4">
       <div className="grid-rows-8 mx-auto grid w-full grid-cols-2 gap-5">
         <ReviewImage img={img ?? ""} size={4} />
         <div>
@@ -46,7 +46,7 @@ const ReviewBox = ({ rating, text, userid, date }: FormData) => {
           {datearray[1]} {datearray[0]} {datearray[2]}
         </div>
       </div>
-      <h1 className="text-l h-100 w-100">{text}</h1>
+      <h1 className="text-l max-w-lg whitespace-normal break-all">{text}</h1>
     </div>
   );
 };
