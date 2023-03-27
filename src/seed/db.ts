@@ -224,6 +224,7 @@ export async function makePost(
 export async function makeBooking(
   petOwnerId: string,
   petSitterId: string,
+  totalPrice: number,
   startDate: Date,
   endDate: Date,
   note: string,
@@ -233,6 +234,7 @@ export async function makeBooking(
     data: {
       petOwnerId: petOwnerId,
       petSitterId: petSitterId,
+      totalPrice: totalPrice,
       startDate: startDate,
       endDate: endDate,
       note: note,

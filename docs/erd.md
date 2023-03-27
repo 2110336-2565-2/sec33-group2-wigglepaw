@@ -78,6 +78,7 @@ rejected rejected
 
   Booking {
     String bookingId PK 
+    Float totalPrice  
     DateTime startDate  
     DateTime endDate  
     Int numberOfPets  

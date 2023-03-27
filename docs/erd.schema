@@ -102,6 +102,7 @@ Table Booking {
   petSitter PetSitter [not null]
   petOwnerId String [not null]
   petSitterId String [not null]
+  totalPrice Float [not null]
   startDate DateTime [not null]
   endDate DateTime [not null]
   numberOfPets Int [not null]
