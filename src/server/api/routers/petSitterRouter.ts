@@ -108,6 +108,22 @@ export const petSitterRouter = createTRPCRouter({
       });
       return update;
     }),
+
+  verifyMany: publicProcedure
+    .input(
+      z.object({
+        userIds: z.array(z.string()),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const update = await ctx.prisma.petSitter.updateMany({
+        where: {
+          userId: { in: input.userIds },
+        },
+        data: { verifyStatus: true },
+      });
+      return update;
+    }),
   // searchPetSitter
   // input:
   // note that all args default value will act as those fields are not in search criteria
