@@ -198,7 +198,7 @@ export const userRouter = createTRPCRouter({
       where: { userId: userId },
       select: { imageUri: true },
     });
-    return result ? result["imageUri"] : "";
+    return result ? result["imageUri"] : null;
   }),
 });
 

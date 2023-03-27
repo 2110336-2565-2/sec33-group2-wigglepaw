@@ -20,13 +20,8 @@ const Header = (props: any) => {
     ? router.query.previousPage
     : asPath;
 
-  const userData = api.user.getByUsername.useQuery({
-    username: username ? username : "",
-  });
-
-  const profileImageUri = userData?.data?.imageUri
-    ? userData?.data?.imageUri
-    : "/profiledummy.png";
+  const profileImageUri =
+    api.user.getMyImageUri.useQuery().data ?? "/profiledummy.png";
 
   const profileLink = username
     ? "/user/" + username.toString() + "/profile"
