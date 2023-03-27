@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { BookingStatus } from "@prisma/client";
+import { BookingStatus, ReportTicketStatus } from "@prisma/client";
 
 export const userFields = z.object({
   //userId: z.string().cuid().optional(),
@@ -117,4 +117,20 @@ export const postFields = z.object({
   text: z.string().optional(),
   pictureUri: z.array(z.string()),
   videoUri: z.string().optional(),
+});
+
+export const ticketStatus = z.enum([
+  ReportTicketStatus.acked,
+  ReportTicketStatus.canceled,
+  ReportTicketStatus.pending,
+  ReportTicketStatus.resolved,
+]);
+
+export const reportTicketFields = z.object({
+  title: z.string(),
+  description: z.string().optional(),
+});
+
+export const approvalRequestFields = z.object({
+  notes: z.string().optional(),
 });

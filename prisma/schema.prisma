@@ -201,14 +201,16 @@ enum ReportTicketStatus {
 }
 
 model ReportTicket {
-    ticketId   String             @id @default(cuid())
-    reporterId String
-    reporter   User               @relation(fields: [reporterId], references: [userId], onDelete: Cascade)
-    adminId    String?
-    admin      Admin?             @relation(fields: [adminId], references: [userId], onDelete: Cascade)
-    status     ReportTicketStatus
-    notes      String?
-    createdAt  DateTime           @default(now())
+    ticketId    String             @id @default(cuid())
+    reporterId  String
+    reporter    User               @relation(fields: [reporterId], references: [userId], onDelete: Cascade)
+    title       String
+    description String?
+    adminId     String?
+    admin       Admin?             @relation(fields: [adminId], references: [userId], onDelete: Cascade)
+    status      ReportTicketStatus
+    notes       String? // Notes made by admins
+    createdAt   DateTime           @default(now())
 }
 
 enum ApprovalRequestStatus {
@@ -218,10 +220,9 @@ enum ApprovalRequestStatus {
 }
 
 model ApprovalRequest {
-    requestId        String    @id @default(cuid())
-    petsitterId      String
-    petSitter        PetSitter @relation(fields: [petsitterId], references: [userId], onDelete: Cascade)
-    certificationUri String
-    notes            String?
-    createdAt        DateTime  @default(now())
+    requestId   String    @id @default(cuid())
+    petSitterId String
+    petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    notes       String? // Notes made by admins
+    createdAt   DateTime  @default(now())
 }

@@ -8,6 +8,23 @@ canceled canceled
 rejected rejected
         }
     
+
+
+        ReportTicketStatus {
+            pending pending
+acked acked
+canceled canceled
+resolved resolved
+        }
+    
+
+
+        ApprovalRequestStatus {
+            pending pending
+declined declined
+approved approved
+        }
+    
   Account {
     String id PK 
     String type  
@@ -122,6 +139,28 @@ rejected rejected
     DateTime createdAt  
     }
   
+
+  Admin {
+
+    }
+  
+
+  ReportTicket {
+    String ticketId PK 
+    String title  
+    String description  "nullable"
+    ReportTicketStatus status  
+    String notes  "nullable"
+    DateTime createdAt  
+    }
+  
+
+  ApprovalRequest {
+    String requestId PK 
+    String notes  "nullable"
+    DateTime createdAt  
+    }
+  
     Account o{--|| User : "user"
     Session o{--|| User : "user"
     PetOwner o|--|| User : "user"
@@ -137,4 +176,9 @@ rejected rejected
     Review o{--|| PetOwner : "petOwner"
     Review o{--|| PetSitter : "petSitter"
     Post o{--|| PetSitter : "petSitter"
+    Admin o{--|| User : "user"
+    ReportTicket o{--|| User : "reporter"
+    ReportTicket o{--|o Admin : "admin"
+    ReportTicket o|--|| ReportTicketStatus : "enum:status"
+    ApprovalRequest o{--|| PetSitter : "petSitter"
 ```
