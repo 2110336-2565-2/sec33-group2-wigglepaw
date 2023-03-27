@@ -151,6 +151,35 @@ export const userRouter = createTRPCRouter({
       }
     }),
 
+  getAllForProfile: publicProcedure.query(async ({ ctx }) => {
+    const users = await ctx.prisma.user.findMany({
+      include: {
+        petOwner: true,
+        petSitter: {
+          include: {
+            freelancePetSitter: true,
+            petHotel: true,
+          },
+        },
+      },
+    });
+
+    return users
+      .filter((user) => user)
+      .map((user) => {
+        // NEED SOME TRY CATCH EXCEPTION HERE
+        try {
+          return flattenUserForProfilePage(user);
+        } catch (error) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "userRouter fucked up",
+            cause: error,
+          });
+        }
+      });
+  }),
+
   post: publicProcedure.input(userFields).mutation(({ ctx, input }) => {
     return ctx.prisma.user.create({
       data: input,
@@ -278,7 +307,7 @@ function flattenUserForProfilePage(
       | null;
   }
 ): UserProfile & UserProfileSubType {
-  const { petOwner, petSitter, ...userData } = user;
+  const { petOwner, petSitter, salt, ...userData } = user;
 
   if (petOwner) {
     const { password, emailVerified, bankAccount, bankName, ...result } = {

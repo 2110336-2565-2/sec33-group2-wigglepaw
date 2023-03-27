@@ -61,6 +61,16 @@ export type UserProfileSubType =
     } & PetSitterProfileType &
       PetHotelProfileType);
 
+export type PetSitterProfileSubType =
+  | ({
+      userType: UserType.FreelancePetSitter;
+    } & PetSitterProfileType &
+      FreelancePetSitterProfileType)
+  | ({
+      userType: UserType.PetHotel;
+    } & PetSitterProfileType &
+      PetHotelProfileType);
+
 export type PetOwnerProfileType = {
   firstName: string;
   lastName: string;
