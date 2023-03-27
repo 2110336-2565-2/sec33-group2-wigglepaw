@@ -118,3 +118,11 @@ export const postFields = z.object({
   pictureUri: z.array(z.string()),
   videoUri: z.string().optional(),
 });
+
+export const messageFields = z.object({
+  senderId: z.string(),
+  chatroomId: z.string().optional().default(""),
+  data: z.string(),
+  petSitterId: z.string().optional().default(""),
+  petOwnerId: z.string().optional().default(""),
+});

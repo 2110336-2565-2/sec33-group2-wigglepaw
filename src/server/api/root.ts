@@ -4,6 +4,7 @@ import { seedRouter } from "./routers/seedRouter";
 import { petHotelRouter } from "./routers/petHotelRouter";
 import { freelancePetSitterRouter } from "./routers/freelancePetSitterRouter";
 import { petOwnerRouter } from "./routers/petOwnerRouter";
+import { chatRouter } from "./routers/chatRouter";
 import { userRouter } from "./routers/userRouter";
 import { createTRPCRouter, publicProcedure } from "./trpc";
 import { petSitterRouter } from "./routers/petSitterRouter";
@@ -25,6 +26,7 @@ export const appRouter = createTRPCRouter({
   petHotel: petHotelRouter,
   booking: bookingRouter,
   seed: seedRouter,
+  chat: chatRouter,
   pet: petRouter,
   review: reviewRouter,
   post: postRouter,
