@@ -210,4 +210,5 @@ model Message {
     createdAt  DateTime    @default(now())
     chatroomId String
     Chatroom   Chatroom?   @relation(fields: [chatroomId], references: [chatroomId])
+    read       Boolean     @default(false)
 }

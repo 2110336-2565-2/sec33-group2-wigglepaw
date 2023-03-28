@@ -140,6 +140,7 @@ image image
     MessageType type  
     String data  
     DateTime createdAt  
+    Boolean read  
     }
   
     Account o{--|| User : "user"

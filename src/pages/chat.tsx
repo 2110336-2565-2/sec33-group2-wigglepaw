@@ -20,6 +20,7 @@ type DataAllchat = {
   petSitterId: string;
   petOwnerId: string;
   imageuri: string;
+  unread: number;
 };
 
 //THis is for PetHotel  (like all chat)
@@ -106,7 +107,7 @@ const ChatRoomPage: NextPage = () => {
               let formattedDate = "";
               let formattedData = "";
 
-              console.log(data.firstmsg, index);
+              //console.log(data.firstmsg, index);
 
               if (data.firstmsg) {
                 const date2 = data.firstmsg.createdAt;
@@ -122,10 +123,9 @@ const ChatRoomPage: NextPage = () => {
                   });
                 } else {
                   formattedDate = date2.toLocaleString([], {
-                    weekday: "long",
-                    year: "numeric",
-                    month: "long",
                     day: "numeric",
+                    year: "numeric",
+                    month: "numeric",
                   });
                 }
               }
@@ -156,11 +156,24 @@ const ChatRoomPage: NextPage = () => {
                         className="rounded-full object-cover"
                       ></Image>
                     </div>
-                    <div className="ml-2 w-full">
-                      <span className="">{data.username}</span>
-                      <div className="flex justify-between text-[0.6rem] text-[#A5A5A5]">
-                        <div>{formattedData}</div>
-                        <div className="">{formattedDate}</div>
+                    <div className="ml-2 flex-1 overflow-x-hidden ">
+                      <div className="flex justify-between">
+                        <span className="">{data.username}</span>
+                        <span className="text-right text-[0.6rem] text-[#A5A5A5]">
+                          {formattedDate}
+                        </span>
+                      </div>
+                      <div className="flex justify-between ">
+                        <div className="max-w-[75%] overflow-hidden pr-5 text-[0.6rem] text-[#A5A5A5]">
+                          {formattedData}
+                        </div>
+                        {data.unread > 0 ? (
+                          <div className="center-thing h-5 w-5 rounded-full bg-red-500 text-right text-xs text-white">
+                            {data.unread}
+                          </div>
+                        ) : (
+                          <></>
+                        )}
                       </div>
                     </div>
                   </div>

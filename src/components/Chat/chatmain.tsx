@@ -8,12 +8,14 @@ import { z } from "zod";
 import io from "socket.io-client";
 
 import { api } from "../../utils/api";
+import { list } from "postcss";
 
 let socket;
 type ChatMessage = {
   data: string;
   sender: object;
   createdAt: Date;
+  read: boolean;
 };
 
 type ChatMainProps = {
@@ -29,6 +31,8 @@ export const Chatmain = (props: ChatMainProps) => {
 
   const [sessionReady, setSessionReady] = useState(false);
 
+  const [lastmsgSender, setLastmsgSender] = useState(false);
+
   const messageEndRef = useRef(null);
 
   const sendchat = api.chat.createMessage.useMutation();
@@ -38,7 +42,7 @@ export const Chatmain = (props: ChatMainProps) => {
     if (props.chatroomid === "") {
     } else {
       void getAllmessage.mutateAsync(
-        { chatroomid: props.chatroomid },
+        { chatroomid: props.chatroomid, otheruser: props.toid },
         {
           onSuccess: (data) => {
             setListmsg(data);
@@ -65,6 +69,7 @@ export const Chatmain = (props: ChatMainProps) => {
         data: msg1,
         sender: { username: props.username || "Unknown" },
         createdAt: new Date(),
+        read: true,
       };
 
       setListmsg((oldArray) => [...oldArray, obj127]);
@@ -119,6 +124,7 @@ export const Chatmain = (props: ChatMainProps) => {
       data: text,
       sender: { username: session?.user?.username },
       createdAt: new Date(),
+      read: false,
     };
 
     setListmsg((oldArray) => [...oldArray, obj127]);
@@ -136,10 +142,16 @@ export const Chatmain = (props: ChatMainProps) => {
       <div className=" h-[82%] w-full  px-10">
         <div className=" h-full w-full  overflow-y-scroll ">
           {listmsg.map((data: ChatMessage, index) => {
-            let who = false;
-            let last = false;
+            let who = false; //let sender = other person
+
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
+            let last = false;
             let newday: boolean = false;
+
+            if (data.sender.username === session?.user?.username) {
+              who = true;
+            } //change sender to whoever using now
 
             const date = new Date(data.createdAt.toString());
             const formattedDate = date.toLocaleTimeString([], {
@@ -153,14 +165,12 @@ export const Chatmain = (props: ChatMainProps) => {
               day: "numeric",
             });
             if (index === listmsg.length - 1) {
-              console.log(data);
+              //console.log(data);
               last = true;
-            }
-            if (data.sender.username === session?.user?.username) {
-              who = true;
             }
 
             const date2: Date = listmsg[index].createdAt;
+
             if (index !== 0) {
               const date1: Date = listmsg[index - 1].createdAt;
 
@@ -210,13 +220,19 @@ export const Chatmain = (props: ChatMainProps) => {
                       <br />
                       <span
                         className={
-                          who ? " break-all  text-white" : "  text-black"
+                          who
+                            ? " break-all  text-white"
+                            : "break-all  text-black"
                         }
                       >
                         {data.data}
                       </span>
                     </div>
+                    {who && data.read && (
+                      <div className="text-[0.7rem] text-[#909090] ">Read</div>
+                    )}
                   </div>
+
                   {last && <div ref={messageEndRef} />}
                 </div>
               </>
