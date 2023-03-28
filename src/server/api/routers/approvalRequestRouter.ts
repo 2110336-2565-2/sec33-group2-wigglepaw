@@ -105,4 +105,18 @@ export const approvalRequestRouter = createTRPCRouter({
         data: { status: ApprovalRequestStatus.pending, adminId: input.adminId },
       });
     }),
+  updateNotes: publicProcedure
+    .input(
+      z.object({
+        requestId: z.string().cuid(),
+        notes: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Check if pet sitter exists
+      return await ctx.prisma.approvalRequest.update({
+        where: { requestId: input.requestId },
+        data: { notes: input.notes },
+      });
+    }),
 });
