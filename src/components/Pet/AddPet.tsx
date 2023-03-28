@@ -87,56 +87,38 @@ const AddPet = (props: any) => {
             <div className="fixed inset-0 overflow-y-auto">
               {/* Container to center the panel */}
               <div className="flex min-h-full items-center justify-center">
-                <Dialog.Panel className="mx-auto box-border w-[90vw] max-w-[30rem] rounded bg-white p-4">
+                <Dialog.Panel className="mx-auto w-[90vw] max-w-[30rem] rounded bg-white p-4">
                   <Dialog.Title className="mb-2 text-xl font-bold">
                     Add New Pet
                   </Dialog.Title>
-                  <form onSubmit={handleSubmit(onSubmit)} className="">
-                    <div className="mb-2 flex items-center">
-                      <label htmlFor="petType" className="mr-2 w-20">
-                        Pet Type*:
-                      </label>
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <div className="mx-auto mb-2 grid w-min grid-cols-[5rem,minmax(10rem,15rem)] items-center gap-2">
+                      <label htmlFor="petType">Pet Type*:</label>
                       <input
                         id="petType"
-                        className="rounded border-2 p-1 text-lg placeholder-gray-400"
+                        className="max-w-full rounded border-2 p-1 text-lg placeholder-gray-400"
                         placeholder="Cat/Dog"
                         {...register("petType", { required: true })}
                       />
-                    </div>
-                    <div className="mb-2 flex items-center">
-                      <label htmlFor="name" className="mr-2 w-20">
-                        Name:
-                      </label>
+                      <label htmlFor="name">Name:</label>
                       <input
                         id="name"
                         className="rounded border-2 p-1 text-lg placeholder-gray-400"
                         {...register("name")}
                       />
-                    </div>
-                    <div className="mb-2 flex items-center">
-                      <label htmlFor="sex" className="mr-2 w-20">
-                        Sex:
-                      </label>
+                      <label htmlFor="sex">Sex:</label>
                       <input
                         id="sex"
                         className="rounded border-2 p-1 text-lg placeholder-gray-400"
                         type=""
                         {...register("sex")}
                       />
-                    </div>
-                    <div className="mb-2 flex items-center">
-                      <label htmlFor="Breed" className="mr-2 w-20">
-                        Breed:
-                      </label>
+                      <label htmlFor="Breed">Breed:</label>
                       <input
                         className="rounded border-2 p-1 text-lg placeholder-gray-400"
                         {...register("breed")}
                       />
-                    </div>
-                    <div className="mb-2 flex items-center">
-                      <label htmlFor="weight" className="mr-2 w-20">
-                        Pet Type:
-                      </label>
+                      <label htmlFor="weight">Pet Type:</label>
                       <input
                         id="weight"
                         className="rounded border-2 p-1 text-lg placeholder-gray-400"
