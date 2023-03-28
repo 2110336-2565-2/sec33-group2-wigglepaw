@@ -46,8 +46,6 @@ Table User {
   phoneNumber String
   address String
   imageUri String
-  bankAccount String
-  bankName String
   accounts Account [not null]
   sessions Session [not null]
   createdAt DateTime [default: `now()`, not null]
@@ -60,6 +58,7 @@ Table PetOwner {
   petTypes String[] [not null]
   firstName String [not null]
   lastName String [not null]
+  customerId String [unique, not null, note: 'Associated Omise\'s customer ID (for card payment)']
   pet Pet [not null]
   booking Booking [not null]
   review Review [not null]
@@ -80,6 +79,7 @@ Table PetSitter {
   review Review [not null]
   avgRating Float
   reviewCount Int [not null, default: 0]
+  recipientId String [unique, not null, note: 'Associated Omise\'s recipient ID (for getting paid)']
 }
 
 Table FreelancePetSitter {
