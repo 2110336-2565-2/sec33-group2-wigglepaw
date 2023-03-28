@@ -17,23 +17,44 @@ const formDataSchema = z.object({
   text: z.string(),
   userid: z.string(),
   date: z.date(),
+  canDelete: z.boolean(),
+  reviewId: z.string(),
 });
 type FormData = z.infer<typeof formDataSchema>;
 
-const ReviewBox = ({ rating, text, userid, date }: FormData) => {
+const ReviewBox = ({
+  rating,
+  text,
+  userid,
+  date,
+  canDelete,
+  reviewId,
+}: FormData) => {
   const user = api.user.getByUserId.useQuery({ userId: userid ?? "Error" });
   const username = user.data?.username;
   const img = user.data?.imageUri;
   const day = date.toDateString().substring(4);
   const datearray = day.split(" ");
+  const deleteMutation = api.review.delete.useMutation();
   return (
     <div className="flex w-full min-w-fit flex-col items-center rounded-md border-4 bg-amber-50 p-4">
-      <div className="grid-rows-8 mx-auto grid w-full grid-cols-2 gap-5">
+      <div className="grid-rows-8 mx-auto grid w-full grid-cols-3 gap-5">
         <ReviewImage img={img ?? ""} size={4} />
         <div>
-          <br />
           <h1 className="text-l">{username}</h1>
         </div>
+        {canDelete && (
+          <div className="m-1">
+            <button
+              className="rounded-md border-4 bg-red-500 p-1 font-bold"
+              onClick={async () =>
+                deleteMutation.mutateAsync({ reviewId: reviewId })
+              }
+            >
+              Delete
+            </button>
+          </div>
+        )}
       </div>
       <div className="grid-rows-8 mx-auto grid w-full grid-cols-2 gap-5">
         <Rating

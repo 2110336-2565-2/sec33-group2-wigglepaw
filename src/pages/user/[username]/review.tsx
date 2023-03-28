@@ -47,6 +47,8 @@ const ReviewPage: NextPage = () => {
           text={review.text ?? ""}
           userid={review.petOwnerId}
           date={review.createdAt ?? new Date("September 30, 2020 11:28:00")}
+          canDelete={review.petOwnerId == user?.userId}
+          reviewId={review.reviewId}
         />
       ));
     }
@@ -56,16 +58,22 @@ const ReviewPage: NextPage = () => {
     if (petSitterReview && user) {
       for (let i = petSitterReview.length; i >= 0; --i) {
         if (petSitterReview[i]?.petOwnerId == user?.userId) {
+          const deletereview = api.review.delete.useMutation();
           return (
-            <ReviewBox
-              rating={petSitterReview[i]?.rating ?? 0}
-              text={petSitterReview[i]?.text ?? ""}
-              userid={petSitterReview[i]?.petOwnerId ?? ""}
-              date={
-                petSitterReview[i]?.createdAt ??
-                new Date("September 30, 2020 11:28:00")
-              }
-            />
+            <div>
+              <ReviewBox
+                rating={petSitterReview[i]?.rating ?? 0}
+                text={petSitterReview[i]?.text ?? ""}
+                userid={petSitterReview[i]?.petOwnerId ?? ""}
+                date={
+                  petSitterReview[i]?.createdAt ??
+                  new Date("September 30, 2020 11:28:00")
+                }
+                canDelete={true}
+                reviewId={petSitterReview[i]?.reviewId ?? ""}
+              />
+              {/*<button onClick={async()=>await deletereview.mutateAsync({reviewId:petSitterReview[i]?.reviewId ?? ""}) }>Delete</button>*/}
+            </div>
           );
         }
       }
