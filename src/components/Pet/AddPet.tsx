@@ -1,4 +1,4 @@
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog, Listbox, Transition } from "@headlessui/react";
 import { useSession } from "next-auth/react";
 import { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -9,9 +9,12 @@ import ResponsePopup from "../ResponsePopup";
 
 type FormData = z.infer<typeof petFields>;
 
+const sex = [{ name: "Male" }, { name: "Female" }];
+
 const AddPet = (props: any) => {
   const [addingPet, setAddingPet] = useState(false);
   const [addSuccess, setAddSuccess] = useState(false);
+  const [selected, setSelected] = useState(sex[0]);
 
   const { data: session } = useSession();
 
@@ -34,10 +37,16 @@ const AddPet = (props: any) => {
     }
 
     try {
-      //   await addPet.mutateAsync({
-      //     pet: { name: data.name },
-      //     petOwnerId: user.userId,
-      //   });
+      await addPet.mutateAsync({
+        pet: {
+          petType: data.petType,
+          name: data.name,
+          sex: data.sex,
+          breed: data.breed,
+          weight: data.weight,
+        },
+        petOwnerId: user.userId,
+      });
     } catch (e) {
       alert(e);
       return;
@@ -107,23 +116,74 @@ const AddPet = (props: any) => {
                         {...register("name")}
                       />
                       <label htmlFor="sex">Sex:</label>
-                      <input
+                      {/* <input
                         id="sex"
                         className="rounded border-2 p-1 text-lg placeholder-gray-400"
                         type=""
                         {...register("sex")}
-                      />
+                      /> */}
+                      <Listbox value={selected} onChange={setSelected}>
+                        <div className="relative mt-1">
+                          <Listbox.Button className="relative w-full rounded border-2 p-1 text-lg placeholder-gray-400">
+                            <span className="block truncate">
+                              {selected?.name}
+                            </span>
+                            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"></span>
+                          </Listbox.Button>
+                          <Transition
+                            as={Fragment}
+                            leave="transition ease-in duration-100"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                          >
+                            <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                              {sex.map((person, personIdx) => (
+                                <Listbox.Option
+                                  key={personIdx}
+                                  className={({ active }) =>
+                                    `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                      active
+                                        ? "bg-amber-100 text-amber-900"
+                                        : "text-gray-900"
+                                    }`
+                                  }
+                                  value={person}
+                                >
+                                  {({ selected }) => (
+                                    <>
+                                      <span
+                                        className={`block truncate ${
+                                          selected
+                                            ? "font-medium"
+                                            : "font-normal"
+                                        }`}
+                                      >
+                                        {person.name}
+                                      </span>
+                                      {selected ? (
+                                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"></span>
+                                      ) : null}
+                                    </>
+                                  )}
+                                </Listbox.Option>
+                              ))}
+                            </Listbox.Options>
+                          </Transition>
+                        </div>
+                      </Listbox>
                       <label htmlFor="Breed">Breed:</label>
                       <input
                         className="rounded border-2 p-1 text-lg placeholder-gray-400"
                         {...register("breed")}
                       />
-                      <label htmlFor="weight">Pet Type:</label>
+                      <label htmlFor="weight">Weight:</label>
                       <input
                         id="weight"
+                        type="number"
+                        min={0}
                         className="rounded border-2 p-1 text-lg placeholder-gray-400"
                         placeholder="(kg)"
-                        {...register("weight")}
+                        {...(register("weight"), { valueAsNumber: true })}
                       />
                     </div>
 
