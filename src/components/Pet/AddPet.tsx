@@ -49,6 +49,7 @@ const AddPet = (props: any) => {
   return (
     <>
       <button
+        type="button"
         onClick={() => setAddingPet(true)}
         className="flex w-fit items-center rounded-md border-2 px-1"
       >
