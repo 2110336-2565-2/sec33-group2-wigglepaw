@@ -106,29 +106,67 @@ export const petOwnerRouter = createTRPCRouter({
     .input(
       z.object({
         user: userFields,
-        petOwner: petOwnerFields,
+        petOwner: petOwnerFields.omit({ customerId: true }),
+        cardToken: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const user = input.user;
+
+      // Hash password
       const saltHash = saltHashPassword(user.password);
       const salt = saltHash.salt;
       const hash = saltHash.hash;
       user.password = hash;
-      await ctx.prisma.petOwner.create({
-        data: {
-          user: {
-            create: {
-              ...input.user,
-              salt: salt,
-            },
-          },
-          ...input.petOwner,
-        },
-        include: {
-          user: true,
-        },
+
+      console.log("Hashed password");
+
+      // Create associated omise's customer (one who pays)
+      const card = input.cardToken;
+      // console.log("Card token", card);
+
+      const omiseCustomer = await ctx.omise.customers.create({
+        email: user.email,
+        description: user.username,
+        card,
       });
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>");
+      console.log("omiseCustomer", omiseCustomer);
+      console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<");
+
+      if (omiseCustomer === null || omiseCustomer === undefined) {
+        console.error(
+          "===================== Fail creating omise customer ====================="
+        );
+        throw new Error("Fail creating omise customer");
+      }
+
+      // console.log("Created omise customer");
+
+      // Create petOwner in database
+      try {
+        const petOwner = await ctx.prisma.petOwner.create({
+          data: {
+            user: {
+              create: {
+                ...input.user,
+                salt: salt,
+              },
+            },
+            ...input.petOwner,
+            customerId: omiseCustomer.id,
+          },
+          include: {
+            user: true,
+          },
+        });
+        console.log(petOwner);
+      } catch (e) {
+        // If error, delete the created omise's customer
+        console.error("Fail creating pet owner in db", e);
+        await ctx.omise.customers.destroy(omiseCustomer.id);
+        throw e;
+      }
       return;
     }),
 
