@@ -1,10 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { useSession } from "next-auth/react";
-import image from "next/image";
 import { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
-import { api } from "../utils/api";
-import ResponsePopup from "./ResponsePopup";
+import { api } from "../../utils/api";
+import ResponsePopup from "../ResponsePopup";
 
 const AddPet = (props: any) => {
   const [addingPet, setAddingPet] = useState(false);
@@ -49,7 +48,13 @@ const AddPet = (props: any) => {
 
   return (
     <>
-      <button onClick={() => setAddingPet(true)}>Add Pet</button>
+      <button
+        type="button"
+        onClick={() => setAddingPet(true)}
+        className="flex w-fit items-center rounded-md border-2 px-1"
+      >
+        + Add Pet
+      </button>
       <Transition show={addingPet} as={Fragment}>
         <Dialog onClose={() => undefined}>
           <Transition.Child

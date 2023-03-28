@@ -1,32 +1,23 @@
-import { Fragment, useState } from "react";
+import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { api } from "../../../utils/api";
-import {
-  FieldErrorsImpl,
-  FieldValues,
-  useForm,
-  UseFormRegister,
-} from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Header from "../../../components/Header";
-import { signIn, useSession } from "next-auth/react";
-import Router, { useRouter } from "next/router";
-import Link from "next/link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaw } from "@fortawesome/free-solid-svg-icons";
-import { Dialog, Transition } from "@headlessui/react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import SideTab from "../../../components/SideTab";
 import { UserType } from "../../../types/user";
 import ResponsePopup from "../../../components/ResponsePopup";
 import { Pet } from "@prisma/client";
-import AddPet from "../../../components/AddPet";
+import AddPet from "../../../components/Pet/AddPet";
+
+import { HiPencilAlt } from "react-icons/hi";
 
 const formDataSchema = z.object({
-  datetimefrom: z.date(),
-  datetimeto: z.date(),
-  petIdList: z.array(z.string()), //TODO: Use state
-  totalPrice: z.number().gt(0),
+  startDate: z.date(),
+  endDate: z.date(),
+  totalPrice: z.number().multipleOf(0.01).gt(0),
   note: z.string().optional(),
 });
 
@@ -41,9 +32,28 @@ const booking: NextPage = () => {
 
   const requestBooking = api.booking.request.useMutation();
   const myPetList = api.pet.getMyPetList.useQuery().data;
-  console.log(myPetList);
 
-  const selectedPetList = new Array();
+  const [selectedPetList, setSelectedPetList] = useState(new Array());
+
+  useEffect(() => {
+    if (myPetList != undefined && myPetList.length != selectedPetList.length) {
+      setSelectedPetList(
+        myPetList.map((pet: Pet) => ({
+          id: pet.petId,
+          name: pet.name,
+          selected: false,
+        }))
+      );
+    }
+  }, [myPetList]);
+
+  const toggleCheckbox = (id: string) => {
+    setSelectedPetList(
+      selectedPetList.map((pet) =>
+        pet.id === id ? { ...pet, selected: !pet.selected } : pet
+      )
+    );
+  };
 
   const { data: petSitterData, error: userError } =
     api.user.getByUsername.useQuery(
@@ -57,13 +67,26 @@ const booking: NextPage = () => {
     reset,
     formState: { errors },
   } = useForm<FormData>();
+
   const onSubmit = async (data: FormData) => {
     if (petSitterData) {
+      const petIdList = selectedPetList.reduce(function (result, pet) {
+        if (pet.selected) {
+          result.push(pet.id);
+        }
+        return result;
+      }, []);
+
+      if (petIdList.length == 0) {
+        alert("Please select at least one pet");
+        return;
+      }
+
       await requestBooking.mutateAsync({
         petSitterId: petSitterData?.userId,
-        startDate: new Date(data.datetimefrom),
-        endDate: new Date(data.datetimeto),
-        petIdList: [], //TODO: Add Pets
+        startDate: new Date(data.startDate),
+        endDate: new Date(data.endDate),
+        petIdList: petIdList,
         totalPrice: data.totalPrice,
         note: data.note,
       });
@@ -84,7 +107,7 @@ const booking: NextPage = () => {
             user={petSitterData}
             isPetOwner={session?.user?.userType == UserType.PetOwner}
           />
-          <div className="mx-auto mt-10 h-fit w-5/12 min-w-fit max-w-[96rem] rounded-md border-[4px] border-blue-500 px-3 py-4">
+          <div className="mx-auto my-10 h-fit w-5/12 min-w-fit max-w-[96rem] rounded-md border-[4px] border-blue-500 px-3 py-4">
             <div className="relative mb-2 flex justify-center">
               <h1 className="text-2xl font-bold">Booking</h1>
             </div>
@@ -96,25 +119,25 @@ const booking: NextPage = () => {
               className="mt-1 flex flex-col gap-1"
             >
               <div>
-                <label htmlFor="datetimefrom" className="mr-1">
+                <label htmlFor="startDate" className="mr-1">
                   Start Date:
                 </label>
                 <input
-                  id="datetimefrom"
+                  id="startDate"
                   className="rounded-md border-2"
                   type="datetime-local"
-                  {...register("datetimefrom", { required: true })}
+                  {...register("startDate", { required: true })}
                 />
               </div>
               <div>
-                <label htmlFor="datetimeto" className="mr-1">
+                <label htmlFor="endDate" className="mr-1">
                   End Date:
                 </label>
                 <input
-                  id="datetimeto"
+                  id="endDate"
                   className="rounded-md border-2"
                   type="datetime-local"
-                  {...register("datetimeto", { required: true })}
+                  {...register("endDate", { required: true })}
                 />
               </div>
               <div className="flex">
@@ -122,15 +145,29 @@ const booking: NextPage = () => {
                   Pets:
                 </label>
                 <span className="block">
-                  <ul>
-                    {myPetList != undefined &&
-                      myPetList.map((pet: Pet, index) => (
-                        <li key={index}>
-                          <input id={pet.petId} className="" type="checkbox" />
-                          {pet.name}
-                        </li>
-                      ))}
-                  </ul>
+                  {selectedPetList.length != 0 &&
+                    selectedPetList.map((pet, index) => {
+                      const { id, name, selected } = pet;
+                      return (
+                        <div
+                          key={index}
+                          className="mb-1 flex w-fit items-center rounded-md border-2 px-1"
+                          onClick={() => toggleCheckbox(id)}
+                        >
+                          <input
+                            id={id}
+                            className=""
+                            type="checkbox"
+                            checked={selected}
+                            readOnly
+                          />
+                          <p className="mx-2">{name}</p>
+
+                          <HiPencilAlt />
+                        </div>
+                      );
+                    })}
+
                   <AddPet />
                 </span>
               </div>
@@ -144,7 +181,10 @@ const booking: NextPage = () => {
                   className="w-40 rounded-md border-2 px-1 text-right"
                   step="0.01"
                   min={0}
-                  {...register("totalPrice", { required: true })}
+                  {...register("totalPrice", {
+                    required: true,
+                    valueAsNumber: true,
+                  })}
                 />
               </div>
               <label htmlFor="note" className="">
