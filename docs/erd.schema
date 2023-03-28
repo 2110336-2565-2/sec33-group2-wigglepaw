@@ -182,6 +182,7 @@ Table ApprovalRequest {
   requestId String [pk]
   petSitterId String [not null]
   petSitter PetSitter [not null]
+  status ApprovalRequestStatus [not null]
   notes String
   createdAt DateTime [default: `now()`, not null]
 }

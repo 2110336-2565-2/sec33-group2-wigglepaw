@@ -220,9 +220,10 @@ enum ApprovalRequestStatus {
 }
 
 model ApprovalRequest {
-    requestId   String    @id @default(cuid())
+    requestId   String                @id @default(cuid())
     petSitterId String
-    petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    petSitter   PetSitter             @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    status      ApprovalRequestStatus
     notes       String? // Notes made by admins
-    createdAt   DateTime  @default(now())
+    createdAt   DateTime              @default(now())
 }

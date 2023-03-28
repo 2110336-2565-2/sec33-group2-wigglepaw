@@ -1,3 +1,4 @@
+import { ApprovalRequestStatus } from "@prisma/client";
 import { prisma } from "./../../db";
 import { z } from "zod";
 
@@ -51,11 +52,24 @@ export const approvalRequestRouter = createTRPCRouter({
       return await ctx.prisma.approvalRequest.create({
         data: {
           petSitterId: input.petSitterId,
+          status: ApprovalRequestStatus.pending,
           notes: "",
         },
         include: {
           petSitter: true,
         },
+      });
+    }),
+  delete: publicProcedure
+    .input(
+      z.object({
+        requestId: z.string().cuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Check if pet sitter exists
+      return await ctx.prisma.approvalRequest.delete({
+        where: { requestId: input.requestId },
       });
     }),
 });

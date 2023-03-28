@@ -157,6 +157,7 @@ approved approved
 
   ApprovalRequest {
     String requestId PK 
+    ApprovalRequestStatus status  
     String notes  "nullable"
     DateTime createdAt  
     }
@@ -181,4 +182,5 @@ approved approved
     ReportTicket o{--|o Admin : "admin"
     ReportTicket o|--|| ReportTicketStatus : "enum:status"
     ApprovalRequest o{--|| PetSitter : "petSitter"
+    ApprovalRequest o|--|| ApprovalRequestStatus : "enum:status"
 ```

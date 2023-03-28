@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { BookingStatus, ReportTicketStatus } from "@prisma/client";
+import {
+  BookingStatus,
+  ReportTicketStatus,
+  ApprovalRequestStatus,
+} from "@prisma/client";
 
 export const userFields = z.object({
   //userId: z.string().cuid().optional(),
@@ -130,6 +134,12 @@ export const reportTicketFields = z.object({
   title: z.string(),
   description: z.string().optional(),
 });
+
+export const approvalStatus = z.enum([
+  ApprovalRequestStatus.pending,
+  ApprovalRequestStatus.declined,
+  ApprovalRequestStatus.approved,
+]);
 
 export const approvalRequestFields = z.object({
   notes: z.string().optional(),
