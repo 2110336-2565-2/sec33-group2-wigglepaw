@@ -1,7 +1,7 @@
 import { prisma } from "./../../db";
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+import * as trpc from "../trpc";
 import {
   userFields,
   petOwnerFields,
@@ -18,8 +18,8 @@ import {
 } from "../../../seed/db";
 import { saltHashPassword } from "../../../pages/api/auth/[...nextauth]";
 
-export const adminRouter = createTRPCRouter({
-  create: publicProcedure
+export const adminRouter = trpc.createTRPCRouter({
+  create: trpc.publicProcedure
     .input(
       z.object({
         user: userFields,
@@ -43,6 +43,19 @@ export const adminRouter = createTRPCRouter({
 
         include: {
           user: true,
+        },
+      });
+    }),
+  delete: trpc.publicProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.admin.delete({
+        where: {
+          userId: input.userId,
         },
       });
     }),
