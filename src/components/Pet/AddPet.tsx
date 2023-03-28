@@ -48,7 +48,12 @@ const AddPet = (props: any) => {
 
   return (
     <>
-      <button onClick={() => setAddingPet(true)}>Add Pet</button>
+      <button
+        onClick={() => setAddingPet(true)}
+        className="flex w-fit items-center rounded-md border-2 px-1"
+      >
+        + Add Pet
+      </button>
       <Transition show={addingPet} as={Fragment}>
         <Dialog onClose={() => undefined}>
           <Transition.Child

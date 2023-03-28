@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { api } from "../../../utils/api";
 import { useForm } from "react-hook-form";
@@ -11,6 +11,8 @@ import { UserType } from "../../../types/user";
 import ResponsePopup from "../../../components/ResponsePopup";
 import { Pet } from "@prisma/client";
 import AddPet from "../../../components/Pet/AddPet";
+
+import { HiPencilAlt } from "react-icons/hi";
 
 const formDataSchema = z.object({
   datetimefrom: z.date(),
@@ -31,9 +33,30 @@ const booking: NextPage = () => {
 
   const requestBooking = api.booking.request.useMutation();
   const myPetList = api.pet.getMyPetList.useQuery().data;
-  console.log(myPetList);
 
-  const selectedPetList = new Array();
+  const [selectedPetList, setSelectedPetList] = useState(new Array());
+
+  useEffect(() => {
+    // Update the document title using the browser API
+    if (myPetList != undefined) {
+      setSelectedPetList([
+        myPetList.map(
+          function (pet: Pet) {
+            return { id: pet.petId, name: pet.name, selected: false };
+          }.bind(this)
+        ),
+      ]);
+      console.log(selectedPetList);
+    }
+  }, myPetList);
+
+  const toggleCheckbox = (id: string) => {
+    setSelectedPetList(
+      selectedPetList.map((pet) =>
+        pet.id === id ? { ...pet, selected: !pet.selected } : pet
+      )
+    );
+  };
 
   const { data: petSitterData, error: userError } =
     api.user.getByUsername.useQuery(
@@ -112,15 +135,20 @@ const booking: NextPage = () => {
                   Pets:
                 </label>
                 <span className="block">
-                  <ul>
-                    {myPetList != undefined &&
-                      myPetList.map((pet: Pet, index) => (
-                        <li key={index}>
-                          <input id={pet.petId} className="" type="checkbox" />
-                          {pet.name}
-                        </li>
-                      ))}
-                  </ul>
+                  {myPetList != undefined &&
+                    myPetList.map((pet: Pet, index) => (
+                      <div
+                        key={index}
+                        className="mb-1 flex w-fit items-center rounded-md border-2 px-1"
+                        // onClick={()=>()}
+                      >
+                        <input id={pet.petId} className="" type="checkbox" />
+                        <p className="mx-2">{pet.name}</p>
+
+                        <HiPencilAlt />
+                      </div>
+                    ))}
+
                   <AddPet />
                 </span>
               </div>
