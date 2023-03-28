@@ -1,28 +1,14 @@
-import { prisma } from "./../../db";
 import { z } from "zod";
 
 import * as trpc from "../trpc";
-import {
-  userFields,
-  petOwnerFields,
-  petFields,
-  reviewFields,
-} from "../../../schema/schema";
-import {
-  makeFree,
-  makeHotel,
-  makeOwner,
-  makePost,
-  makeReview,
-  updateAvgRating,
-} from "../../../seed/db";
+import * as schema from "../../../schema/schema";
 import { saltHashPassword } from "../../../pages/api/auth/[...nextauth]";
 
 export const adminRouter = trpc.createTRPCRouter({
   create: trpc.publicProcedure
     .input(
       z.object({
-        user: userFields,
+        user: schema.userFields,
       })
     )
     .mutation(async ({ ctx, input }) => {

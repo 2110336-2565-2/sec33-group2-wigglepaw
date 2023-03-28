@@ -188,9 +188,10 @@ model Post {
 }
 
 model Admin {
-    userId        String         @id @default(cuid())
-    user          User           @relation(fields: [userId], references: [userId], onDelete: Cascade)
-    ActiveTickets ReportTicket[]
+    userId          String            @id @default(cuid())
+    user            User              @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    ActiveTickets   ReportTicket[]
+    ApprovalRequest ApprovalRequest[]
 }
 
 enum ReportTicketStatus {
@@ -220,10 +221,13 @@ enum ApprovalRequestStatus {
 }
 
 model ApprovalRequest {
-    requestId   String                @id @default(cuid())
-    petSitterId String
-    petSitter   PetSitter             @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
-    status      ApprovalRequestStatus
-    notes       String? // Notes made by admins
-    createdAt   DateTime              @default(now())
+    requestId            String                @id @default(cuid())
+    petSitterId          String
+    petSitter            PetSitter             @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    status               ApprovalRequestStatus
+    adminId              String?
+    latestStatusUpdateby Admin?                @relation(fields: [adminUserId], references: [userId])
+    notes                String? // Notes made by admins
+    createdAt            DateTime              @default(now())
+    adminUserId          String?
 }
