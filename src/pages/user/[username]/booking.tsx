@@ -28,6 +28,10 @@ const booking: NextPage = () => {
   const requestBooking = api.booking.request.useMutation();
   const myPetList = api.pet.getMyPetList.useQuery().data;
 
+  // const updateMyPetList = () => {
+  //   myPetList = api.pet.getMyPetList.useQuery().data;
+  // };
+
   const [selectedPetList, setSelectedPetList] = useState(new Array());
 
   useEffect(() => {
