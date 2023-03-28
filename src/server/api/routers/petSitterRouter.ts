@@ -9,9 +9,9 @@ import {
   freelancePetSitterFields,
   petSitterFields,
   userFields,
-  searchField,
+  searchPetSitterField,
 } from "../../../schema/schema";
-import * as searchLogic from "../logic/search";
+import { PetSitterSearchLogic } from "../logic/search/petSitterSearchLogic";
 
 const zodUserFields = z.object({
   verifyStatus: z.boolean(),
@@ -169,7 +169,7 @@ export const petSitterRouter = createTRPCRouter({
   //     { "userId": "cldzsm3tt00137k08lt9r3rfs" },
   //   ]
   searchPetSitter: publicProcedure
-    .input(searchField)
+    .input(searchPetSitterField)
     .query(async ({ ctx, input }) => {
       const items = await ctx.prisma.petSitter.findMany({
         take: input.limit + 1,
@@ -177,28 +177,33 @@ export const petSitterRouter = createTRPCRouter({
         cursor: input.cursor ? { userId: input.cursor } : undefined,
         where: {
           AND: [
-            input.searchName ? searchLogic.searchByName(input.searchName) : {},
+            input.searchName
+              ? PetSitterSearchLogic.petSitterName(input.searchName)
+              : {},
             input.searchPriceMin
-              ? searchLogic.searchByPriceMin(input.searchPriceMin)
+              ? PetSitterSearchLogic.priceMin(input.searchPriceMin)
               : {},
             input.searchPriceMax
-              ? searchLogic.searchByPriceMax(input.searchPriceMax)
+              ? PetSitterSearchLogic.priceMax(input.searchPriceMax)
               : {},
             input.searchPetTypes
-              ? searchLogic.searchByPetTypes(input.searchPetTypes)
+              ? PetSitterSearchLogic.petTypes(input.searchPetTypes)
+              : {},
+            input.searchVerifyStatus
+              ? PetSitterSearchLogic.verifyStatus(input.searchVerifyStatus)
               : {},
             input.searchIncludePetSitterType
-              ? searchLogic.searchByPetSitterTypes(
+              ? PetSitterSearchLogic.petSitterTypes(
                   input.searchIncludePetSitterType
                 )
               : {},
-            searchLogic.searchByPetSitterType(
+            PetSitterSearchLogic.petSitterType(
               input.searchIncludePetHotel,
               input.searchIncludeFreelancePetSitter
             ),
           ],
         },
-        orderBy: [searchLogic.searchOrderBy(input.searchSortBy)],
+        orderBy: [PetSitterSearchLogic.sortBy(input.searchSortBy)],
         include: {
           user: true,
           petHotel: true,

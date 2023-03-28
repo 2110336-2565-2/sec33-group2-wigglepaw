@@ -20,6 +20,7 @@ import {
   getAllSitterId,
   getMultipleRandom,
   getRandomIntFromInterval,
+  getRandomFloatFromInterval,
   getRandomStartEndDate,
   updateOwnerPetTypes,
 } from "../../../seed/util";
@@ -218,6 +219,7 @@ export const seedRouter = createTRPCRouter({
         const ownerId = getMultipleRandom(ownerIds, 1)[0] ?? "";
         const sitterId = getMultipleRandom(sitterIds, 1)[0] ?? "";
         const dates = getRandomStartEndDate();
+        const totalPrice = getRandomFloatFromInterval(500, 10000);
         const startDate = dates["startDate"];
         const endDate = dates["endDate"];
         const note = getMultipleRandom(notes, 1)[0] ?? "";
@@ -225,7 +227,15 @@ export const seedRouter = createTRPCRouter({
         const numPets = getRandomIntFromInterval(1, allPetIds.length);
         const petIds = getMultipleRandom(allPetIds, numPets);
 
-        await makeBooking(ownerId, sitterId, startDate, endDate, note, petIds);
+        await makeBooking(
+          ownerId,
+          sitterId,
+          totalPrice,
+          startDate,
+          endDate,
+          note,
+          petIds
+        );
       }
       return "Seeded Bookings";
     }),

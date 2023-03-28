@@ -221,6 +221,14 @@ export const userRouter = createTRPCRouter({
       });
       return update;
     }),
+  getMyImageUri: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+    const result = await ctx.prisma.user.findUnique({
+      where: { userId: userId },
+      select: { imageUri: true },
+    });
+    return result ? result["imageUri"] : null;
+  }),
 });
 
 async function deleteByUser(
