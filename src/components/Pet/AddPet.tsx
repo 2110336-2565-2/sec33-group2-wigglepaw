@@ -1,10 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { useSession } from "next-auth/react";
-import image from "next/image";
 import { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
-import { api } from "../utils/api";
-import ResponsePopup from "./ResponsePopup";
+import { api } from "../../utils/api";
+import ResponsePopup from "../ResponsePopup";
 
 const AddPet = (props: any) => {
   const [addingPet, setAddingPet] = useState(false);

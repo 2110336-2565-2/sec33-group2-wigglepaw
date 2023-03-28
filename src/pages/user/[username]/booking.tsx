@@ -1,26 +1,16 @@
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import type { NextPage } from "next";
 import { api } from "../../../utils/api";
-import {
-  FieldErrorsImpl,
-  FieldValues,
-  useForm,
-  UseFormRegister,
-} from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Header from "../../../components/Header";
-import { signIn, useSession } from "next-auth/react";
-import Router, { useRouter } from "next/router";
-import Link from "next/link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaw } from "@fortawesome/free-solid-svg-icons";
-import { Dialog, Transition } from "@headlessui/react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import SideTab from "../../../components/SideTab";
 import { UserType } from "../../../types/user";
 import ResponsePopup from "../../../components/ResponsePopup";
 import { Pet } from "@prisma/client";
-import AddPet from "../../../components/AddPet";
+import AddPet from "../../../components/Pet/AddPet";
 
 const formDataSchema = z.object({
   datetimefrom: z.date(),
