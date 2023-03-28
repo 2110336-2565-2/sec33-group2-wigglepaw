@@ -4,8 +4,6 @@ import React, { useState } from "react";
 
 type TabProps = {
   user?: any;
-  isAdmin?: boolean;
-  isHelpCenter?: boolean;
 };
 
 export default function AdminandHelpSideTab(props: TabProps) {
@@ -21,37 +19,23 @@ export default function AdminandHelpSideTab(props: TabProps) {
         }`}
       >
         <div className="mx-auto my-1 text-center text-2xl font-semibold">
-          Welcome Admin
+          Help Center
         </div>
         <div className="my-16">
           <div className="flex flex-col  ">
-            {/*Dashboard Tab*/}
+            {/*Report problem Tab*/}
             <Link
               href={`/user/${props.user?.username}/profile`}
               className="flex h-[58px] w-[219px] items-center justify-center border bg-[#D9D9D9] text-lg font-medium hover:bg-[#A3A3A3]"
             >
-              Dashboard
+              Report a Problem
             </Link>
-            {/*Pet Sitters Tab*/}
+            {/*View My Report Tab*/}
             <Link
               href={`/user/${props.user?.username}/profile`}
               className="flex h-[58px] w-[219px] items-center justify-center border bg-[#D9D9D9] text-lg font-medium hover:bg-[#A3A3A3]"
             >
-              Pet Sitters
-            </Link>
-            {/*Review Tab*/}
-            <Link
-              href={`/user/${props.user?.username}/review`}
-              className="flex h-[58px] w-[219px] items-center justify-center border bg-[#D9D9D9] text-lg font-medium hover:bg-[#A3A3A3]"
-            >
-              Reviews
-            </Link>
-            {/*User Reports Tab*/}
-            <Link
-              href={`/user/${props.user?.username}/profile`}
-              className="flex h-[58px] w-[219px] items-center justify-center border bg-[#D9D9D9] text-lg font-medium hover:bg-[#A3A3A3]"
-            >
-              User Reports
+              View My Report
             </Link>
           </div>
         </div>
