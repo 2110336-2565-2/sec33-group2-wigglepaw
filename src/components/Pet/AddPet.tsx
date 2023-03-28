@@ -2,8 +2,12 @@ import { Dialog, Transition } from "@headlessui/react";
 import { useSession } from "next-auth/react";
 import { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { petFields } from "../../schema/schema";
 import { api } from "../../utils/api";
 import ResponsePopup from "../ResponsePopup";
+
+type FormData = z.infer<typeof petFields>;
 
 const AddPet = (props: any) => {
   const [addingPet, setAddingPet] = useState(false);
@@ -83,19 +87,63 @@ const AddPet = (props: any) => {
             <div className="fixed inset-0 overflow-y-auto">
               {/* Container to center the panel */}
               <div className="flex min-h-full items-center justify-center">
-                <Dialog.Panel className="mx-auto box-border w-[90vw] max-w-[50rem] rounded bg-white p-4">
+                <Dialog.Panel className="mx-auto box-border w-[90vw] max-w-[30rem] rounded bg-white p-4">
                   <Dialog.Title className="mb-2 text-xl font-bold">
-                    Add Pet
+                    Add New Pet
                   </Dialog.Title>
-                  <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="flex flex-col"
-                  >
-                    <input
-                      className="mb-2 rounded border-2 p-1 text-lg font-bold placeholder-gray-400"
-                      placeholder="Title"
-                      //   {...register("name")}
-                    />
+                  <form onSubmit={handleSubmit(onSubmit)} className="">
+                    <div className="mb-2 flex items-center">
+                      <label htmlFor="petType" className="mr-2 w-20">
+                        Pet Type*:
+                      </label>
+                      <input
+                        id="petType"
+                        className="rounded border-2 p-1 text-lg placeholder-gray-400"
+                        placeholder="Cat/Dog"
+                        {...register("petType", { required: true })}
+                      />
+                    </div>
+                    <div className="mb-2 flex items-center">
+                      <label htmlFor="name" className="mr-2 w-20">
+                        Name:
+                      </label>
+                      <input
+                        id="name"
+                        className="rounded border-2 p-1 text-lg placeholder-gray-400"
+                        {...register("name")}
+                      />
+                    </div>
+                    <div className="mb-2 flex items-center">
+                      <label htmlFor="sex" className="mr-2 w-20">
+                        Sex:
+                      </label>
+                      <input
+                        id="sex"
+                        className="rounded border-2 p-1 text-lg placeholder-gray-400"
+                        type=""
+                        {...register("sex")}
+                      />
+                    </div>
+                    <div className="mb-2 flex items-center">
+                      <label htmlFor="Breed" className="mr-2 w-20">
+                        Breed:
+                      </label>
+                      <input
+                        className="rounded border-2 p-1 text-lg placeholder-gray-400"
+                        {...register("breed")}
+                      />
+                    </div>
+                    <div className="mb-2 flex items-center">
+                      <label htmlFor="weight" className="mr-2 w-20">
+                        Pet Type:
+                      </label>
+                      <input
+                        id="weight"
+                        className="rounded border-2 p-1 text-lg placeholder-gray-400"
+                        placeholder="(kg)"
+                        {...register("weight")}
+                      />
+                    </div>
 
                     <div className="flex w-full justify-between">
                       <button
@@ -112,7 +160,7 @@ const AddPet = (props: any) => {
                         className="rounded-full bg-sky-800 px-2 py-1 font-semibold text-white hover:bg-sky-600"
                         type="submit"
                       >
-                        Post
+                        Add
                       </button>
                     </div>
                   </form>
