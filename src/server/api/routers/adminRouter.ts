@@ -46,7 +46,7 @@ export const adminRouter = trpc.createTRPCRouter({
         },
       });
     }),
-  delete: trpc.publicProcedure
+  deleteById: trpc.publicProcedure
     .input(
       z.object({
         userId: z.string(),

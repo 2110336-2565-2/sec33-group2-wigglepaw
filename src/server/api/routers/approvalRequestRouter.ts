@@ -60,7 +60,7 @@ export const approvalRequestRouter = createTRPCRouter({
         },
       });
     }),
-  delete: publicProcedure
+  deleteById: publicProcedure
     .input(
       z.object({
         requestId: z.string().cuid(),

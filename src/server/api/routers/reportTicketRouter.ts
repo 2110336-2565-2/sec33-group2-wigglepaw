@@ -39,4 +39,17 @@ export const reportTicketRouter = createTRPCRouter({
         },
       });
     }),
+  deleteById: publicProcedure
+    .input(
+      z.object({
+        ticketId: z.string().cuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.reportTicket.delete({
+        where: {
+          ticketId: input.ticketId,
+        },
+      });
+    }),
 });
