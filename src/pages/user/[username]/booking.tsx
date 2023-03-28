@@ -11,15 +11,10 @@ import { UserType } from "../../../types/user";
 import ResponsePopup from "../../../components/ResponsePopup";
 import { Pet } from "@prisma/client";
 import AddPet from "../../../components/Pet/AddPet";
-
 import { HiPencilAlt } from "react-icons/hi";
+import { bookingFields } from "../../../schema/schema";
 
-const formDataSchema = z.object({
-  startDate: z.date(),
-  endDate: z.date(),
-  totalPrice: z.number().multipleOf(0.01).gt(0),
-  note: z.string().optional(),
-});
+const formDataSchema = bookingFields;
 
 type FormData = z.infer<typeof formDataSchema>;
 
@@ -41,6 +36,7 @@ const booking: NextPage = () => {
         myPetList.map((pet: Pet) => ({
           id: pet.petId,
           name: pet.name,
+          type: pet.petType,
           selected: false,
         }))
       );
@@ -147,7 +143,7 @@ const booking: NextPage = () => {
                 <span className="block">
                   {selectedPetList.length != 0 &&
                     selectedPetList.map((pet, index) => {
-                      const { id, name, selected } = pet;
+                      const { id, name, type, selected } = pet;
                       return (
                         <div
                           key={index}
@@ -161,13 +157,13 @@ const booking: NextPage = () => {
                             checked={selected}
                             readOnly
                           />
-                          <p className="mx-2">{name}</p>
-
+                          <p className="mx-2">
+                            {name} ({type})
+                          </p>
                           <HiPencilAlt />
                         </div>
                       );
                     })}
-
                   <AddPet />
                 </span>
               </div>
