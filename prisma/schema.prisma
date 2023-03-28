@@ -195,8 +195,8 @@ model Admin {
 }
 
 enum ReportTicketStatus {
-    pending
-    acked
+    pending // visible to all admins
+    acked // only visible to admin that acked the ticket 
     canceled
     resolved
 }
