@@ -20,13 +20,8 @@ const Header = (props: any) => {
     ? router.query.previousPage
     : asPath;
 
-  const userData = api.user.getByUsername.useQuery({
-    username: username ? username : "",
-  });
-
-  const profileImageUri = userData?.data?.imageUri
-    ? userData?.data?.imageUri
-    : "/profiledummy.png";
+  const profileImageUri =
+    api.user.getMyImageUri.useQuery().data ?? "/profiledummy.png";
 
   const profileLink = username
     ? "/user/" + username.toString() + "/profile"
@@ -376,11 +371,15 @@ const Header = (props: any) => {
 };
 
 const ReminderBar = () => {
+  const now = new Date();
+  now.setSeconds(0);
+  now.setMilliseconds(0);
+  // set date's second and millisecond to 0 so booking search will not be continously requested
   const remindableBooking = api.booking.search.useQuery({
     searchStatusList: [BookingStatus.accepted],
     searchStartDate: {
-      from: new Date(),
-      to: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+      from: now,
+      to: new Date(now.getTime() + 24 * 60 * 60 * 1000),
     },
   }).data;
 
