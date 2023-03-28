@@ -39,8 +39,6 @@ rejected rejected
     String phoneNumber  "nullable"
     String address  "nullable"
     String imageUri  "nullable"
-    String bankAccount  "nullable"
-    String bankName  "nullable"
     DateTime createdAt  
     String salt  
     }
@@ -50,6 +48,7 @@ rejected rejected
     String petTypes  
     String firstName  
     String lastName  
+    String customerId  
     }
   
 
@@ -61,6 +60,7 @@ rejected rejected
     Float endPrice  "nullable"
     Float avgRating  "nullable"
     Int reviewCount  
+    String recipientId  
     }
   
 
