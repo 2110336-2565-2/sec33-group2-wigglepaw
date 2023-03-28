@@ -9,9 +9,9 @@ import DataTable, {
 } from "react-data-table-component";
 import { HiCheck } from "react-icons/hi";
 import { string } from "zod";
-import FixedHeader from "../../components/FixedHeader";
-import { UserType } from "../../types/user";
-import { api } from "../../utils/api";
+import FixedHeader from "../../../components/FixedHeader";
+import { UserType } from "../../../types/user";
+import { api } from "../../../utils/api";
 import ReactDOMServer from "react-dom/server";
 
 export default function Verification() {
