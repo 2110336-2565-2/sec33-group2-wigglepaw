@@ -7,7 +7,7 @@ import DataTable, {
   TableColumn,
   ConditionalStyles,
 } from "react-data-table-component";
-import { HiCheck } from "react-icons/hi";
+import { HiCheck, HiMenuAlt1 } from "react-icons/hi";
 import { string } from "zod";
 import FixedHeader from "../../../components/FixedHeader";
 import { UserType } from "../../../types/user";
@@ -114,7 +114,7 @@ function Table() {
           ? row.fullName || ""
           : row.hotelName || "",
       cell: (row) => (
-        <RecursivePropsProvider props={{ "data-tag": "allowRowEvents" }}>
+        <RecursivePropsProvider data-tag="allowRowEvents">
           <div className="flex h-[60px] w-full items-center gap-2">
             <div className="relative min-h-[40px] min-w-[40px] rounded-full border border-black drop-shadow-md">
               <Image
@@ -143,7 +143,7 @@ function Table() {
       selector: (row) =>
         row.type === UserType.FreelancePetSitter ? "Freelance" : "Hotel",
       cell: (row) => (
-        <RecursivePropsProvider props={{ "data-tag": "allowRowEvents" }}>
+        <RecursivePropsProvider data-tag="allowRowEvents">
           <div
             className={`w-full overflow-hidden text-ellipsis whitespace-nowrap text-[18px] font-semibold ${
               row.type === UserType.FreelancePetSitter
@@ -181,7 +181,7 @@ function Table() {
       name: "Last update",
       selector: (row) => row.lastUpdate.toISOString(),
       cell: (row) => (
-        <RecursivePropsProvider props={{ "data-tag": "allowRowEvents" }}>
+        <RecursivePropsProvider data-tag="allowRowEvents">
           <div className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-[18px] text-wp-blue">
             {formatTime(row.lastUpdate)}
           </div>
@@ -194,7 +194,7 @@ function Table() {
       name: "Status",
       selector: (row) => (row.status ? "Verified" : "Pending"),
       cell: (row) => (
-        <RecursivePropsProvider props={{ "data-tag": "allowRowEvents" }}>
+        <RecursivePropsProvider data-tag="allowRowEvents">
           <div
             className={`flex h-[28px] w-[100px] items-center justify-center rounded-lg text-[18px] font-semibold text-white drop-shadow-md ${
               row.status ? "bg-good" : "bg-neutral"
@@ -251,9 +251,9 @@ function Table() {
   return (
     <DataTable
       title={
-        <h2 className="mb-[20px] text-[40px] font-semibold">
+        <h1 className="mb-[20px] text-[40px] font-semibold">
           Pet Sitter Verification
-        </h2>
+        </h1>
       }
       keyField="username"
       columns={columns}
@@ -298,13 +298,13 @@ function Table() {
 
 // LMAO THANKS TO CHATGPT
 // Add this function to add row event propagation to cell components
-interface RecursivePropsProviderProps {
-  props: Object;
+interface RecursivePropsProviderProps
+  extends React.HTMLAttributes<HTMLElement> {
   children: ReactNode;
 }
 const RecursivePropsProvider = ({
-  props: additionalProps,
   children,
+  ...props
 }: RecursivePropsProviderProps) => {
   function cloneChildren(children: ReactNode): ReactNode {
     return React.Children.map(children, (child: ReactNode) => {
@@ -312,7 +312,7 @@ const RecursivePropsProvider = ({
         return child;
       }
 
-      const childProps = { ...child.props, ...additionalProps };
+      const childProps = { ...child.props, ...props };
 
       if (child.props.children) {
         childProps.children = cloneChildren(child.props.children);

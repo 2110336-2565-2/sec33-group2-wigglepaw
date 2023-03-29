@@ -216,11 +216,11 @@ function PetTypes({ petTypes }: PetTypesProps) {
       case "fish":
         return "#6CB8ED";
       case "mouse":
-        return "#A37A7A";
+        return "#7AA38D";
       case "hamster":
-        return "#C0A57C";
+        return "#A37A7A";
       default:
-        return "#A0A0A0";
+        return "#C0A57C";
     }
   }
 
@@ -322,8 +322,7 @@ function TailwindBugFix() {
       <div className="bg-[#6CB8ED]"></div>
       <div className="bg-[#A37A7A]"></div>
       <div className="bg-[#C0A57C]"></div>
-      <div className="bg-[#A0A0A0]"></div>
-      <div className="border-[#A0A0A0]"></div>
+      <div className="bg-[#7AA38D]"></div>
     </div>
   );
 }
