@@ -106,9 +106,7 @@ function Table() {
           ? row.fullName || ""
           : row.hotelName || "",
       cell: (row) => (
-        <RecursivePropsProvider
-          additionalProps={{ "data-tag": "allowRowEvents" }}
-        >
+        <RecursivePropsProvider props={{ "data-tag": "allowRowEvents" }}>
           <div className="flex h-[60px] w-full items-center gap-2">
             <div className="relative min-h-[40px] min-w-[40px] rounded-full border border-black drop-shadow-md">
               <Image
@@ -137,9 +135,7 @@ function Table() {
       selector: (row) =>
         row.type === UserType.FreelancePetSitter ? "Freelance" : "Hotel",
       cell: (row) => (
-        <RecursivePropsProvider
-          additionalProps={{ "data-tag": "allowRowEvents" }}
-        >
+        <RecursivePropsProvider props={{ "data-tag": "allowRowEvents" }}>
           <div
             className={`w-full overflow-hidden text-ellipsis whitespace-nowrap text-[18px] font-semibold ${
               row.type === UserType.FreelancePetSitter
@@ -158,18 +154,17 @@ function Table() {
       name: "Certification URI",
       selector: (row) => row.certificationUri || "",
       cell: (row) => (
-        <RecursivePropsProvider
-          additionalProps={{ "data-tag": "allowRowEvents" }}
+        <div
+          data-tag="allowRowEvents"
+          className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-[18px]"
         >
-          <div className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-[18px]">
-            <Link href={row.certificationUri || ""} className="link">
-              {(row.certificationUri || "none").replace(
-                /^(https?:\/\/)?(www\.)?/i,
-                ""
-              )}
-            </Link>
-          </div>
-        </RecursivePropsProvider>
+          <Link href={row.certificationUri || ""} className="link">
+            {(row.certificationUri || "none").replace(
+              /^(https?:\/\/)?(www\.)?/i,
+              ""
+            )}
+          </Link>
+        </div>
       ),
       width: "20%",
       sortable: true,
@@ -178,9 +173,7 @@ function Table() {
       name: "Last update",
       selector: (row) => row.lastUpdate.toISOString(),
       cell: (row) => (
-        <RecursivePropsProvider
-          additionalProps={{ "data-tag": "allowRowEvents" }}
-        >
+        <RecursivePropsProvider props={{ "data-tag": "allowRowEvents" }}>
           <div className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-[18px] text-wp-blue">
             {formatTime(row.lastUpdate)}
           </div>
@@ -193,9 +186,7 @@ function Table() {
       name: "Status",
       selector: (row) => (row.status ? "Verified" : "Pending"),
       cell: (row) => (
-        <RecursivePropsProvider
-          additionalProps={{ "data-tag": "allowRowEvents" }}
-        >
+        <RecursivePropsProvider props={{ "data-tag": "allowRowEvents" }}>
           <div
             className={`flex h-[28px] w-[100px] items-center justify-center rounded-lg text-[18px] font-semibold text-white drop-shadow-md ${
               row.status ? "bg-good" : "bg-neutral"
@@ -211,14 +202,6 @@ function Table() {
   ];
 
   const customStyles = {
-    // rows: {
-    //   style: {
-    //     //
-    //     "&:hover": {
-    //       backgroundColor: "#f0f0f0",
-    //     },
-    //   },
-    // },
     headCells: {
       style: {
         height: "60px",
@@ -233,11 +216,6 @@ function Table() {
         fontWeight: 600,
       },
     },
-    // cells: {
-    //   style: {
-    //     // fontSize: "18px",
-    //   },
-    // },
   };
 
   const conditionalRowStyles = [
@@ -313,11 +291,11 @@ function Table() {
 // LMAO THANKS TO CHATGPT
 // Add this function to add row event propagation to cell components
 interface RecursivePropsProviderProps {
-  additionalProps: Object;
+  props: Object;
   children: ReactNode;
 }
 const RecursivePropsProvider = ({
-  additionalProps,
+  props: additionalProps,
   children,
 }: RecursivePropsProviderProps) => {
   function cloneChildren(children: ReactNode): ReactNode {

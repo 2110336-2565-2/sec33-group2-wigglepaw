@@ -315,10 +315,10 @@ function flattenUserForProfilePage(
       | null;
   }
 ): UserProfile & UserProfileSubType {
-  const { petOwner, petSitter, salt, ...userData } = user;
+  const { petOwner, petSitter, password, salt, ...userData } = user;
 
   if (petOwner) {
-    const { password, emailVerified, bankAccount, bankName, ...result } = {
+    const { emailVerified, bankAccount, bankName, ...result } = {
       userType: UserType.PetOwner as UserType.PetOwner, // I HAVE TO PUT THIS, IDK WHY IT HAS BUG
       ...userData,
       ...petOwner,
@@ -329,15 +329,7 @@ function flattenUserForProfilePage(
   if (petSitter) {
     const { freelancePetSitter, petHotel, ...petSitterData } = petSitter;
     if (freelancePetSitter) {
-      const {
-        password,
-        emailVerified,
-        bankAccount,
-        bankName,
-        startPrice,
-        endPrice,
-        ...result
-      } = {
+      const { emailVerified, bankAccount, bankName, ...result } = {
         userType: UserType.FreelancePetSitter as UserType.FreelancePetSitter,
         ...userData,
         ...petSitterData,
@@ -346,15 +338,7 @@ function flattenUserForProfilePage(
       return result;
     }
     if (petHotel) {
-      const {
-        password,
-        emailVerified,
-        bankAccount,
-        bankName,
-        startPrice,
-        endPrice,
-        ...result
-      } = {
+      const { emailVerified, bankAccount, bankName, ...result } = {
         userType: UserType.PetHotel as UserType.PetHotel,
         ...userData,
         ...petSitterData,
