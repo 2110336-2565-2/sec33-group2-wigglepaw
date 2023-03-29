@@ -1,19 +1,27 @@
+import { useRouter } from "next/router";
+import { useState } from "react";
+
 interface NotificationProps {
   code: number;
   notice: string;
   width?: string;
   height?: string;
+  className?: string;
 }
 
+// 6899: bad
+// 6900: neural
+// 6901: god
 export default function Notification({
   code,
   notice,
   width,
   height,
+  className,
 }: NotificationProps) {
   const styles = {
     6899: {
-      className: "border-2 border-bad bg-[#FCEDE9]",
+      className: "border-[#fbded7] bg-[#FCEDE9]/[.8]",
       Icon: (
         <svg
           viewBox="0 0 512 512"
@@ -27,7 +35,7 @@ export default function Notification({
       ),
     },
     6900: {
-      className: "border-2 border-neutral bg-[#F7EBD8]",
+      className: "border-[#F9E6C6] bg-[#FEF7EA]",
       Icon: (
         <svg
           viewBox="0 0 1024 1024"
@@ -41,7 +49,7 @@ export default function Notification({
       ),
     },
     6901: {
-      className: "border-2 border-good bg-[#D3EEDA]",
+      className: "border-[#D3EEDA] bg-[#EAF7EE]",
       Icon: (
         <svg
           viewBox="0 0 1024 1024"
@@ -56,15 +64,39 @@ export default function Notification({
     },
   };
 
-  if (code != 6899 && code != 6900 && code != 6901) return <></>;
+  // state
+  const router = useRouter();
+  const [closed, setClosed] = useState(false);
+
+  if (closed || (code != 6899 && code != 6900 && code != 6901)) return <></>;
   return (
     <div
-      className={`flex items-center gap-2 rounded-lg border-2 p-2 text-[#434D54] h-[${
+      className={`flex justify-between rounded-lg border-2 p-2 text-[#434D54] h-[${
         height ?? "60px"
-      }] w-[${width ?? "full"}] ${styles[code].className}`}
+      }] w-[${width ?? "full"}] ${styles[code].className} ${className}`}
     >
-      <div className="h-full">{styles[code].Icon}</div>
-      <div>{notice}</div>
+      <div className="flex items-center gap-2">
+        <div className="h-full">{styles[code].Icon}</div>
+        <div>{notice}</div>
+      </div>
+      <button
+        className="z-10 h-[80%] place-self-center rounded-md p-1 text-[#69727c] hover:bg-white/[0.4] hover:text-good"
+        onClick={() => {
+          setClosed(true);
+
+          // Clear query to prevent browser back events
+          router.replace(router.pathname);
+        }}
+      >
+        <svg
+          viewBox="0 0 512 512"
+          fill="currentColor"
+          height="100%"
+          width="100%"
+        >
+          <path d="M289.94 256l95-95A24 24 0 00351 127l-95 95-95-95a24 24 0 00-34 34l95 95-95 95a24 24 0 1034 34l95-95 95 95a24 24 0 0034-34z" />
+        </svg>
+      </button>
     </div>
   );
 }
