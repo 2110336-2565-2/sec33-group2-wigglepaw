@@ -1,14 +1,20 @@
-import { faMessage, faPencil } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleLeft,
+  faMessage,
+  faPencil,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useContext } from "react";
 import io from "socket.io-client";
 
 import { api } from "../../utils/api";
 import { list } from "postcss";
+import { ModeContext } from "../../pages/chat";
 
 let socket;
 type ChatMessage = {
@@ -26,6 +32,8 @@ type ChatMainProps = {
 
 export const Chatmain = (props: ChatMainProps) => {
   const { data: session } = useSession();
+
+  const { mode, togglemode } = useContext(ModeContext);
 
   const [listmsg, setListmsg] = useState([]);
 
@@ -134,8 +142,17 @@ export const Chatmain = (props: ChatMainProps) => {
   };
 
   return (
-    <div className="relative h-full w-full ">
+    <div
+      className={
+        mode
+          ? "relative h-full w-full md:w-full "
+          : "relative h-full w-0 md:w-full"
+      }
+    >
       <div className=" flex w-full items-center border-b-2 border-[#F0A21F] py-1">
+        <div className="ml-4 hidden w-5 md:visible" onClick={togglemode}>
+          <FontAwesomeIcon className="" size="xl" icon={faAngleLeft} />
+        </div>
         <span className=" px-4 py-2">{props.username}</span>
       </div>
 
