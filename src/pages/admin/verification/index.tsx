@@ -13,8 +13,11 @@ import FixedHeader from "../../../components/FixedHeader";
 import { UserType } from "../../../types/user";
 import { api } from "../../../utils/api";
 import ReactDOMServer from "react-dom/server";
+import Notification from "../../../components/Admin/Notification";
 
 export default function Verification() {
+  const router = useRouter();
+
   return (
     <div className="flex h-screen flex-col">
       <FixedHeader />
@@ -22,7 +25,12 @@ export default function Verification() {
         <div className="flex h-full w-[200px] border-2 max-lg:hidden">
           Please connect sidetab given I am done with my life.
         </div>
-        <div className="w-full overflow-scroll sm:px-[20px] sm:py-[10px] lg:px-[40px] lg:py-[20px] xl:px-[80px] xl:py-[40px]">
+        <div className="flex w-full flex-col gap-5 overflow-scroll sm:px-[20px] sm:py-[10px] lg:px-[40px] lg:py-[20px] xl:px-[80px] xl:py-[40px]">
+          <Notification
+            code={parseInt(router.query.code as string)}
+            notice={router.query.notice as string}
+            className="mx-4"
+          />
           <div className="h-full flex-grow">
             <Table />
           </div>

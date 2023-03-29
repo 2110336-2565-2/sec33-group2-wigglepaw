@@ -157,7 +157,13 @@ export default function VerifyPetSitter() {
                         {
                           pathname: "/admin/verification",
                           query: {
-                            notice: `Pet sitter ${petSitter.data.username} has been verified.`,
+                            code: 6901,
+                            notice: `${
+                              petSitter.data.userType ===
+                              UserType.FreelancePetSitter
+                                ? "Freelance pet sitter"
+                                : "Pet hotel"
+                            } ${petSitter.data.username} has been verified.`,
                           },
                         },
                         "/admin/verification"

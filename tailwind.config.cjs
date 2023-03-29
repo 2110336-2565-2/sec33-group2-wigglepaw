@@ -18,9 +18,9 @@ module.exports = {
         "wp-light-blue": "#3b6691",
         freelance: "#169C64",
         hotel: "#C3177E",
-        good: "#3FBD61",
-        neutral: "#EE9500",
-        bad: "#EC4E2A",
+        good: "#40be62",
+        neutral: "#ee9500",
+        bad: "#EA4E2C",
       },
       fontFamily: {
         sans: ["Ubuntu", "sans-serif"],
