@@ -6,7 +6,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { ReportTicketStatus } from "@prisma/client";
 
-function throwErr(err) {
+function throwErr(err: unknown) {
   throw new TRPCError({
     code: "INTERNAL_SERVER_ERROR",
     message: "reportTickerRouter fucked up",
@@ -14,7 +14,24 @@ function throwErr(err) {
   });
 }
 
+function stateErr(from: string, to: string) {
+  const message = `Changing status from '${from}' to '${to}' is not allowed.`;
+
+  return {
+    success: false,
+    message: message,
+  };
+}
+
+function differentAdminErr() {
+  return {
+    success: false,
+    message: "This ticket is already assigned to another admin.",
+  };
+}
+
 export const reportTicketRouter = createTRPCRouter({
+  // Create
   create: publicProcedure
     .input(
       z.object({
@@ -40,6 +57,7 @@ export const reportTicketRouter = createTRPCRouter({
       }
     }),
 
+  // Delete by Id
   deleteById: publicProcedure
     .input(
       z.object({
@@ -58,6 +76,7 @@ export const reportTicketRouter = createTRPCRouter({
       }
     }),
 
+  // Acknowledge
   ack: publicProcedure
     .input(
       z.object({
@@ -66,6 +85,24 @@ export const reportTicketRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // get current status
+      const ticket = await ctx.prisma.reportTicket.findUnique({
+        where: { ticketId: input.ticketId },
+        select: { status: true },
+      });
+      // no ticket in system
+      if (!ticket) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Ticket not found in database",
+        });
+      }
+      // check state machine
+      // only accept pending to ack
+      if (ticket.status.toString() != "pending") {
+        return stateErr(ticket.status.toString(), "acked");
+      }
+
       try {
         return await ctx.prisma.reportTicket.update({
           where: {
@@ -81,6 +118,7 @@ export const reportTicketRouter = createTRPCRouter({
       }
     }),
 
+  // Cancel
   cancel: publicProcedure
     .input(
       z.object({
@@ -89,6 +127,35 @@ export const reportTicketRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // get current status
+      const ticket = await ctx.prisma.reportTicket.findUnique({
+        where: { ticketId: input.ticketId },
+        select: {
+          status: true,
+          admin: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+      // no ticket in system
+      if (!ticket) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Ticket not found in database",
+        });
+      }
+      // check state machine
+      const badStatus = ["canceled", "resolved"];
+      if (badStatus.includes(ticket.status.toString())) {
+        return stateErr(ticket.status.toString(), "acked");
+      }
+      const ticketAdmin = ticket.admin?.user;
+      // Different admins --> unauthorized
+      if (ticketAdmin?.userId && ticketAdmin?.userId != input.adminId) {
+        return differentAdminErr();
+      }
       try {
         return await ctx.prisma.reportTicket.update({
           where: {
@@ -104,6 +171,7 @@ export const reportTicketRouter = createTRPCRouter({
       }
     }),
 
+  // Resolve
   resolve: publicProcedure
     .input(
       z.object({

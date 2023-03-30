@@ -133,7 +133,7 @@ export const ticketStatus = z.enum([
 
 export const reportTicketFields = z.object({
   title: z.string(),
-  description: z.string().optional(),
+  description: z.string().optional().default(""),
 });
 
 export const approvalStatus = z.enum([
