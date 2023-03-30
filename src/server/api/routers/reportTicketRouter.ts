@@ -149,7 +149,7 @@ export const reportTicketRouter = createTRPCRouter({
       // check state machine
       const badStatus = ["canceled", "resolved"];
       if (badStatus.includes(ticket.status.toString())) {
-        return stateErr(ticket.status.toString(), "acked");
+        return stateErr(ticket.status.toString(), "canceled");
       }
       const ticketAdmin = ticket.admin?.user;
       // Different admins --> unauthorized
@@ -181,6 +181,35 @@ export const reportTicketRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
+        // get current status
+        const ticket = await ctx.prisma.reportTicket.findUnique({
+          where: { ticketId: input.ticketId },
+          select: {
+            status: true,
+            admin: {
+              include: {
+                user: true,
+              },
+            },
+          },
+        });
+        // no ticket in system
+        if (!ticket) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Ticket not found in database",
+          });
+        }
+        // check state machine
+        const badStatus = ["canceled", "resolved"];
+        if (badStatus.includes(ticket.status.toString())) {
+          return stateErr(ticket.status.toString(), "resolved");
+        }
+        const ticketAdmin = ticket.admin?.user;
+        // Different admins --> unauthorized
+        if (ticketAdmin?.userId && ticketAdmin?.userId != input.adminId) {
+          return differentAdminErr();
+        }
         return await ctx.prisma.reportTicket.update({
           where: {
             ticketId: input.ticketId,
