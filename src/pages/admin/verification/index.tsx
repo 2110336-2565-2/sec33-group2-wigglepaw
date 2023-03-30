@@ -115,8 +115,8 @@ function Table() {
             (petSitter.userType === UserType.FreelancePetSitter ||
               petSitter.userType === UserType.PetHotel) &&
             petSitter.verifyStatus
-              ? "Pending"
-              : "Verified",
+              ? "Verified"
+              : "Pending",
         }))
     : [];
 
