@@ -25,14 +25,14 @@ export default function AdminandHelpSideTab(props: TabProps) {
           <div className="flex flex-col  ">
             {/*Report problem Tab*/}
             <Link
-              href={`/user/${props.user?.username}/profile`}
+              href={`/help/reports/new`}
               className="flex h-[58px] w-[219px] items-center justify-center border bg-[#D9D9D9] text-lg font-medium hover:bg-[#A3A3A3]"
             >
               Report a Problem
             </Link>
             {/*View My Report Tab*/}
             <Link
-              href={`/user/${props.user?.username}/profile`}
+              href={`/help/reports`}
               className="flex h-[58px] w-[219px] items-center justify-center border bg-[#D9D9D9] text-lg font-medium hover:bg-[#A3A3A3]"
             >
               View My Report
