@@ -56,6 +56,46 @@ export const reportTicketRouter = createTRPCRouter({
         throwErr(err);
       }
     }),
+  getAll: publicProcedure.mutation(async ({ ctx, input }) => {
+    try {
+      return await ctx.prisma.reportTicket.findMany();
+    } catch (err) {
+      throwErr(err);
+    }
+  }),
+  getPending: publicProcedure.mutation(async ({ ctx, input }) => {
+    try {
+      return await ctx.prisma.reportTicket.findMany({
+        where: {
+          status: ReportTicketStatus.pending,
+        },
+      });
+    } catch (err) {
+      throwErr(err);
+    }
+  }),
+  getCanceled: publicProcedure.mutation(async ({ ctx, input }) => {
+    try {
+      return await ctx.prisma.reportTicket.findMany({
+        where: {
+          status: ReportTicketStatus.canceled,
+        },
+      });
+    } catch (err) {
+      throwErr(err);
+    }
+  }),
+  getResolved: publicProcedure.mutation(async ({ ctx, input }) => {
+    try {
+      return await ctx.prisma.reportTicket.findMany({
+        where: {
+          status: ReportTicketStatus.resolved,
+        },
+      });
+    } catch (err) {
+      throwErr(err);
+    }
+  }),
   getByAdminId: publicProcedure
     .input(
       z.object({
