@@ -90,7 +90,9 @@ export default function VerifyPetSitter() {
                     </div>
                   </div>
                   <div className="flex w-full items-end leading-none">
-                    <div className="w-[30%] font-semibold">Price Range</div>
+                    <div className="w-[30%] font-semibold text-wp-blue">
+                      Price Range
+                    </div>
                     <div className="w-[70%]r">
                       ฿{petSitter.data.startPrice} - ฿{petSitter.data.endPrice}
                     </div>
@@ -110,7 +112,7 @@ export default function VerifyPetSitter() {
                     <div className="w-[30%] font-semibold">Introduction</div>
                     <div className="w-[70%]">
                       <textarea
-                        className="-mb-[3px] w-[80%] resize-none rounded-sm border-[1px] p-[5px] text-[18px] focus:border-[#80bdff] focus:shadow-[0_0_0_0.2rem_rgba(0,123,255,.25)] focus:outline-none"
+                        className="-mb-[3px] w-[80%] resize-none rounded-sm border-2 p-[5px] text-[18px] text-[#434D54] focus:border-[#80bdff] focus:shadow-[0_0_0_0.2rem_rgba(0,123,255,.25)] focus:outline-none"
                         rows={4}
                         readOnly
                       >
@@ -120,7 +122,7 @@ export default function VerifyPetSitter() {
                   </div>
                   <div className="flex w-full">
                     <div className="w-[30%] font-semibold">Register Date</div>
-                    <div className="w-[70%]">
+                    <div className="w-[70%] text-wp-blue">
                       {petSitter.data.createdAt.toLocaleString()}
                     </div>
                   </div>
@@ -137,11 +139,15 @@ export default function VerifyPetSitter() {
                   </div>
                   <div className="flex flex-col gap-[10px]">
                     <div className="font-semibold">Address</div>
-                    <div className="text-[20px]">{petSitter.data.address}</div>
+                    <div className="text-[20px] text-[#434D54]">
+                      {petSitter.data.address}
+                    </div>
                   </div>
                   <div className="flex flex-col gap-[10px]">
                     <div className="font-semibold">Phone Number</div>
-                    <div className="">{petSitter.data.phoneNumber}</div>
+                    <div className="text-wp-blue">
+                      {petSitter.data.phoneNumber}
+                    </div>
                   </div>
                 </div>
               </div>

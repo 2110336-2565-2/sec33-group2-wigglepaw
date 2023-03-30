@@ -14,6 +14,7 @@ import { UserType } from "../../../types/user";
 import { api } from "../../../utils/api";
 import ReactDOMServer from "react-dom/server";
 import Notification from "../../../components/Admin/Notification";
+import { title } from "process";
 
 export default function Verification() {
   const router = useRouter();
@@ -31,7 +32,7 @@ export default function Verification() {
             notice={router.query.notice as string}
             className="mx-4"
           />
-          <div className="h-full flex-grow">
+          <div className="h-full flex-grow text-[18px]">
             <Table />
           </div>
         </div>
@@ -47,10 +48,11 @@ interface DataRow {
   imageUri: string | null | undefined;
   fullName: string | null;
   hotelName: string | null;
-  type: UserType;
+  type: "Freelance" | "Hotel";
   certificationUri: string | null;
-  lastUpdate: Date;
-  status: boolean;
+  lastUpdate: string | null;
+  lastUpdateTime: number;
+  status: "Pending" | "Verified" | null;
 }
 
 function Table() {
@@ -72,6 +74,12 @@ function Table() {
   const [selectedRows, setSelectedRows] = useState<DataRow[]>([]);
   const [toggledClearRows, setToggleClearRows] = useState(false);
 
+  // table title
+  const Title = (
+    <h1 className="text-[40px] font-semibold">Pet Sitter Verification</h1>
+  );
+
+  // available data
   const data: DataRow[] = users.data
     ? users.data
         .filter(
@@ -92,27 +100,83 @@ function Table() {
             petSitter.userType === UserType.PetHotel
               ? petSitter.hotelName
               : null,
-          type: petSitter.userType,
+          type:
+            petSitter.userType === UserType.FreelancePetSitter
+              ? "Freelance"
+              : "Hotel",
           certificationUri:
             petSitter.userType === UserType.FreelancePetSitter ||
             petSitter.userType === UserType.PetHotel
               ? petSitter.certificationUri
               : null,
-          lastUpdate: new Date(Date.now() - 86400100),
+          lastUpdate: formatTime(new Date(Date.now() - 86400100)), // dummy
+          lastUpdateTime: Date.now() - 86400100, // dummy
           status:
             (petSitter.userType === UserType.FreelancePetSitter ||
               petSitter.userType === UserType.PetHotel) &&
-            petSitter.verifyStatus,
+            petSitter.verifyStatus
+              ? "Pending"
+              : "Verified",
         }))
     : [];
 
+  // filter data
+  const [filterText, setFilterText] = useState("");
+  const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+
+  const filteredData = data.filter((row: DataRow) =>
+    // row.fullName &&
+    // row.fullName.toLowerCase().includes(filterText.toLowerCase())
+    filterText
+      .toLowerCase()
+      .split(/\s+/)
+      .every(
+        (word) =>
+          row.fullName?.toLowerCase().includes(word) ||
+          row.hotelName?.toLowerCase().includes(word) ||
+          row.username?.toLowerCase().includes(word) ||
+          row.type.toLowerCase().includes(word) ||
+          row.certificationUri?.toLowerCase().includes(word) ||
+          row.lastUpdate?.toLowerCase().includes(word) ||
+          row.status?.toLowerCase().includes(word)
+      )
+  );
+
+  // filter component (subheader)
+  const SubHeaderComponent = (
+    <div className="relative mt-[10px] flex items-center">
+      <label className="mr-2">Filter</label>
+      <input
+        className="peer w-[200px] rounded-md border-2 p-1.5 px-2 text-[16px] text-[#434D54] focus:border-[#80bdff] focus:shadow-[0_0_0_0.2rem_rgba(0,123,255,.25)] focus:outline-none"
+        value={filterText}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setFilterText(e.target.value)
+        }
+      />
+      <div className="absolute right-[2px] z-10 hidden h-[80%] bg-white pr-1 hover:flex hover:items-center first:hover:flex first:hover:items-center peer-hover:flex peer-hover:items-center">
+        <button
+          className="rounded-md text-[#434D54] hover:bg-[#434D54]/[.4] hover:text-white"
+          onClick={() => setFilterText("")}
+        >
+          <svg
+            viewBox="0 0 512 512"
+            fill="currentColor"
+            height="18px"
+            width="18px"
+          >
+            <path d="M289.94 256l95-95A24 24 0 00351 127l-95 95-95-95a24 24 0 00-34 34l95 95-95 95a24 24 0 1034 34l95-95 95 95a24 24 0 0034-34z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+
+  // columns to show
   const columns: TableColumn<DataRow>[] = [
     {
       name: "Pet Sitter",
       selector: (row) =>
-        row.type === UserType.FreelancePetSitter
-          ? row.fullName || ""
-          : row.hotelName || "",
+        row.type === "Freelance" ? row.fullName || "" : row.hotelName || "",
       cell: (row) => (
         <RecursivePropsProvider data-tag="allowRowEvents">
           <div className="flex h-[60px] w-full items-center gap-2">
@@ -140,18 +204,15 @@ function Table() {
     },
     {
       name: "Type",
-      selector: (row) =>
-        row.type === UserType.FreelancePetSitter ? "Freelance" : "Hotel",
+      selector: (row) => row.type,
       cell: (row) => (
         <RecursivePropsProvider data-tag="allowRowEvents">
           <div
             className={`w-full overflow-hidden text-ellipsis whitespace-nowrap text-[18px] font-semibold ${
-              row.type === UserType.FreelancePetSitter
-                ? "text-freelance"
-                : "text-hotel"
+              row.type === "Freelance" ? "text-freelance" : "text-hotel"
             } `}
           >
-            {row.type === UserType.FreelancePetSitter ? "Freelance" : "Hotel"}
+            {row.type === "Freelance" ? "Freelance" : "Hotel"}
           </div>
         </RecursivePropsProvider>
       ),
@@ -179,11 +240,11 @@ function Table() {
     },
     {
       name: "Last update",
-      selector: (row) => row.lastUpdate.toISOString(),
+      selector: (row) => row.lastUpdateTime,
       cell: (row) => (
         <RecursivePropsProvider data-tag="allowRowEvents">
           <div className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-[18px] text-wp-blue">
-            {formatTime(row.lastUpdate)}
+            {row.lastUpdate}
           </div>
         </RecursivePropsProvider>
       ),
@@ -192,15 +253,15 @@ function Table() {
     },
     {
       name: "Status",
-      selector: (row) => (row.status ? "Verified" : "Pending"),
+      selector: (row) => row.status || "",
       cell: (row) => (
         <RecursivePropsProvider data-tag="allowRowEvents">
           <div
             className={`flex h-[28px] w-[100px] items-center justify-center rounded-lg text-[18px] font-semibold text-white drop-shadow-md ${
-              row.status ? "bg-good" : "bg-neutral"
+              row.status === "Verified" ? "bg-good" : "bg-neutral"
             }`}
           >
-            {row.status ? "Verified" : "Pending"}
+            {row.status}
           </div>
         </RecursivePropsProvider>
       ),
@@ -209,6 +270,7 @@ function Table() {
     },
   ];
 
+  // styles
   const customStyles = {
     headCells: {
       style: {
@@ -226,43 +288,60 @@ function Table() {
     },
   };
 
+  // conditional styles
   const conditionalRowStyles = [
     {
-      when: (row: DataRow) => !row.status,
+      when: (row: DataRow) => row.status === "Pending",
       style: {
         cursor: "help",
       },
     },
   ];
 
+  // selectable rows
   interface handleChangeProps {
     selectedRows: DataRow[];
   }
-  const handleChange = ({ selectedRows }: handleChangeProps) => {
+  const handleSelectedRowChange = ({ selectedRows }: handleChangeProps) => {
     setSelectedRows(selectedRows);
   };
 
-  const rowDisabledCriteria = (row: DataRow) => row.status;
+  const rowDisabledCriteria = (row: DataRow) => row.status === "Verified";
 
   const onRowClicked = (row: DataRow) => {
-    if (!row.status) router.push(`/admin/verification/${row.username}`);
+    if (row.status === "Pending")
+      router.push(`/admin/verification/${row.username}`);
   };
+
+  // manage selected rows
+  const ContextActions = (
+    <button
+      className="mr-2 rounded-lg px-4 py-2 font-semibold text-wp-blue hover:bg-white/[0.5]"
+      onClick={async () => {
+        // alert(JSON.stringify(selectedRows.map((row) => row.userId)));
+        await verifyPetSitters.mutateAsync({
+          userIds: selectedRows.map((row) => row.userId),
+        });
+        setToggleClearRows((prev) => !prev);
+      }}
+    >
+      Verify
+    </button>
+  );
 
   return (
     <DataTable
-      title={
-        <h1 className="mb-[20px] text-[40px] font-semibold">
-          Pet Sitter Verification
-        </h1>
-      }
       keyField="username"
+      title={Title}
+      data={filteredData}
+      subHeader
+      subHeaderComponent={SubHeaderComponent}
       columns={columns}
-      data={data}
       customStyles={customStyles}
       conditionalRowStyles={conditionalRowStyles}
       onRowClicked={onRowClicked}
       selectableRows
-      onSelectedRowsChange={handleChange}
+      onSelectedRowsChange={handleSelectedRowChange}
       selectableRowDisabled={rowDisabledCriteria}
       clearSelectedRows={toggledClearRows}
       contextMessage={{
@@ -270,20 +349,7 @@ function Table() {
         plural: "pet sitters",
         message: "selected",
       }}
-      contextActions={
-        <button
-          className="mr-4 rounded-lg bg-wp-blue px-4 py-2 font-semibold text-white hover:bg-wp-light-blue"
-          onClick={async () => {
-            // alert(JSON.stringify(selectedRows.map((row) => row.userId)));
-            await verifyPetSitters.mutateAsync({
-              userIds: selectedRows.map((row) => row.userId),
-            });
-            setToggleClearRows((prev) => !prev);
-          }}
-        >
-          Verify all
-        </button>
-      }
+      contextActions={ContextActions}
       // contextComponent={}
       // selectableRowsComponent={}
       progressPending={users.isLoading}
