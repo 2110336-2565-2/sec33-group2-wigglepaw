@@ -200,6 +200,7 @@ Table Message {
   createdAt DateTime [default: `now()`, not null]
   chatroomId String [not null]
   Chatroom Chatroom
+  read Boolean [not null, default: false]
 }
 
 Table MyRelationTable {
