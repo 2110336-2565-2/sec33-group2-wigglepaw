@@ -12,7 +12,7 @@ const Home: NextPage = () => {
     <div className="relative">
       <section className="h-[32rem] min-h-screen w-full md:h-screen">
         {/* <div className="-z-10 h-screen w-[100%] origin-bottom-right bg-[url('/dog-bg.jpg')] bg-auto bg-left bg-no-repeat"> */}
-        <div className="-z-10 flex h-full w-full origin-bottom-right flex-col bg-[url('/dog-bg-2.jpg')] bg-cover bg-center bg-no-repeat md:h-full">
+        <div className="-z-10 flex h-full w-full origin-bottom-right flex-col bg-[url('/dog-bg-2.jpg')] bg-cover bg-right bg-no-repeat md:h-full md:bg-center">
           <Header />
 
           <div className="center-thing -mt-4 flex-grow">

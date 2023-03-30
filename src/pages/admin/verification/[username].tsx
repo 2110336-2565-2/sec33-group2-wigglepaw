@@ -163,7 +163,7 @@ export default function VerifyPetSitter() {
                               UserType.FreelancePetSitter
                                 ? "Freelance pet sitter"
                                 : "Pet hotel"
-                            } ${petSitter.data.username} has been verified.`,
+                            } #${petSitter.data.username} has been verified.`,
                           },
                         },
                         "/admin/verification"
