@@ -33,46 +33,58 @@ export const petHotelRouter = createTRPCRouter({
       const hash = saltHash.hash;
       user.password = hash;
 
-      const omiseRecipient = await OmiseUtils.createRecipients(ctx.omise, {
-        name: input.user.username,
-        email: input.user.email,
-        type: "individual",
-        // There is type error here, but only because OmiseJS type is wrong
-        // it frustates me how offical source can be this wrong
-        //
-        // Actually, thier `bank_account` is wrong too (originally the type would wrongly said `back_account`)
-        // so I create wrapper to fix it, but I give up at this point.
-        bank_account: {
-          brand: input.bankAccount.bankCode,
-          number: input.bankAccount.bankNo,
-          name: input.bankAccount.bankName,
+      const omiseRecipient = await OmiseUtils.createRecipients(
+        ctx.omise,
+        {
+          name: input.user.username,
+          email: input.user.email,
+          type: "individual",
+          // There is type error here, but only because OmiseJS type is wrong
+          // it frustates me how offical source can be this wrong
+          //
+          // Actually, thier `bank_account` is wrong too (originally the type would wrongly said `back_account`)
+          // so I create wrapper to fix it, but I give up at this point.
+          bank_account: {
+            brand: input.bankAccount.bankCode,
+            number: input.bankAccount.bankNo,
+            name: input.bankAccount.bankName,
+          },
         },
-      });
+        {
+          autoVerifyInTest: true,
+        }
+      );
 
-      await ctx.prisma.petHotel.create({
-        data: {
-          petSitter: {
-            create: {
-              user: {
-                create: {
-                  ...input.user,
-                  salt: salt,
+      try {
+        await ctx.prisma.petHotel.create({
+          data: {
+            petSitter: {
+              create: {
+                user: {
+                  create: {
+                    ...input.user,
+                    salt: salt,
+                  },
                 },
+                ...input.petSitter,
+                recipientId: omiseRecipient.id,
               },
-              ...input.petSitter,
-              recipientId: omiseRecipient.id,
+            },
+            ...input.petHotel,
+          },
+          include: {
+            petSitter: {
+              include: {
+                user: true,
+              },
             },
           },
-          ...input.petHotel,
-        },
-        include: {
-          petSitter: {
-            include: {
-              user: true,
-            },
-          },
-        },
-      });
+        });
+      } catch (e) {
+        console.error(e);
+        await ctx.omise.recipients.destroy(omiseRecipient.id);
+        throw e;
+      }
       return;
     }),
 
