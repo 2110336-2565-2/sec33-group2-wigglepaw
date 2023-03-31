@@ -206,18 +206,17 @@ const Home: NextPage = () => {
       </section>
       <section className="center-thing w-[100%] bg-[#EAE7DC] py-12">
         <div className="max-w-[1800px] px-12">
-          <h1 className="center-thing text-[2.5rem]">ABOUT</h1>
-          <p className="px-4 pt-5 md:px-16">
-            I don't know hat to write, so just write something repeatly for 5
-            times then so just write something repeatly for 5 times then so just
-            write something repeatly for 5 times then so just write something
-            repeatly for 5 times then so just write something repeatly for 5
-            times then
-          </p>
-          <div className="center-thing">
-            <button className="find-link mx-0 mt-5 rounded-lg px-3 text-base">
-              <p className="text-white">MORE ABOUT US!</p>
-            </button>
+          <h1 className="center-thing text-[2.5rem]">ABOUT OUR TEAM</h1>
+          <div id="team-members" className="text-center">
+            <p>Natapat Klaewkla</p>
+            <p>Thanadol Chitthamlerd</p>
+            <p>Kawin Moongsamankul</p>
+            <p>Thanachote Katanyutapant</p>
+            <p>Thut Thamrongnawasawat</p>
+            <p>Tuchtham Sungkameka</p>
+            <p>Thuwa Ngeonsalung</p>
+            <p>Pannatorn Sirasuk</p>
+            <p>Sirawitch Tiyasuttipun</p>
           </div>
         </div>
       </section>
