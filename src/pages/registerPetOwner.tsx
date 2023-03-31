@@ -17,9 +17,9 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { getServerAuthSession } from "../server/auth";
-import type _ from "omise-js-typed"; // Import for global type declaration
-import Script from "next/script";
-import * as betterOmiseJs from "../utils/better-omise";
+import type { OmiseTokenParameters } from "omise-js-typed/dist/lib/omise";
+import { useOmise } from "use-omise";
+import { env } from "../env/client.mjs";
 
 // Schema for first page of form
 const formDataSchema1 = z.object({
@@ -74,6 +74,10 @@ const RegisterPage: NextPage = () => {
 
   const router = useRouter();
   const mutation = api.petOwner.create.useMutation();
+  const { createTokenPromise } = useOmise({
+    publicKey: env.NEXT_PUBLIC_OMISE_PUBLISHABLE_KEY,
+  });
+
   const onSubmit = async (data: FormData) => {
     alert(JSON.stringify(tag));
 
@@ -90,14 +94,18 @@ const RegisterPage: NextPage = () => {
 
     let cardToken;
     try {
-      const [status, response] = await betterOmiseJs.createToken("card", {
+      if (createTokenPromise === null) {
+        alert("OmiseJS is not loaded yet, please wait and try again");
+        return;
+      }
+
+      cardToken = await createTokenPromise("card", {
         name: data.holdername,
         number: data.cardno,
         expiration_month: exp_month,
         expiration_year: exp_year,
         security_code: +data.cvv,
-      });
-      cardToken = response.id;
+      } satisfies OmiseTokenParameters);
     } catch (e) {
       console.error("Card verification failed:", e);
       alert(`Card verification failed: ${JSON.stringify(e)}`);
@@ -365,31 +373,12 @@ const RegisterPage: NextPage = () => {
             <h1 className=" ml-[15%] text-2xl font-bold">Payment</h1>
           </div>
           <div className="flex justify-center">
-            {/* Load Omise.js */}
-            <Script
-              type="text/javascript"
-              src="https://cdn.omise.co/omise.js"
-              onLoad={() => {
-                if (!process.env.NEXT_PUBLIC_OMISE_PUBLISHABLE_KEY) {
-                  throw new Error(
-                    "NEXT_PUBLIC_OMISE_PUBLISHABLE_KEY is not defined"
-                  );
-                }
-                window.Omise.setPublicKey(
-                  process.env.NEXT_PUBLIC_OMISE_PUBLISHABLE_KEY
-                );
-                window.OmiseCard.configure({
-                  publicKey: process.env.NEXT_PUBLIC_OMISE_PUBLISHABLE_KEY,
-                });
-              }}
-            />
-
             <form onSubmit={handleSubmit(onSubmit)} className=" h-full w-2/3 ">
               <div className="mx-auto grid w-full grid-cols-2 grid-rows-6 gap-5 md:grid-cols-4 md:gap-2">
                 <div className="col-span-4 flex items-center">
-                  <input className="mr-2" type="checkbox"></input>
-                  <label>By Card</label>
-                  <div className="ml-4 h-6 w-8 rounded  bg-blue-300"></div>
+                  {/* <input className="mr-2" type="checkbox"></input>
+                  <label>By Card</label> */}
+                  <div className="h-6 w-8 rounded  bg-blue-300"></div>
                   <div className="ml-2 h-6 w-8 rounded  bg-blue-300"></div>
                   <div className="ml-2 h-6 w-8 rounded  bg-blue-300"></div>
                 </div>
