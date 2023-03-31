@@ -3,17 +3,17 @@ import { useState } from "react";
 import type { GetServerSidePropsContext, NextPage } from "next";
 import { api } from "../utils/api";
 import {
-  FieldValues,
-  SubmitHandler,
+  type FieldValues,
+  type SubmitHandler,
   useForm,
-  UseFormRegister,
+  type UseFormRegister,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { PetKind } from "@prisma/client";
 import Header from "../components/Header";
 import { useRouter } from "next/router";
 import { getServerAuthSession } from "../server/auth";
+import { banks } from "../common/constants";
 
 export default function RegisterPetSitter() {
   const createFreelancePetSitter = api.freelancePetSitter.create.useMutation();
@@ -44,7 +44,7 @@ export default function RegisterPetSitter() {
   //   cardno: "",
   // });
 
-  const [state, setState] = useState(0); //0=main info 1=freelance 2=hotelpet
+  const [state, setState] = useState(0); //0=main info 1=freelance 2=hotelpet, 3=banking
 
   const onSubmitpage3 = async (e: {
     target: any;
@@ -54,12 +54,11 @@ export default function RegisterPetSitter() {
   }) => {
     e.preventDefault();
 
-    var data = {
-      bankAccount: e.target.bankno.value,
-      bankName: e.target.bankname.value,
-      cvv: e.target.cvv.value,
-      exp: e.target.exp.value,
-      cardno: e.target.cardno.value,
+    // Wtf am I doing?
+    const data = {
+      bankNo: +(e.target.bankno.value as string),
+      bankName: e.target.bankname.value as string,
+      bankCode: e.target.bankcode.value as string,
     };
 
     // registering to the backend
@@ -73,14 +72,15 @@ export default function RegisterPetSitter() {
               email: page1.email,
               phoneNumber: page1.phoneNumber,
               address: page1.address,
-              bankAccount: data.bankAccount,
-              bankName: data.bankName,
+              // bankAccount: data.bankAccount,
+              // bankName: data.bankName,
             },
             petSitter: {
               petTypes: ["dog", "cats"], // temporary for now
               verifyStatus: false,
               certificationUri: "testCertURI",
             },
+            bankAccount: data,
             freelancePetSitter: page2free,
           });
       } else {
@@ -91,9 +91,10 @@ export default function RegisterPetSitter() {
             email: page1.email,
             phoneNumber: page1.phoneNumber,
             address: page1.address,
-            bankAccount: data.bankAccount,
-            bankName: data.bankName,
+            // bankAccount: data.bankAccount,
+            // bankName: data.bankName,
           },
+          bankAccount: data,
           petSitter: {
             petTypes: ["dog", "cats"], // temporary for now
             verifyStatus: false,
@@ -103,8 +104,9 @@ export default function RegisterPetSitter() {
         });
       }
 
-      router.push("/");
+      await router.push("/");
     } catch (error) {
+      alert(JSON.stringify(error));
       console.log(error);
     }
     setState(3);
@@ -281,7 +283,6 @@ export default function RegisterPetSitter() {
         </>
       );
     } else if (state === 3) {
-      z;
       return (
         <>
           <Header />
@@ -290,7 +291,7 @@ export default function RegisterPetSitter() {
           <div className="flex w-2/3 justify-center">
             <form className=" h-full w-full pt-5 " onSubmit={onSubmitpage3}>
               <div className="mx-auto grid w-full grid-cols-2 grid-rows-6 gap-5 md:grid-cols-2 md:gap-2">
-                <div className="col-span-4 flex items-center">
+                {/* <div className="col-span-4 flex items-center">
                   <input className="mr-2" type="checkbox"></input>
                   <label>By Card</label>
                   <div className="ml-4 h-6 w-8 rounded  bg-blue-300"></div>
@@ -324,15 +325,24 @@ export default function RegisterPetSitter() {
                     type="number"
                   />
                 </div>
-                <div className="col-span-2"></div>
-                <div className="col-span-4 flex w-full items-center">
+                <div className="col-span-2"></div> */}
+                {/* <div className="col-span-4 flex w-full items-center">
                   <input className="mr-2" type="checkbox"></input>
                   <label>Mobile banking</label>
                   <div className="ml-4 h-7 w-7 rounded-full bg-blue-300"></div>
                   <div className="ml-2 h-7 w-7 rounded-full bg-blue-300"></div>
                   <div className="ml-2 h-7 w-7 rounded-full bg-blue-300"></div>
                   <div className="ml-2 h-7 w-7 rounded-full bg-blue-300"></div>
+                </div> */}
+                <div className=" flex w-full flex-col">
+                  <label>Bank Name*</label>
+                  <input
+                    id="bankname"
+                    placeholder="ABC"
+                    className="block w-full rounded border border-gray-100 bg-gray-100 p-1 px-2 text-sm text-gray-900 drop-shadow-md focus:border-blue-500 focus:bg-white focus:ring-blue-500"
+                  />
                 </div>
+                <div className="col-span-2"></div>
                 <div className="flex w-full flex-col">
                   <label>Bank No*</label>
                   <input
@@ -343,12 +353,18 @@ export default function RegisterPetSitter() {
                   />
                 </div>
                 <div className=" flex w-full flex-col">
-                  <label>Bank Name*</label>
-                  <input
-                    id="bankname"
+                  <label>Bank Code*</label>
+                  <select
+                    id="bankcode"
                     placeholder="ABC"
                     className="block w-full rounded border border-gray-100 bg-gray-100 p-1 px-2 text-sm text-gray-900 drop-shadow-md focus:border-blue-500 focus:bg-white focus:ring-blue-500"
-                  />
+                  >
+                    {banks.map(({ code, name }) => (
+                      <option key={code} value={code}>
+                        {name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="col-span-2"></div>
                 <div className="col-span-2 flex items-center">

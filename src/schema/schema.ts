@@ -14,6 +14,12 @@ export const userFields = z.object({
   // accounts: Account
 });
 
+export const bankAccountCreateSchema = z.object({
+  bankNo: z.number(),
+  bankName: z.string(),
+  bankCode: z.string(),
+});
+
 export const petSitterFields = z.object({
   // user: userFields,
   petTypes: z.array(z.string()),
