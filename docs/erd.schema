@@ -157,11 +157,6 @@ Table Post {
   createdAt DateTime [default: `now()`, not null]
 }
 
-Table MyRelationTable {
-  petId String [ref: > Pet.petId]
-  bookingId String [ref: > Booking.bookingId]
-}
-
 Enum BookingStatus {
   requested
   accepted
