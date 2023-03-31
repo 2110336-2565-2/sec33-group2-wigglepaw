@@ -266,7 +266,7 @@ const RegisterPage: NextPage = () => {
                 <div className="flex w-full rounded border border-gray-100 bg-gray-100 p-1 px-2 text-sm text-gray-900 drop-shadow-md focus:border-blue-500 focus:bg-white focus:ring-blue-500">
                   <div className="center-thing ">
                     {tag.map((value, index) => (
-                      <div className="center-thing mr-1 rounded-full bg-slate-300 py-1 px-2 text-sm  ">
+                      <div className="center-thing mr-1 rounded-full bg-slate-300 px-2 py-1 text-sm  ">
                         <span>{value}</span>
                         <button
                           type="button"
@@ -351,7 +351,7 @@ const RegisterPage: NextPage = () => {
         <div className="absolute right-0 -z-10 ">
           <img src="/Ipage2-1.png" width={614} height={580} alt="cat" />
         </div>
-        <div className="absolute top-[20%] right-0 -z-10 ">
+        <div className="absolute right-0 top-[20%] -z-10 ">
           <img src="/Ipage2-2.png" width={200} height={315} alt="cat" />
         </div>
         <div className="mt-4 h-full items-center">
@@ -365,6 +365,25 @@ const RegisterPage: NextPage = () => {
             <h1 className=" ml-[15%] text-2xl font-bold">Payment</h1>
           </div>
           <div className="flex justify-center">
+            {/* Load Omise.js */}
+            <Script
+              type="text/javascript"
+              src="https://cdn.omise.co/omise.js"
+              onLoad={() => {
+                if (!process.env.NEXT_PUBLIC_OMISE_PUBLISHABLE_KEY) {
+                  throw new Error(
+                    "NEXT_PUBLIC_OMISE_PUBLISHABLE_KEY is not defined"
+                  );
+                }
+                window.Omise.setPublicKey(
+                  process.env.NEXT_PUBLIC_OMISE_PUBLISHABLE_KEY
+                );
+                window.OmiseCard.configure({
+                  publicKey: process.env.NEXT_PUBLIC_OMISE_PUBLISHABLE_KEY,
+                });
+              }}
+            />
+
             <form onSubmit={handleSubmit(onSubmit)} className=" h-full w-2/3 ">
               <div className="mx-auto grid w-full grid-cols-2 grid-rows-6 gap-5 md:grid-cols-4 md:gap-2">
                 <div className="col-span-4 flex items-center">
@@ -474,29 +493,6 @@ const RegisterPage: NextPage = () => {
                 <Button type="submit">Register</Button>
               </div>
             </form>
-
-            <Script
-              type="text/javascript"
-              src="https://cdn.omise.co/omise.js"
-              onLoad={() => {
-                if (!process.env.NEXT_PUBLIC_OMISE_PUBLISHABLE_KEY) {
-                  throw new Error(
-                    "NEXT_PUBLIC_OMISE_PUBLISHABLE_KEY is not defined"
-                  );
-                }
-                window.Omise.setPublicKey(
-                  process.env.NEXT_PUBLIC_OMISE_PUBLISHABLE_KEY
-                );
-                window.OmiseCard.configure({
-                  publicKey: process.env.NEXT_PUBLIC_OMISE_PUBLISHABLE_KEY,
-                });
-              }}
-            />
-
-            {/* // TODO: submit token to backend, and creatae pet owner.
-                // TODO: also verify the token on backend
-                // Ok, proably need to make our form
-                // https://www.omise.co/collecting-card-information */}
           </div>
           <div className="relative flex justify-center">
             <div className="absolute top-[-4rem] -z-10 ">
