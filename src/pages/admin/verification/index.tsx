@@ -15,7 +15,7 @@ import { api } from "../../../utils/api";
 import ReactDOMServer from "react-dom/server";
 import Notification from "../../../components/Admin/Notification";
 import { title } from "process";
-
+import AdminSideTab from "../../../components/AdminSideTab";
 export default function Verification() {
   const router = useRouter();
 
@@ -24,7 +24,7 @@ export default function Verification() {
       <FixedHeader />
       <div className="flex flex-grow">
         <div className="flex h-full w-[200px] border-2 max-lg:hidden">
-          Please connect sidetab given I am done with my life.
+          <AdminSideTab />
         </div>
         <div className="flex w-full flex-col gap-5 overflow-scroll sm:px-[20px] sm:py-[10px] lg:px-[40px] lg:py-[20px] xl:px-[80px] xl:py-[40px]">
           <Notification
