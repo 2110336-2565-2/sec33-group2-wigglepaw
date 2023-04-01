@@ -62,26 +62,30 @@ const NewReportPage = () => {
               <div id="title-and-text-wrapper" className="mr-6 flex-1">
                 <div className="mb-2 flex">
                   <p className="w-20 text-lg  text-slate-700">Title</p>
-                  <input
-                    className="flex-1 rounded-sm border border-slate-400 px-2 py-2"
-                    {...register("title", { required: true })}
-                    placeholder="What is your report title?"
-                  />
-                  {errors.title && (
-                    <p className="text-red-500">This field is required</p>
-                  )}
+                  <div className="flex flex-1 flex-col">
+                    {errors.title && (
+                      <p className="text-red-500">This field is required</p>
+                    )}
+                    <input
+                      className="flex-1 rounded-sm border border-slate-400 px-2 py-2"
+                      {...register("title", { required: true })}
+                      placeholder="What is your report title?"
+                    />
+                  </div>
                 </div>
 
                 <div className="mb-2 flex">
                   <p className="w-20 text-lg  text-slate-700">Text</p>
-                  <input
-                    className="h-60 flex-1 rounded-sm border border-slate-400 px-2 py-2 text-start"
-                    {...register("text", { required: true })}
-                    placeholder="What do you want to report ?"
-                  />
-                  {errors.text && (
-                    <p className="text-red-500">This field is required</p>
-                  )}
+                  <div className="flex flex-1 flex-col">
+                    {errors.text && (
+                      <p className="text-red-500">This field is required</p>
+                    )}
+                    <input
+                      className="h-60 rounded-sm border border-slate-400 px-2 py-2 text-start"
+                      {...register("text", { required: true })}
+                      placeholder="What do you want to report ?"
+                    />
+                  </div>
                 </div>
               </div>
 
