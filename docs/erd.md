@@ -54,13 +54,11 @@ image image
   
 
   BlockedUser {
-    String id PK 
     DateTime createdAt  
     }
   
 
   MutedUser {
-    String id PK 
     DateTime createdAt  
     }
   

@@ -74,4 +74,9 @@ export abstract class Return {
     petOwner: { select: InnerReturn.petOwner },
     petSitter: { select: this.petSitter },
   };
+  public static userWithType: object = {
+    ...this.user,
+    petOwner: { select: this.petOwner },
+    petSitter: { select: this.petSitter },
+  };
 }

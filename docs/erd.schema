@@ -60,21 +60,27 @@ Table User {
 }
 
 Table BlockedUser {
-  id String [pk]
   blockedBy User [not null]
   blockedById String [not null]
   blockedUser User [not null]
   blockedUserId String [not null]
   createdAt DateTime [default: `now()`, not null]
+
+  indexes {
+    (blockedById, blockedUserId) [pk]
+  }
 }
 
 Table MutedUser {
-  id String [pk]
   mutedBy User [not null]
   mutedById String [not null]
   mutedUser User [not null]
   mutedUserId String [not null]
   createdAt DateTime [default: `now()`, not null]
+
+  indexes {
+    (mutedById, mutedUserId) [pk]
+  }
 }
 
 Table PetOwner {
@@ -224,13 +230,13 @@ Ref: Account.userId > User.userId [delete: Cascade]
 
 Ref: Session.userId > User.userId [delete: Cascade]
 
-Ref: BlockedUser.blockedById > User.userId
+Ref: BlockedUser.blockedById > User.userId [delete: Cascade]
 
-Ref: BlockedUser.blockedUserId > User.userId
+Ref: BlockedUser.blockedUserId > User.userId [delete: Cascade]
 
-Ref: MutedUser.mutedById > User.userId
+Ref: MutedUser.mutedById > User.userId [delete: Cascade]
 
-Ref: MutedUser.mutedUserId > User.userId
+Ref: MutedUser.mutedUserId > User.userId [delete: Cascade]
 
 Ref: PetOwner.userId - User.userId [delete: Cascade]
 
