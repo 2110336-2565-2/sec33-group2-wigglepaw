@@ -155,7 +155,8 @@ export const Chatmain = (props: ChatMainProps) => {
         <div className="ml-4 hidden w-5 md:visible" onClick={togglemode}>
           <FontAwesomeIcon className="" size="xl" icon={faAngleLeft} />
         </div>
-        <span className=" flex-1 px-4 py-2">{props.username}</span>
+        <span className="flex-1 px-4 py-2">{props.username}</span>
+
         {/* Block button */}
         <div className="px-1">
           <MuteButton></MuteButton>
