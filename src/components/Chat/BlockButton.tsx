@@ -20,7 +20,7 @@ export default function BlockButton(props: BlockButtonProps) {
         >
           <FontAwesomeIcon
             icon={faUserSlash}
-            className={`rounded-full border ${block} bg-gray-400 p-1`}
+            className={`rounded-full border ${block} bg-gray-300 p-1`}
           />
         </button>
       )}
@@ -33,7 +33,7 @@ export default function BlockButton(props: BlockButtonProps) {
         >
           <FontAwesomeIcon
             icon={faUser}
-            className={`rounded-full border ${block} bg-gray-400 p-1`}
+            className={`rounded-full border ${block} bg-gray-300 p-1`}
           />
         </button>
       )}

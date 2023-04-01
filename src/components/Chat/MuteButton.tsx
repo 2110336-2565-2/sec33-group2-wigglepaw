@@ -20,7 +20,7 @@ export default function MuteButton(props: MuteButtonProps) {
         >
           <FontAwesomeIcon
             icon={faVolumeMute}
-            className={`rounded-full border ${mute} bg-gray-400 p-1`}
+            className={`rounded-full border ${mute} bg-gray-300 p-1`}
           />
         </button>
       )}
@@ -33,7 +33,7 @@ export default function MuteButton(props: MuteButtonProps) {
         >
           <FontAwesomeIcon
             icon={faVolumeHigh}
-            className={`rounded-full border ${mute} bg-gray-400 p-1`}
+            className={`rounded-full border ${mute} bg-gray-300 p-1`}
           />
         </button>
       )}

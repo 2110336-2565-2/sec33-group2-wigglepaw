@@ -15,6 +15,8 @@ import io from "socket.io-client";
 import { api } from "../../utils/api";
 import { list } from "postcss";
 import { ModeContext } from "../../pages/chat";
+import BlockButton from "./BlockButton";
+import MuteButton from "./MuteButton";
 
 let socket;
 type ChatMessage = {
@@ -153,8 +155,14 @@ export const Chatmain = (props: ChatMainProps) => {
         <div className="ml-4 hidden w-5 md:visible" onClick={togglemode}>
           <FontAwesomeIcon className="" size="xl" icon={faAngleLeft} />
         </div>
-        <span className=" px-4 py-2">{props.username}</span>
+        <span className=" flex-1 px-4 py-2">{props.username}</span>
         {/* Block button */}
+        <div className="px-1">
+          <MuteButton></MuteButton>
+        </div>
+        <div className="px-2">
+          <BlockButton></BlockButton>
+        </div>
       </div>
 
       <div className=" h-[82%] w-full  px-10">
