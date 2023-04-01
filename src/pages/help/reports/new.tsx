@@ -1,4 +1,5 @@
-import Image from "next/image";
+import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Header from "../../../components/Header";
@@ -53,50 +54,68 @@ const NewReportPage = () => {
   return (
     <>
       <Header />
-      <div className="text-center">
-        <h1>New Report</h1>
+      <div className="m-5">
+        <h1 className="text-[40px] text-[#213951]">New Report</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <p>Title</p>
-            <input
-              className="border"
-              {...register("title", { required: true })}
-              placeholder="What is your report title?"
-            />
-            {errors.title && (
-              <p className="text-red-500">This field is required</p>
-            )}
-          </div>
+          <div className=" border border-[#a3bad1] p-5">
+            <div className="mb-6 flex">
+              <div id="title-and-text-wrapper" className="mr-6 flex-1">
+                <div className="mb-2 flex">
+                  <p className="w-20 text-lg  text-slate-700">Title</p>
+                  <input
+                    className="flex-1 rounded-sm border border-slate-400 px-2 py-2"
+                    {...register("title", { required: true })}
+                    placeholder="What is your report title?"
+                  />
+                  {errors.title && (
+                    <p className="text-red-500">This field is required</p>
+                  )}
+                </div>
 
-          <div>
-            <p>Text</p>
-            <input
-              className="border"
-              {...register("text", { required: true })}
-              placeholder="What do you want to report ?"
-            />
-            {errors.text && (
-              <p className="text-red-500">This field is required</p>
-            )}
-          </div>
+                <div className="mb-2 flex">
+                  <p className="w-20 text-lg  text-slate-700">Text</p>
+                  <input
+                    className="h-60 flex-1 rounded-sm border border-slate-400 px-2 py-2 text-start"
+                    {...register("text", { required: true })}
+                    placeholder="What do you want to report ?"
+                  />
+                  {errors.text && (
+                    <p className="text-red-500">This field is required</p>
+                  )}
+                </div>
+              </div>
 
-          <div>
-            <p>Problem Screenshot</p>
-            {imagePreview && (
-              <img className="h-60 w-60" src={imagePreview} alt="preview" />
-            )}
-            <input
-              className="border"
-              {...register("image")}
-              type="file"
-              accept="image/*"
-            />
-          </div>
+              <div id="image-upload-wrapper" className=" mr-4">
+                <p className="text-lg text-slate-700">Problem Screenshot</p>
+                {imagePreview ? (
+                  <div className="h-48 w-48 rounded-sm p-[24px] ">
+                    <img className="" src={imagePreview} alt="preview" />
+                  </div>
+                ) : (
+                  <div className="h-48 w-48 rounded-sm border border-slate-200 p-[24px]">
+                    <FontAwesomeIcon
+                      icon={faCloudArrowUp}
+                      className="h-full w-full opacity-10"
+                    />
+                  </div>
+                )}
+                <input
+                  className="w-48 bg-white text-sm"
+                  {...register("image")}
+                  type="file"
+                  accept="image/*"
+                />
+              </div>
+            </div>
 
-          <div>
-            <button type="submit" className="border bg-green-600">
-              Submit
-            </button>
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                className="rounded-sm border-b-2 border-[#35924e] bg-[#3FBD61] py-2 px-4 text-white hover:border-[#20512d] hover:bg-[#35924e]"
+              >
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
