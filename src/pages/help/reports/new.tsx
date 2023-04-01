@@ -92,7 +92,7 @@ const NewReportPage = () => {
                     <img className="" src={imagePreview} alt="preview" />
                   </div>
                 ) : (
-                  <div className="h-48 w-48 rounded-sm border border-slate-200 p-[24px]">
+                  <div className="h-48 rounded-sm border border-slate-200 p-[24px]">
                     <FontAwesomeIcon
                       icon={faCloudArrowUp}
                       className="h-full w-full opacity-10"
