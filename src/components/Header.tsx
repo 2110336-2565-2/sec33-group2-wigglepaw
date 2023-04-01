@@ -365,7 +365,7 @@ const Header = (props: any) => {
         )}
       </nav>
 
-      <ReminderBar />
+      {/* <ReminderBar /> */}
     </span>
   );
 };
