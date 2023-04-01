@@ -12,14 +12,16 @@ const HelpCenter = () => {
           <h1 className="text-[50px] font-extrabold text-[#173554]">
             Help Center
           </h1>
+
           <p className="mb-6 text-[#6f768c]">
             Unhappy about something ? You&apos;ve come to the right place
           </p>
-          <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
             <HelpMenuCard
               linkURL={"/help/reports/new"}
               iconUrl={"/help_pencil.png"}
-              bgColor={"#8E6CF0"}
+              bgColor={"rgb(142, 108, 240)"}
+              borderColor={"#5b21b6"}
               headerText={"New Report"}
               subText={[
                 "Found something off ?",
@@ -30,6 +32,7 @@ const HelpCenter = () => {
               linkURL={"/help/reports"}
               iconUrl={"/help_barchart.png"}
               bgColor={"#D95BD1"}
+              borderColor={"#c026d3"}
               headerText={"View My Reports"}
               subText={[
                 "So you’ve submitted a report earlier ?",
@@ -40,6 +43,7 @@ const HelpCenter = () => {
               linkURL={"/help/contactAdmin"}
               iconUrl={"/help_people.png"}
               bgColor={"#F07F6C"}
+              borderColor={"#ea580c"}
               headerText={"Contact Admin"}
               subText={[
                 "I don’t know what this feature does.",
@@ -49,7 +53,8 @@ const HelpCenter = () => {
             <HelpMenuCard
               linkURL={"/help/faq"}
               iconUrl={"/help_book.png"}
-              bgColor={"#DEA44D"}
+              bgColor={"#eab308"}
+              borderColor={"#a16207"}
               headerText={"FAQ"}
               subText={[
                 "Browse through the answers to some frequently asked questions.",
@@ -69,6 +74,7 @@ interface HelpMenuCardProps {
   headerText: string;
   subText: string[];
   linkURL: string;
+  borderColor: string;
 }
 
 const HelpMenuCard: FunctionComponent<HelpMenuCardProps> = ({
@@ -77,11 +83,18 @@ const HelpMenuCard: FunctionComponent<HelpMenuCardProps> = ({
   headerText,
   subText,
   linkURL,
+  borderColor,
 }) => {
   return (
     <Link
-      className="flex h-56 flex-col rounded-lg p-5 text-white duration-100 hover:shadow-lg hover:shadow-slate-400"
-      style={{ background: bgColor }}
+      className="flex h-56 flex-col rounded-lg border-red-500 p-5 text-white opacity-90 duration-100 hover:scale-[1.01] hover:opacity-100 hover:shadow-lg hover:shadow-slate-400"
+      style={{
+        background: bgColor,
+
+        borderStyle: "solid",
+        borderColor: borderColor,
+        borderWidth: "2px",
+      }}
       href={linkURL}
     >
       <div id="" className="flex justify-between">
