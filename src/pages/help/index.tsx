@@ -80,7 +80,7 @@ const HelpMenuCard: FunctionComponent<HelpMenuCardProps> = ({
 }) => {
   return (
     <Link
-      className="flex h-fit flex-col rounded-lg p-5 text-white duration-100 hover:shadow-lg hover:shadow-slate-400"
+      className="flex h-56 flex-col rounded-lg p-5 text-white duration-100 hover:shadow-lg hover:shadow-slate-400"
       style={{ background: bgColor }}
       href={linkURL}
     >
@@ -89,7 +89,10 @@ const HelpMenuCard: FunctionComponent<HelpMenuCardProps> = ({
         <Image src={iconUrl} width={45} height={45} alt={iconUrl}></Image>
       </div>
 
-      <div id="" className="mt-2 flex flex-col gap-2 text-[16px] font-light">
+      <div
+        id=""
+        className="mt-10 mb-2 flex flex-col gap-2 text-[16px] font-light"
+      >
         {subText.map((text, idx) => (
           <p key={idx}>{text}</p>
         ))}
