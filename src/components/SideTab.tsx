@@ -2,7 +2,7 @@ import { faArrowLeft, faPaw, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import Image from "next/image";
-
+import { useRouter } from "next/router";
 import Link from "next/link";
 
 type SideTabProps = {
@@ -89,7 +89,10 @@ export default function SideTab(props: SideTabProps) {
             {/*Contact Tab*/}
             {props.isPetOwner && (
               <Link
-                href={`/user/${props.user?.username}/chat`}
+                href={{
+                  pathname: "/chat",
+                  query: { username: props.user?.userId },
+                }}
                 className="flex h-[58px] w-[219px] items-center justify-center border bg-[#B77B59] text-lg font-medium hover:bg-[#A96037]"
               >
                 Chat
