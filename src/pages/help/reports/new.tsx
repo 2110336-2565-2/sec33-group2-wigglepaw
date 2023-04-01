@@ -22,7 +22,7 @@ const NewReportPage = () => {
 
   // create a preview image before uploading using this custom hook
   // custom hook for previewing uploaded image
-  const useImagePreview = (file) => {
+  const useImagePreview = (file: any) => {
     const [imgSrc, setImgSrc] = useState("");
 
     useEffect(() => {
@@ -52,9 +52,9 @@ const NewReportPage = () => {
   };
 
   return (
-    <>
+    <div className="min-h-screen">
       <Header />
-      <div className="m-5">
+      <div className="m-5 mx-auto min-h-[90vh] w-[85vw] max-w-4xl">
         <h1 className="text-[40px] text-[#213951]">New Report</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className=" border border-[#a3bad1] p-5">
@@ -123,7 +123,7 @@ const NewReportPage = () => {
           </div>
         </form>
       </div>
-    </>
+    </div>
   );
 };
 

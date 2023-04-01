@@ -5,7 +5,7 @@ import Header from "../../components/Header";
 
 const HelpCenter = () => {
   return (
-    <>
+    <div className="min-h-screen">
       <Header></Header>
       <div id="" className="my-10 flex flex-col items-center">
         <div className="w-[85vw] max-w-4xl">
@@ -64,7 +64,7 @@ const HelpCenter = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -87,7 +87,7 @@ const HelpMenuCard: FunctionComponent<HelpMenuCardProps> = ({
 }) => {
   return (
     <Link
-      className="flex h-56 flex-col rounded-lg border-red-500 p-5 text-white opacity-90 duration-100 hover:scale-[1.01] hover:opacity-100 hover:shadow-lg hover:shadow-slate-400"
+      className="flex h-min min-h-[13rem] flex-col rounded-lg border-red-500 p-5 text-white opacity-90 duration-100 hover:scale-[1.01] hover:opacity-100 hover:shadow-lg hover:shadow-slate-400"
       style={{
         background: bgColor,
 
@@ -97,15 +97,14 @@ const HelpMenuCard: FunctionComponent<HelpMenuCardProps> = ({
       }}
       href={linkURL}
     >
-      <div id="" className="flex justify-between">
-        <p className="text-3xl font-bold drop-shadow-lg">{headerText}</p>
+      <div id="" className="mb-2 flex justify-between">
+        <p className="text-xl font-bold drop-shadow-lg md:text-3xl">
+          {headerText}
+        </p>
         <Image src={iconUrl} width={45} height={45} alt={iconUrl}></Image>
       </div>
 
-      <div
-        id=""
-        className="mt-10 mb-2 flex flex-col gap-2 text-[16px] font-light"
-      >
+      <div id="" className="my-4 flex flex-col gap-2 text-[1rem] font-light">
         {subText.map((text, idx) => (
           <p key={idx}>{text}</p>
         ))}
