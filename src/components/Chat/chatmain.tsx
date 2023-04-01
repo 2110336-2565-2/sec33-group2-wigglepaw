@@ -154,6 +154,7 @@ export const Chatmain = (props: ChatMainProps) => {
           <FontAwesomeIcon className="" size="xl" icon={faAngleLeft} />
         </div>
         <span className=" px-4 py-2">{props.username}</span>
+        {/* Block button */}
       </div>
 
       <div className=" h-[82%] w-full  px-10">
