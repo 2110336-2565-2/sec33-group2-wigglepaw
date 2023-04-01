@@ -20,13 +20,8 @@ const Header = (props: any) => {
     ? router.query.previousPage
     : asPath;
 
-  const userData = api.user.getByUsername.useQuery({
-    username: username ? username : "",
-  });
-
-  const profileImageUri = userData?.data?.imageUri
-    ? userData?.data?.imageUri
-    : "/profiledummy.png";
+  const profileImageUri =
+    api.user.getMyImageUri.useQuery().data ?? "/profiledummy.png";
 
   const profileLink = username
     ? "/user/" + username.toString() + "/profile"
@@ -115,46 +110,47 @@ const Header = (props: any) => {
                   Login
                 </Link>
               </div>
-
-              <Menu>
-                <div className="my-auto">
-                  <Menu.Button className={"header-desktop-button my-auto"}>
-                    Register
-                  </Menu.Button>
-                </div>
-                <Menu.Items className="absolute right-0 z-20 mt-2 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <div className="px-1 py-[0.1rem]">
-                    <Menu.Item>
-                      <Link
-                        href="/registerPetOwner"
-                        className={`
+              <div className="relative my-auto">
+                <Menu>
+                  <div className="my-auto">
+                    <Menu.Button className={"header-desktop-button my-auto"}>
+                      Register
+                    </Menu.Button>
+                  </div>
+                  <Menu.Items className="absolute right-0 z-20 w-48 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <div className="px-1 py-[0.1rem]">
+                      <Menu.Item>
+                        <Link
+                          href="/registerPetOwner"
+                          className={`
                       header-dropdown group
                       ${
                         asPath.includes("/registerPetOwner")
                           ? "header-at-page border-green-700 text-green-700"
                           : "bg-green-700 hover:bg-green-500"
                       }`}
-                      >
-                        Register Pet Owner
-                      </Link>
-                    </Menu.Item>
-                    <Menu.Item>
-                      <Link
-                        href="/registerPetSitter"
-                        className={`
+                        >
+                          Register Pet Owner
+                        </Link>
+                      </Menu.Item>
+                      <Menu.Item>
+                        <Link
+                          href="/registerPetSitter"
+                          className={`
                       header-dropdown group
                       ${
                         asPath.includes("/registerPetSitter")
                           ? "header-at-page border-green-700 text-green-700"
                           : "bg-green-700 hover:bg-green-500"
                       }`}
-                      >
-                        Register Pet Sitter
-                      </Link>
-                    </Menu.Item>
-                  </div>
-                </Menu.Items>
-              </Menu>
+                        >
+                          Register Pet Sitter
+                        </Link>
+                      </Menu.Item>
+                    </div>
+                  </Menu.Items>
+                </Menu>
+              </div>
             </>
           )}
 
@@ -173,7 +169,7 @@ const Header = (props: any) => {
                     ></Image>
                   </Menu.Button>
                 </div>
-                <Menu.Items className="absolute right-0 z-20 mt-2 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <Menu.Items className="absolute right-0 z-20 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div className="px-1 py-[0.1rem]">
                     <Menu.Item>
                       <Link
@@ -369,22 +365,24 @@ const Header = (props: any) => {
         )}
       </nav>
 
-      <ReminderBar />
+      {/* <ReminderBar /> */}
     </span>
   );
 };
 
 const ReminderBar = () => {
-  const booking = api.booking.getMyBooking.useQuery();
+  const now = new Date();
+  now.setSeconds(0);
+  now.setMilliseconds(0);
+  // set date's second and millisecond to 0 so booking search will not be continously requested
+  const remindableBooking = api.booking.search.useQuery({
+    searchStatusList: [BookingStatus.accepted],
+    searchStartDate: {
+      from: now,
+      to: new Date(now.getTime() + 24 * 60 * 60 * 1000),
+    },
+  }).data;
 
-  // Filter out only bookings that are accepted and start within 24 hours
-  const remindableBooking = booking.data?.filter((book) => {
-    return (
-      book.status === BookingStatus.accepted &&
-      book.startDate.getTime() - new Date().getTime() < 24 * 60 * 60 * 1000 &&
-      book.startDate.getTime() - new Date().getTime() > 0
-    );
-  });
   const nRemindable = (remindableBooking ?? []).length;
 
   return nRemindable > 0 ? (

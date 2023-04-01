@@ -39,66 +39,73 @@ const Scheulde: NextPage = () => {
   const [savelen, setSavelen] = useState(-2);
 
   const [mode, setMode] = useState(false);
-  //sa
-  api.booking.getMyBooking.useQuery([], {
-    onSuccess: (gg) => {
-      const updatedPending = [];
-      const updatedAccepted = [];
-      const updatedCancelled = [];
-      const updatedFinished = [];
-      if (gg.length === savelen) {
-      } else {
-        setEvents([]);
-        setSavelen(gg.length);
-        gg.forEach((value) => {
-          //console.log(value);
 
-          const date1 = new Date(value.startDate.toString());
-          value.startDate = date1.toDateString();
+  api.booking.search.useQuery(
+    {},
+    {
+      onSuccess: (gg) => {
+        const updatedPending = [];
+        const updatedAccepted = [];
+        const updatedCancelled = [];
+        const updatedFinished = [];
+        if (gg.length === savelen) {
+        } else {
+          setEvents([]);
+          setSavelen(gg.length);
+          gg.forEach((value) => {
+            //console.log(value);
 
-          const date2 = new Date(value.endDate.toString());
-          value.endDate = date2.toDateString();
+            const date1 = new Date(value.startDate.toString());
+            value.startDate = date1.toDateString();
 
-          const colorbg = (status) => {
+            const date2 = new Date(value.endDate.toString());
+            value.endDate = date2.toDateString();
+
+            const colorbg = (status) => {
+              if (status === "requested") {
+                return "#fdba74";
+              } else if (status === "accepted") {
+                return "#a5f3fc";
+              } else if (status === "finished") {
+                return "#bef264";
+              } else if (status === "canceled" || status === "rejected") {
+                return "#cbd5e1";
+              }
+            };
+            const status =
+              value.state === "finished" && value.status === "accepted"
+                ? value.state
+                : value.status;
+
+            const add = {
+              title: value.petOwner.firstName,
+              start: date1,
+              end: date2,
+              color: colorbg(status),
+            };
+            //console.log(events);
+
+            setEvents((prevevents) => [...prevevents, add]);
+
             if (status === "requested") {
-              return "#fdba74";
+              updatedPending.push(value);
             } else if (status === "accepted") {
-              return "#a5f3fc";
-            } else if (status === "canceled") {
-              return "#bef264";
-            } else {
-              return "#cbd5e1";
+              updatedAccepted.push(value);
+            } else if (status === "finished") {
+              updatedFinished.push(value);
+            } else if (status === "rejected" || status === "canceled") {
+              updatedCancelled.push(value);
             }
-          };
+          });
 
-          const add = {
-            title: value.petOwner.firstName,
-            start: date1,
-            end: date2,
-            color: colorbg(value.status),
-          };
-          //console.log(events);
-
-          setEvents((prevevents) => [...prevevents, add]);
-
-          if (value.status === "requested") {
-            updatedPending.push(value);
-          } else if (value.status === "accepted") {
-            updatedAccepted.push(value);
-          } else if (value.status === "rejected") {
-            updatedCancelled.push(value);
-          } else {
-            updatedFinished.push(value);
-          }
-        });
-
-        setpending(updatedPending);
-        setaccepted(updatedAccepted);
-        setcancelled(updatedCancelled);
-        setfinished(updatedFinished);
-      }
-    },
-  });
+          setpending(updatedPending);
+          setaccepted(updatedAccepted);
+          setcancelled(updatedCancelled);
+          setfinished(updatedFinished);
+        }
+      },
+    }
+  );
 
   useEffect(() => {
     // api.booking.getMyBooking.useQuery({
