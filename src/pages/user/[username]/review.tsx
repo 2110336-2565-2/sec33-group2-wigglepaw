@@ -129,7 +129,7 @@ const ReviewPage: NextPage = () => {
     <div className="min-h-screen">
       <Header></Header>
       <div className="flex min-h-[90vh]">
-        <SideTab user={petSitterData} isPetOwner={isPetOwner} />
+        <SideTab user={petSitterData} isPetOwner={isPetOwner} booking />
         <div className="mx-auto mt-4 flex w-3/5 min-w-fit flex-col items-center text-xl">
           <ReviewImage img={img ?? ""} size={6}></ReviewImage>
           <h1 className="font-bold">{petSitterData?.username}</h1>

@@ -9,7 +9,7 @@ export default function info() {
     <div className="min-h-screen">
       <Header></Header>
       <div className="flex min-h-[90vh]">
-        <Helpcenter></Helpcenter>GOOMBA
+        <AdminSideTab></AdminSideTab>GOOMBA
       </div>
     </div>
   );

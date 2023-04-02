@@ -3,18 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import React, { useState } from "react";
 
-type TabProps = {
-  user?: any;
-};
-
-export default function AdminandHelpSideTab(props: TabProps) {
+export default function HelpcenterSideTab() {
   const [tab, setTab] = useState("Profile");
   const [openTab, setOpenTab] = React.useState(false);
 
   return (
     <div>
       {/* TAB BUTTON */}
-      <div className="top-50 fixed left-0 block sm:hidden">
+      <div className="top-50 fixed left-0 z-10 block sm:hidden">
         <button
           className={`flex items-center justify-center`}
           onClick={() => {
