@@ -225,3 +225,19 @@ export const petNames: string[] = [
 ];
 
 export const sexes: string[] = ["Male", "Female"];
+
+export const citysSubstr: string[] = [
+  "Bang",
+  "Chiang",
+  "Rai",
+  "Nakhon",
+  "Si",
+  "Ratchaburi",
+  "Udon",
+  "Thani",
+  "Phetchabun",
+  "Surin",
+  "Trang",
+  "Samut",
+  "Sakhon",
+];

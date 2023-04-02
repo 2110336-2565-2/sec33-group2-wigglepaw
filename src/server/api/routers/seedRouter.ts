@@ -35,6 +35,7 @@ import {
 } from "../../../seed/db";
 import Rand, { PRNG } from "rand-seed";
 import { resetRand } from "../../../seed/util";
+import { TRPCError } from "@trpc/server";
 
 export const seedRouter = createTRPCRouter({
   seedUsers: publicProcedure
@@ -67,45 +68,64 @@ export const seedRouter = createTRPCRouter({
           case 1: {
             const code =
               "Owner" + getRandomIntFromInterval(100, 999).toString();
-            await makeOwner(
-              code,
-              firstName,
-              lastName,
-              phoneNumber,
-              address,
-              imageUri,
-              petType
-            );
+            try {
+              await makeOwner(
+                code,
+                firstName,
+                lastName,
+                phoneNumber,
+                address,
+                imageUri,
+                petType
+              );
+            } catch (e) {
+              console.error("Failed to make owner: ", e);
+              throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                cause: e,
+                message: "Failed to make owner",
+              });
+            }
             break;
           }
           case 2: {
             const code = "Free" + getRandomIntFromInterval(100, 999).toString();
-            await makeFree(
-              code,
-              firstName,
-              lastName,
-              phoneNumber,
-              address,
-              petType,
-              startPrice,
-              endPrice,
-              imageUri
-            );
+            try {
+              await makeFree(
+                code,
+                firstName,
+                lastName,
+                phoneNumber,
+                address,
+                petType,
+                startPrice,
+                endPrice,
+                imageUri
+              );
+            } catch (e) {
+              console.error("Failed to make free: ", e);
+              throw e;
+            }
             break;
           }
           default: {
             const code =
               "Hotel" + getRandomIntFromInterval(100, 999).toString();
-            await makeHotel(
-              code,
-              hotelName,
-              phoneNumber,
-              address,
-              petType,
-              startPrice,
-              endPrice,
-              imageUri
-            );
+            try {
+              await makeHotel(
+                code,
+                hotelName,
+                phoneNumber,
+                address,
+                petType,
+                startPrice,
+                endPrice,
+                imageUri
+              );
+            } catch (e) {
+              console.error("Failed to make hotel: ", e);
+              throw e;
+            }
             break;
           }
         }
