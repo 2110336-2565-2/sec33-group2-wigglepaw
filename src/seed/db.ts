@@ -1,4 +1,4 @@
-import { BookingStatus } from "@prisma/client";
+import { BookingStatus, ReviewStatus } from "@prisma/client";
 import { saltHashPassword } from "../pages/api/auth/[...nextauth]";
 import { prisma } from "../server/db";
 import {
@@ -176,20 +176,33 @@ export async function makeOwner(
     },
   });
   const ownerId = owner.userId;
-  createRandomPets(1, ownerId);
+  await createRandomPets(1, ownerId);
   return;
 }
 
 export async function makeReview(
   petSitterId: string,
   petOwnerId: string,
+  status: number,
   rating: number,
   text: string
 ) {
+  let statusEnum: ReviewStatus;
+  switch (status) {
+    case 1:
+      statusEnum = ReviewStatus.submitted;
+    case 2:
+      statusEnum = ReviewStatus.pending;
+      break;
+    default:
+      statusEnum = ReviewStatus.resolved;
+      break;
+  }
   const createReview = await prisma.review.create({
     data: {
       petSitterId: petSitterId,
       petOwnerId: petOwnerId,
+      status: statusEnum,
       rating: rating,
       text: text,
       createdAt: getRandomDatetime(),

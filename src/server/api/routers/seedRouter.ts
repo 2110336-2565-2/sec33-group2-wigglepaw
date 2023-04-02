@@ -12,6 +12,7 @@ import {
   postTexts,
   postTitles,
   notes,
+  reviewStatuses,
 } from "../../../seed/pool";
 import {
   createRandomPets,
@@ -35,6 +36,7 @@ import {
 } from "../../../seed/db";
 import Rand, { PRNG } from "rand-seed";
 import { resetRand } from "../../../seed/util";
+import { ReviewStatus } from "@prisma/client";
 
 export const seedRouter = createTRPCRouter({
   seedUsers: publicProcedure
@@ -164,8 +166,8 @@ export const seedRouter = createTRPCRouter({
         const ownerId = getMultipleRandom(ownerIds, 1)[0] ?? "";
         const rating = getRandomIntFromInterval(1, 5);
         const text = getMultipleRandom(reviewTexts, 1)[0] ?? "";
-
-        await makeReview(sitterId, ownerId, rating, text);
+        const status = getRandomIntFromInterval(1, 3);
+        await makeReview(sitterId, ownerId, status, rating, text);
       }
       return "Seeded Reviews";
     }),
