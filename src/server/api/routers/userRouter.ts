@@ -245,25 +245,25 @@ async function deleteByUser(
     // Delete user's profile pic
     profilePic.delete(s3, userData.userId),
     // If the deleted user is a pet sitter, delete all their post images.
-    async () => {
+    (async () => {
       if (petSitter) {
         await Promise.allSettled(
           petSitter.post.map(({ postId }) => postPic.deleteOfPost(s3, postId))
         );
       }
-    },
+    })(),
     // If the deleted user is a pet owner, delete the Omise's customer
-    async () => {
+    (async () => {
       if (petOwner) {
         await omise.customers.destroy(petOwner.customerId);
       }
-    },
+    })(),
     // If the deleted user is a pet sitter, delete the Omise's recipient
-    async () => {
+    (async () => {
       if (petSitter) {
         await omise.recipients.destroy(petSitter.recipientId);
       }
-    },
+    })(),
   ]);
 
   return userData as User;
