@@ -57,4 +57,14 @@ export const reviewRouter = createTRPCRouter({
       await updateAvgRating(petSitterId);
       return;
     }),
+
+  getAll: publicProcedure
+    .input(
+      z.object({
+        reviewId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.review.findMany();
+    }),
 });

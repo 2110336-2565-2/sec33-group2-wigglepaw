@@ -52,7 +52,6 @@ Table User {
   sessions Session [not null]
   createdAt DateTime [default: `now()`, not null]
   salt String [not null]
-  messages Message [not null]
 }
 
 Table PetOwner {
@@ -82,6 +81,7 @@ Table PetSitter {
   review Review [not null]
   avgRating Float
   reviewCount Int [not null, default: 0]
+  ApprovalRequest ApprovalRequest [not null]
   Chatroom Chatroom [not null]
 }
 
@@ -160,26 +160,6 @@ Table Post {
   createdAt DateTime [default: `now()`, not null]
 }
 
-Table Chatroom {
-  chatroomId String [pk]
-  petOwnerId String [not null]
-  petOwner PetOwner [not null]
-  petSitterId String [not null]
-  petSitter PetSitter [not null]
-  messages Message [not null]
-}
-
-Table Message {
-  messageId String [pk]
-  type MessageType [not null, default: 'text']
-  data String [not null]
-  senderId String [not null]
-  sender User [not null]
-  createdAt DateTime [default: `now()`, not null]
-  chatroomId String [not null]
-  Chatroom Chatroom
-}
-
 Table MyRelationTable {
   petId String [ref: > Pet.petId]
   bookingId String [ref: > Booking.bookingId]
@@ -190,11 +170,6 @@ Enum BookingStatus {
   accepted
   canceled
   rejected
-}
-
-Enum MessageType {
-  text
-  image
 }
 
 Ref: Account.userId > User.userId [delete: Cascade]
@@ -220,11 +195,3 @@ Ref: Review.petOwnerId > PetOwner.userId [delete: Cascade]
 Ref: Review.petSitterId > PetSitter.userId [delete: Cascade]
 
 Ref: Post.petSitterId > PetSitter.userId [delete: Cascade]
-
-Ref: Chatroom.petOwnerId > PetOwner.userId
-
-Ref: Chatroom.petSitterId > PetSitter.userId
-
-Ref: Message.senderId > User.userId
-
-Ref: Message.chatroomId > Chatroom.chatroomId
