@@ -3,15 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import type { z } from "zod";
 import Header from "../../../components/Header";
+import type { reportTicketFields } from "../../../schema/schema";
 import { api } from "../../../utils/api";
 
-interface ReportFormDataT {
-  date: Date;
-  title: string;
-  text: string;
-  image?: FileList;
-}
+type ReportFormDataT = z.infer<typeof reportTicketFields>;
 
 const NewReportPage = () => {
   // define the form
@@ -47,21 +44,17 @@ const NewReportPage = () => {
 
   // define the onSubmit method for the form
   const onSubmit = async (data: ReportFormDataT) => {
-    // append date to the submitted report
-    data.date = new Date();
-
     try {
       const user = session?.user;
       if (!user) {
         throw new Error("not logged in");
-        return;
       }
 
       await createReport.mutateAsync({
         reporterId: user.id,
         reportTicket: {
           title: data.title,
-          description: data.text,
+          description: data.description,
         },
       });
 
@@ -97,12 +90,12 @@ const NewReportPage = () => {
                 <div className="mb-2 flex">
                   <p className="w-20 text-lg  text-slate-700">Text</p>
                   <div className="flex flex-1 flex-col">
-                    {errors.text && (
+                    {errors.description && (
                       <p className="text-red-500">This field is required</p>
                     )}
                     <input
                       className="h-60 rounded-sm border border-slate-400 px-2 py-2 text-start"
-                      {...register("text", { required: true })}
+                      {...register("description", { required: true })}
                       placeholder="What do you want to report ?"
                     />
                   </div>
