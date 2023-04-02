@@ -9,9 +9,9 @@ import {
   freelancePetSitterFields,
   petSitterFields,
   userFields,
-  searchField,
+  searchPetSitterField,
 } from "../../../schema/schema";
-import * as searchLogic from "../logic/search";
+import { PetSitterSearchLogic } from "../logic/search/petSitterSearchLogic";
 
 const zodUserFields = z.object({
   verifyStatus: z.boolean(),
@@ -108,52 +108,8 @@ export const petSitterRouter = createTRPCRouter({
       });
       return update;
     }),
-  // searchPetSitter
-  // input:
-  // note that all args default value will act as those fields are not in search criteria
-  // read more about default value on searchField
-  //   searchName: @string name such as "john smith"
-  //   searchRating: @number not implement yet
-  //   searchPriceMin:  @number minimum price that user is ok with
-  // searchPriceMin can be null and default is null   ( also endPrice )
-  // table below show when petsitter will be in search result (✓ mean show in result)
-  // +---------------+------+---------------+
-  // | input  \   db | null | num(endPrice) |
-  // +---------------+------+---------------+
-  // | null          | ✓    | ✓            |
-  // +---------------+------+---------------+
-  // | num(priceMin) | x    |  if endPrice  |
-  // |               |      |  >  priceMin  |
-  // +---------------+------+---------------+
-  //   searchPriceMax:  @number maximum price that user is ok with
-  //   searchLocation:  @string not implement yet
-  //   searchPetType:   @string pet types such as "cat dog" it will return petsitter that have both cat and dog
-  //   searchStartSchedule: @string not implement yet
-  //   searchEndSchedule:   @string not implement yet
-  //   searchIncludePetHotelFlag: @boolean if you want to include pet hotel in search result then set it to true
-  //   searchIncludeFreelancePetSitterFlag: @boolean if you want to inclde FreelancePetSitter in search result then set it to true
-  // table to show how to set value of searchIncludePetHotelFlag and searchIncludeFreelancePetSitterFlag
-  // +-------------------------------+---------------------------+-------------------------------------+
-  // | want to seach for \ args name | searchIncludePetHotelFlag | searchIncludeFreelancePetSitterFlag |
-  // +-------------------------------+---------------------------+-------------------------------------+
-  // | pet hotel                     | true                      | false                               |
-  // +-------------------------------+---------------------------+-------------------------------------+
-  // | freelance                     | false                     | true                                |
-  // +-------------------------------+---------------------------+-------------------------------------+
-  // | all                           | true                      | true                                |
-  // +-------------------------------+---------------------------+-------------------------------------+
-  //  searchSortBy: @string for sorting. support "name", "username", "price", "startPrice", "endPrice" default is username
-  //  will implement sort by firstname lastname hotel name if needed
-
-  // output:
-  //   list of object that only contain user id that match search input
-  //   example:
-  //   [
-  //     { "userId": "cldzsm2n6000z7k083zwda6b1" },
-  //     { "userId": "cldzsm3tt00137k08lt9r3rfs" },
-  //   ]
   searchPetSitter: publicProcedure
-    .input(searchField)
+    .input(searchPetSitterField)
     .query(async ({ ctx, input }) => {
       const items = await ctx.prisma.petSitter.findMany({
         take: input.limit + 1,
@@ -161,28 +117,33 @@ export const petSitterRouter = createTRPCRouter({
         cursor: input.cursor ? { userId: input.cursor } : undefined,
         where: {
           AND: [
-            input.searchName ? searchLogic.searchByName(input.searchName) : {},
+            input.searchName
+              ? PetSitterSearchLogic.petSitterName(input.searchName)
+              : {},
             input.searchPriceMin
-              ? searchLogic.searchByPriceMin(input.searchPriceMin)
+              ? PetSitterSearchLogic.priceMin(input.searchPriceMin)
               : {},
             input.searchPriceMax
-              ? searchLogic.searchByPriceMax(input.searchPriceMax)
+              ? PetSitterSearchLogic.priceMax(input.searchPriceMax)
               : {},
             input.searchPetTypes
-              ? searchLogic.searchByPetTypes(input.searchPetTypes)
+              ? PetSitterSearchLogic.petTypes(input.searchPetTypes)
+              : {},
+            input.searchVerifyStatus
+              ? PetSitterSearchLogic.verifyStatus(input.searchVerifyStatus)
               : {},
             input.searchIncludePetSitterType
-              ? searchLogic.searchByPetSitterTypes(
+              ? PetSitterSearchLogic.petSitterTypes(
                   input.searchIncludePetSitterType
                 )
               : {},
-            searchLogic.searchByPetSitterType(
+            PetSitterSearchLogic.petSitterType(
               input.searchIncludePetHotel,
               input.searchIncludeFreelancePetSitter
             ),
           ],
         },
-        orderBy: [searchLogic.searchOrderBy(input.searchSortBy)],
+        orderBy: [PetSitterSearchLogic.sortBy(input.searchSortBy)],
         include: {
           user: true,
           petHotel: true,

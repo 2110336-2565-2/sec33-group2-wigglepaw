@@ -2,12 +2,28 @@
 import { faMessage, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { api } from "../../utils/api";
 export const SessionMediumCard = ({ data }) => {
   const { data: session, status } = useSession();
+
+  const sitter =
+    session?.user?.userType === "PetHotel" ||
+    session?.user?.userType === "FreelancePetSitter"
+      ? true
+      : false;
+  //for testing, use to set the value of usertype
+
+  const imageUri = api.user.getImagebyId.useQuery(
+    { userId: data.petSitterId },
+    {}
+  );
+  const imageUri2 = api.user.getImagebyId.useQuery(
+    { userId: data.petOwner.userId },
+    {}
+  );
   const colorbg = () => {
     if (data.status === "requested") {
       return "#fdba74";
@@ -148,13 +164,6 @@ export const SessionMediumCard = ({ data }) => {
     }
   };
 
-  const sitter =
-    session?.user?.userType === "PetHotel" ||
-    session?.user?.userType === "FreelancePetSitter"
-      ? true
-      : false;
-  //for testing, use to set the value of usertype
-
   const [tickArray, setTickarray] = useState([true, false, true]); //Array for state in pet box, size = number of pets
   return (
     <div>
@@ -194,14 +203,16 @@ export const SessionMediumCard = ({ data }) => {
             <div className="  grid grid-cols-5 rounded-md border border-[#7b7b7b] bg-[#F3F3F3] py-2 ">
               <div className="relative mx-2 h-[60px] w-[60px]">
                 <Image
-                  src="/umadeofstupid.webp"
+                  src={sitter ? imageUri2.data : imageUri.data} //change photo
                   alt="dummy"
                   fill
                   className="relative rounded-xl"
                 />
               </div>
               <div className="center-thing col-span-2  text-[#7b7b7b]">
-                {data.petOwner.firstName}
+                {sitter
+                  ? data.petOwner.firstName
+                  : data.petSitter.petHotel.hotelName}
               </div>
               <div className="center-thing col-span-2">
                 <button className="center-thing drop-s rounded-md bg-[#357CC2] py-1 px-4 text-white  shadow-lg drop-shadow-lg">
