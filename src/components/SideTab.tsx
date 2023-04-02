@@ -1,4 +1,4 @@
-import { faArrowLeft, faPaw, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import Image from "next/image";
@@ -13,7 +13,7 @@ type SideTabProps = {
 };
 
 export default function SideTab(props: SideTabProps) {
-  const [openTab, setOpenTab] = React.useState(false);
+  const [openTab, setOpenTab] = useState(false);
 
   if (props.booking !== undefined) {
     return (

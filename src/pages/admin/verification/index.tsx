@@ -23,7 +23,7 @@ export default function Verification() {
             notice={router.query.notice as string}
             className="mx-4"
           />
-          <div className="overflow-scroll text-[18px]">
+          <div className="overflow-scroll px-6 text-base">
             <PetSitterVerifyTable />
           </div>
         </div>
@@ -137,7 +137,7 @@ function PetSitterVerifyTable() {
 
   // filter component (subheader)
   const SubHeaderComponent = (
-    <div className="relative mt-[10px] flex items-center">
+    <div className="relative mt-2 flex items-center">
       <label className="mr-2">Filter</label>
       <input
         className="peer w-[200px] rounded-md border-2 p-1.5 px-2 text-[16px] text-[#434D54] focus:border-[#80bdff] focus:shadow-[0_0_0_0.2rem_rgba(0,123,255,.25)] focus:outline-none"
