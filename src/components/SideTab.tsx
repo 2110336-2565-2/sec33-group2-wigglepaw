@@ -2,7 +2,6 @@ import { faArrowLeft, faPaw, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import Link from "next/link";
 
 type SideTabProps = {
@@ -14,7 +13,6 @@ type SideTabProps = {
 };
 
 export default function SideTab(props: SideTabProps) {
-  const [tab, setTab] = useState("Profile");
   const [openTab, setOpenTab] = React.useState(false);
 
   if (props.booking !== undefined) {
@@ -228,34 +226,4 @@ export default function SideTab(props: SideTabProps) {
       </div>
     );
   }
-}
-
-interface TabProps {
-  tabName: string;
-}
-
-interface TabButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  openTab: boolean;
-  setOpenTab: (value: React.SetStateAction<boolean>) => void;
-}
-
-function TabButton({
-  openTab,
-  setOpenTab,
-  className,
-  ...rest
-}: TabButtonProps) {
-  return (
-    <button
-      className={`flex items-center justify-center border hover:bg-gray-500 ${className} `}
-      onClick={() => {
-        setOpenTab((prev) => !prev);
-      }}
-    >
-      <FontAwesomeIcon
-        icon={faPaw}
-        className={`rounded-full border ${openTab} p-1`}
-      />
-    </button>
-  );
 }
