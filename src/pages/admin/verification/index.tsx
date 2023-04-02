@@ -15,7 +15,8 @@ import { api } from "../../../utils/api";
 import ReactDOMServer from "react-dom/server";
 import Notification from "../../../components/Admin/Notification";
 import { title } from "process";
-import AdminSideTab from "../../../components/AdminSideTab";
+import SideTab from "../../../components/SideTab";
+
 export default function Verification() {
   const router = useRouter();
 
@@ -23,7 +24,7 @@ export default function Verification() {
     <div className="flex h-screen flex-col">
       <Header />
       <div className="flex flex-grow">
-        <AdminSideTab />
+        <SideTab admin />
         <div className="flex w-full flex-col gap-5 overflow-scroll sm:px-[20px] sm:py-[10px] lg:px-[40px] lg:py-[20px] xl:px-[80px] xl:py-[40px]">
           <Notification
             code={parseInt(router.query.code as string)}
