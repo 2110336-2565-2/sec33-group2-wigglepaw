@@ -96,6 +96,24 @@ export const reportTicketRouter = createTRPCRouter({
       throwErr(err);
     }
   }),
+
+  getByUserId: publicProcedure
+    .input(
+      z.object({
+        userId: z.string().cuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await ctx.prisma.reportTicket.findMany({
+          where: {
+            reporterId: input.userId,
+          },
+        });
+      } catch (err) {
+        throwErr(err);
+      }
+    }),
   getByAdminId: publicProcedure
     .input(
       z.object({
