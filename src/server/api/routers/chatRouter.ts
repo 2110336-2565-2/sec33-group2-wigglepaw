@@ -21,11 +21,11 @@ export const chatRouter = createTRPCRouter({
         ctx.prisma,
         input.chatroomId
       );
-      if (
-        chatroom === null ||
-        BlockProcedureLogic.isChatRoomBlocked(ctx.prisma, chatroom)
-      )
-        return null;
+      // if (
+      //   chatroom === null ||
+      //   BlockProcedureLogic.isChatRoomBlocked(ctx.prisma, chatroom)
+      // )
+      //   return null;
       const newmessage = await ctx.prisma.message.create({
         data: {
           senderId: input.senderId,
