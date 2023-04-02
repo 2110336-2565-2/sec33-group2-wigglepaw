@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { BookingStatus } from "@prisma/client";
+import {
+  BookingStatus,
+  ReportTicketStatus,
+  ApprovalRequestStatus,
+} from "@prisma/client";
 
 export const userFields = z.object({
   //userId: z.string().cuid().optional(),
@@ -39,6 +43,7 @@ export const petFields = z.object({
   name: z.string().optional(),
   sex: z.enum(["Male", "Female"]).optional(),
   breed: z.string().optional(),
+  weight: z.number().gte(0).optional(),
 });
 
 export const petHotelFields = z.object({
@@ -117,4 +122,26 @@ export const postFields = z.object({
   text: z.string().optional(),
   pictureUri: z.array(z.string()),
   videoUri: z.string().optional(),
+});
+
+export const ticketStatus = z.enum([
+  ReportTicketStatus.acked,
+  ReportTicketStatus.canceled,
+  ReportTicketStatus.pending,
+  ReportTicketStatus.resolved,
+]);
+
+export const reportTicketFields = z.object({
+  title: z.string(),
+  description: z.string().optional().default(""),
+});
+
+export const approvalStatus = z.enum([
+  ApprovalRequestStatus.pending,
+  ApprovalRequestStatus.declined,
+  ApprovalRequestStatus.approved,
+]);
+
+export const approvalRequestFields = z.object({
+  notes: z.string().optional(),
 });

@@ -11,6 +11,9 @@ import { bookingRouter } from "./routers/bookingRouter";
 import { petRouter } from "./routers/petRouter";
 import { profilePictureRouter } from "./routers/profilePictureRouter";
 import { recommendRouter } from "./routers/recommendRouter";
+import { adminRouter } from "./routers/adminRouter";
+import { reportTicketRouter } from "./routers/reportTicketRouter";
+import { approvalRequestRouter } from "./routers/approvalRequestRouter";
 
 /**
  * This is the primary router for your server.
@@ -19,6 +22,7 @@ import { recommendRouter } from "./routers/recommendRouter";
  */
 export const appRouter = createTRPCRouter({
   user: userRouter,
+  admin: adminRouter,
   petSitter: petSitterRouter,
   petOwner: petOwnerRouter,
   freelancePetSitter: freelancePetSitterRouter,
@@ -30,6 +34,8 @@ export const appRouter = createTRPCRouter({
   post: postRouter,
   profilePicture: profilePictureRouter,
   recommend: recommendRouter,
+  reportTicket: reportTicketRouter,
+  approvalRequest: approvalRequestRouter,
   // Health check route, return 200 OK if server is up
   healthcheck: publicProcedure
     .meta({ description: "Health check route, return 200 OK if server is up" })
