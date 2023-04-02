@@ -1,3 +1,5 @@
+import { ReviewStatus } from "@prisma/client";
+
 export const firstNames: string[] = [
   "Tokino",
   "Kanata",
@@ -225,3 +227,9 @@ export const petNames: string[] = [
 ];
 
 export const sexes: string[] = ["Male", "Female"];
+
+export const reviewStatuses: ReviewStatus[] = [
+  ReviewStatus.pending,
+  ReviewStatus.resolved,
+  ReviewStatus.submitted,
+];

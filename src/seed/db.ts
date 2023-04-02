@@ -183,15 +183,26 @@ export async function makeOwner(
 export async function makeReview(
   petSitterId: string,
   petOwnerId: string,
-  status: ReviewStatus,
+  status: number,
   rating: number,
   text: string
 ) {
+  let statusEnum: ReviewStatus;
+  switch (status) {
+    case 1:
+      statusEnum = ReviewStatus.submitted;
+    case 2:
+      statusEnum = ReviewStatus.pending;
+      break;
+    default:
+      statusEnum = ReviewStatus.resolved;
+      break;
+  }
   const createReview = await prisma.review.create({
     data: {
       petSitterId: petSitterId,
       petOwnerId: petOwnerId,
-      status: status,
+      status: statusEnum,
       rating: rating,
       text: text,
       createdAt: getRandomDatetime(),
