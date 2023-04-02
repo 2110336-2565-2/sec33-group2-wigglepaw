@@ -39,6 +39,7 @@ export const petFields = z.object({
   name: z.string().optional(),
   sex: z.enum(["Male", "Female"]).optional(),
   breed: z.string().optional(),
+  weight: z.number().optional(),
 });
 
 export const petHotelFields = z.object({
@@ -55,7 +56,7 @@ export const freelancePetSitterFields = z.object({
 
 export const bookingFields = z.object({
   petSitterId: z.string().cuid(),
-  totalPrice: z.number(),
+  totalPrice: z.number().gt(0),
   startDate: z.date(),
   endDate: z.date(),
   petIdList: z.array(z.string().cuid()),

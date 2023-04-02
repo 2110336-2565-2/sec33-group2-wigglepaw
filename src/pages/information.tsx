@@ -1,6 +1,8 @@
 import BlockButton from "../components/Chat/BlockButton";
 import MuteButton from "../components/Chat/MuteButton";
 import SideTab from "../components/SideTab";
+import Header from "../components/Header";
+import Helpcenter from "../components/Helpcenter";
 
 export default function info() {
   return (
@@ -9,3 +11,4 @@ export default function info() {
     </div>
   );
 }
+S;
