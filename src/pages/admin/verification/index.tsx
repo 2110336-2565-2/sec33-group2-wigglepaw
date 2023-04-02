@@ -1,37 +1,29 @@
-import { PetSitter } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactNode, useState } from "react";
-import DataTable, {
-  TableColumn,
-  ConditionalStyles,
-} from "react-data-table-component";
-import { HiCheck, HiMenuAlt1 } from "react-icons/hi";
-import { string } from "zod";
+import DataTable, { TableColumn } from "react-data-table-component";
 import Header from "../../../components/Header";
 import { UserType } from "../../../types/user";
 import { api } from "../../../utils/api";
-import ReactDOMServer from "react-dom/server";
 import Notification from "../../../components/Admin/Notification";
-import { title } from "process";
 import SideTab from "../../../components/SideTab";
 
 export default function Verification() {
   const router = useRouter();
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="min-h-screen">
       <Header />
-      <div className="flex flex-grow">
+      <div className="flex">
         <SideTab admin />
-        <div className="flex w-full flex-col gap-5 overflow-scroll sm:px-[20px] sm:py-[10px] lg:px-[40px] lg:py-[20px] xl:px-[80px] xl:py-[40px]">
+        <div className="my-5 w-full gap-5">
           <Notification
             code={parseInt(router.query.code as string)}
             notice={router.query.notice as string}
             className="mx-4"
           />
-          <div className="h-full flex-grow text-[18px]">
+          <div className="overflow-scroll text-[18px]">
             <PetSitterVerifyTable />
           </div>
         </div>
@@ -75,7 +67,9 @@ function PetSitterVerifyTable() {
 
   // table title
   const Title = (
-    <h1 className="text-[40px] font-semibold">Pet Sitter Verification</h1>
+    <h1 className="text-3xl font-semibold md:text-4xl">
+      Pet Sitter Verification
+    </h1>
   );
 
   // available data
