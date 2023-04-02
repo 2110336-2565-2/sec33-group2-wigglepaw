@@ -1,6 +1,7 @@
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
@@ -55,6 +56,7 @@ const NewReportPage = () => {
         reportTicket: {
           title: data.title,
           description: data.description,
+          image: data.image,
         },
       });
 
@@ -105,11 +107,16 @@ const NewReportPage = () => {
               <div id="image-upload-wrapper" className=" mr-4">
                 <p className="text-lg text-slate-700">Problem Screenshot</p>
                 {imagePreview ? (
-                  <div className="h-48 w-48 rounded-sm p-[24px]">
-                    <img className="" src={imagePreview} alt="preview" />
+                  <div className="relative flex h-48 w-48 justify-center rounded-sm border">
+                    <Image
+                      fill
+                      className="object-cover"
+                      src={imagePreview as string}
+                      alt="preview"
+                    />
                   </div>
                 ) : (
-                  <div className="h-48 rounded-sm border border-slate-200 p-[24px]">
+                  <div className="h-48 w-48 rounded-sm border border-slate-200 p-[24px]">
                     <FontAwesomeIcon
                       icon={faCloudArrowUp}
                       className="h-full w-full opacity-10"
@@ -117,7 +124,7 @@ const NewReportPage = () => {
                   </div>
                 )}
                 <input
-                  className="w-48 bg-white text-sm"
+                  className="mt-2 w-48 bg-white text-sm"
                   {...register("image")}
                   type="file"
                   accept="image/*"
