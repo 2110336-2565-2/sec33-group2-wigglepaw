@@ -16,6 +16,7 @@ import {
   makeReview,
   updateAvgRating,
 } from "../../../seed/db";
+import { ReviewStatus } from "@prisma/client";
 
 export const reviewRouter = createTRPCRouter({
   create: publicProcedure
@@ -31,6 +32,7 @@ export const reviewRouter = createTRPCRouter({
         data: {
           petSitterId: input.petSitterId,
           petOwnerId: input.petOwnerId,
+          status: ReviewStatus.submitted,
           ...input.review,
         },
       });
@@ -57,4 +59,50 @@ export const reviewRouter = createTRPCRouter({
       await updateAvgRating(petSitterId);
       return;
     }),
+
+  report: publicProcedure
+    .input(
+      z.object({
+        reviewId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.review.update({
+        where: {
+          reviewId: input.reviewId,
+        },
+        data: {
+          status: ReviewStatus.pending,
+        },
+      });
+    }),
+
+  resolve: publicProcedure
+    .input(
+      z.object({
+        reviewId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.review.update({
+        where: {
+          reviewId: input.reviewId,
+        },
+        data: {
+          status: ReviewStatus.resolved,
+        },
+      });
+    }),
+
+  getAll: publicProcedure.mutation(async ({ ctx, input }) => {
+    return await ctx.prisma.review.findMany();
+  }),
+
+  getAllReport: publicProcedure.mutation(async ({ ctx, input }) => {
+    return await ctx.prisma.review.findMany({
+      where: {
+        status: ReviewStatus.resolved || ReviewStatus.pending,
+      },
+    });
+  }),
 });
