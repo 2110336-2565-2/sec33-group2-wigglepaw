@@ -8,6 +8,30 @@ canceled canceled
 rejected rejected
         }
     
+
+
+        MessageType {
+            text text
+image image
+        }
+    
+
+
+        ReportTicketStatus {
+            pending pending
+acked acked
+canceled canceled
+resolved resolved
+        }
+    
+
+
+        ApprovalRequestStatus {
+            pending pending
+declined declined
+approved approved
+        }
+    
   Account {
     String id PK 
     String type  
@@ -123,6 +147,43 @@ rejected rejected
     DateTime createdAt  
     }
   
+
+  Chatroom {
+    String chatroomId PK 
+    }
+  
+
+  Message {
+    String messageId PK 
+    MessageType type  
+    String data  
+    DateTime createdAt  
+    }
+  
+
+  Admin {
+
+    }
+  
+
+  ReportTicket {
+    String ticketId PK 
+    String title  
+    String description  "nullable"
+    ReportTicketStatus status  
+    String notes  "nullable"
+    DateTime createdAt  
+    }
+  
+
+  ApprovalRequest {
+    String requestId PK 
+    ApprovalRequestStatus status  
+    String adminId  "nullable"
+    String notes  "nullable"
+    DateTime createdAt  
+    }
+  
     Account o{--|| User : "user"
     Session o{--|| User : "user"
     PetOwner o|--|| User : "user"
@@ -138,4 +199,16 @@ rejected rejected
     Review o{--|| PetOwner : "petOwner"
     Review o{--|| PetSitter : "petSitter"
     Post o{--|| PetSitter : "petSitter"
+    Chatroom o{--|| PetOwner : "petOwner"
+    Chatroom o{--|| PetSitter : "petSitter"
+    Message o|--|| MessageType : "enum:type"
+    Message o{--|| User : "sender"
+    Message o{--|o Chatroom : "Chatroom"
+    Admin o{--|| User : "user"
+    ReportTicket o{--|| User : "reporter"
+    ReportTicket o{--|o Admin : "admin"
+    ReportTicket o|--|| ReportTicketStatus : "enum:status"
+    ApprovalRequest o{--|| PetSitter : "petSitter"
+    ApprovalRequest o|--|| ApprovalRequestStatus : "enum:status"
+    ApprovalRequest o{--|o Admin : "latestStatusUpdateby"
 ```
