@@ -13,6 +13,10 @@ rejected rejected
         MessageType {
             text text
 image image
+        ReviewStatus {
+            submitted submitted
+pending pending
+resolved resolved
         }
     
 
@@ -132,6 +136,7 @@ approved approved
 
   Review {
     String reviewId PK 
+    ReviewStatus status  
     String text  "nullable"
     Int rating  
     DateTime createdAt  
@@ -198,6 +203,7 @@ approved approved
     Pet o{--}o Booking : ""
     Review o{--|| PetOwner : "petOwner"
     Review o{--|| PetSitter : "petSitter"
+    Review o|--|| ReviewStatus : "enum:status"
     Post o{--|| PetSitter : "petSitter"
     Chatroom o{--|| PetOwner : "petOwner"
     Chatroom o{--|| PetSitter : "petSitter"
