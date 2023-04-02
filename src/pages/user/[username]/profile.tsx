@@ -47,7 +47,11 @@ const ProfilePage: NextPage = () => {
 
     case UserType.PetHotel:
       return (
-        <PetHotelProfile user={data} editable={editable}></PetHotelProfile>
+        <PetHotelProfile
+          user={data}
+          editable={editable}
+          isPetOwner={isPetOwner}
+        ></PetHotelProfile>
       );
 
     default:

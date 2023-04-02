@@ -60,19 +60,21 @@ export const freelancePetSitterFields = z.object({
 
 export const bookingFields = z.object({
   petSitterId: z.string().cuid(),
-  startDate: z.date().default(new Date("1-1-1")),
-  endDate: z.date().default(new Date("1-1-1")),
-  petIdList: z.array(z.string().cuid()).default([]),
+  totalPrice: z.number().gt(0),
+  startDate: z.date(),
+  endDate: z.date(),
+  petIdList: z.array(z.string().cuid()),
   note: z.string().nullable().default(null),
 });
 
-export const searchField = z.object({
+export const searchPetSitterField = z.object({
   searchName: z.string().optional(),
   searchRating: z.number().optional(),
   searchPriceMin: z.number().optional(),
   searchPriceMax: z.number().optional(),
   searchLocation: z.string().optional(),
   searchPetTypes: z.array(z.string()).optional(),
+  searchVerifyStatus: z.boolean().optional(),
   searchStartSchedule: z.string().optional(),
   searchEndSchedule: z.string().optional(),
   searchIncludePetSitterType: z.string().optional(),
@@ -94,23 +96,28 @@ export const bookingStatus = z.enum([
 
 const userId = z.string().cuid();
 
+const date_from_to = z.object({
+  from: z.date().nullable(),
+  to: z.date().nullable(),
+});
+
 export const searchBookingField = z.object({
   searchBookingIdList: z.array(z.string().cuid()).default([]),
   searchUserIdList: z.array(userId).default([]),
   searchStatusList: z.array(bookingStatus).default([]),
-  searchStartDate: z.date().optional(),
-  searchEndDate: z.date().optional(),
+  searchStartDate: date_from_to.optional(),
+  searchEndDate: date_from_to.optional(),
   // searchLocation: z.string().default(""),
   searchSortBy: z.string().optional(),
 });
 
-// export const returnStatus = z.enum(["ERROR", "SUCCESS"]);
-// export const returnField = z.object({
-//   status: returnStatus,
-//   code: z.string().nullable().default(null),
-//   reason: z.string().nullable().default(null),
-//   result: z.string().nullable().default(null),
-// });
+export const returnStatus = z.enum(["ERROR", "SUCCESS"]);
+export const returnField = z.object({
+  status: returnStatus,
+  code: z.string().optional(),
+  reason: z.string().optional(),
+  result: z.string().optional(),
+});
 
 export const reviewFields = z.object({
   rating: z.number().gte(1).lte(5),
