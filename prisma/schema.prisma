@@ -75,17 +75,19 @@ model User {
     sessions      Session[] // Needed for Auth
     createdAt     DateTime   @default(now())
     salt          String
+    messages      Message[] // Just to make prisma work
 }
 
 model PetOwner {
-    userId    String    @id @default(cuid())
-    user      User      @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    userId    String     @id @default(cuid())
+    user      User       @relation(fields: [userId], references: [userId], onDelete: Cascade)
     petTypes  String[]
     firstName String
     lastName  String
     pet       Pet[]
     booking   Booking[]
     review    Review[]
+    Chatroom  Chatroom[]
 }
 
 model PetSitter {
@@ -103,6 +105,7 @@ model PetSitter {
     review             Review[]
     avgRating          Float?
     reviewCount        Int                 @default(0)
+    Chatroom           Chatroom[]
 }
 
 model FreelancePetSitter {
@@ -125,6 +128,7 @@ model Booking {
     petSitter    PetSitter     @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
     petOwnerId   String
     petSitterId  String
+    totalPrice   Float
     startDate    DateTime
     endDate      DateTime
     numberOfPets Int
@@ -182,4 +186,29 @@ model Post {
     pictureUri  String[]
     videoUri    String?
     createdAt   DateTime  @default(now())
+}
+
+model Chatroom {
+    chatroomId  String    @id @default(cuid())
+    petOwnerId  String
+    petOwner    PetOwner  @relation(fields: [petOwnerId], references: [userId])
+    petSitterId String
+    petSitter   PetSitter @relation(fields: [petSitterId], references: [userId])
+    messages    Message[]
+}
+
+enum MessageType {
+    text
+    image
+}
+
+model Message {
+    messageId  String      @id @default(cuid())
+    type       MessageType @default(text)
+    data       String // text or imageUrl
+    senderId   String
+    sender     User        @relation(fields: [senderId], references: [userId])
+    createdAt  DateTime    @default(now())
+    chatroomId String
+    Chatroom   Chatroom?   @relation(fields: [chatroomId], references: [chatroomId])
 }

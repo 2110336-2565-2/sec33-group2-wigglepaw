@@ -12,7 +12,7 @@ const Home: NextPage = () => {
     <div className="relative">
       <section className="h-[32rem] min-h-screen w-full md:h-screen">
         {/* <div className="-z-10 h-screen w-[100%] origin-bottom-right bg-[url('/dog-bg.jpg')] bg-auto bg-left bg-no-repeat"> */}
-        <div className="-z-10 flex h-full w-full origin-bottom-right flex-col bg-[url('/dog-bg-2.jpg')] bg-cover bg-center bg-no-repeat md:h-full">
+        <div className="-z-10 flex h-full w-full origin-bottom-right flex-col bg-[url('/dog-bg-2.jpg')] bg-cover bg-right bg-no-repeat md:h-full md:bg-center">
           <Header />
 
           <div className="center-thing -mt-4 flex-grow">
@@ -206,18 +206,17 @@ const Home: NextPage = () => {
       </section>
       <section className="center-thing w-[100%] bg-[#EAE7DC] py-12">
         <div className="max-w-[1800px] px-12">
-          <h1 className="center-thing text-[2.5rem]">ABOUT</h1>
-          <p className="px-4 pt-5 md:px-16">
-            I don't know hat to write, so just write something repeatly for 5
-            times then so just write something repeatly for 5 times then so just
-            write something repeatly for 5 times then so just write something
-            repeatly for 5 times then so just write something repeatly for 5
-            times then
-          </p>
-          <div className="center-thing">
-            <button className="find-link mx-0 mt-5 rounded-lg px-3 text-base">
-              <p className="text-white">MORE ABOUT US!</p>
-            </button>
+          <h1 className="center-thing text-[2.5rem]">ABOUT OUR TEAM</h1>
+          <div id="team-members" className="text-center">
+            <p>Natapat Klaewkla</p>
+            <p>Thanadol Chitthamlerd</p>
+            <p>Kawin Moongsamankul</p>
+            <p>Thanachote Katanyutapant</p>
+            <p>Thut Thamrongnawasawat</p>
+            <p>Tuchtham Sungkameka</p>
+            <p>Thuwa Ngeonsalung</p>
+            <p>Pannatorn Sirasuk</p>
+            <p>Sirawitch Tiyasuttipun</p>
           </div>
         </div>
       </section>

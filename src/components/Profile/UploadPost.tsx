@@ -7,6 +7,7 @@ import { addWidthHeightToImages } from "../../utils/image";
 import { useAsync } from "react-async-hook";
 import { useSession } from "next-auth/react";
 import { useAddNewPost } from "../../utils/upload";
+import ResponsePopup from "../ResponsePopup";
 
 const formDataSchema = z.object({
   title: z.string().min(1, { message: "Required" }),
@@ -144,7 +145,7 @@ const UploadPost = (props: UploadPostProps) => {
                       {...register("title", { required: true })}
                     />
                     <textarea
-                      className="mb-2 min-h-[4rem] w-full border-2 p-1"
+                      className="mb-2 max-h-[15rem] min-h-[4rem] w-full border-2 p-1"
                       placeholder="Post something about your pet setting experience!"
                       {...register("content")}
                     ></textarea>
@@ -183,52 +184,16 @@ const UploadPost = (props: UploadPostProps) => {
       </Transition>
 
       {/* Upload Success Dialog */}
-      <Transition show={isUploadSuccess} as={Fragment}>
-        <Dialog
-          onClose={() => {
-            setIsUploadSuccess(false);
-            props.refetch();
-          }}
-        >
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            {/* The backdrop, rendered as a fixed sibling to the panel container */}
-            <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-          </Transition.Child>
-
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-200"
-            enterFrom="opacity-0 scale-95"
-            enterTo="opacity-100 scale-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100 scale-100"
-            leaveTo="opacity-0 scale-95"
-          >
-            {/* Full-screen scrollable container */}
-            <div className="fixed inset-0 overflow-y-auto">
-              {/* Container to center the panel */}
-              <div className="flex min-h-full items-center justify-center">
-                <Dialog.Panel
-                  className="mx-auto box-border w-fit cursor-default rounded bg-green-400 p-6 text-lg text-green-700"
-                  onClick={() => {
-                    setIsUploadSuccess(false);
-                  }}
-                >
-                  <div className="font-bold">Upload Successful!</div>
-                </Dialog.Panel>
-              </div>
-            </div>
-          </Transition.Child>
-        </Dialog>
-      </Transition>
+      <ResponsePopup
+        show={isUploadSuccess}
+        setShow={setIsUploadSuccess}
+        doBeforeClose={() => {
+          props.refetch();
+        }}
+        panelCSS={"bg-green-400 text-green-700"}
+      >
+        <div className="font-bold">Upload Successful!</div>
+      </ResponsePopup>
     </>
   );
 };
