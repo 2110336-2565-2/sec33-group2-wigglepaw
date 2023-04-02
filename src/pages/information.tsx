@@ -1,5 +1,8 @@
+import AdminSideTab from "../components/AdminSideTab";
+import AdminandHelpSideTab from "../components/AdminSideTab";
 import Header from "../components/Header";
 import Helpcenter from "../components/Helpcenter";
+import SideTab from "../components/SideTab";
 
 export default function info() {
   return (
