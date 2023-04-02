@@ -16,6 +16,7 @@ module.exports = {
       'bg-main': '#E5D4C4',
       "wp-blue": "#213951",
       "wp-light-blue": "#3b6691",
+      "wp-orange": "#F0A21F",
     }, fontFamily: {
       sans: ["Ubuntu", "sans-serif"],
       mono: ['"Ubuntu Condensed"', "ui-monospace"],

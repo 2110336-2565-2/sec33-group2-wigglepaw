@@ -151,7 +151,7 @@ export const Chatmain = (props: ChatMainProps) => {
           : "relative h-full w-0 md:w-full"
       }
     >
-      <div className=" flex w-full items-center border-b-2 border-[#F0A21F] py-1">
+      <div className="flex w-full items-center border-b-2 border-wp-orange py-1">
         <div className="ml-4 hidden w-5 md:visible" onClick={togglemode}>
           <FontAwesomeIcon className="" size="xl" icon={faAngleLeft} />
         </div>
@@ -241,8 +241,8 @@ export const Chatmain = (props: ChatMainProps) => {
                     <div
                       className={
                         who
-                          ? "my-1 inline-block  bg-[#F0A21F] px-3"
-                          : "my-1 inline-block  bg-[#E9E9E9] px-3"
+                          ? "my-1 inline-block rounded-md bg-wp-orange  p-1 px-3"
+                          : "my-1 inline-block rounded-md bg-[#E9E9E9]  p-1 px-3"
                       }
                     >
                       <span className={who ? "text-white" : "text-[#909090]"}>
