@@ -117,9 +117,9 @@ const NewReportPage = () => {
                   <div className="relative flex h-48 w-48 justify-center rounded-sm border">
                     <Image
                       fill
+                      alt="preview-report-problem"
                       className="object-cover"
                       src={imagePreview as string}
-                      alt="preview"
                     />
                   </div>
                 ) : (
