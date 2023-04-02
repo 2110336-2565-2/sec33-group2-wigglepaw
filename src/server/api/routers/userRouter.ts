@@ -118,6 +118,15 @@ export const userRouter = createTRPCRouter({
         });
       }
     }),
+  getImagebyId: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const result = await ctx.prisma.user.findUnique({
+        where: { userId: input.userId },
+        select: { imageUri: true },
+      });
+      return result ? result["imageUri"] : null;
+    }),
 
   getForProfilePage: publicProcedure
     .input(z.object({ username: z.string() }))
@@ -192,6 +201,14 @@ export const userRouter = createTRPCRouter({
       });
       return update;
     }),
+  getMyImageUri: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+    const result = await ctx.prisma.user.findUnique({
+      where: { userId: userId },
+      select: { imageUri: true },
+    });
+    return result ? result["imageUri"] : null;
+  }),
 });
 
 async function deleteByUser(

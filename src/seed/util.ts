@@ -19,6 +19,10 @@ export function getRandomIntFromInterval(min: number, max: number) {
   // min and max included
   return Math.floor(rand.next() * (max - min + 1) + min);
 }
+export function getRandomFloatFromInterval(min: number, max: number) {
+  // min and max included
+  return rand.next() * (max - min + 1) + min;
+}
 
 export function getRandomDatetime() {
   const dayToMs = 1000 * 60 * 60 * 24;
