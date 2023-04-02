@@ -94,27 +94,15 @@ export const reviewRouter = createTRPCRouter({
       });
     }),
 
-  getAll: publicProcedure
-    .input(
-      z.object({
-        reviewId: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      return await ctx.prisma.review.findMany();
-    }),
+  getAll: publicProcedure.mutation(async ({ ctx, input }) => {
+    return await ctx.prisma.review.findMany();
+  }),
 
-  getAllReport: publicProcedure
-    .input(
-      z.object({
-        reviewId: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      return await ctx.prisma.review.findMany({
-        where: {
-          status: ReviewStatus.resolved || ReviewStatus.pending,
-        },
-      });
-    }),
+  getAllReport: publicProcedure.mutation(async ({ ctx, input }) => {
+    return await ctx.prisma.review.findMany({
+      where: {
+        status: ReviewStatus.resolved || ReviewStatus.pending,
+      },
+    });
+  }),
 });
