@@ -5,6 +5,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { ReportTicketStatus } from "@prisma/client";
+import reportTicketPic from "../logic/s3Op/reportTicketPic";
 
 function throwErr(err: unknown) {
   throw new TRPCError({
@@ -32,29 +33,83 @@ function differentAdminErr() {
 
 export const reportTicketRouter = createTRPCRouter({
   // Create
+  // using postRouter as a template to upload picture
+  // กราบ 1 กราบ 2 กราบ 3 dkomplex ท่านผู้เจริญ
   create: publicProcedure
     .input(
       z.object({
         reporterId: z.string().cuid(),
-        reportTicket: reportTicketFields,
+        reportTicket: reportTicketFields.omit({ image: true }),
+        pictureCount: z.number().min(0).max(1),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      try {
-        return await ctx.prisma.reportTicket.create({
-          data: {
-            reporterId: input.reporterId,
-            status: ticketStatus.Enum.pending,
-            ...input.reportTicket,
-          },
-          include: {
-            reporter: true,
-            admin: true,
-          },
-        });
-      } catch (err) {
-        throwErr(err);
-      }
+      // create temporary report ticket with no picture
+      // so that we have a reportTicket-id to create URLs for S3
+      const createReportTicket = await ctx.prisma.reportTicket.create({
+        data: {
+          reporterId: input.reporterId,
+          status: ticketStatus.Enum.pending,
+          ...input.reportTicket,
+          pictureUri: undefined, // set as undefined for now, will be later updated once we get urls from s3 provider
+        },
+        include: {
+          reporter: true,
+          admin: true,
+        },
+      });
+
+      // setup for URL generation
+      const ticketId = createReportTicket.ticketId;
+      const imageIdx = Array.from({ length: input.pictureCount }, (_, i) => i);
+      // 1.create presigned URLS for frontend to upload to
+      const uploadUrls: string[] = await Promise.all(
+        imageIdx.map((i) =>
+          reportTicketPic.signedUploadUrl(ctx.s3, ticketId, i)
+        )
+      );
+
+      // 2.create publicURLs for frontend to view the images
+      // and update the model with this value
+      const pictureUri = imageIdx.map((i) =>
+        reportTicketPic.publicUrl(ticketId, i)
+      );
+      await ctx.prisma.reportTicket.update({
+        where: {
+          ticketId,
+        },
+        data: {
+          pictureUri,
+        },
+      });
+
+      // make a 5-min time bomb, to check if front end uploaded successfully, otherwise delete the report
+      const uploadCheckTask = async () => {
+        const allUploaded = await Promise.all(
+          imageIdx.map((i) =>
+            reportTicketPic.checkUploaded(ctx.s3, ticketId, i)
+          )
+        );
+
+        if (!allUploaded) {
+          console.error(`Not uplaoded, deleting report ${ticketId}`);
+          await ctx.prisma.reportTicket.delete({
+            where: {
+              ticketId,
+            },
+          });
+        }
+      };
+      // start the bomb
+      setTimeout(() => {
+        uploadCheckTask().then().catch(console.error);
+      }, 5 * 60 * 1000);
+
+      // return the reportTicket (in case), and the uploadUrls to which frontend will axios.put
+      return {
+        reportTicket: createReportTicket,
+        uploadUrls,
+      };
     }),
   getAll: publicProcedure.mutation(async ({ ctx, input }) => {
     try {

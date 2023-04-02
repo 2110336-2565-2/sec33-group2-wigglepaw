@@ -6,10 +6,11 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import Header from "../../../components/Header";
-import type { reportTicketFields } from "../../../schema/schema";
+import type { ReportFormDataT } from "../../../schema/schema";
 import { api } from "../../../utils/api";
+import { useAddNewReport, useAddNewReportTicket } from "../../../utils/upload";
 
-type ReportFormDataT = z.infer<typeof reportTicketFields>;
+type ReportFormDataT = z.infer<typeof ReportFormDataT>;
 
 const NewReportPage = () => {
   // define the form
@@ -22,17 +23,22 @@ const NewReportPage = () => {
 
   // create a preview image before uploading using this custom hook
   // custom hook for previewing uploaded image
-  const useImagePreview = (file: any) => {
+  const useImagePreview = (file: FileList) => {
     const [imgSrc, setImgSrc] = useState("");
+
+    console.log(file);
 
     useEffect(() => {
       if (file && file[0]) {
+        console.log(file);
+
         const newURL = URL.createObjectURL(file[0]);
 
         if (newURL !== imgSrc) {
           setImgSrc(newURL);
         }
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [file]);
 
     return [imgSrc, setImgSrc];
@@ -40,7 +46,8 @@ const NewReportPage = () => {
   const uploadedImage = watch("image");
   const [imagePreview] = useImagePreview(uploadedImage);
 
-  const createReport = api.reportTicket.create.useMutation();
+  const createReportTicket = useAddNewReportTicket();
+
   const { data: session } = useSession();
 
   // define the onSubmit method for the form
@@ -51,14 +58,14 @@ const NewReportPage = () => {
         throw new Error("not logged in");
       }
 
-      await createReport.mutateAsync({
-        reporterId: user.id,
-        reportTicket: {
+      await createReportTicket.mutateAsync(
+        user.id,
+        {
           title: data.title,
           description: data.description,
-          image: data.image,
         },
-      });
+        data.image
+      );
 
       console.log("report created success");
     } catch (err) {

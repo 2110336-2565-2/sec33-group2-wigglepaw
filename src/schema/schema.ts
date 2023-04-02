@@ -131,9 +131,20 @@ export const ticketStatus = z.enum([
   ReportTicketStatus.resolved,
 ]);
 
-export const reportTicketFields = z.object({
+// base ReportTicketFields zod objects
+export const baseReportTicketFields = z.object({
   title: z.string(),
   description: z.string().optional().default(""),
+});
+
+// This will be used by prisma backend, storing images as S3 publicURL
+export const reportTicketFields = baseReportTicketFields.extend({
+  image: z.string(),
+});
+
+// This will be used by the front end, uploading images as a Filelist
+export const ReportFormDataT = baseReportTicketFields.extend({
+  image: z.custom<FileList>(),
 });
 
 export const approvalStatus = z.enum([

@@ -177,6 +177,7 @@ Table ReportTicket {
   status ReportTicketStatus [not null]
   notes String
   createdAt DateTime [default: `now()`, not null]
+  pictureUri String[] [not null]
 }
 
 Table ApprovalRequest {

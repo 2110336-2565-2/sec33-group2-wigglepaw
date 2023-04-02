@@ -212,6 +212,7 @@ model ReportTicket {
     status      ReportTicketStatus
     notes       String? // Notes made by admins
     createdAt   DateTime           @default(now())
+    pictureUri  String[]
 }
 
 enum ApprovalRequestStatus {

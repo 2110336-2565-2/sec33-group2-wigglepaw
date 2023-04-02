@@ -152,6 +152,7 @@ approved approved
     ReportTicketStatus status  
     String notes  "nullable"
     DateTime createdAt  
+    String pictureUri  
     }
   
 
