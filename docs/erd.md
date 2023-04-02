@@ -10,6 +10,14 @@ rejected rejected
     
 
 
+        ReviewStatus {
+            submitted submitted
+pending pending
+resolved resolved
+        }
+    
+
+
         ReportTicketStatus {
             pending pending
 acked acked
@@ -125,6 +133,7 @@ approved approved
 
   Review {
     String reviewId PK 
+    ReviewStatus status  
     String text  "nullable"
     Int rating  
     DateTime createdAt  
@@ -178,6 +187,7 @@ approved approved
     Pet o{--}o Booking : ""
     Review o{--|| PetOwner : "petOwner"
     Review o{--|| PetSitter : "petSitter"
+    Review o|--|| ReviewStatus : "enum:status"
     Post o{--|| PetSitter : "petSitter"
     Admin o{--|| User : "user"
     ReportTicket o{--|| User : "reporter"

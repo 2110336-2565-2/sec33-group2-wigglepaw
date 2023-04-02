@@ -144,6 +144,7 @@ Table Review {
   petOwner PetOwner [not null]
   petSitterId String [not null]
   petSitter PetSitter [not null]
+  status ReviewStatus [not null]
   text String
   rating Int [not null]
   createdAt DateTime [default: `now()`, not null]
@@ -202,6 +203,12 @@ Enum BookingStatus {
   accepted
   canceled
   rejected
+}
+
+Enum ReviewStatus {
+  submitted
+  pending
+  resolved
 }
 
 Enum ReportTicketStatus {

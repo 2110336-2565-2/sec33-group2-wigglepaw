@@ -166,15 +166,22 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+enum ReviewStatus {
+    submitted // set at creation time
+    pending // reported to admin
+    resolved // resolved by admin, marked as no problem
+}
+
 model Review {
-    reviewId    String    @id @default(cuid())
+    reviewId    String       @id @default(cuid())
     petOwnerId  String
-    petOwner    PetOwner  @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
+    petOwner    PetOwner     @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
     petSitterId String
-    petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    petSitter   PetSitter    @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    status      ReviewStatus
     text        String?
     rating      Int
-    createdAt   DateTime  @default(now())
+    createdAt   DateTime     @default(now())
 }
 
 model Post {
