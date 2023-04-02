@@ -1,8 +1,10 @@
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Header from "../../../components/Header";
+import { api } from "../../../utils/api";
 
 interface ReportFormDataT {
   date: Date;
@@ -40,15 +42,33 @@ const NewReportPage = () => {
   const uploadedImage = watch("image");
   const [imagePreview] = useImagePreview(uploadedImage);
 
+  const createReport = api.reportTicket.create.useMutation();
+  const { data: session } = useSession();
+
   // define the onSubmit method for the form
-  const onSubmit = (data: ReportFormDataT) => {
+  const onSubmit = async (data: ReportFormDataT) => {
     // append date to the submitted report
     data.date = new Date();
 
-    console.log("submitting new report");
-    console.log(data);
+    try {
+      const user = session?.user;
+      if (!user) {
+        throw new Error("not logged in");
+        return;
+      }
 
-    // TODO: call mutations to server here
+      await createReport.mutateAsync({
+        reporterId: user.id,
+        reportTicket: {
+          title: data.title,
+          description: data.text,
+        },
+      });
+
+      console.log("report created success");
+    } catch (err) {
+      console.log("error: ", err);
+    }
   };
 
   return (
@@ -92,7 +112,7 @@ const NewReportPage = () => {
               <div id="image-upload-wrapper" className=" mr-4">
                 <p className="text-lg text-slate-700">Problem Screenshot</p>
                 {imagePreview ? (
-                  <div className="h-48 w-48 rounded-sm p-[24px] ">
+                  <div className="h-48 w-48 rounded-sm p-[24px]">
                     <img className="" src={imagePreview} alt="preview" />
                   </div>
                 ) : (
