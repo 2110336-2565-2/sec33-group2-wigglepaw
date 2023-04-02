@@ -158,12 +158,16 @@ export const Chatmain = (props: ChatMainProps) => {
         <span className="flex-1 px-4 py-2">{props.username}</span>
 
         {/* Block button */}
-        <div className="px-1">
-          <MuteButton></MuteButton>
-        </div>
-        <div className="px-2">
-          <BlockButton></BlockButton>
-        </div>
+        {props.chatroomid && (
+          <>
+            <div className="px-1">
+              <MuteButton></MuteButton>
+            </div>
+            <div className="px-1">
+              <BlockButton></BlockButton>
+            </div>
+          </>
+        )}
       </div>
 
       <div className=" h-[82%] w-full  px-10">
