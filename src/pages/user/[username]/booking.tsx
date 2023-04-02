@@ -104,6 +104,7 @@ const booking: NextPage = () => {
         <Header />
         <div className="flex min-h-[90vh]">
           <SideTab
+            booking
             user={petSitterData}
             isPetOwner={session?.user?.userType == UserType.PetOwner}
           />
