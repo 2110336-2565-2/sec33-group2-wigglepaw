@@ -13,6 +13,7 @@ const Header = (props: any) => {
   const isLoggedIn = status === "authenticated";
   const logout = () => signOut();
   const username = session?.user?.username;
+  const fixed = typeof props.fixed !== "undefined";
 
   const router = useRouter();
   const asPath = router.asPath;
@@ -30,9 +31,10 @@ const Header = (props: any) => {
 
   return (
     <span
-      className={
-        "flex h-fit w-screen flex-col bg-wp-blue md:pr-2 " + props.className
-      }
+      className={`z-10 flex h-fit w-screen flex-col bg-wp-blue md:pr-2 ${
+        fixed ? "sticky inset-auto top-0" : ""
+      } ${props.className}
+      `}
     >
       <nav className="flex w-full justify-between">
         <Link href={"/"} className="flex shrink-0">

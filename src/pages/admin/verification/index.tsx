@@ -9,7 +9,7 @@ import DataTable, {
 } from "react-data-table-component";
 import { HiCheck, HiMenuAlt1 } from "react-icons/hi";
 import { string } from "zod";
-import FixedHeader from "../../../components/FixedHeader";
+import Header from "../../../components/Header";
 import { UserType } from "../../../types/user";
 import { api } from "../../../utils/api";
 import ReactDOMServer from "react-dom/server";
@@ -21,11 +21,9 @@ export default function Verification() {
 
   return (
     <div className="flex h-screen flex-col">
-      <FixedHeader />
+      <Header />
       <div className="flex flex-grow">
-        <div className="flex h-full w-[200px] border-2 max-lg:hidden">
-          <AdminSideTab />
-        </div>
+        <AdminSideTab />
         <div className="flex w-full flex-col gap-5 overflow-scroll sm:px-[20px] sm:py-[10px] lg:px-[40px] lg:py-[20px] xl:px-[80px] xl:py-[40px]">
           <Notification
             code={parseInt(router.query.code as string)}
@@ -33,7 +31,7 @@ export default function Verification() {
             className="mx-4"
           />
           <div className="h-full flex-grow text-[18px]">
-            <Table />
+            <PetSitterVerifyTable />
           </div>
         </div>
       </div>
@@ -55,7 +53,7 @@ interface DataRow {
   status: "Pending" | "Verified" | null;
 }
 
-function Table() {
+function PetSitterVerifyTable() {
   // ctx
   const utils = api.useContext();
 
