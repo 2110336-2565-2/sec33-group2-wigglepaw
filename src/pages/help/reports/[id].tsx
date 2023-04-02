@@ -1,67 +1,119 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import Header from "../../../components/Header";
+import { api } from "../../../utils/api";
+import { ReportTicket } from "@prisma/client";
 
 const ReportPage = () => {
-  const ReportTmp = {
-    title: "the report title",
-    text: "this is report text",
-    status: "resolved",
-    adminComment: "this is admin comment. read your report, done",
-    date: "Sat Apr 01 2023 18:41:03 GMT+0700 (Indochina Time)",
-    user: {
-      id: "#uFree90",
-      name: "myUserNameJa",
-      imageURL: "/nomatch_saddog.png",
-    },
-  };
+  const router = useRouter();
+  const { id: ticketId } = router.query;
 
-  return (
-    <>
-      <Header />
-      <div className="m-5">
-        <h1 className="text-[40px] text-[#213951]">Problem Report</h1>
-        <div className=" border border-[#a3bad1] p-5">
-          <div className="mb-6 flex">
-            <div id="title-and-text-wrapper" className="mr-6 flex-1">
-              {/* the reported user */}
-              <ReportFieldStyle1 label={"User"} user={ReportTmp.user} />
+  // there are two tricks going on here
+  // 1. we use a type-guard fallback to check solve the error:
+  // ```
+  //  Type 'string | string[] | undefined' is not assignable to type 'string'.
+  //  Type 'undefined' is not assignable to type 'string'.ts(2322)
+  // ```
+  //
+  // 2. we prevent the premature query error from the browser:
+  // TRPCClientError: [
+  //   {
+  //     "validation": "cuid",
+  //     "code": "invalid_string",
+  //     "message": "Invalid cuid",
+  //     "path": [
+  //       "ticketId"
+  //     ]
+  //   }
+  // ]
+  //
+  // by setting the enabled option to be true only if the ticketId value is not undefined, that is it's supplied from next's router
+  const { isLoading, data } = api.reportTicket.getByTicketId.useQuery(
+    { ticketId: typeof ticketId === "string" ? ticketId : "" },
+    {
+      enabled: typeof ticketId === "string",
+    }
+  );
 
-              {/* the reported date */}
-              <ReportFieldStyle2 label={"Date"} text={ReportTmp.date} />
+  // tmp
+  if (isLoading) {
+    return <>isLoading</>;
+  } else {
+    if (typeof data === "undefined" || data === null) {
+      return <>typescript error ja</>;
+    }
 
-              {/* the report title */}
-              <ReportFieldStyle2 label={"Title"} text={ReportTmp.title} />
+    const {
+      status,
+      title,
+      ticketId,
+      description,
+      notes,
+      createdAt,
+      pictureUri,
+      reporterId,
+      username,
+    } = data;
 
-              {/* the report text */}
-              <ReportFieldStyle3 label={"Text"} text={ReportTmp.text} />
+    console.log(data);
 
-              {/* the report status */}
-              <ReportFieldStyle2 label={"Status"} text={ReportTmp.status} />
+    return (
+      <>
+        <Header />
+        <div className="m-5">
+          <h1 className="text-[40px] text-[#213951]">Problem Report</h1>
+          <div className=" border border-[#a3bad1] p-5">
+            <div className="mb-6 flex">
+              <div id="title-and-text-wrapper" className="mr-6 flex-1">
+                {/* the report ticket id */}
+                <ReportFieldStyle2 label={"Report Id"} text={ticketId} />
 
-              {/* admin comments if any */}
-              {ReportTmp.adminComment && ReportTmp.status !== "pending" && (
-                <ReportFieldStyle3
-                  label={"Admin Comment"}
-                  text={ReportTmp.adminComment}
+                {/* the report status */}
+                <ReportFieldStyle2 label={"Status"} text={status} />
+
+                {/* the reported user */}
+                <ReportFieldStyle1
+                  label={"User"}
+                  user={{ name: username, id: reporterId }}
                 />
-              )}
-            </div>
 
-            <div id="image-upload-wrapper" className=" mr-4">
-              <p className="text-lg text-slate-700">Problem Screenshot</p>
-              <Image
-                alt="sitter profile image"
-                src={"/nomatch_saddog.png"}
-                className="rounded-sm border p-[24px]"
-                width={192}
-                height={192}
-              />
+                {/* the reported date */}
+                <ReportFieldStyle2 label={"Date"} text={createdAt.toString()} />
+
+                {/* the report title */}
+                <ReportFieldStyle2 label={"Title"} text={title} />
+
+                {/* the report text */}
+                <ReportFieldStyle3 label={"Description"} text={description} />
+
+                {/* admin comments if any */}
+                {status !== "pending" && notes && (
+                  <ReportFieldStyle3 label={"Admin Comment"} text={notes} />
+                )}
+              </div>
+
+              <div id="image-upload-wrapper" className=" mr-4">
+                <p className="text-lg text-slate-700">Problem Screenshot</p>
+                <div className="relative flex h-48 w-48 justify-center rounded-sm border">
+                  <Image
+                    fill
+                    alt="preview-report-problem"
+                    className="object-cover"
+                    src={
+                      typeof pictureUri[0] === "string"
+                        ? pictureUri[0]
+                        : "/nomatch_saddog.png"
+                    }
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  }
 };
 
 const ReportFieldStyle1 = ({ label, user }) => {
@@ -103,7 +155,7 @@ const ReportFieldStyle3 = ({ label, text }) => {
     <div className="mb-2 flex">
       <p className="w-28 text-lg  text-slate-700">{label}</p>
       <div className="flex flex-1 flex-col">
-        <div className="rounded-sm border border-[#dbdbdb] px-2 py-2 text-slate-400">
+        <div className="rounded-sm border border-[#dbdbdb] px-1 py-1 text-slate-400">
           {text}
         </div>
       </div>

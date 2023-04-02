@@ -168,6 +168,34 @@ export const reportTicketRouter = createTRPCRouter({
         throwErr(err);
       }
     }),
+  getByTicketId: publicProcedure
+    .input(
+      z.object({
+        ticketId: z.string().cuid(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        const reportTicket = await ctx.prisma.reportTicket.findUnique({
+          where: {
+            ticketId: input.ticketId,
+          },
+        });
+
+        const reporter = await ctx.prisma.user.findUnique({
+          where: {
+            userId: reportTicket?.reporterId,
+          },
+          select: {
+            username: true,
+          },
+        });
+
+        return { ...reportTicket, username: reporter?.username };
+      } catch (err) {
+        throwErr(err);
+      }
+    }),
   // Delete by Id
   deleteById: publicProcedure
     .input(
