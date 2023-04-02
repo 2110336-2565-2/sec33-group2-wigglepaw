@@ -1,4 +1,4 @@
-import { faArrowLeft, faPaw, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import Image from "next/image";

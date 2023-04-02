@@ -54,6 +54,7 @@ Table User {
   salt String [not null]
   Admin Admin [not null]
   ReportTicket ReportTicket [not null]
+  messages Message [not null]
 }
 
 Table PetOwner {
@@ -65,6 +66,7 @@ Table PetOwner {
   pet Pet [not null]
   booking Booking [not null]
   review Review [not null]
+  Chatroom Chatroom [not null]
 }
 
 Table PetSitter {
@@ -83,6 +85,7 @@ Table PetSitter {
   avgRating Float
   reviewCount Int [not null, default: 0]
   ApprovalRequest ApprovalRequest [not null]
+  Chatroom Chatroom [not null]
 }
 
 Table FreelancePetSitter {
@@ -193,6 +196,26 @@ Table ApprovalRequest {
   adminUserId String
 }
 
+Table Chatroom {
+  chatroomId String [pk]
+  petOwnerId String [not null]
+  petOwner PetOwner [not null]
+  petSitterId String [not null]
+  petSitter PetSitter [not null]
+  messages Message [not null]
+}
+
+Table Message {
+  messageId String [pk]
+  type MessageType [not null, default: 'text']
+  data String [not null]
+  senderId String [not null]
+  sender User [not null]
+  createdAt DateTime [default: `now()`, not null]
+  chatroomId String [not null]
+  Chatroom Chatroom
+}
+
 Table MyRelationTable {
   petId String [ref: > Pet.petId]
   bookingId String [ref: > Booking.bookingId]
@@ -216,6 +239,11 @@ Enum ApprovalRequestStatus {
   pending
   declined
   approved
+}
+
+Enum MessageType {
+  text
+  image
 }
 
 Ref: Account.userId > User.userId [delete: Cascade]
@@ -251,3 +279,11 @@ Ref: ReportTicket.adminId > Admin.userId [delete: Cascade]
 Ref: ApprovalRequest.petSitterId > PetSitter.userId [delete: Cascade]
 
 Ref: ApprovalRequest.adminUserId > Admin.userId
+
+Ref: Chatroom.petOwnerId > PetOwner.userId
+
+Ref: Chatroom.petSitterId > PetSitter.userId
+
+Ref: Message.senderId > User.userId
+
+Ref: Message.chatroomId > Chatroom.chatroomId

@@ -163,3 +163,11 @@ export const approvalStatus = z.enum([
 export const approvalRequestFields = z.object({
   notes: z.string().optional(),
 });
+
+export const messageFields = z.object({
+  senderId: z.string(),
+  chatroomId: z.string().optional().default(""),
+  data: z.string(),
+  petSitterId: z.string().optional().default(""),
+  petOwnerId: z.string().optional().default(""),
+});

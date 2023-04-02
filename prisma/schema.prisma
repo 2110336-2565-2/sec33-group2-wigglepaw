@@ -77,17 +77,19 @@ model User {
     salt          String
     Admin         Admin[]
     ReportTicket  ReportTicket[]
+    messages      Message[] // Just to make prisma work
 }
 
 model PetOwner {
-    userId    String    @id @default(cuid())
-    user      User      @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    userId    String     @id @default(cuid())
+    user      User       @relation(fields: [userId], references: [userId], onDelete: Cascade)
     petTypes  String[]
     firstName String
     lastName  String
     pet       Pet[]
     booking   Booking[]
     review    Review[]
+    Chatroom  Chatroom[]
 }
 
 model PetSitter {
@@ -106,6 +108,7 @@ model PetSitter {
     avgRating          Float?
     reviewCount        Int                 @default(0)
     ApprovalRequest    ApprovalRequest[]
+    Chatroom           Chatroom[]
 }
 
 model FreelancePetSitter {
@@ -232,4 +235,29 @@ model ApprovalRequest {
     notes                String? // Notes made by admins
     createdAt            DateTime              @default(now())
     adminUserId          String?
+}
+
+model Chatroom {
+    chatroomId  String    @id @default(cuid())
+    petOwnerId  String
+    petOwner    PetOwner  @relation(fields: [petOwnerId], references: [userId])
+    petSitterId String
+    petSitter   PetSitter @relation(fields: [petSitterId], references: [userId])
+    messages    Message[]
+}
+
+enum MessageType {
+    text
+    image
+}
+
+model Message {
+    messageId  String      @id @default(cuid())
+    type       MessageType @default(text)
+    data       String // text or imageUrl
+    senderId   String
+    sender     User        @relation(fields: [senderId], references: [userId])
+    createdAt  DateTime    @default(now())
+    chatroomId String
+    Chatroom   Chatroom?   @relation(fields: [chatroomId], references: [chatroomId])
 }

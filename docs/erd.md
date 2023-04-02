@@ -25,6 +25,13 @@ declined declined
 approved approved
         }
     
+
+
+        MessageType {
+            text text
+image image
+        }
+    
   Account {
     String id PK 
     String type  
@@ -165,6 +172,19 @@ approved approved
     DateTime createdAt  
     }
   
+
+  Chatroom {
+    String chatroomId PK 
+    }
+  
+
+  Message {
+    String messageId PK 
+    MessageType type  
+    String data  
+    DateTime createdAt  
+    }
+  
     Account o{--|| User : "user"
     Session o{--|| User : "user"
     PetOwner o|--|| User : "user"
@@ -187,4 +207,9 @@ approved approved
     ApprovalRequest o{--|| PetSitter : "petSitter"
     ApprovalRequest o|--|| ApprovalRequestStatus : "enum:status"
     ApprovalRequest o{--|o Admin : "latestStatusUpdateby"
+    Chatroom o{--|| PetOwner : "petOwner"
+    Chatroom o{--|| PetSitter : "petSitter"
+    Message o|--|| MessageType : "enum:type"
+    Message o{--|| User : "sender"
+    Message o{--|o Chatroom : "Chatroom"
 ```

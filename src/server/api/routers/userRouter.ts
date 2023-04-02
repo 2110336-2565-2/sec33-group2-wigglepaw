@@ -160,6 +160,35 @@ export const userRouter = createTRPCRouter({
       }
     }),
 
+  getAllForProfile: publicProcedure.query(async ({ ctx }) => {
+    const users = await ctx.prisma.user.findMany({
+      include: {
+        petOwner: true,
+        petSitter: {
+          include: {
+            freelancePetSitter: true,
+            petHotel: true,
+          },
+        },
+      },
+    });
+
+    return users
+      .filter((user) => user)
+      .map((user) => {
+        // NEED SOME TRY CATCH EXCEPTION HERE
+        try {
+          return flattenUserForProfilePage(user);
+        } catch (error) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "userRouter fucked up",
+            cause: error,
+          });
+        }
+      });
+  }),
+
   post: publicProcedure.input(userFields).mutation(({ ctx, input }) => {
     return ctx.prisma.user.create({
       data: input,
@@ -295,10 +324,10 @@ function flattenUserForProfilePage(
       | null;
   }
 ): UserProfile & UserProfileSubType {
-  const { petOwner, petSitter, ...userData } = user;
+  const { petOwner, petSitter, password, salt, ...userData } = user;
 
   if (petOwner) {
-    const { password, emailVerified, bankAccount, bankName, ...result } = {
+    const { emailVerified, bankAccount, bankName, ...result } = {
       userType: UserType.PetOwner as UserType.PetOwner, // I HAVE TO PUT THIS, IDK WHY IT HAS BUG
       ...userData,
       ...petOwner,
@@ -309,15 +338,7 @@ function flattenUserForProfilePage(
   if (petSitter) {
     const { freelancePetSitter, petHotel, ...petSitterData } = petSitter;
     if (freelancePetSitter) {
-      const {
-        password,
-        emailVerified,
-        bankAccount,
-        bankName,
-        startPrice,
-        endPrice,
-        ...result
-      } = {
+      const { emailVerified, bankAccount, bankName, ...result } = {
         userType: UserType.FreelancePetSitter as UserType.FreelancePetSitter,
         ...userData,
         ...petSitterData,
@@ -326,15 +347,7 @@ function flattenUserForProfilePage(
       return result;
     }
     if (petHotel) {
-      const {
-        password,
-        emailVerified,
-        bankAccount,
-        bankName,
-        startPrice,
-        endPrice,
-        ...result
-      } = {
+      const { emailVerified, bankAccount, bankName, ...result } = {
         userType: UserType.PetHotel as UserType.PetHotel,
         ...userData,
         ...petSitterData,
