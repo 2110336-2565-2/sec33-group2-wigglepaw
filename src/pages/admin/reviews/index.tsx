@@ -46,6 +46,10 @@ interface DataRow {
   petOwnerUsername: string;
   petOwnerImageUri: string | null | undefined;
   petOwnerFullName: string | null;
+  petSitterId: string; //PetOwner
+  petSitterUsername: string;
+  petSitterImageUri: string | null | undefined;
+  petSitterFullName: string | null;
   //hotelName: string | null;
   //type: "Freelance" | "Hotel";
   //certificationUri: string | null;
@@ -91,7 +95,13 @@ function Table() {
         petOwnerUsername: review.petOwner.user.username,
         petOwnerImageUri: review.petOwner.user.imageUri,
         petOwnerFullName: `${review.petOwner.firstName} ${review.petOwner.lastName}`,
-        title: review.rating,
+        petSitterId: review.petSitterId,
+        petSitterUsername: review.petSitter.user.username,
+        petSitterImageUri: review.petSitter.user.imageUri,
+        petSitterFullName:
+          review.petSitter === UserType.FreelancePetSitter
+            ? `${petSitter.firstName} ${petSitter.lastName}`
+            : null,
         hotelName:
           petSitter.userType === UserType.PetHotel ? petSitter.hotelName : null,
         type:

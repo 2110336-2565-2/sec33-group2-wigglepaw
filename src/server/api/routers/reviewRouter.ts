@@ -149,6 +149,8 @@ export const reviewRouter = createTRPCRouter({
         petSitter: {
           include: {
             user: true,
+            freelancePetSitter: true,
+            petHotel: true,
           },
         },
       },
