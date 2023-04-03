@@ -85,6 +85,7 @@ export const approvalRequestRouter = createTRPCRouter({
         data: {
           status: ApprovalRequestStatus.approved,
           adminId: input.adminId,
+          latestStatusUpdateAt: new Date(),
         },
         select: Return.approvalRequest,
       });
@@ -103,6 +104,7 @@ export const approvalRequestRouter = createTRPCRouter({
         data: {
           status: ApprovalRequestStatus.declined,
           adminId: input.adminId,
+          latestStatusUpdateAt: new Date(),
         },
         select: Return.approvalRequest,
       });
@@ -118,7 +120,11 @@ export const approvalRequestRouter = createTRPCRouter({
       // Check if pet sitter exists
       return await ctx.prisma.approvalRequest.update({
         where: { requestId: input.requestId },
-        data: { status: ApprovalRequestStatus.pending, adminId: input.adminId },
+        data: {
+          status: ApprovalRequestStatus.pending,
+          adminId: input.adminId,
+          latestStatusUpdateAt: new Date(),
+        },
         select: Return.approvalRequest,
       });
     }),
@@ -133,11 +139,25 @@ export const approvalRequestRouter = createTRPCRouter({
       // Check if pet sitter exists
       return await ctx.prisma.approvalRequest.update({
         where: { requestId: input.requestId },
-        data: { notes: input.notes },
+        data: { notes: input.notes, latestStatusUpdateAt: new Date() },
         select: Return.approvalRequest,
       });
     }),
-
+  getByPetSitterId: publicProcedure
+    .input(
+      z.object({
+        petSitterId: z.string().cuid(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      // Check if pet sitter exists
+      return await ctx.prisma.approvalRequest.findFirst({
+        where: {
+          petSitterId: input.petSitterId,
+        },
+        select: Return.approvalRequest,
+      });
+    }),
   getAll: publicProcedure.query(async ({ ctx, input }) => {
     // Check if pet sitter exists
     return await ctx.prisma.approvalRequest.findMany({

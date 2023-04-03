@@ -268,6 +268,7 @@ model ApprovalRequest {
     status               ApprovalRequestStatus
     adminId              String?
     latestStatusUpdateby Admin?                @relation(fields: [adminId], references: [userId])
+    latestStatusUpdateAt DateTime
     notes                String? // Notes made by admins
     createdAt            DateTime              @default(now())
 }
