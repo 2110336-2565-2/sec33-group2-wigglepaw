@@ -157,7 +157,7 @@ export const userRouter = createTRPCRouter({
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "userRouter fucked up",
+          message: "user router fucked up",
           cause: error,
         });
       }

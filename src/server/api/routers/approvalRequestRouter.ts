@@ -53,6 +53,7 @@ export const approvalRequestRouter = createTRPCRouter({
         data: {
           petSitterId: input.petSitterId,
           status: ApprovalRequestStatus.pending,
+          latestStatusUpdateAt: new Date(),
           notes: "",
         },
         select: Return.approvalRequest,
@@ -80,6 +81,23 @@ export const approvalRequestRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       // Check if pet sitter exists
+      const request = await ctx.prisma.approvalRequest.findUnique({
+        where: {
+          requestId: input.requestId,
+        },
+        include: {
+          petSitter: true,
+        },
+      });
+      const petSitterId = request.petSitter.userId;
+      await ctx.prisma.petSitter.update({
+        where: {
+          userId: petSitterId,
+        },
+        data: {
+          verifyStatus: true,
+        },
+      });
       return await ctx.prisma.approvalRequest.update({
         where: { requestId: input.requestId },
         data: {

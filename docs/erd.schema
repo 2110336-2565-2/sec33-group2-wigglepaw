@@ -222,6 +222,7 @@ Table ApprovalRequest {
   status ApprovalRequestStatus [not null]
   adminId String
   latestStatusUpdateby Admin
+  latestStatusUpdateAt DateTime [not null]
   notes String
   createdAt DateTime [default: `now()`, not null]
 }
@@ -331,6 +332,6 @@ Ref: Chatroom.petSitterUserId > PetSitter.userId
 
 Ref: Chatroom.adminUserId > Admin.userId
 
-Ref: Message.senderId > User.userId
+Ref: Message.senderId > User.userId [delete: Cascade]
 
-Ref: Message.chatroomId > Chatroom.chatroomId
+Ref: Message.chatroomId > Chatroom.chatroomId [delete: Cascade]
