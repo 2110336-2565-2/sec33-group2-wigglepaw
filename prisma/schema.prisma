@@ -234,7 +234,7 @@ enum ApprovalRequestStatus {
 
 model ApprovalRequest {
     requestId            String                @id @default(cuid())
-    petSitterId          String
+    petSitterId          String                @unique
     petSitter            PetSitter             @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
     status               ApprovalRequestStatus
     adminId              String?
