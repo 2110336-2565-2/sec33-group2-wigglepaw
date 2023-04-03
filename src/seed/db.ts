@@ -215,12 +215,13 @@ export async function makeReview(
   let statusEnum: ReviewStatus;
   switch (status) {
     case 1:
-      statusEnum = ReviewStatus.submitted;
+      statusEnum = ReviewStatus.resolved;
+      break;
     case 2:
       statusEnum = ReviewStatus.pending;
       break;
     default:
-      statusEnum = ReviewStatus.resolved;
+      statusEnum = ReviewStatus.submitted;
       break;
   }
   const createReview = await prisma.review.create({

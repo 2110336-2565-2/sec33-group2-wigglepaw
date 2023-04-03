@@ -208,14 +208,13 @@ Table ReportTicket {
 
 Table ApprovalRequest {
   requestId String [pk]
-  petSitterId String [not null]
+  petSitterId String [unique, not null]
   petSitter PetSitter [not null]
   status ApprovalRequestStatus [not null]
   adminId String
   latestStatusUpdateby Admin
   notes String
   createdAt DateTime [default: `now()`, not null]
-  adminUserId String
 }
 
 Table MyRelationTable {
@@ -293,4 +292,4 @@ Ref: ReportTicket.adminId > Admin.userId [delete: Cascade]
 
 Ref: ApprovalRequest.petSitterId > PetSitter.userId [delete: Cascade]
 
-Ref: ApprovalRequest.adminUserId > Admin.userId
+Ref: ApprovalRequest.adminId > Admin.userId

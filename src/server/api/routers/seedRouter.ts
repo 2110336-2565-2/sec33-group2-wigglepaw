@@ -192,7 +192,7 @@ export const seedRouter = createTRPCRouter({
         const ownerId = getMultipleRandom(ownerIds, 1)[0] ?? "";
         const rating = getRandomIntFromInterval(1, 5);
         const text = getMultipleRandom(reviewTexts, 1)[0] ?? "";
-        const status = getRandomIntFromInterval(1, 3);
+        const status = getRandomIntFromInterval(1, 10);
         await makeReview(sitterId, ownerId, status, rating, text);
       }
       return "Seeded Reviews";
