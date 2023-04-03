@@ -9,10 +9,23 @@ import { appRouter } from "../../../server/api/root";
 import { messageFields } from "../../../schema/schema";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
+import { ChatRoomProcedureLogic } from "../logic/procedure/chatProcedureLogic";
+
+import { BlockProcedureLogic } from "../logic/procedure/blockProcedureLogic";
+
 export const chatRouter = createTRPCRouter({
   createMessage: publicProcedure
     .input(messageFields)
     .mutation(async ({ ctx, input }) => {
+      const chatroom = await ChatRoomProcedureLogic.getById(
+        ctx.prisma,
+        input.chatroomId
+      );
+      // if (
+      //   chatroom === null ||
+      //   BlockProcedureLogic.isChatRoomBlocked(ctx.prisma, chatroom)
+      // )
+      //   return null;
       const newmessage = await ctx.prisma.message.create({
         data: {
           senderId: input.senderId,
@@ -81,6 +94,15 @@ export const chatRouter = createTRPCRouter({
             },
             take: 1,
           });
+
+          const unread = await ctx.prisma.message.findMany({
+            where: {
+              chatroomId: element.chatroomId,
+              senderId: element.petOwnerId,
+              read: false,
+            },
+          });
+
           if (firstmsg1) {
             firstmsg = firstmsg1;
           } else {
@@ -94,6 +116,7 @@ export const chatRouter = createTRPCRouter({
             firstmsg: firstmsg[0],
             username: usernamela?.username,
             imageuri: usernamela?.imageUri,
+            unread: unread.length,
           };
           return smallresult;
         });
@@ -124,6 +147,14 @@ export const chatRouter = createTRPCRouter({
             take: 1,
           });
 
+          const unread = await ctx.prisma.message.findMany({
+            where: {
+              chatroomId: element.chatroomId,
+              senderId: element.petSitterId,
+              read: false,
+            },
+          });
+
           const smallresult = {
             chatroomId: element.chatroomId,
             petSitterId: element.petSitterId,
@@ -131,6 +162,7 @@ export const chatRouter = createTRPCRouter({
             firstmsg: firstmsg ? firstmsg[0] : { data: "" },
             username: usernamela?.username,
             imageuri: usernamela?.imageUri,
+            unread: unread.length,
           };
           return smallresult;
         });
@@ -141,9 +173,20 @@ export const chatRouter = createTRPCRouter({
     }),
 
   getAllChatMessage: publicProcedure
-    .input(z.object({ chatroomid: z.string() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.message.findMany({
+    .input(z.object({ chatroomid: z.string(), otheruser: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.message.updateMany({
+        where: {
+          chatroomId: input.chatroomid,
+          senderId: input.otheruser,
+          read: false,
+        },
+        data: {
+          read: true,
+        },
+      });
+
+      const allinfo = await ctx.prisma.message.findMany({
         where: {
           chatroomId: input.chatroomid,
         },
@@ -151,7 +194,27 @@ export const chatRouter = createTRPCRouter({
           data: true,
           sender: true,
           createdAt: true,
+          read: true,
+        },
+        orderBy: {
+          createdAt: "asc",
         },
       });
+      return allinfo;
     }),
+
+  // updateRead: publicProcedure
+  // .input(z.object({chatroomid:z.string(),messsageid:z.string()}))
+  // .mutation(async ({ctx,input})=>{
+  //   await ctx.prisma.message.update({
+  //     where:{
+  //       messageId:input.messsageid,
+  //       chatroomId:input.chatroomid,
+  //       read: false
+  //     },
+  //     data:{
+  //       read:true
+  //     }
+  //   })
+  // })
 });

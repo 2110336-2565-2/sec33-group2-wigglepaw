@@ -55,6 +55,34 @@ Table User {
   Admin Admin
   ReportTicket ReportTicket [not null]
   messages Message [not null]
+  blockedUsers BlockedUser [not null]
+  blockedBy BlockedUser [not null]
+  mutedUser MutedUser [not null]
+  mutedBy MutedUser [not null]
+}
+
+Table BlockedUser {
+  blockedBy User [not null]
+  blockedById String [not null]
+  blockedUser User [not null]
+  blockedUserId String [not null]
+  createdAt DateTime [default: `now()`, not null]
+
+  indexes {
+    (blockedById, blockedUserId) [pk]
+  }
+}
+
+Table MutedUser {
+  mutedBy User [not null]
+  mutedById String [not null]
+  mutedUser User [not null]
+  mutedUserId String [not null]
+  createdAt DateTime [default: `now()`, not null]
+
+  indexes {
+    (mutedById, mutedUserId) [pk]
+  }
 }
 
 Table PetOwner {
@@ -216,6 +244,7 @@ Table Message {
   createdAt DateTime [default: `now()`, not null]
   chatroomId String [not null]
   Chatroom Chatroom
+  read Boolean [not null, default: false]
 }
 
 Table MyRelationTable {
@@ -257,6 +286,14 @@ Enum MessageType {
 Ref: Account.userId > User.userId [delete: Cascade]
 
 Ref: Session.userId > User.userId [delete: Cascade]
+
+Ref: BlockedUser.blockedById > User.userId [delete: Cascade]
+
+Ref: BlockedUser.blockedUserId > User.userId [delete: Cascade]
+
+Ref: MutedUser.mutedById > User.userId [delete: Cascade]
+
+Ref: MutedUser.mutedUserId > User.userId [delete: Cascade]
 
 Ref: PetOwner.userId - User.userId [delete: Cascade]
 

@@ -12,6 +12,8 @@ import { bookingRouter } from "./routers/bookingRouter";
 import { petRouter } from "./routers/petRouter";
 import { profilePictureRouter } from "./routers/profilePictureRouter";
 import { recommendRouter } from "./routers/recommendRouter";
+import { blockRouter } from "./routers/blockRouter";
+import { muteRouter } from "./routers/muteRouter";
 import { adminRouter } from "./routers/adminRouter";
 import { reportTicketRouter } from "./routers/reportTicketRouter";
 import { approvalRequestRouter } from "./routers/approvalRequestRouter";
@@ -38,6 +40,8 @@ export const appRouter = createTRPCRouter({
   recommend: recommendRouter,
   reportTicket: reportTicketRouter,
   approvalRequest: approvalRequestRouter,
+  block: blockRouter,
+  mute: muteRouter,
   // Health check route, return 200 OK if server is up
   healthcheck: publicProcedure
     .meta({ description: "Health check route, return 200 OK if server is up" })
