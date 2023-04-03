@@ -162,6 +162,7 @@ Enum BookingStatus {
   accepted
   canceled
   rejected
+  paid
 }
 
 Ref: Account.userId > User.userId [delete: Cascade]
