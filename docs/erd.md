@@ -189,7 +189,7 @@ approved approved
     Review o{--|| PetSitter : "petSitter"
     Review o|--|| ReviewStatus : "enum:status"
     Post o{--|| PetSitter : "petSitter"
-    Admin o{--|| User : "user"
+    Admin o|--|| User : "user"
     ReportTicket o{--|| User : "reporter"
     ReportTicket o{--|o Admin : "admin"
     ReportTicket o|--|| ReportTicketStatus : "enum:status"

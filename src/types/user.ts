@@ -3,6 +3,7 @@ import {
   type PetSitter,
   type FreelancePetSitter,
   type PetHotel,
+  type Admin,
 } from "@prisma/client";
 
 /**
@@ -12,6 +13,7 @@ export const enum UserType {
   PetOwner = "PetOwner",
   FreelancePetSitter = "FreelancePetSitter",
   PetHotel = "PetHotel",
+  Admin = "Admin",
 }
 
 /**
@@ -32,7 +34,10 @@ export type UserSubType =
   | ({
       userType: UserType.PetHotel;
     } & PetSitter &
-      PetHotel);
+      PetHotel)
+  | ({
+      userType: UserType.Admin;
+    } & Admin);
 
 /**
  * I try to filter some unnecessary fields when displaying user profile.
