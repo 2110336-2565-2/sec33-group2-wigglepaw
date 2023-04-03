@@ -12,7 +12,7 @@ const ReportHome = () => {
       <Header />
       <div className="flex">
         <SideTab help />
-        <div className="my-5 w-full gap-5">
+        <div className="content-with-sidetab my-5 w-full gap-5">
           <div className="overflow-scroll px-6 text-base">
             <ReportsTable />
           </div>
@@ -57,7 +57,8 @@ const ReportsTable = () => {
 };
 
 const StatusDisplay = (props: any) => {
-  const classname = "text-white rounded-lg p-1 w-32 text-center";
+  const classname =
+    "text-white rounded-lg p-1 w-[6.5rem] whitespace-nowrap text-center";
   switch (props.status) {
     case "pending":
       return <p className={classname + " bg-yellow-400"}>Pending</p>;
