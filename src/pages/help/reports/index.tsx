@@ -31,7 +31,7 @@ const ReportsTable = () => {
 
   return (
     <div className="min-h-screen">
-      My Report Table
+      <p className="mb-4 text-2xl font-bold">My Report Table</p>
       <ul>
         {isLoading && <>Loading</>}
         {!isLoading &&
@@ -41,11 +41,10 @@ const ReportsTable = () => {
                 <Link
                   href={`/help/reports/${report.ticketId}`}
                   key={report.ticketId}
+                  className="flex w-full items-center justify-between border px-3 py-2"
                 >
-                  <li className="flex gap-1 border">
-                    <p>{report.title}</p>
-                    <p>{report.status}</p>
-                  </li>
+                  <p className="float-left h-full">{report.title}</p>
+                  <StatusDisplay status={report.status} />
                 </Link>
               );
             })
@@ -55,6 +54,22 @@ const ReportsTable = () => {
       </ul>
     </div>
   );
+};
+
+const StatusDisplay = (props: any) => {
+  const classname = "text-white rounded-lg p-1 w-32 text-center";
+  switch (props.status) {
+    case "pending":
+      return <p className={classname + " bg-yellow-400"}>Pending</p>;
+    case "acked":
+      return <p className={classname + " bg-orange-400"}>In Progress</p>;
+    case "canceled":
+      return <p className={classname + " bg-red-400"}>Canceled</p>;
+    case "resolved":
+      return <p className={classname + " bg-green-400"}>Resolved</p>;
+    default:
+      return <p className={classname + "bg-gray-600"}>{props.status}</p>;
+  }
 };
 
 export default ReportHome;
