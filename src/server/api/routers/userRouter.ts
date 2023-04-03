@@ -118,6 +118,15 @@ export const userRouter = createTRPCRouter({
         });
       }
     }),
+  getImagebyId: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const result = await ctx.prisma.user.findUnique({
+        where: { userId: input.userId },
+        select: { imageUri: true },
+      });
+      return result ? result["imageUri"] : null;
+    }),
 
   getForProfilePage: publicProcedure
     .input(z.object({ username: z.string() }))
@@ -180,11 +189,12 @@ export const userRouter = createTRPCRouter({
       });
   }),
 
-  post: publicProcedure.input(userFields).mutation(({ ctx, input }) => {
-    return ctx.prisma.user.create({
-      data: input,
-    });
-  }),
+  // Deprecated
+  // post: publicProcedure.input(userFields).mutation(({ ctx, input }) => {
+  //   return ctx.prisma.user.create({
+  //     data: input,
+  //   });
+  // }),
 
   deleteByUserId: publicProcedure
     .input(z.object({ userId: z.string() }))

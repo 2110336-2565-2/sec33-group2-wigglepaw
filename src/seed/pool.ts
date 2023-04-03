@@ -1,3 +1,5 @@
+import { ReviewStatus } from "@prisma/client";
+
 export const firstNames: string[] = [
   "Tokino",
   "Kanata",
@@ -225,3 +227,27 @@ export const petNames: string[] = [
 ];
 
 export const sexes: string[] = ["Male", "Female"];
+
+export const reviewStatuses: ReviewStatus[] = [
+  ReviewStatus.pending,
+  ReviewStatus.resolved,
+  ReviewStatus.submitted,
+];
+
+export const ticketTitle: string[] = [
+  "HE ATE MY DOG",
+  "HE ATE MY CAT",
+  "Can't press login button on iPhone69",
+  "Review page not responsive",
+  "Hello, I cannot see my previous payment slips",
+];
+
+export const ticketDescription: string[] = [
+  "As the title said",
+  "See title",
+  "",
+  "It only happens with bad Wifi",
+  "It can be solved by repeatedly clicking, but I believe the app shouldn't behave like that.",
+];
+
+export const ticketNotes: string[] = ["LGTM", "lgtm but idk man", "sus"];

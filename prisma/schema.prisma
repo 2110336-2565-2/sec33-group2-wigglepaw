@@ -59,12 +59,12 @@ model Session {
 // This can fuck up NextAuth, please fix the variable names after merging this.
 // ***************** IMPORTANT *******************
 model User {
-    userId        String     @id @default(cuid())
+    userId        String         @id @default(cuid())
     petOwner      PetOwner?
     petSitter     PetSitter?
-    username      String     @unique
+    username      String         @unique
     password      String
-    email         String     @unique
+    email         String         @unique
     emailVerified DateTime?
     phoneNumber   String?
     address       String?
@@ -73,8 +73,10 @@ model User {
     bankName      String? // Assume 1 per user
     accounts      Account[] // Needed for Auth
     sessions      Session[] // Needed for Auth
-    createdAt     DateTime   @default(now())
+    createdAt     DateTime       @default(now())
     salt          String
+    Admin         Admin?
+    ReportTicket  ReportTicket[]
     messages      Message[] // Just to make prisma work
 }
 
@@ -105,6 +107,7 @@ model PetSitter {
     review             Review[]
     avgRating          Float?
     reviewCount        Int                 @default(0)
+    ApprovalRequest    ApprovalRequest[]
     Chatroom           Chatroom[]
 }
 
@@ -166,15 +169,23 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+enum ReviewStatus {
+    submitted // set at creation time
+    pending // reported to admin
+    resolved // resolved by admin, marked as no problem
+}
+
 model Review {
-    reviewId    String    @id @default(cuid())
-    petOwnerId  String
-    petOwner    PetOwner  @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
-    petSitterId String
-    petSitter   PetSitter @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
-    text        String?
-    rating      Int
-    createdAt   DateTime  @default(now())
+    reviewId     String       @id @default(cuid())
+    petOwnerId   String
+    petOwner     PetOwner     @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
+    petSitterId  String
+    petSitter    PetSitter    @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    status       ReviewStatus
+    adminComment String?
+    text         String?
+    rating       Int
+    createdAt    DateTime     @default(now())
 }
 
 model Post {
@@ -186,6 +197,51 @@ model Post {
     pictureUri  String[]
     videoUri    String?
     createdAt   DateTime  @default(now())
+}
+
+model Admin {
+    userId          String            @id @default(cuid())
+    user            User              @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    ActiveTickets   ReportTicket[]
+    ApprovalRequest ApprovalRequest[]
+}
+
+enum ReportTicketStatus {
+    pending // visible to all admins
+    acked // only visible to admin that acked the ticket 
+    canceled
+    resolved
+}
+
+model ReportTicket {
+    ticketId    String             @id @default(cuid())
+    reporterId  String
+    reporter    User               @relation(fields: [reporterId], references: [userId], onDelete: Cascade)
+    title       String
+    description String?
+    adminId     String?
+    admin       Admin?             @relation(fields: [adminId], references: [userId], onDelete: Cascade)
+    status      ReportTicketStatus
+    notes       String? // Notes made by admins
+    createdAt   DateTime           @default(now())
+}
+
+enum ApprovalRequestStatus {
+    pending
+    declined
+    approved
+}
+
+model ApprovalRequest {
+    requestId            String                @id @default(cuid())
+    petSitterId          String
+    petSitter            PetSitter             @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    status               ApprovalRequestStatus
+    adminId              String?
+    latestStatusUpdateby Admin?                @relation(fields: [adminUserId], references: [userId])
+    notes                String? // Notes made by admins
+    createdAt            DateTime              @default(now())
+    adminUserId          String?
 }
 
 model Chatroom {

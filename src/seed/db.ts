@@ -1,4 +1,8 @@
-import { BookingStatus } from "@prisma/client";
+import {
+  BookingStatus,
+  ReportTicketStatus,
+  ReviewStatus,
+} from "@prisma/client";
 import { saltHashPassword } from "../pages/api/auth/[...nextauth]";
 import { prisma } from "../server/db";
 import {
@@ -176,20 +180,54 @@ export async function makeOwner(
     },
   });
   const ownerId = owner.userId;
-  createRandomPets(1, ownerId);
+  await createRandomPets(1, ownerId);
   return;
+}
+
+export async function makeAdmin(code: string) {
+  const saltHash = saltHashPassword("p" + code);
+  const salt = saltHash.salt;
+  const hash = saltHash.hash;
+  return await prisma.admin.create({
+    data: {
+      user: {
+        create: {
+          username: "u" + code,
+          email: "e" + code + "@gmail.com",
+          password: hash,
+          salt: salt,
+        },
+      },
+    },
+    include: {
+      user: true,
+    },
+  });
 }
 
 export async function makeReview(
   petSitterId: string,
   petOwnerId: string,
+  status: number,
   rating: number,
   text: string
 ) {
+  let statusEnum: ReviewStatus;
+  switch (status) {
+    case 1:
+      statusEnum = ReviewStatus.submitted;
+    case 2:
+      statusEnum = ReviewStatus.pending;
+      break;
+    default:
+      statusEnum = ReviewStatus.resolved;
+      break;
+  }
   const createReview = await prisma.review.create({
     data: {
       petSitterId: petSitterId,
       petOwnerId: petOwnerId,
+      status: statusEnum,
       rating: rating,
       text: text,
       createdAt: getRandomDatetime(),
@@ -247,4 +285,35 @@ export async function makeBooking(
     select: Return.booking,
   });
   return createBooking;
+}
+
+export async function makeTicket(
+  reporterId: string,
+  title: string,
+  description: string,
+  adminId: string,
+  status: ReportTicketStatus,
+  notes: string
+) {
+  if (adminId != "")
+    return await prisma.reportTicket.create({
+      data: {
+        reporterId: reporterId,
+        title: title,
+        description: description,
+        adminId: adminId,
+        status: status,
+        notes: notes,
+      },
+    });
+  else
+    return await prisma.reportTicket.create({
+      data: {
+        reporterId: reporterId,
+        title: title,
+        description: description,
+        status: status,
+        notes: notes,
+      },
+    });
 }
