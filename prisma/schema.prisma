@@ -142,6 +142,7 @@ enum BookingStatus {
     accepted
     canceled
     rejected
+    finished
 }
 
 model Pet {
