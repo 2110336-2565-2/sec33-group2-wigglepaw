@@ -133,4 +133,33 @@ export const approvalRequestRouter = createTRPCRouter({
         data: { notes: input.notes },
       });
     }),
+
+  getAll: publicProcedure.query(async ({ ctx, input }) => {
+    // Check if pet sitter exists
+    return await ctx.prisma.approvalRequest.findMany();
+  }),
+  getPending: publicProcedure.query(async ({ ctx, input }) => {
+    // Check if pet sitter exists
+    return await ctx.prisma.approvalRequest.findMany({
+      where: {
+        status: ApprovalRequestStatus.pending,
+      },
+    });
+  }),
+  getDeclined: publicProcedure.query(async ({ ctx, input }) => {
+    // Check if pet sitter exists
+    return await ctx.prisma.approvalRequest.findMany({
+      where: {
+        status: ApprovalRequestStatus.declined,
+      },
+    });
+  }),
+  getApproved: publicProcedure.query(async ({ ctx, input }) => {
+    // Check if pet sitter exists
+    return await ctx.prisma.approvalRequest.findMany({
+      where: {
+        status: ApprovalRequestStatus.approved,
+      },
+    });
+  }),
 });
