@@ -28,8 +28,8 @@ const Dashboard = () => {
         (obj.userType === UserType.FreelancePetSitter ||
           obj.userType === UserType.PetHotel) &&
         obj.verifyStatus
-          ? "Verified"
-          : "Pending",
+          ? "verified"
+          : "pending",
     };
   });
 
@@ -145,6 +145,8 @@ const StatusDisplay = (props: any) => {
       return <p className={classname + " bg-red-400"}>Canceled</p>;
     case "resolved":
       return <p className={classname + " bg-green-400"}>Resolved</p>;
+    case "verified":
+      return <p className={classname + " bg-green-400"}>Verified</p>;
     default:
       return <p className={classname + "bg-gray-600"}>{props.status}</p>;
   }
