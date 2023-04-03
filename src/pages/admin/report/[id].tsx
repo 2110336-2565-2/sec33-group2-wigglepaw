@@ -7,6 +7,9 @@ import { ReportTicket } from "@prisma/client";
 import { ReportTicketStatus } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
+import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMessage } from "@fortawesome/free-solid-svg-icons";
 
 type AdminSubmitForm = { notes: string };
 
@@ -144,7 +147,7 @@ const AdminReportPage = () => {
               <div className="flex justify-center">
                 <button
                   onClick={ackHandler}
-                  className="w-[200px] rounded-sm border-b-2 border-[#111d29] bg-[#2f4f6e] py-2 px-4 text-white hover:border-[#213951] hover:bg-[#213951]"
+                  className="w-[200px] rounded-sm border-b-2 border-[#111d29] bg-[#2f4f6e] py-2 px-4 text-white duration-100 hover:border-[#213951] hover:bg-[#213951]"
                 >
                   Acknowledge
                 </button>
@@ -178,7 +181,7 @@ const AdminReportPage = () => {
                     <button
                       type="submit"
                       onClick={handleSubmit(resolveHandler)}
-                      className="w-[200px] rounded-sm border-b-2 border-[#35924e] bg-[#3FBD61] py-2 px-4 text-white hover:border-[#20512d] hover:bg-[#35924e]"
+                      className="w-[200px] rounded-sm border-b-2 border-[#35924e] bg-[#3FBD61] py-2 px-4 text-white duration-100 hover:border-[#20512d] hover:bg-[#35924e]"
                     >
                       Resolve
                     </button>
@@ -186,7 +189,7 @@ const AdminReportPage = () => {
                     <button
                       type="submit"
                       onClick={handleSubmit(rejectHandler)}
-                      className="w-[200px] rounded-sm border-b-2 border-[#c24023] bg-[#EC4E2A] py-2 px-4 text-white hover:border-[#832b17] hover:bg-[#be4a30]"
+                      className="w-[200px] rounded-sm border-b-2 border-[#c24023] bg-[#EC4E2A] py-2 px-4 text-white duration-100 hover:border-[#832b17] hover:bg-[#be4a30]"
                     >
                       Reject
                     </button>
@@ -216,7 +219,24 @@ const ReportFieldStyle1 = ({ label, user }) => {
           />
         </div>
         <div className="ml-2 flex flex-1 flex-col">
-          <p className="text-slate-400">{user.name}</p>
+          <div className="flex flex-row gap-10">
+            <p className="text-slate-400">{user.name}</p>
+            <Link
+              href={{
+                pathname: "/chat",
+                query: { username: user.id },
+              }}
+            >
+              <button className="center-thing rounded-md border-b border-b-[#235281] bg-[#357CC2] px-2 text-sm text-white  shadow-lg duration-100 hover:bg-[#1e4a77]">
+                Chat
+                <FontAwesomeIcon
+                  className="ml-3 mt-1 scale-y-75 scale-x-100"
+                  size="xl"
+                  icon={faMessage}
+                />
+              </button>
+            </Link>
+          </div>
           <p className="text-slate-400">{user.id}</p>
         </div>
       </div>
