@@ -17,6 +17,9 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { getServerAuthSession } from "../server/auth";
+import type { OmiseTokenParameters } from "omise-js-typed/dist/lib/omise";
+import { useOmise } from "use-omise";
+import { env } from "../env/client.mjs";
 
 // Schema for first page of form
 const formDataSchema1 = z.object({
@@ -38,11 +41,12 @@ const formDataSchema1 = z.object({
 });
 // Schema for second page of form
 const formDataSchema2 = z.object({
+  holdername: z.string().min(1, { message: "Required" }),
   cardno: z.string(), //.regex(/^\d{16}$/),
   expdate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   cvv: z.string().regex(/^\d{3}$/),
-  bankno: z.string(), //.regex(/^\d{12}$/),
-  bankname: z.string(),
+  // bankno: z.string(), //.regex(/^\d{12}$/),
+  // bankname: z.string(),
 });
 // Schema for entire form, includes validation for password confirmation
 const formDataSchema = formDataSchema1.merge(formDataSchema2).refine(
@@ -70,32 +74,72 @@ const RegisterPage: NextPage = () => {
 
   const router = useRouter();
   const mutation = api.petOwner.create.useMutation();
+  const { createTokenPromise } = useOmise({
+    publicKey: env.NEXT_PUBLIC_OMISE_PUBLISHABLE_KEY,
+  });
+
   const onSubmit = async (data: FormData) => {
     alert(JSON.stringify(tag));
 
+    // Collect card into omise
+    // follow the offical guide: https://www.omise.co/collecting-card-information
+    const exp_month = +data.expdate.slice(5, 7);
+    const exp_year = +data.expdate.slice(0, 4);
+    if (exp_month < 1 || exp_month > 12) {
+      throw new Error("Invalid expiration month");
+    }
+    if (exp_year < 2000 || exp_year > 2100) {
+      throw new Error("Invalid expiration year");
+    }
+
+    let cardToken;
+    try {
+      if (createTokenPromise === null) {
+        alert("OmiseJS is not loaded yet, please wait and try again");
+        return;
+      }
+
+      cardToken = await createTokenPromise("card", {
+        name: data.holdername,
+        number: data.cardno,
+        expiration_month: exp_month,
+        expiration_year: exp_year,
+        security_code: +data.cvv,
+      } satisfies OmiseTokenParameters);
+    } catch (e) {
+      console.error("Card verification failed:", e);
+      alert(`Card verification failed: ${JSON.stringify(e)}`);
+      return;
+    }
+
     //when send Pet type  send tag instead of data.type !!
     console.assert(data.password === data.confirmpassword);
-    mutation.mutate({
-      user: {
-        username: data.username,
-        password: data.confirmpassword,
-        email: data.email,
-        phoneNumber: data.phone,
-        address: data.address,
-        bankAccount: data.bankno,
-        bankName: data.bankname,
-      },
-      petOwner: {
-        firstName: data.firstname,
-        lastName: data.lastname,
-        petTypes: [data.type], // TODO: Please correct this, it's currently just a placeholder
-      },
-    });
+    try {
+      await mutation.mutateAsync({
+        user: {
+          username: data.username,
+          password: data.confirmpassword,
+          email: data.email,
+          phoneNumber: data.phone,
+          address: data.address,
+        },
+        petOwner: {
+          firstName: data.firstname,
+          lastName: data.lastname,
+          petTypes: [data.type], // TODO: Please correct this, it's currently just a placeholder
+        },
+        cardToken,
+      });
+    } catch (e) {
+      console.error("Failed to register:", e);
+      alert(`Failed to register: ${JSON.stringify(e)}`);
+    }
 
+    console.log(`Try signin with ${data.username} and ${data.password}`);
     const result = await signIn("credentials", {
       redirect: false,
       username: data.username,
-      password: data.confirmpassword,
+      password: data.password,
     });
     if (result?.ok) {
       // redict to home page
@@ -230,7 +274,7 @@ const RegisterPage: NextPage = () => {
                 <div className="flex w-full rounded border border-gray-100 bg-gray-100 p-1 px-2 text-sm text-gray-900 drop-shadow-md focus:border-blue-500 focus:bg-white focus:ring-blue-500">
                   <div className="center-thing ">
                     {tag.map((value, index) => (
-                      <div className="center-thing mr-1 rounded-full bg-slate-300 py-1 px-2 text-sm  ">
+                      <div className="center-thing mr-1 rounded-full bg-slate-300 px-2 py-1 text-sm  ">
                         <span>{value}</span>
                         <button
                           type="button"
@@ -315,7 +359,7 @@ const RegisterPage: NextPage = () => {
         <div className="absolute right-0 -z-10 ">
           <img src="/Ipage2-1.png" width={614} height={580} alt="cat" />
         </div>
-        <div className="absolute top-[20%] right-0 -z-10 ">
+        <div className="absolute right-0 top-[20%] -z-10 ">
           <img src="/Ipage2-2.png" width={200} height={315} alt="cat" />
         </div>
         <div className="mt-4 h-full items-center">
@@ -332,12 +376,24 @@ const RegisterPage: NextPage = () => {
             <form onSubmit={handleSubmit(onSubmit)} className=" h-full w-2/3 ">
               <div className="mx-auto grid w-full grid-cols-2 grid-rows-6 gap-5 md:grid-cols-4 md:gap-2">
                 <div className="col-span-4 flex items-center">
-                  <input className="mr-2" type="checkbox"></input>
-                  <label>By Card</label>
-                  <div className="ml-4 h-6 w-8 rounded  bg-blue-300"></div>
+                  {/* <input className="mr-2" type="checkbox"></input>
+                  <label>By Card</label> */}
+                  <div className="h-6 w-8 rounded  bg-blue-300"></div>
                   <div className="ml-2 h-6 w-8 rounded  bg-blue-300"></div>
                   <div className="ml-2 h-6 w-8 rounded  bg-blue-300"></div>
                 </div>
+                <div className="col-span-2 flex w-full  flex-col">
+                  <Input
+                    id="holdername"
+                    label="Holder Name *"
+                    placeholder="Adam Smith"
+                    register={register}
+                    errors={errors}
+                    validationRules={{ required: true }}
+                    type="text"
+                  />
+                </div>
+                <div className="col-span-2"></div>
                 <div className="col-span-2 flex w-full  flex-col">
                   <Input
                     id="cardno"
@@ -372,7 +428,7 @@ const RegisterPage: NextPage = () => {
                   />
                 </div>
                 <div className="col-span-2"></div>
-                <div className="col-span-4 flex w-full items-center">
+                {/* <div className="col-span-4 flex w-full items-center">
                   <input className="mr-2" type="checkbox"></input>
                   <label>Mobile banking</label>
                   <div className="ml-4 h-7 w-7 rounded-full bg-blue-300"></div>
@@ -401,7 +457,7 @@ const RegisterPage: NextPage = () => {
                     placeholder="ABC"
                   />
                 </div>
-                <div className="col-span-2"></div>
+                <div className="col-span-2"></div> */}
                 <div className="col-span-2 flex items-center">
                   <input className="mr-2" type="checkbox"></input>
                   <div>

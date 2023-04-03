@@ -3,6 +3,7 @@ import {
   freelancePetSitterFields,
   petSitterFields,
   petHotelFields,
+  bankAccountCreateSchema,
 } from "./../../../schema/schema";
 import { initTRPC } from "@trpc/server";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
@@ -12,45 +13,78 @@ import { appRouter } from "../../../server/api/root";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { saltHashPassword } from "../../../pages/api/auth/[...nextauth]";
+import * as OmiseUtils from "../logic/omise-utils";
 
 export const petHotelRouter = createTRPCRouter({
   create: publicProcedure
     .input(
       z.object({
         user: userFields,
-        petSitter: petSitterFields,
+        petSitter: petSitterFields.omit({ recipientId: true }),
+        bankAccount: bankAccountCreateSchema,
         petHotel: petHotelFields,
       })
     )
     .mutation(async ({ ctx, input }) => {
       const user = input.user;
+
       const saltHash = saltHashPassword(user.password);
       const salt = saltHash.salt;
       const hash = saltHash.hash;
       user.password = hash;
-      await ctx.prisma.petHotel.create({
-        data: {
-          petSitter: {
-            create: {
-              user: {
-                create: {
-                  ...input.user,
-                  salt: salt,
+
+      const omiseRecipient = await OmiseUtils.createRecipients(
+        ctx.omise,
+        {
+          name: input.user.username,
+          email: input.user.email,
+          type: "individual",
+          // There is type error here, but only because OmiseJS type is wrong
+          // it frustates me how offical source can be this wrong
+          //
+          // Actually, thier `bank_account` is wrong too (originally the type would wrongly said `back_account`)
+          // so I create wrapper to fix it, but I give up at this point.
+          bank_account: {
+            brand: input.bankAccount.bankCode,
+            number: input.bankAccount.bankNo,
+            name: input.bankAccount.bankName,
+          },
+        },
+        {
+          autoVerifyInTest: true,
+        }
+      );
+
+      try {
+        await ctx.prisma.petHotel.create({
+          data: {
+            petSitter: {
+              create: {
+                user: {
+                  create: {
+                    ...input.user,
+                    salt: salt,
+                  },
                 },
+                ...input.petSitter,
+                recipientId: omiseRecipient.id,
               },
-              ...input.petSitter,
+            },
+            ...input.petHotel,
+          },
+          include: {
+            petSitter: {
+              include: {
+                user: true,
+              },
             },
           },
-          ...input.petHotel,
-        },
-        include: {
-          petSitter: {
-            include: {
-              user: true,
-            },
-          },
-        },
-      });
+        });
+      } catch (e) {
+        console.error(e);
+        await ctx.omise.recipients.destroy(omiseRecipient.id);
+        throw e;
+      }
       return;
     }),
 

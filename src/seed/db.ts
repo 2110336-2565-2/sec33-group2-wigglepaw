@@ -6,7 +6,9 @@ import {
 import { saltHashPassword } from "../pages/api/auth/[...nextauth]";
 import { prisma } from "../server/db";
 import {
+  createRandomCustomer,
   createRandomPets,
+  createRandomRecipient,
   getRandomBookingStatus,
   getRandomDatetime,
 } from "./util";
@@ -63,6 +65,13 @@ export async function makeFree(
   const saltHash = saltHashPassword("p" + code);
   const salt = saltHash.salt;
   const hash = saltHash.hash;
+
+  const email = "e" + code + "@gmail.com";
+  const recipient = await createRandomRecipient({
+    code,
+    email,
+  });
+
   return await prisma.freelancePetSitter.create({
     data: {
       petSitter: {
@@ -70,7 +79,7 @@ export async function makeFree(
           user: {
             create: {
               username: "u" + code,
-              email: "e" + code + "@gmail.com",
+              email,
               password: hash,
               address: address,
               phoneNumber: phone,
@@ -83,6 +92,7 @@ export async function makeFree(
           petTypes: petTypes,
           startPrice: startPrice,
           endPrice: endPrice,
+          recipientId: recipient.id,
         },
       },
       firstName: firstname,
@@ -111,6 +121,13 @@ export async function makeHotel(
   const saltHash = saltHashPassword("p" + code);
   const salt = saltHash.salt;
   const hash = saltHash.hash;
+
+  const email = "e" + code + "@gmail.com";
+  const recipient = await createRandomRecipient({
+    code,
+    email,
+  });
+
   return await prisma.petHotel.create({
     data: {
       petSitter: {
@@ -118,7 +135,7 @@ export async function makeHotel(
           user: {
             create: {
               username: "u" + code,
-              email: "e" + code + "@gmail.com",
+              email,
               password: hash,
               salt: salt,
               address: address,
@@ -131,6 +148,7 @@ export async function makeHotel(
           petTypes: petTypes,
           startPrice: startPrice,
           endPrice: endPrice,
+          recipientId: recipient.id,
         },
       },
       hotelName: hotelName,
@@ -157,12 +175,25 @@ export async function makeOwner(
   const saltHash = saltHashPassword("p" + code);
   const salt = saltHash.salt;
   const hash = saltHash.hash;
+
+  const email = "e" + code + "@gmail.com";
+  let customer;
+  try {
+    customer = await createRandomCustomer({
+      code,
+      email,
+    });
+  } catch (err) {
+    console.error("Error creating customer: ", err);
+    throw err;
+  }
+
   const owner = await prisma.petOwner.create({
     data: {
       user: {
         create: {
           username: "u" + code,
-          email: "e" + code + "@gmail.com",
+          email,
           password: hash,
           salt: salt,
           address: address,
@@ -174,6 +205,7 @@ export async function makeOwner(
       petTypes: petTypes,
       firstName: firstName,
       lastName: lastName,
+      customerId: customer.id,
     },
     include: {
       user: true,

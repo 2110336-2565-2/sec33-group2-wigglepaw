@@ -15,9 +15,13 @@ export const userFields = z.object({
   phoneNumber: z.string().optional(),
   address: z.string().optional(),
   imageUri: z.string().optional(),
-  bankAccount: z.string().optional(),
-  bankName: z.string().optional(),
   // accounts: Account
+});
+
+export const bankAccountCreateSchema = z.object({
+  bankNo: z.number(),
+  bankName: z.string(),
+  bankCode: z.string(),
 });
 
 export const petSitterFields = z.object({
@@ -27,6 +31,7 @@ export const petSitterFields = z.object({
   certificationUri: z.string().optional(),
   startPrice: z.number().optional(),
   endPrice: z.number().optional(),
+  recipientId: z.string(),
   // location: z.string().default("Laem Thong Rd, Thung Sukhla, Si Racha, Chon Buri 20110")
   // location might be duplicated with userFields.address
 });
@@ -36,6 +41,7 @@ export const petOwnerFields = z.object({
   petTypes: z.array(z.string()),
   firstName: z.string(),
   lastName: z.string(),
+  customerId: z.string(),
 });
 
 export const petFields = z.object({

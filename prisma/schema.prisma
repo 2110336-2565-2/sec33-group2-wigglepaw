@@ -69,8 +69,8 @@ model User {
     phoneNumber   String?
     address       String?
     imageUri      String?
-    bankAccount   String? // Assume 1 per user
-    bankName      String? // Assume 1 per user
+    // bankAccount   String? // Assume 1 per user
+    // bankName      String? // Assume 1 per user
     accounts      Account[] // Needed for Auth
     sessions      Session[] // Needed for Auth
     createdAt     DateTime       @default(now())
@@ -80,14 +80,15 @@ model User {
 }
 
 model PetOwner {
-    userId    String    @id @default(cuid())
-    user      User      @relation(fields: [userId], references: [userId], onDelete: Cascade)
-    petTypes  String[]
-    firstName String
-    lastName  String
-    pet       Pet[]
-    booking   Booking[]
-    review    Review[]
+    userId     String    @id @default(cuid())
+    user       User      @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    petTypes   String[]
+    firstName  String
+    lastName   String
+    customerId String    @unique /// Associated Omise's customer ID (for card payment)
+    pet        Pet[]
+    booking    Booking[]
+    review     Review[]
 }
 
 model PetSitter {
@@ -106,6 +107,7 @@ model PetSitter {
     avgRating          Float?
     reviewCount        Int                 @default(0)
     ApprovalRequest    ApprovalRequest[]
+    recipientId        String              @unique /// Associated Omise's recipient ID (for getting paid)
 }
 
 model FreelancePetSitter {
@@ -143,6 +145,7 @@ enum BookingStatus {
     accepted
     canceled
     rejected
+    paid
 }
 
 model Pet {
