@@ -18,6 +18,7 @@ import { Return } from "../../../schema/returnSchema";
 import { UserTypeLogic } from "../logic/session";
 import { BookingSearchLogic } from "../logic/search/bookingSearchLogic";
 import { BookingStateLogic, BookingState } from "../logic/bookingStateLogic";
+import { chargeAndTransfer } from "../logic/payment";
 
 type returnFieldType = z.TypeOf<typeof returnField>;
 
@@ -39,6 +40,11 @@ const INPUT_DATE_NOT_SUPPORT: returnFieldType = {
   reason:
     "Please avoid setting the start date to be earlier than the current date or later than the end date. The start date should be equal to or later than the current date and earlier than or equal to the end date.",
 };
+const PAYMENT_FAILED: returnFieldType = {
+  status: "ERROR",
+  reason: "Payment failed",
+};
+
 function getSuccessResponse(result: string): returnFieldType {
   return { status: "SUCCESS", result: result };
 }
@@ -234,6 +240,46 @@ export const bookingRouter = createTRPCRouter({
       if (qualified.status != BookingStatus.accepted)
         return BOOKING_STATUS_UNAVAILABLE;
       const status = BookingStatus.paid;
+
+      // Retrive customer, recipient, price of booking
+      const {
+        petOwner: { customerId },
+        petSitter: { recipientId },
+        totalPrice,
+      } = await ctx.prisma.booking.findUniqueOrThrow({
+        where: {
+          bookingId: input.bookingId,
+        },
+        select: {
+          totalPrice: true,
+          petOwner: {
+            select: {
+              customerId: true,
+            },
+          },
+          petSitter: {
+            select: {
+              recipientId: true,
+            },
+          },
+        },
+      });
+
+      // Transfer money from customer to recipient
+      try {
+        const satang = Math.round(100 * totalPrice);
+        await chargeAndTransfer(
+          ctx.omise,
+          satang,
+          customerId,
+          recipientId,
+          input.bookingId
+        );
+      } catch (error) {
+        console.error("Failed payment", error);
+        throw error;
+      }
+
       const update = await ctx.prisma.booking.update({
         where: {
           bookingId: input.bookingId,
