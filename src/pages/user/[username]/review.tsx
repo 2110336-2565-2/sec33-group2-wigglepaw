@@ -215,7 +215,14 @@ const ReviewPage: NextPage = () => {
                           <button type="reset" onClick={closeModal}>
                             Cancel
                           </button>
-                          <button type="submit">Submit</button>
+                          <button
+                            type="submit"
+                            onClick={() => {
+                              window.location.reload();
+                            }}
+                          >
+                            Submit
+                          </button>
                         </div>
                       </form>
                     </div>
