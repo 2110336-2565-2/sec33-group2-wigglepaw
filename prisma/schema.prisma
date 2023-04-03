@@ -75,7 +75,7 @@ model User {
     sessions      Session[] // Needed for Auth
     createdAt     DateTime       @default(now())
     salt          String
-    Admin         Admin[]
+    Admin         Admin?
     ReportTicket  ReportTicket[]
 }
 
