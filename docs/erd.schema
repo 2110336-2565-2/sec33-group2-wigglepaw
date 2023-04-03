@@ -192,6 +192,7 @@ Table ApprovalRequest {
   status ApprovalRequestStatus [not null]
   adminId String
   latestStatusUpdateby Admin
+  latestStatusUpdateAt DateTime [not null]
   notes String
   createdAt DateTime [default: `now()`, not null]
 }

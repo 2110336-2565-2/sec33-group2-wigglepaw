@@ -62,6 +62,7 @@ abstract class InnerReturn {
     adminId: true,
     notes: true,
     createdAt: true,
+    latestStatusUpdateAt: true,
   };
 }
 export abstract class Return {

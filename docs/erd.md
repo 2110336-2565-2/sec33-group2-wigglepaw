@@ -176,6 +176,7 @@ image image
   ApprovalRequest {
     String requestId PK 
     ApprovalRequestStatus status  
+    DateTime latestStatusUpdateAt  
     String notes  "nullable"
     DateTime createdAt  
     }

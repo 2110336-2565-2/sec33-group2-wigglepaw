@@ -1,13 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import Header from "../../../components/Header";
 import { UserType } from "../../../types/user";
 import { api } from "../../../utils/api";
 import Notification from "../../../components/Admin/Notification";
 import SideTab from "../../../components/SideTab";
+import { ApprovalRequestStatus } from "@prisma/client";
 
 export default function Verification() {
   const router = useRouter();
@@ -17,11 +18,11 @@ export default function Verification() {
       <Header />
       <div className="flex">
         <SideTab admin />
-        <div className="my-5 w-full gap-5">
+        <div className="my-5 flex w-full flex-col gap-5">
           <Notification
             code={parseInt(router.query.code as string)}
             notice={router.query.notice as string}
-            className="mx-4"
+            className="mx-9"
           />
           <div className="overflow-scroll px-6 text-base">
             <PetSitterVerifyTable />
@@ -43,7 +44,7 @@ interface DataRow {
   certificationUri: string | null;
   lastUpdate: string | null;
   lastUpdateTime: number;
-  status: "Pending" | "Verified" | null;
+  status: "Pending" | "Declined" | "Approved";
 }
 
 function PetSitterVerifyTable() {
@@ -54,7 +55,7 @@ function PetSitterVerifyTable() {
   const router = useRouter();
 
   // query
-  const users = api.user.getAllForProfile.useQuery();
+  const approvalRequests = api.approvalRequest.getAll.useQuery();
   const verifyPetSitters = api.petSitter.verifyMany.useMutation({
     async onSettled() {
       utils.user.getAllForProfile.invalidate();
@@ -73,44 +74,33 @@ function PetSitterVerifyTable() {
   );
 
   // available data
-  const data: DataRow[] = users.data
-    ? users.data
-        .filter(
-          (user) =>
-            user &&
-            (user.userType === UserType.FreelancePetSitter ||
-              user.userType === UserType.PetHotel)
-        )
-        .map((petSitter) => ({
-          userId: petSitter.userId,
-          username: petSitter.username,
-          imageUri: petSitter.imageUri,
-          fullName:
-            petSitter.userType === UserType.FreelancePetSitter
-              ? `${petSitter.firstName} ${petSitter.lastName}`
-              : null,
-          hotelName:
-            petSitter.userType === UserType.PetHotel
-              ? petSitter.hotelName
-              : null,
-          type:
-            petSitter.userType === UserType.FreelancePetSitter
-              ? "Freelance"
-              : "Hotel",
+  const data: DataRow[] = approvalRequests.data
+    ? approvalRequests.data.map((approvalRequest: any) => {
+        const petSitter = approvalRequest.petSitter;
+        const lastUpdate = new Date(approvalRequest.latestStatusUpdateAt);
+        return {
+          userId: petSitter.user.userId as string,
+          username: petSitter.user.username as string,
+          imageUri: petSitter.user.imageUri as string,
+          fullName: petSitter.freelancePetSitter
+            ? `${petSitter.freelancePetSitter.firstName} ${petSitter.freelancePetSitter.lastName}`
+            : null,
+          hotelName: petSitter.petHotel ? petSitter.petHotel.hotelName : null,
+          type: petSitter.freelancePetSitter ? "Freelance" : "Hotel",
           certificationUri:
-            petSitter.userType === UserType.FreelancePetSitter ||
-            petSitter.userType === UserType.PetHotel
+            petSitter.freelancePetSitter || petSitter.petHotel
               ? petSitter.certificationUri
               : null,
-          lastUpdate: formatTime(new Date(Date.now() - 86400100)), // dummy
-          lastUpdateTime: Date.now() - 86400100, // dummy
+          lastUpdate: formatTime(lastUpdate),
+          lastUpdateTime: lastUpdate.getTime(),
           status:
-            (petSitter.userType === UserType.FreelancePetSitter ||
-              petSitter.userType === UserType.PetHotel) &&
-            petSitter.verifyStatus
-              ? "Verified"
+            approvalRequest.status === ApprovalRequestStatus.approved
+              ? "Approved"
+              : approvalRequest.status === ApprovalRequestStatus.declined
+              ? "Declined"
               : "Pending",
-        }))
+        };
+      })
     : [];
 
   // filter data
@@ -250,8 +240,12 @@ function PetSitterVerifyTable() {
       cell: (row) => (
         <RecursivePropsProvider data-tag="allowRowEvents">
           <div
-            className={`flex h-[28px] w-[100px] items-center justify-center rounded-lg text-[18px] font-semibold text-white drop-shadow-md ${
-              row.status === "Verified" ? "bg-good" : "bg-neutral"
+            className={`flex h-[28px] w-[108px] items-center justify-center rounded-lg text-[18px] font-semibold text-white drop-shadow-md ${
+              row.status === "Approved"
+                ? "bg-good"
+                : row.status === "Declined"
+                ? "bg-bad"
+                : "bg-neutral"
             }`}
           >
             {row.status}
@@ -299,7 +293,7 @@ function PetSitterVerifyTable() {
     setSelectedRows(selectedRows);
   };
 
-  const rowDisabledCriteria = (row: DataRow) => row.status === "Verified";
+  const rowDisabledCriteria = (row: DataRow) => row.status !== "Pending";
 
   const onRowClicked = (row: DataRow) => {
     if (row.status === "Pending")
@@ -345,7 +339,7 @@ function PetSitterVerifyTable() {
       contextActions={ContextActions}
       // contextComponent={}
       // selectableRowsComponent={}
-      progressPending={users.isLoading}
+      progressPending={approvalRequests.isLoading}
       progressComponent={<>DOG DOG DOG DOG is loading bro...</>}
       striped
       highlightOnHover
