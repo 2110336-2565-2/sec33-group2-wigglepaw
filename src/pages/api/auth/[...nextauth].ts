@@ -154,6 +154,13 @@ export const authOptions: NextAuthOptions = {
 
           const user: User = { ...userSubInfo, ...userCommonInfo };
           return user;
+        } else if (userDB.Admin) {
+          const userSubInfo: UserSubType = {
+            userId: userDB.userId,
+            userType: UserType.Admin,
+          };
+          const user: User = { ...userSubInfo, ...userCommonInfo };
+          return user;
         } else {
           throw new Error("User type cannot be determined");
         }
@@ -189,6 +196,7 @@ async function authenticateUser(
         },
       },
       petOwner: true,
+      Admin: true,
     },
   });
 

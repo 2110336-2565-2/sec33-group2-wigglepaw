@@ -13,6 +13,9 @@ import {
   postTitles,
   notes,
   reviewStatuses,
+  ticketTitle,
+  ticketDescription,
+  ticketNotes,
 } from "../../../seed/pool";
 import {
   createRandomPets,
@@ -24,19 +27,23 @@ import {
   getRandomFloatFromInterval,
   getRandomStartEndDate,
   updateOwnerPetTypes,
+  getAllAdminId,
+  getAllReporterId,
 } from "../../../seed/util";
 import {
+  makeAdmin,
   makeBooking,
   makeFree,
   makeHotel,
   makeOwner,
   makePost,
   makeReview,
+  makeTicket,
   updateAvgRating,
 } from "../../../seed/db";
 import Rand, { PRNG } from "rand-seed";
 import { resetRand } from "../../../seed/util";
-import { ReviewStatus } from "@prisma/client";
+import { ReportTicketStatus, ReviewStatus } from "@prisma/client";
 
 export const seedRouter = createTRPCRouter({
   seedUsers: publicProcedure
@@ -113,6 +120,25 @@ export const seedRouter = createTRPCRouter({
         }
       }
       return "Seeded Users";
+    }),
+
+  seedAdmins: publicProcedure
+    .input(
+      z.object({
+        clearAdmins: z.boolean(),
+        numberOfAdmins: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.clearAdmins) {
+        await ctx.prisma.admin.deleteMany();
+      }
+      resetRand();
+      for (let i = 0; i < input.numberOfAdmins; i++) {
+        const code = "Admin" + getRandomIntFromInterval(100, 999).toString();
+        await makeAdmin(code);
+      }
+      return "Seeded Admins";
     }),
 
   seedPets: publicProcedure
@@ -240,5 +266,78 @@ export const seedRouter = createTRPCRouter({
         );
       }
       return "Seeded Bookings";
+    }),
+
+  seedTickets: publicProcedure
+    .input(
+      z.object({
+        clearTickets: z.boolean(),
+        numberOfTickets: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.clearTickets) {
+        await ctx.prisma.reportTicket.deleteMany();
+      }
+
+      const N = input.numberOfTickets;
+      const adminIds = await getAllAdminId();
+      const reporterIds = await getAllReporterId();
+
+      resetRand();
+      for (let i = 0; i < N; i++) {
+        const reporterId = getMultipleRandom(reporterIds, 1)[0] ?? "";
+        const adminId = getMultipleRandom(adminIds, 1)[0] ?? "";
+        const title = getMultipleRandom(ticketTitle, 1)[0] ?? "";
+        const desc = getMultipleRandom(ticketDescription, 1)[0] ?? "";
+        const notes = getMultipleRandom(ticketNotes, 1)[0] ?? "";
+
+        const statusNum = getRandomIntFromInterval(1, 4);
+        switch (statusNum) {
+          case 1: // Pending
+            await makeTicket(
+              reporterId,
+              title,
+              desc,
+              "",
+              ReportTicketStatus.pending,
+              notes
+            );
+            break;
+          case 2:
+            await makeTicket(
+              reporterId,
+              title,
+              desc,
+              adminId,
+              ReportTicketStatus.acked,
+              notes
+            );
+            break;
+          case 3:
+            await makeTicket(
+              reporterId,
+              title,
+              desc,
+              adminId,
+              ReportTicketStatus.canceled,
+              notes
+            );
+            break;
+          case 4:
+            await makeTicket(
+              reporterId,
+              title,
+              desc,
+              adminId,
+              ReportTicketStatus.resolved,
+              notes
+            );
+            break;
+          default:
+            break;
+        }
+      }
+      return "Seeded ReportTickets";
     }),
 });

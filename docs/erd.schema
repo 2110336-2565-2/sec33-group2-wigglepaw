@@ -54,6 +54,7 @@ Table User {
   salt String [not null]
   messages Message [not null]
   Admin Admin [not null]
+  Admin Admin
   ReportTicket ReportTicket [not null]
 }
 
@@ -148,6 +149,7 @@ Table Review {
   petSitterId String [not null]
   petSitter PetSitter [not null]
   status ReviewStatus [not null]
+  adminComment String
   text String
   rating Int [not null]
   createdAt DateTime [default: `now()`, not null]
@@ -283,6 +285,7 @@ Ref: Message.senderId > User.userId
 Ref: Message.chatroomId > Chatroom.chatroomId
 
 Ref: Admin.userId > User.userId [delete: Cascade]
+Ref: Admin.userId - User.userId [delete: Cascade]
 
 Ref: ReportTicket.reporterId > User.userId [delete: Cascade]
 

@@ -137,6 +137,7 @@ approved approved
   Review {
     String reviewId PK 
     ReviewStatus status  
+    String adminComment  "nullable"
     String text  "nullable"
     Int rating  
     DateTime createdAt  
@@ -211,6 +212,7 @@ approved approved
     Message o{--|| User : "sender"
     Message o{--|o Chatroom : "Chatroom"
     Admin o{--|| User : "user"
+    Admin o|--|| User : "user"
     ReportTicket o{--|| User : "reporter"
     ReportTicket o{--|o Admin : "admin"
     ReportTicket o|--|| ReportTicketStatus : "enum:status"
