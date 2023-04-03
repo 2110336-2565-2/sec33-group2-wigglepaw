@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import FixedHeader from "../../../components/FixedHeader";
+import FixedHeader from "../../../components/Header";
 import { UserType } from "../../../types/user";
 import { api } from "../../../utils/api";
 

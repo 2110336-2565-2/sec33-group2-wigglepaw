@@ -15,23 +15,31 @@ const Dashboard = () => {
   // query the verification
   const { data: queryVerifications, isLoading: verificationsIsLoading } =
     api.user.getAllForProfile.useQuery();
-  const verifications = queryVerifications?.slice(0, 5).map((obj) => {
-    return {
-      firstField:
-        obj.userType === UserType.FreelancePetSitter
-          ? `${obj.firstName} ${obj.lastName}`
-          : obj.userType === UserType.PetHotel
-          ? obj.hotelName
-          : "No name",
-      id: obj.userId,
-      status:
-        (obj.userType === UserType.FreelancePetSitter ||
-          obj.userType === UserType.PetHotel) &&
-        obj.verifyStatus
-          ? "verified"
-          : "pending",
-    };
-  });
+  const verifications = queryVerifications
+    ?.filter((obj) => {
+      return (
+        obj.userType === UserType.FreelancePetSitter ||
+        obj.userType === UserType.PetHotel
+      );
+    })
+    .slice(0, 5)
+    .map((obj, idx) => {
+      let firstField;
+      if (obj.userType === UserType.FreelancePetSitter)
+        firstField = `${obj.firstName} ${obj.lastName}`;
+      else if (obj.userType === UserType.PetHotel) firstField = obj.hotelName;
+      else firstField = "nani!";
+      return {
+        firstField: firstField,
+        id: obj.userId,
+        status:
+          (obj.userType === UserType.FreelancePetSitter ||
+            obj.userType === UserType.PetHotel) &&
+          obj.verifyStatus
+            ? "verified"
+            : "pending",
+      };
+    });
 
   // query the reportTickets
   const { data: queryReports, isLoading: reportIsLoading } =
