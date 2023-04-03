@@ -213,8 +213,8 @@ export const bookingRouter = createTRPCRouter({
       return getSuccessResponse(update.status);
     }),
 
-  // finish booking by petOwner
-  finish: protectedProcedure
+  // pay booking by petOwner
+  pay: protectedProcedure
     .input(
       z.object({
         bookingId: z.string(),
@@ -231,9 +231,9 @@ export const bookingRouter = createTRPCRouter({
       );
       if (qualified == null || input.bookingId != qualified.bookingId)
         return NO_BOOKING_FOUND;
-      if (qualified.status != BookingStatus.requested)
+      if (qualified.status != BookingStatus.accepted)
         return BOOKING_STATUS_UNAVAILABLE;
-      const status = BookingStatus.finished;
+      const status = BookingStatus.paid;
       const update = await ctx.prisma.booking.update({
         where: {
           bookingId: input.bookingId,
