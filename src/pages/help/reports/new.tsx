@@ -17,7 +17,6 @@ type ReportFormDataT = z.infer<typeof ReportFormDataT>;
 
 const NewReportPage = () => {
   const [submitReportSuccess, setSubmitReportSuccess] = useState(false);
-  const [ticketId, setTicketId] = useState("");
 
   // define the form
   const {
@@ -74,10 +73,9 @@ const NewReportPage = () => {
         data.image
       );
       console.log("report created success");
-      setTicketId(response.reportTicket.ticketId);
       setSubmitReportSuccess(true);
       setTimeout(function () {
-        router.push(`help/reports/${ticketId}`);
+        router.push(`help/reports/${response.reportTicket.ticketId}`);
         setSubmitReportSuccess(false);
       }, 1500);
     } catch (err) {
@@ -166,9 +164,6 @@ const NewReportPage = () => {
           <ResponsePopup
             show={submitReportSuccess}
             setShow={setSubmitReportSuccess}
-            doBeforeClose={() => {
-              router.push(`help/reports/${ticketId}`);
-            }}
             panelCSS={"bg-green-400 text-green-700"}
           >
             <div className="font-bold">Report Submitted Successful!</div>

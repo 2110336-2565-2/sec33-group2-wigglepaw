@@ -105,15 +105,16 @@ model MutedUser {
 }
 
 model PetOwner {
-    userId    String     @id @default(cuid())
-    user      User       @relation(fields: [userId], references: [userId], onDelete: Cascade)
-    petTypes  String[]
-    firstName String
-    lastName  String
-    pet       Pet[]
-    booking   Booking[]
-    review    Review[]
-    Chatroom  Chatroom[]
+    userId     String     @id @default(cuid())
+    user       User       @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    petTypes   String[]
+    firstName  String
+    lastName   String
+    pet        Pet[]
+    booking    Booking[]
+    review     Review[]
+    Chatroom   Chatroom[]
+    customerId String     @unique
 }
 
 model PetSitter {
