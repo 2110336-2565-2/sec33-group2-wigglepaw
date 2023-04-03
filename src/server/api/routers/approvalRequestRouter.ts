@@ -137,7 +137,21 @@ export const approvalRequestRouter = createTRPCRouter({
         select: Return.approvalRequest,
       });
     }),
-
+  getByPetSitterId: publicProcedure
+    .input(
+      z.object({
+        petSitterId: z.string().cuid(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      // Check if pet sitter exists
+      return await ctx.prisma.approvalRequest.findFirst({
+        where: {
+          petSitterId: input.petSitterId,
+        },
+        select: Return.approvalRequest,
+      });
+    }),
   getAll: publicProcedure.query(async ({ ctx, input }) => {
     // Check if pet sitter exists
     return await ctx.prisma.approvalRequest.findMany({

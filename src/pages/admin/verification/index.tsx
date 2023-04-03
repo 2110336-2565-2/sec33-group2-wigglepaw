@@ -9,10 +9,16 @@ import { api } from "../../../utils/api";
 import Notification from "../../../components/Admin/Notification";
 import SideTab from "../../../components/SideTab";
 import { ApprovalRequestStatus } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import Error from "next/error";
 
 export default function Verification() {
+  const session = useSession();
+
   const router = useRouter();
 
+  if (session.data?.user?.userType !== UserType.Admin)
+    return <Error statusCode={404} />;
   return (
     <div className="min-h-screen">
       <Header />
@@ -297,7 +303,7 @@ function PetSitterVerifyTable() {
 
   const onRowClicked = (row: DataRow) => {
     if (row.status === "Pending")
-      router.push(`/admin/verification/${row.username}`);
+      router.push(`/admin/verification/${row.userId}`);
   };
 
   // manage selected rows

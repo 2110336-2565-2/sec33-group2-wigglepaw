@@ -6,31 +6,36 @@ import { useEffect, useState } from "react";
 import { UserType } from "../../../types/user";
 import { api } from "../../../utils/api";
 import Header from "../../../components/Header";
+import { useSession } from "next-auth/react";
 
 export default function VerifyPetSitter() {
   // ctx
   const utils = api.useContext();
 
+  // session
+  const session = useSession();
+
   // router
   const router = useRouter();
 
   // query
-  const petSitter = api.user.getForProfilePage.useQuery({
-    username:
-      typeof router.query.username === "string" ? router.query.username : "",
+  const approvalRequest: any = api.approvalRequest.getByPetSitterId.useQuery({
+    petSitterId: typeof router.query.id === "string" ? router.query.id : "",
   });
-  const verifyPetSitter = api.petSitter.verifyMany.useMutation({
+  const approvePetSitter = api.approvalRequest.approve.useMutation({
     async onSettled() {
-      utils.user.getForProfilePage.invalidate();
+      utils.approvalRequest.getAll.invalidate();
     },
   });
 
-  if (petSitter.isLoading) return <Header />;
+  const petSitter: any = approvalRequest.data?.petSitter;
+
+  if (session.data?.user?.userType !== UserType.Admin)
+    return <Error statusCode={404} />;
+  if (approvalRequest.isLoading) return <Header />;
   if (
-    !petSitter.data ||
-    (petSitter.data.userType !== UserType.FreelancePetSitter &&
-      petSitter.data.userType !== UserType.PetHotel) ||
-    petSitter.data.verifyStatus
+    !approvalRequest.data ||
+    (!petSitter.freelancePetSitter && !petSitter.petHotel)
   )
     return <Error statusCode={404} />;
   return (
@@ -55,23 +60,21 @@ export default function VerifyPetSitter() {
                   <div className="flex w-full items-end leading-none">
                     <div className="w-[30%] font-semibold">Type</div>
                     <div className="w-[70%] text-[30px]">
-                      {petSitter.data.userType === UserType.FreelancePetSitter
-                        ? "Freelance"
-                        : "Hotel"}
+                      {petSitter.freelancePetSitter ? "Freelance" : "Hotel"}
                     </div>
                   </div>
                   <div className="flex flex-col">
                     <div className="flex w-full items-end leading-none">
                       <div className="w-[30%] font-semibold">Name</div>
                       <div className="flex w-[70%] flex-col">
-                        {petSitter.data.userType ===
-                        UserType.FreelancePetSitter ? (
+                        {petSitter.freelancePetSitter ? (
                           <div className="text-[30px]">
-                            {petSitter.data.firstName} {petSitter.data.lastName}
+                            {petSitter.freelancePetSitter.firstName}{" "}
+                            {petSitter.freelancePetSitter.lastName}
                           </div>
                         ) : (
                           <div className="text-[30px]">
-                            {petSitter.data.hotelName}
+                            {petSitter.petHotel.hotelName}
                           </div>
                         )}
                       </div>
@@ -79,14 +82,14 @@ export default function VerifyPetSitter() {
                     <div className="flex w-full items-end leading-none">
                       <div className="w-[30%]"></div>
                       <div className="flex w-[70%] flex-col text-[22.5px] text-wp-blue">
-                        #{petSitter.data.username}
+                        #{petSitter.user.username}
                       </div>
                     </div>
                   </div>
                   <div className="flex w-full items-center leading-none">
                     <div className="w-[30%] font-semibold">Pet Types</div>
                     <div className="flex w-[70%] gap-2">
-                      <PetTypes petTypes={petSitter.data.petTypes} />
+                      <PetTypes petTypes={petSitter.petTypes} />
                     </div>
                   </div>
                   <div className="flex w-full items-end leading-none">
@@ -94,17 +97,17 @@ export default function VerifyPetSitter() {
                       Price Range
                     </div>
                     <div className="w-[70%]r">
-                      ฿{petSitter.data.startPrice} - ฿{petSitter.data.endPrice}
+                      ฿{petSitter.startPrice} - ฿{petSitter.endPrice}
                     </div>
                   </div>
                   <div className="flex w-full items-end leading-none">
                     <div className="w-[30%] font-semibold">Certification</div>
                     <div className="w-[70%] overflow-hidden text-ellipsis whitespace-nowrap">
                       <Link
-                        href={petSitter.data.certificationUri || ""}
+                        href={petSitter.certificationUri || ""}
                         className="link"
                       >
-                        {petSitter.data.certificationUri}
+                        {petSitter.certificationUri}
                       </Link>
                     </div>
                   </div>
@@ -123,7 +126,7 @@ export default function VerifyPetSitter() {
                   <div className="flex w-full">
                     <div className="w-[30%] font-semibold">Register Date</div>
                     <div className="w-[70%] text-wp-blue">
-                      {petSitter.data.createdAt.toLocaleString()}
+                      {approvalRequest.data?.createdAt.toLocaleString()}
                     </div>
                   </div>
                 </div>
@@ -131,7 +134,7 @@ export default function VerifyPetSitter() {
                 <div className="flex w-[304px] flex-col gap-5 px-8 text-[24px]">
                   <div className="relative aspect-square w-full rounded-lg drop-shadow-lg">
                     <Image
-                      src={petSitter.data.imageUri || "/profiledummy.png"}
+                      src={petSitter.user.imageUri || "/profiledummy.png"}
                       alt=""
                       fill
                       className="rounded-lg object-cover"
@@ -140,13 +143,13 @@ export default function VerifyPetSitter() {
                   <div className="flex flex-col gap-[10px]">
                     <div className="font-semibold">Address</div>
                     <div className="text-[20px] text-[#434D54]">
-                      {petSitter.data.address}
+                      {petSitter.user.address}
                     </div>
                   </div>
                   <div className="flex flex-col gap-[10px]">
                     <div className="font-semibold">Phone Number</div>
                     <div className="text-wp-blue">
-                      {petSitter.data.phoneNumber}
+                      {petSitter.user.phoneNumber}
                     </div>
                   </div>
                 </div>
@@ -156,8 +159,9 @@ export default function VerifyPetSitter() {
                   className="h-[60px] w-[200px] rounded-md bg-good text-[30px] font-semibold text-white drop-shadow-md hover:bg-[#3BAD5A]"
                   onClick={async () => {
                     if (petSitter.data) {
-                      await verifyPetSitter.mutateAsync({
-                        userIds: [petSitter.data.userId],
+                      await approvePetSitter.mutateAsync({
+                        requestId: approvalRequest.requestId,
+                        adminId: session.data?.user?.userId ?? "",
                       });
                       router.replace(
                         {
