@@ -46,7 +46,7 @@ export const blockRouter = createTRPCRouter({
     }),
 
   // unblock s/o
-  unBlock: protectedProcedure
+  unblock: protectedProcedure
     .input(userIdObject)
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;

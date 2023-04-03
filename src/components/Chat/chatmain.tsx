@@ -161,10 +161,10 @@ export const Chatmain = (props: ChatMainProps) => {
         {props.chatroomid && (
           <>
             <div className="px-1">
-              <MuteButton></MuteButton>
+              <MuteButton otherUserId={props.toid}></MuteButton>
             </div>
             <div className="px-1">
-              <BlockButton></BlockButton>
+              <BlockButton otherUserId={props.toid}></BlockButton>
             </div>
           </>
         )}

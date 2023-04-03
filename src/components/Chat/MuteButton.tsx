@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faVolumeMute, faVolumeHigh } from "@fortawesome/free-solid-svg-icons";
+import { api } from "../../utils/api";
 
 type MuteButtonProps = {
-  isMuted?: Boolean;
+  otherUserId: string;
+  isMuted?: boolean;
 };
 
 export default function MuteButton(props: MuteButtonProps) {
+  const muteUser = api.mute.mute.useMutation();
+  const unmuteUser = api.mute.unmute.useMutation();
   const [mute, setMute] = React.useState(false);
   return (
     <div>
@@ -14,7 +18,8 @@ export default function MuteButton(props: MuteButtonProps) {
       {mute && (
         <button
           className={`flex items-center justify-center`}
-          onClick={() => {
+          onClick={async () => {
+            await unmuteUser.mutateAsync({ userId: props.otherUserId });
             setMute((prev) => !prev);
           }}
         >
@@ -27,7 +32,8 @@ export default function MuteButton(props: MuteButtonProps) {
       {!mute && (
         <button
           className={`flex items-center justify-center`}
-          onClick={() => {
+          onClick={async () => {
+            await muteUser.mutateAsync({ userId: props.otherUserId });
             setMute((prev) => !prev);
           }}
         >
