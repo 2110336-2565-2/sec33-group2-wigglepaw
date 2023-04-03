@@ -3,9 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import FixedHeader from "../../../components/FixedHeader";
 import { UserType } from "../../../types/user";
 import { api } from "../../../utils/api";
+import Header from "../../../components/Header";
 
 export default function VerifyPetSitter() {
   // ctx
@@ -25,7 +25,7 @@ export default function VerifyPetSitter() {
     },
   });
 
-  if (petSitter.isLoading) return <FixedHeader />;
+  if (petSitter.isLoading) return <Header />;
   if (
     !petSitter.data ||
     (petSitter.data.userType !== UserType.FreelancePetSitter &&
@@ -35,7 +35,7 @@ export default function VerifyPetSitter() {
     return <Error statusCode={404} />;
   return (
     <div className="flex h-screen flex-col">
-      <FixedHeader />
+      <Header />
       <div className="flex flex-grow">
         {/* SIDE TAB */}
         <div className="flex h-full w-[200px] border-2">
