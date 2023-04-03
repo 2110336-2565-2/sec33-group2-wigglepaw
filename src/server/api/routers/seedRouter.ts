@@ -13,6 +13,9 @@ import {
   postTitles,
   notes,
   reviewStatuses,
+  ticketTitle,
+  ticketDescription,
+  ticketNotes,
 } from "../../../seed/pool";
 import {
   createRandomPets,
@@ -40,7 +43,7 @@ import {
 } from "../../../seed/db";
 import Rand, { PRNG } from "rand-seed";
 import { resetRand } from "../../../seed/util";
-import { ReviewStatus } from "@prisma/client";
+import { ReportTicketStatus, ReviewStatus } from "@prisma/client";
 
 export const seedRouter = createTRPCRouter({
   seedUsers: publicProcedure
@@ -274,7 +277,7 @@ export const seedRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       if (input.clearTickets) {
-        await ctx.prisma.review.deleteMany();
+        await ctx.prisma.reportTicket.deleteMany();
       }
 
       const N = input.numberOfTickets;
@@ -285,11 +288,56 @@ export const seedRouter = createTRPCRouter({
       for (let i = 0; i < N; i++) {
         const reporterId = getMultipleRandom(reporterIds, 1)[0] ?? "";
         const adminId = getMultipleRandom(adminIds, 1)[0] ?? "";
-        const rating = getRandomIntFromInterval(1, 5);
-        const text = getMultipleRandom(reviewTexts, 1)[0] ?? "";
-        const status = getRandomIntFromInterval(1, 3);
-        await makeTicket();
+        const title = getMultipleRandom(ticketTitle, 1)[0] ?? "";
+        const desc = getMultipleRandom(ticketDescription, 1)[0] ?? "";
+        const notes = getMultipleRandom(ticketNotes, 1)[0] ?? "";
+
+        const statusNum = getRandomIntFromInterval(1, 4);
+        switch (statusNum) {
+          case 1: // Pending
+            await makeTicket(
+              reporterId,
+              title,
+              desc,
+              "",
+              ReportTicketStatus.pending,
+              notes
+            );
+            break;
+          case 2:
+            await makeTicket(
+              reporterId,
+              title,
+              desc,
+              adminId,
+              ReportTicketStatus.acked,
+              notes
+            );
+            break;
+          case 3:
+            await makeTicket(
+              reporterId,
+              title,
+              desc,
+              adminId,
+              ReportTicketStatus.canceled,
+              notes
+            );
+            break;
+          case 4:
+            await makeTicket(
+              reporterId,
+              title,
+              desc,
+              adminId,
+              ReportTicketStatus.resolved,
+              notes
+            );
+            break;
+          default:
+            break;
+        }
       }
-      return "Seeded Reviews";
+      return "Seeded ReportTickets";
     }),
 });

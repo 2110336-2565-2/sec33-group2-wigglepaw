@@ -295,14 +295,25 @@ export async function makeTicket(
   status: ReportTicketStatus,
   notes: string
 ) {
-  return await prisma.reportTicket.create({
-    data: {
-      reporterId: reporterId,
-      title: title,
-      description: description,
-      adminId: adminId,
-      status: status,
-      notes: notes,
-    },
-  });
+  if (adminId != "")
+    return await prisma.reportTicket.create({
+      data: {
+        reporterId: reporterId,
+        title: title,
+        description: description,
+        adminId: adminId,
+        status: status,
+        notes: notes,
+      },
+    });
+  else
+    return await prisma.reportTicket.create({
+      data: {
+        reporterId: reporterId,
+        title: title,
+        description: description,
+        status: status,
+        notes: notes,
+      },
+    });
 }

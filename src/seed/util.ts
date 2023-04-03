@@ -80,12 +80,21 @@ export async function getAllOwnerId() {
 export async function getAllReporterId() {
   const frees = await prisma.freelancePetSitter.findMany();
   const freeIds = new Array<string>(frees.length);
+  for (let i = 0; i < freeIds.length; i++) {
+    freeIds[i] = frees[i]?.userId ?? "";
+  }
 
   const owners = await prisma.petOwner.findMany();
   const ownerIds = new Array<string>(owners.length);
+  for (let i = 0; i < ownerIds.length; i++) {
+    ownerIds[i] = owners[i]?.userId ?? "";
+  }
 
   const hotels = await prisma.petHotel.findMany();
   const hotelIds = new Array<string>(hotels.length);
+  for (let i = 0; i < hotelIds.length; i++) {
+    hotelIds[i] = hotels[i]?.userId ?? "";
+  }
 
   const userIds = freeIds.concat(ownerIds).concat(hotelIds);
 
