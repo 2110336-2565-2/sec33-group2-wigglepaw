@@ -77,6 +77,24 @@ export const reviewRouter = createTRPCRouter({
       });
     }),
 
+  setAdminComment: publicProcedure
+    .input(
+      z.object({
+        reviewId: z.string().cuid(),
+        comment: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.review.update({
+        where: {
+          reviewId: input.reviewId,
+        },
+        data: {
+          adminComment: input.comment,
+        },
+      });
+    }),
+
   resolve: publicProcedure
     .input(
       z.object({

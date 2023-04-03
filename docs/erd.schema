@@ -52,7 +52,7 @@ Table User {
   sessions Session [not null]
   createdAt DateTime [default: `now()`, not null]
   salt String [not null]
-  Admin Admin [not null]
+  Admin Admin
   ReportTicket ReportTicket [not null]
   messages Message [not null]
 }
@@ -148,6 +148,7 @@ Table Review {
   petSitterId String [not null]
   petSitter PetSitter [not null]
   status ReviewStatus [not null]
+  adminComment String
   text String
   rating Int [not null]
   createdAt DateTime [default: `now()`, not null]
@@ -277,7 +278,7 @@ Ref: Review.petSitterId > PetSitter.userId [delete: Cascade]
 
 Ref: Post.petSitterId > PetSitter.userId [delete: Cascade]
 
-Ref: Admin.userId > User.userId [delete: Cascade]
+Ref: Admin.userId - User.userId [delete: Cascade]
 
 Ref: ReportTicket.reporterId > User.userId [delete: Cascade]
 

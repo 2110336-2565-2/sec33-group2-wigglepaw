@@ -189,11 +189,12 @@ export const userRouter = createTRPCRouter({
       });
   }),
 
-  post: publicProcedure.input(userFields).mutation(({ ctx, input }) => {
-    return ctx.prisma.user.create({
-      data: input,
-    });
-  }),
+  // Deprecated
+  // post: publicProcedure.input(userFields).mutation(({ ctx, input }) => {
+  //   return ctx.prisma.user.create({
+  //     data: input,
+  //   });
+  // }),
 
   deleteByUserId: publicProcedure
     .input(z.object({ userId: z.string() }))

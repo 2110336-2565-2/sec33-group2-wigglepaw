@@ -141,6 +141,7 @@ image image
   Review {
     String reviewId PK 
     ReviewStatus status  
+    String adminComment  "nullable"
     String text  "nullable"
     Int rating  
     DateTime createdAt  
@@ -210,7 +211,7 @@ image image
     Review o{--|| PetSitter : "petSitter"
     Review o|--|| ReviewStatus : "enum:status"
     Post o{--|| PetSitter : "petSitter"
-    Admin o{--|| User : "user"
+    Admin o|--|| User : "user"
     ReportTicket o{--|| User : "reporter"
     ReportTicket o{--|o Admin : "admin"
     ReportTicket o|--|| ReportTicketStatus : "enum:status"
