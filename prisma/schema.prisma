@@ -173,15 +173,16 @@ enum ReviewStatus {
 }
 
 model Review {
-    reviewId    String       @id @default(cuid())
-    petOwnerId  String
-    petOwner    PetOwner     @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
-    petSitterId String
-    petSitter   PetSitter    @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
-    status      ReviewStatus
-    text        String?
-    rating      Int
-    createdAt   DateTime     @default(now())
+    reviewId     String       @id @default(cuid())
+    petOwnerId   String
+    petOwner     PetOwner     @relation(fields: [petOwnerId], references: [userId], onDelete: Cascade)
+    petSitterId  String
+    petSitter    PetSitter    @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
+    status       ReviewStatus
+    adminComment String?
+    text         String?
+    rating       Int
+    createdAt    DateTime     @default(now())
 }
 
 model Post {

@@ -24,6 +24,8 @@ import {
   getRandomFloatFromInterval,
   getRandomStartEndDate,
   updateOwnerPetTypes,
+  getAllAdminId,
+  getAllReporterId,
 } from "../../../seed/util";
 import {
   makeAdmin,
@@ -33,6 +35,7 @@ import {
   makeOwner,
   makePost,
   makeReview,
+  makeTicket,
   updateAvgRating,
 } from "../../../seed/db";
 import Rand, { PRNG } from "rand-seed";
@@ -260,5 +263,33 @@ export const seedRouter = createTRPCRouter({
         );
       }
       return "Seeded Bookings";
+    }),
+
+  seedTickets: publicProcedure
+    .input(
+      z.object({
+        clearTickets: z.boolean(),
+        numberOfTickets: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.clearTickets) {
+        await ctx.prisma.review.deleteMany();
+      }
+
+      const N = input.numberOfTickets;
+      const adminIds = await getAllAdminId();
+      const reporterIds = await getAllReporterId();
+
+      resetRand();
+      for (let i = 0; i < N; i++) {
+        const reporterId = getMultipleRandom(reporterIds, 1)[0] ?? "";
+        const adminId = getMultipleRandom(adminIds, 1)[0] ?? "";
+        const rating = getRandomIntFromInterval(1, 5);
+        const text = getMultipleRandom(reviewTexts, 1)[0] ?? "";
+        const status = getRandomIntFromInterval(1, 3);
+        await makeTicket();
+      }
+      return "Seeded Reviews";
     }),
 });

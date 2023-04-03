@@ -134,6 +134,7 @@ approved approved
   Review {
     String reviewId PK 
     ReviewStatus status  
+    String adminComment  "nullable"
     String text  "nullable"
     Int rating  
     DateTime createdAt  

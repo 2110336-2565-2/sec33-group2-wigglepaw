@@ -1,4 +1,8 @@
-import { BookingStatus, ReviewStatus } from "@prisma/client";
+import {
+  BookingStatus,
+  ReportTicketStatus,
+  ReviewStatus,
+} from "@prisma/client";
 import { saltHashPassword } from "../pages/api/auth/[...nextauth]";
 import { prisma } from "../server/db";
 import {
@@ -281,4 +285,24 @@ export async function makeBooking(
     select: Return.booking,
   });
   return createBooking;
+}
+
+export async function makeTicket(
+  reporterId: string,
+  title: string,
+  description: string,
+  adminId: string,
+  status: ReportTicketStatus,
+  notes: string
+) {
+  return await prisma.reportTicket.create({
+    data: {
+      reporterId: reporterId,
+      title: title,
+      description: description,
+      adminId: adminId,
+      status: status,
+      notes: notes,
+    },
+  });
 }

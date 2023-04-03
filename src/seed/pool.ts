@@ -233,3 +233,5 @@ export const reviewStatuses: ReviewStatus[] = [
   ReviewStatus.resolved,
   ReviewStatus.submitted,
 ];
+
+export const ticketTitle: string[] = ["HE ATE MY DOG", "HE ATE MY CAT"];

@@ -145,6 +145,7 @@ Table Review {
   petSitterId String [not null]
   petSitter PetSitter [not null]
   status ReviewStatus [not null]
+  adminComment String
   text String
   rating Int [not null]
   createdAt DateTime [default: `now()`, not null]
