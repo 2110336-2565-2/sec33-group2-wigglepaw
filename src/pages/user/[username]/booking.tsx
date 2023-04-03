@@ -109,7 +109,7 @@ const booking: NextPage = () => {
             isPetOwner={session?.user?.userType == UserType.PetOwner}
             booking
           />
-          <div className="mx-auto my-10 h-fit w-5/12 min-w-fit max-w-[96rem] rounded-md border-[4px] border-blue-500 px-3 py-4">
+          <div className="content-with-sidetab my-10 h-fit w-5/12 min-w-fit max-w-[96rem] rounded-md border-[4px] border-blue-500 px-3 py-4">
             <div className="relative mb-2 flex justify-center">
               <h1 className="text-2xl font-bold">Booking</h1>
             </div>
