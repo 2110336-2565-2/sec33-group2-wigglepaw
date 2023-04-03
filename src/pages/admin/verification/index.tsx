@@ -138,9 +138,10 @@ function PetSitterVerifyTable() {
       <input
         className="peer w-[200px] rounded-md border-2 p-1.5 px-2 text-[16px] text-[#434D54] focus:border-[#80bdff] focus:shadow-[0_0_0_0.2rem_rgba(0,123,255,.25)] focus:outline-none"
         value={filterText}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setFilterText(e.target.value)
-        }
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          setResetPaginationToggle((prev) => !prev);
+          setFilterText(e.target.value);
+        }}
       />
       <div className="absolute right-[2px] z-10 hidden h-[80%] bg-white pr-1 hover:flex hover:items-center first:hover:flex first:hover:items-center peer-hover:flex peer-hover:items-center">
         <button
@@ -330,6 +331,8 @@ function PetSitterVerifyTable() {
       subHeader
       subHeaderComponent={SubHeaderComponent}
       columns={columns}
+      defaultSortFieldId={4}
+      defaultSortAsc={false}
       customStyles={customStyles}
       conditionalRowStyles={conditionalRowStyles}
       onRowClicked={onRowClicked}
@@ -350,6 +353,7 @@ function PetSitterVerifyTable() {
       striped
       highlightOnHover
       pagination
+      paginationResetDefaultPage={resetPaginationToggle}
       responsive
     />
   );

@@ -27,6 +27,11 @@ export default function VerifyPetSitter() {
       utils.approvalRequest.getAll.invalidate();
     },
   });
+  const declinePetSitter = api.approvalRequest.decline.useMutation({
+    async onSettled() {
+      utils.approvalRequest.getAll.invalidate();
+    },
+  });
 
   const petSitter: any = approvalRequest.data?.petSitter;
 
@@ -154,13 +159,16 @@ export default function VerifyPetSitter() {
                   </div>
                 </div>
               </div>
-              <div className="flex justify-center">
+              <div className="flex justify-evenly">
                 <button
                   className="h-[60px] w-[200px] rounded-md bg-good text-[30px] font-semibold text-white drop-shadow-md hover:bg-[#3BAD5A]"
                   onClick={async () => {
-                    if (petSitter.data) {
+                    if (
+                      session.data?.user?.userType === UserType.Admin &&
+                      approvalRequest.data
+                    ) {
                       await approvePetSitter.mutateAsync({
-                        requestId: approvalRequest.requestId,
+                        requestId: approvalRequest.data.requestId,
                         adminId: session.data?.user?.userId ?? "",
                       });
                       router.replace(
@@ -169,11 +177,10 @@ export default function VerifyPetSitter() {
                           query: {
                             code: 6901,
                             notice: `${
-                              petSitter.data.userType ===
-                              UserType.FreelancePetSitter
+                              petSitter.userType === UserType.FreelancePetSitter
                                 ? "Freelance pet sitter"
                                 : "Pet hotel"
-                            } #${petSitter.data.username} has been verified.`,
+                            } #${petSitter.user.username} has been approved.`,
                           },
                         },
                         "/admin/verification"
@@ -181,7 +188,37 @@ export default function VerifyPetSitter() {
                     }
                   }}
                 >
-                  Verify
+                  Approve
+                </button>
+                <button
+                  className="h-[60px] w-[200px] rounded-md bg-bad text-[30px] font-semibold text-white drop-shadow-md hover:bg-[#ee2D2a]"
+                  onClick={async () => {
+                    if (
+                      session.data?.user?.userType === UserType.Admin &&
+                      approvalRequest.data
+                    ) {
+                      await declinePetSitter.mutateAsync({
+                        requestId: approvalRequest.data.requestId,
+                        adminId: session.data?.user?.userId ?? "",
+                      });
+                      router.replace(
+                        {
+                          pathname: "/admin/verification",
+                          query: {
+                            code: 6899,
+                            notice: `${
+                              petSitter.userType === UserType.FreelancePetSitter
+                                ? "Freelance pet sitter"
+                                : "Pet hotel"
+                            } #${petSitter.user.username} has been declined.`,
+                          },
+                        },
+                        "/admin/verification"
+                      );
+                    }
+                  }}
+                >
+                  Decline
                 </button>
               </div>
             </div>
