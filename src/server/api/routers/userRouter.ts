@@ -20,6 +20,7 @@ import type {
   PrismaClient,
   User,
   Prisma,
+  ApprovalRequest,
 } from "@prisma/client";
 import postPic from "../logic/s3Op/postPic";
 import profilePic from "../logic/s3Op/profilePic";
@@ -141,6 +142,7 @@ export const userRouter = createTRPCRouter({
             include: {
               freelancePetSitter: true,
               petHotel: true,
+              ApprovalRequest: true,
             },
           },
         },
@@ -168,6 +170,7 @@ export const userRouter = createTRPCRouter({
           include: {
             freelancePetSitter: true,
             petHotel: true,
+            ApprovalRequest: true,
           },
         },
       },
@@ -321,6 +324,7 @@ function flattenUserForProfilePage(
       | (PetSitter & {
           freelancePetSitter: FreelancePetSitter | null;
           petHotel: PetHotel | null;
+          ApprovalRequest: ApprovalRequest[];
         })
       | null;
   }
@@ -337,13 +341,15 @@ function flattenUserForProfilePage(
   }
 
   if (petSitter) {
-    const { freelancePetSitter, petHotel, ...petSitterData } = petSitter;
+    const { freelancePetSitter, petHotel, ApprovalRequest, ...petSitterData } =
+      petSitter;
     if (freelancePetSitter) {
       const { emailVerified, bankAccount, bankName, ...result } = {
         userType: UserType.FreelancePetSitter as UserType.FreelancePetSitter,
         ...userData,
         ...petSitterData,
         ...freelancePetSitter,
+        ApprovalRequest,
       };
       return result;
     }
@@ -353,6 +359,7 @@ function flattenUserForProfilePage(
         ...userData,
         ...petSitterData,
         ...petHotel,
+        ApprovalRequest,
       };
       return result;
     }
