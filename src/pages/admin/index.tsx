@@ -90,7 +90,7 @@ const Dashboard = () => {
 
 const TableDisplay = ({ linkTo, dataRows, isLoading, tableTitle }) => {
   return (
-    <div className="rounded-md border p-4">
+    <div className="rounded-md border p-4 shadow-md">
       <Link href={linkTo}>
         <p className="mb-4 text-xl font-bold hover:underline">{tableTitle}</p>
       </Link>
