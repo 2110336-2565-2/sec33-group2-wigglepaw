@@ -111,7 +111,7 @@ export const reportTicketRouter = createTRPCRouter({
         uploadUrls,
       };
     }),
-  getAll: publicProcedure.mutation(async ({ ctx, input }) => {
+  getAll: publicProcedure.query(async ({ ctx, input }) => {
     try {
       return await ctx.prisma.reportTicket.findMany();
     } catch (err) {
