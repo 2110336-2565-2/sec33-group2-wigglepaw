@@ -107,6 +107,13 @@ export const petOwnerRouter = createTRPCRouter({
       z.object({
         user: userFields,
         petOwner: petOwnerFields.omit({ customerId: true }),
+        /**
+         * Omise's card token,
+         * usually obtained from frontend after submitting credit card information to Omise's API
+         *
+         * @see https://www.npmjs.com/package/use-omise
+         * @see https://www.omise.co/tokens-api
+         */
         cardToken: z.string(),
       })
     )
@@ -123,25 +130,18 @@ export const petOwnerRouter = createTRPCRouter({
 
       // Create associated omise's customer (one who pays)
       const card = input.cardToken;
-      // console.log("Card token", card);
-
       const omiseCustomer = await ctx.omise.customers.create({
         email: user.email,
         description: user.username,
         card,
       });
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>");
-      console.log("omiseCustomer", omiseCustomer);
-      console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<");
-
+      // Error "handling"
       if (omiseCustomer === null || omiseCustomer === undefined) {
         console.error(
           "===================== Fail creating omise customer ====================="
         );
         throw new Error("Fail creating omise customer");
       }
-
-      // console.log("Created omise customer");
 
       // Create petOwner in database
       try {
@@ -162,7 +162,7 @@ export const petOwnerRouter = createTRPCRouter({
         });
         console.log(petOwner);
       } catch (e) {
-        // If error, delete the created omise's customer
+        // If failed to make petOwner, delete the just created omise's customer
         console.error("Fail creating pet owner in db", e);
         await ctx.omise.customers.destroy(omiseCustomer.id);
         throw e;

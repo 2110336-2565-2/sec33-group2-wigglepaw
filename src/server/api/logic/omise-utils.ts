@@ -41,10 +41,6 @@ export async function createRecipients(
   try {
     const recipient = await omise.recipients.create(req);
 
-    console.log(">>>>>>>>>>>>>>>>>");
-    console.log(recipient);
-    console.log("<<<<<<<<<<<<<<<<<");
-
     if (
       config.autoVerifyInTest === true &&
       !recipient.verified &&
