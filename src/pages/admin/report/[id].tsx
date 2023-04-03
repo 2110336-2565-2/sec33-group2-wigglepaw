@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage } from "@fortawesome/free-solid-svg-icons";
+import SideTab from "../../../components/SideTab";
 
 type AdminSubmitForm = { notes: string };
 
@@ -93,110 +94,116 @@ const AdminReportPage = () => {
     return (
       <>
         <Header />
-        <div className="m-5">
-          <h1 className="text-[40px] text-[#213951]">Problem Report</h1>
-          <div className=" border border-[#a3bad1] p-5">
-            <div className="mb-6 flex">
-              <div id="title-and-text-wrapper" className="mr-6 flex-1">
-                {/* the report ticket id */}
-                <ReportFieldStyle2 label={"Report Id"} text={ticketId} />
+        <div className="flex">
+          <SideTab admin />
+          <div className="m-5">
+            <h1 className="text-[40px] text-[#213951]">Problem Report</h1>
+            <div className=" border border-[#a3bad1] p-5">
+              <div className="mb-6 flex">
+                <div id="title-and-text-wrapper" className="mr-6 flex-1">
+                  {/* the report ticket id */}
+                  <ReportFieldStyle2 label={"Report Id"} text={ticketId} />
 
-                {/* the report status */}
-                <ReportFieldStyle2 label={"Status"} text={status} />
+                  {/* the report status */}
+                  <ReportFieldStyle2 label={"Status"} text={status} />
 
-                {/* the reported user */}
-                <ReportFieldStyle1
-                  label={"User"}
-                  user={{ name: username, id: reporterId }}
-                />
-
-                {/* the reported date */}
-                <ReportFieldStyle2 label={"Date"} text={createdAt.toString()} />
-
-                {/* the report title */}
-                <ReportFieldStyle2 label={"Title"} text={title} />
-
-                {/* the report text */}
-                <ReportFieldStyle3 label={"Description"} text={description} />
-
-                {/* admin comments if any */}
-                {(status === ReportTicketStatus.resolved ||
-                  status === ReportTicketStatus.canceled) && (
-                  <ReportFieldStyle3 label={"Admin Comment"} text={notes} />
-                )}
-              </div>
-
-              <div id="image-upload-wrapper" className="">
-                <p className="text-lg text-slate-700">Problem Screenshot</p>
-                <div className="relative flex h-48 w-48 justify-center rounded-sm border">
-                  <Image
-                    fill
-                    alt="preview-report-problem"
-                    className="object-cover"
-                    src={
-                      typeof pictureUri[0] === "string"
-                        ? pictureUri[0]
-                        : "/nomatch_saddog.png"
-                    }
+                  {/* the reported user */}
+                  <ReportFieldStyle1
+                    label={"User"}
+                    user={{ name: username, id: reporterId }}
                   />
+
+                  {/* the reported date */}
+                  <ReportFieldStyle2
+                    label={"Date"}
+                    text={createdAt.toString()}
+                  />
+
+                  {/* the report title */}
+                  <ReportFieldStyle2 label={"Title"} text={title} />
+
+                  {/* the report text */}
+                  <ReportFieldStyle3 label={"Description"} text={description} />
+
+                  {/* admin comments if any */}
+                  {(status === ReportTicketStatus.resolved ||
+                    status === ReportTicketStatus.canceled) && (
+                    <ReportFieldStyle3 label={"Admin Comment"} text={notes} />
+                  )}
+                </div>
+
+                <div id="image-upload-wrapper" className="">
+                  <p className="text-lg text-slate-700">Problem Screenshot</p>
+                  <div className="relative flex h-48 w-48 justify-center rounded-sm border">
+                    <Image
+                      fill
+                      alt="preview-report-problem"
+                      className="object-cover"
+                      src={
+                        typeof pictureUri[0] === "string"
+                          ? pictureUri[0]
+                          : "/nomatch_saddog.png"
+                      }
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {status === ReportTicketStatus.pending && (
-              <div className="flex justify-center">
-                <button
-                  onClick={ackHandler}
-                  className="w-[200px] rounded-sm border-b-2 border-[#111d29] bg-[#2f4f6e] py-2 px-4 text-white duration-100 hover:border-[#213951] hover:bg-[#213951]"
-                >
-                  Acknowledge
-                </button>
-              </div>
-            )}
+              {status === ReportTicketStatus.pending && (
+                <div className="flex justify-center">
+                  <button
+                    onClick={ackHandler}
+                    className="w-[200px] rounded-sm border-b-2 border-[#111d29] bg-[#2f4f6e] py-2 px-4 text-white duration-100 hover:border-[#213951] hover:bg-[#213951]"
+                  >
+                    Acknowledge
+                  </button>
+                </div>
+              )}
 
-            {status === ReportTicketStatus.acked && (
-              <>
-                {/* a line separator */}
-                <div
-                  id="separator"
-                  className="-mx-5 mt-2 mb-8 h-2 border-b border-[#a3bad1]"
-                ></div>
+              {status === ReportTicketStatus.acked && (
+                <>
+                  {/* a line separator */}
+                  <div
+                    id="separator"
+                    className="-mx-5 mt-2 mb-8 h-2 border-b border-[#a3bad1]"
+                  ></div>
 
-                {/* the form for admin submitting comments */}
-                <form>
-                  <div className="mb-2 mt-2 flex">
-                    <p className="w-28 text-lg  text-slate-700">
-                      Admin Comments
-                    </p>
-                    <div className="flex flex-1 flex-col">
-                      <input
-                        className="h-60 rounded-sm border border-slate-400 px-2 py-2 text-start"
-                        {...register("notes")}
-                        placeholder="What do you want to comment ?"
-                      />
+                  {/* the form for admin submitting comments */}
+                  <form>
+                    <div className="mb-2 mt-2 flex">
+                      <p className="w-28 text-lg  text-slate-700">
+                        Admin Comments
+                      </p>
+                      <div className="flex flex-1 flex-col">
+                        <input
+                          className="h-60 rounded-sm border border-slate-400 px-2 py-2 text-start"
+                          {...register("notes")}
+                          placeholder="What do you want to comment ?"
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="mt-4 flex justify-center gap-5">
-                    <button
-                      type="submit"
-                      onClick={handleSubmit(resolveHandler)}
-                      className="w-[200px] rounded-sm border-b-2 border-[#35924e] bg-[#3FBD61] py-2 px-4 text-white duration-100 hover:border-[#20512d] hover:bg-[#35924e]"
-                    >
-                      Resolve
-                    </button>
+                    <div className="mt-4 flex justify-center gap-5">
+                      <button
+                        type="submit"
+                        onClick={handleSubmit(resolveHandler)}
+                        className="w-[200px] rounded-sm border-b-2 border-[#35924e] bg-[#3FBD61] py-2 px-4 text-white duration-100 hover:border-[#20512d] hover:bg-[#35924e]"
+                      >
+                        Resolve
+                      </button>
 
-                    <button
-                      type="submit"
-                      onClick={handleSubmit(rejectHandler)}
-                      className="w-[200px] rounded-sm border-b-2 border-[#c24023] bg-[#EC4E2A] py-2 px-4 text-white duration-100 hover:border-[#832b17] hover:bg-[#be4a30]"
-                    >
-                      Reject
-                    </button>
-                  </div>
-                </form>
-              </>
-            )}
+                      <button
+                        type="submit"
+                        onClick={handleSubmit(rejectHandler)}
+                        className="w-[200px] rounded-sm border-b-2 border-[#c24023] bg-[#EC4E2A] py-2 px-4 text-white duration-100 hover:border-[#832b17] hover:bg-[#be4a30]"
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  </form>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </>

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import Header from "../../../components/Header";
+import SideTab from "../../../components/SideTab";
 import type { ReportFormDataT } from "../../../schema/schema";
 import { api } from "../../../utils/api";
 import { useAddNewReport, useAddNewReportTicket } from "../../../utils/upload";
@@ -76,79 +77,82 @@ const NewReportPage = () => {
   return (
     <div className="min-h-screen">
       <Header />
-      <div className="m-5 mx-auto min-h-[90vh] w-[85vw] max-w-4xl">
-        <h1 className="text-[40px] text-[#213951]">New Report</h1>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className=" border border-[#a3bad1] p-5">
-            <div className="mb-6 flex">
-              <div id="title-and-text-wrapper" className="mr-6 flex-1">
-                <div className="mb-2 flex">
-                  <p className="w-20 text-lg  text-slate-700">Title</p>
-                  <div className="flex flex-1 flex-col">
-                    {errors.title && (
-                      <p className="text-red-500">This field is required</p>
-                    )}
-                    <input
-                      className="flex-1 rounded-sm border border-slate-400 px-2 py-2"
-                      {...register("title", { required: true })}
-                      placeholder="What is your report title?"
-                    />
+      <div className="flex">
+        <SideTab help />
+        <div className="m-5 mx-auto min-h-[90vh] w-[85vw] max-w-4xl">
+          <h1 className="text-[40px] text-[#213951]">New Report</h1>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className=" border border-[#a3bad1] p-5">
+              <div className="mb-6 flex">
+                <div id="title-and-text-wrapper" className="mr-6 flex-1">
+                  <div className="mb-2 flex">
+                    <p className="w-20 text-lg  text-slate-700">Title</p>
+                    <div className="flex flex-1 flex-col">
+                      {errors.title && (
+                        <p className="text-red-500">This field is required</p>
+                      )}
+                      <input
+                        className="flex-1 rounded-sm border border-slate-400 px-2 py-2"
+                        {...register("title", { required: true })}
+                        placeholder="What is your report title?"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-2 flex">
+                    <p className="w-20 text-lg  text-slate-700">Text</p>
+                    <div className="flex flex-1 flex-col">
+                      {errors.description && (
+                        <p className="text-red-500">This field is required</p>
+                      )}
+                      <input
+                        className="h-60 rounded-sm border border-slate-400 px-2 py-2 text-start"
+                        {...register("description", { required: true })}
+                        placeholder="What do you want to report ?"
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <div className="mb-2 flex">
-                  <p className="w-20 text-lg  text-slate-700">Text</p>
-                  <div className="flex flex-1 flex-col">
-                    {errors.description && (
-                      <p className="text-red-500">This field is required</p>
-                    )}
-                    <input
-                      className="h-60 rounded-sm border border-slate-400 px-2 py-2 text-start"
-                      {...register("description", { required: true })}
-                      placeholder="What do you want to report ?"
-                    />
-                  </div>
+                <div id="image-upload-wrapper" className=" mr-4">
+                  <p className="text-lg text-slate-700">Problem Screenshot</p>
+                  {imagePreview ? (
+                    <div className="relative flex h-48 w-48 justify-center rounded-sm border">
+                      <Image
+                        fill
+                        alt="preview-report-problem"
+                        className="object-cover"
+                        src={imagePreview as string}
+                      />
+                    </div>
+                  ) : (
+                    <div className="h-48 w-48 rounded-sm border border-slate-200 p-[24px]">
+                      <FontAwesomeIcon
+                        icon={faCloudArrowUp}
+                        className="h-full w-full opacity-10"
+                      />
+                    </div>
+                  )}
+                  <input
+                    className="mt-2 w-48 bg-white text-sm"
+                    {...register("image")}
+                    type="file"
+                    accept="image/*"
+                  />
                 </div>
               </div>
 
-              <div id="image-upload-wrapper" className=" mr-4">
-                <p className="text-lg text-slate-700">Problem Screenshot</p>
-                {imagePreview ? (
-                  <div className="relative flex h-48 w-48 justify-center rounded-sm border">
-                    <Image
-                      fill
-                      alt="preview-report-problem"
-                      className="object-cover"
-                      src={imagePreview as string}
-                    />
-                  </div>
-                ) : (
-                  <div className="h-48 w-48 rounded-sm border border-slate-200 p-[24px]">
-                    <FontAwesomeIcon
-                      icon={faCloudArrowUp}
-                      className="h-full w-full opacity-10"
-                    />
-                  </div>
-                )}
-                <input
-                  className="mt-2 w-48 bg-white text-sm"
-                  {...register("image")}
-                  type="file"
-                  accept="image/*"
-                />
+              <div className="flex justify-center">
+                <button
+                  type="submit"
+                  className="rounded-sm border-b-2 border-[#35924e] bg-[#3FBD61] py-2 px-4 text-white hover:border-[#20512d] hover:bg-[#35924e]"
+                >
+                  Submit
+                </button>
               </div>
             </div>
-
-            <div className="flex justify-center">
-              <button
-                type="submit"
-                className="rounded-sm border-b-2 border-[#35924e] bg-[#3FBD61] py-2 px-4 text-white hover:border-[#20512d] hover:bg-[#35924e]"
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );
