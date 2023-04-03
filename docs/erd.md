@@ -171,7 +171,6 @@ approved approved
     ApprovalRequestStatus status  
     String notes  "nullable"
     DateTime createdAt  
-    String adminUserId  "nullable"
     }
   
     Account o{--|| User : "user"

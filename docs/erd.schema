@@ -191,7 +191,6 @@ Table ApprovalRequest {
   latestStatusUpdateby Admin
   notes String
   createdAt DateTime [default: `now()`, not null]
-  adminUserId String
 }
 
 Table MyRelationTable {
