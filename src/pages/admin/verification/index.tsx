@@ -20,9 +20,9 @@ export default function Verification() {
   if (session.data?.user?.userType !== UserType.Admin)
     return <Error statusCode={404} />;
   return (
-    <div className="min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <Header />
-      <div className="flex">
+      <div className="flex flex-grow">
         <SideTab admin />
         <div className="my-5 flex w-full flex-col gap-5">
           <Notification

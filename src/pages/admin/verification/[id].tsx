@@ -7,6 +7,7 @@ import { UserType } from "../../../types/user";
 import { api } from "../../../utils/api";
 import Header from "../../../components/Header";
 import { useSession } from "next-auth/react";
+import SideTab from "../../../components/SideTab";
 
 export default function VerifyPetSitter() {
   // ctx
@@ -49,7 +50,7 @@ export default function VerifyPetSitter() {
       <div className="flex flex-grow">
         {/* SIDE TAB */}
         <div className="flex h-full w-[200px] border-2">
-          Please connect sidetab given I am done with my life.
+          <SideTab admin />
         </div>
         <div className="w-full overflow-scroll sm:px-[40px] sm:pt-[20px] sm:pb-[40px] xl:px-[80px] xl:pt-[40px] xl:pb-[60px]">
           <div className="flex h-full flex-col gap-5">
@@ -124,7 +125,7 @@ export default function VerifyPetSitter() {
                         rows={4}
                         readOnly
                       >
-                        I will eat your pets.\n.\n.
+                        I will eat your pets.
                       </textarea>
                     </div>
                   </div>
