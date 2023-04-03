@@ -239,6 +239,7 @@ export const reportTicketRouter = createTRPCRouter({
       z.object({
         ticketId: z.string().cuid(),
         adminId: z.string().cuid(),
+        notes: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -268,6 +269,7 @@ export const reportTicketRouter = createTRPCRouter({
           data: {
             adminId: input.adminId,
             status: ReportTicketStatus.acked,
+            notes: input.notes,
           },
         });
       } catch (err) {
@@ -281,6 +283,7 @@ export const reportTicketRouter = createTRPCRouter({
       z.object({
         ticketId: z.string().cuid(),
         adminId: z.string().cuid(),
+        notes: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -321,6 +324,7 @@ export const reportTicketRouter = createTRPCRouter({
           data: {
             adminId: input.adminId,
             status: ReportTicketStatus.canceled,
+            notes: input.notes,
           },
         });
       } catch (err) {
@@ -334,6 +338,7 @@ export const reportTicketRouter = createTRPCRouter({
       z.object({
         ticketId: z.string().cuid(),
         adminId: z.string().cuid(),
+        notes: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -374,6 +379,7 @@ export const reportTicketRouter = createTRPCRouter({
           data: {
             adminId: input.adminId,
             status: ReportTicketStatus.resolved,
+            notes: input.notes,
           },
         });
       } catch (err) {
