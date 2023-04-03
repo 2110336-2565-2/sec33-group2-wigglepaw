@@ -6,6 +6,7 @@ erDiagram
 accepted accepted
 canceled canceled
 rejected rejected
+paid paid
         }
     
   "Account" {
