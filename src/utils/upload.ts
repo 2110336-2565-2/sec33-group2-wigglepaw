@@ -108,7 +108,7 @@ export function useAddNewReportTicket() {
     reportTicket: z.infer<typeof baseReportTicketFields>,
     images: FileList
   ) => {
-    const { uploadUrls } = await createReport.mutateAsync({
+    const response = await createReport.mutateAsync({
       reporterId: userId,
       reportTicket: {
         title: reportTicket.title,
@@ -118,12 +118,15 @@ export function useAddNewReportTicket() {
     });
 
     // sanity check
-    console.assert(uploadUrls.length === images.length);
+    console.assert(response.uploadUrls.length === images.length);
 
     // perform multiple HTTP upload requests concurrently
     // not creating a new resource, but rather uploading an object to an existing S3 bucket.
     // Therefore, the HTTP method that is appropriate for this operation is PUT, not POST
-    await Promise.all(uploadUrls.map((url, i) => axios.put(url, images[i])));
+    await Promise.all(
+      response.uploadUrls.map((url, i) => axios.put(url, images[i]))
+    );
+    return response;
   };
 
   return { mutateAsync };

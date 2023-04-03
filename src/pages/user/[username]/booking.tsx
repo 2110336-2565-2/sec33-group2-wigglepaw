@@ -82,19 +82,23 @@ const booking: NextPage = () => {
         return;
       }
 
-      await requestBooking.mutateAsync({
-        petSitterId: petSitterData?.userId,
-        startDate: new Date(data.startDate),
-        endDate: new Date(data.endDate),
-        petIdList: petIdList,
-        totalPrice: data.totalPrice,
-        note: data.note,
-      });
-      setIsBookSuccess(true);
-      setTimeout(function () {
-        setIsBookSuccess(false);
-        router.push("/schedule");
-      }, 1500);
+      try {
+        await requestBooking.mutateAsync({
+          petSitterId: petSitterData?.userId,
+          startDate: new Date(data.startDate),
+          endDate: new Date(data.endDate),
+          petIdList: petIdList,
+          totalPrice: data.totalPrice,
+          note: data.note,
+        });
+        setIsBookSuccess(true);
+        setTimeout(function () {
+          setIsBookSuccess(false);
+          router.push("/schedule");
+        }, 1500);
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
@@ -107,7 +111,6 @@ const booking: NextPage = () => {
             booking
             user={petSitterData}
             isPetOwner={session?.user?.userType == UserType.PetOwner}
-            booking
           />
           <div className="content-with-sidetab my-10 h-fit w-5/12 min-w-fit max-w-[96rem] rounded-md border-[4px] border-blue-500 px-3 py-4">
             <div className="relative mb-2 flex justify-center">

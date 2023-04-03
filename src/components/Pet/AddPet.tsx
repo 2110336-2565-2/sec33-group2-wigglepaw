@@ -47,16 +47,16 @@ const AddPet = (props: any) => {
         },
         petOwnerId: user.userId,
       });
+      setAddingPet(false);
+      reset();
+      setAddSuccess(true);
+      setTimeout(function () {
+        setAddSuccess(false);
+      }, 1500);
     } catch (e) {
       alert(e);
       return;
     }
-    setAddingPet(false);
-    reset();
-    setAddSuccess(true);
-    setTimeout(function () {
-      setAddSuccess(false);
-    }, 1500);
   };
 
   return (
