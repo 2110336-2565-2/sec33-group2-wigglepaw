@@ -62,7 +62,7 @@ const Home: NextPage = () => {
               />
             </div> */}
 
-            <div className="mx-5 grid max-h-[80%] w-full max-w-lg grid-cols-3 grid-rows-5 rounded-2xl  bg-white bg-opacity-50 px-6 pt-4 pb-6 shadow-2xl ">
+            <div className="mx-5 grid max-h-[80%] w-full max-w-lg grid-cols-3 grid-rows-5 rounded-2xl  bg-white bg-opacity-50 px-6 pb-6 pt-4 shadow-2xl ">
               <h1 className="center-thing col-span-3 row-span-2 text-center text-[2rem] font-semibold md:w-full">
                 <span className="w-full">
                   &quot;Let us take care your loves&quot;
@@ -95,17 +95,17 @@ const Home: NextPage = () => {
           </div>
         </div>
       </section>
-      <section className="center-thing min-h-[30vh] w-full bg-[#EAE7DC] pt-6 pb-16">
+      <section className="center-thing min-h-[30vh] w-full bg-[#EAE7DC] pb-16 pt-6">
         <div className="center-thing h-full w-full max-w-[1800px]">
           <div className="grid w-[100%] justify-items-center text-center md:grid-cols-3 md:grid-rows-3">
             <div className="center-thing md:col-span-3">
               <div className="max-md:hidden">
-                <h1 className="py-12 px-4 text-[2.5rem] font-semibold md:py-0 md:text-[2.5rem]">
+                <h1 className="px-4 py-12 text-[2.5rem] font-semibold md:py-0 md:text-[2.5rem]">
                   10 billion users, 234 million members
                 </h1>
               </div>
               <div className="md:hidden">
-                <h1 className="py-12 px-4 text-[2rem] font-semibold md:py-0 md:text-[2.5rem]">
+                <h1 className="px-4 py-12 text-[2rem] font-semibold md:py-0 md:text-[2.5rem]">
                   10 billion users,
                   <br />
                   234 million members

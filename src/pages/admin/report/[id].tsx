@@ -153,7 +153,7 @@ const AdminReportPage = () => {
                 <div className="flex justify-center">
                   <button
                     onClick={ackHandler}
-                    className="w-[200px] rounded-sm border-b-2 border-[#111d29] bg-[#2f4f6e] py-2 px-4 text-white duration-100 hover:border-[#213951] hover:bg-[#213951]"
+                    className="w-[200px] rounded-sm border-b-2 border-[#111d29] bg-[#2f4f6e] px-4 py-2 text-white duration-100 hover:border-[#213951] hover:bg-[#213951]"
                   >
                     Acknowledge
                   </button>
@@ -165,7 +165,7 @@ const AdminReportPage = () => {
                   {/* a line separator */}
                   <div
                     id="separator"
-                    className="-mx-5 mt-2 mb-8 h-2 border-b border-[#a3bad1]"
+                    className="-mx-5 mb-8 mt-2 h-2 border-b border-[#a3bad1]"
                   ></div>
 
                   {/* the form for admin submitting comments */}
@@ -187,7 +187,7 @@ const AdminReportPage = () => {
                       <button
                         type="submit"
                         onClick={handleSubmit(resolveHandler)}
-                        className="w-[200px] rounded-sm border-b-2 border-[#35924e] bg-[#3FBD61] py-2 px-4 text-white duration-100 hover:border-[#20512d] hover:bg-[#35924e]"
+                        className="w-[200px] rounded-sm border-b-2 border-[#35924e] bg-[#3FBD61] px-4 py-2 text-white duration-100 hover:border-[#20512d] hover:bg-[#35924e]"
                       >
                         Resolve
                       </button>
@@ -195,7 +195,7 @@ const AdminReportPage = () => {
                       <button
                         type="submit"
                         onClick={handleSubmit(rejectHandler)}
-                        className="w-[200px] rounded-sm border-b-2 border-[#c24023] bg-[#EC4E2A] py-2 px-4 text-white duration-100 hover:border-[#832b17] hover:bg-[#be4a30]"
+                        className="w-[200px] rounded-sm border-b-2 border-[#c24023] bg-[#EC4E2A] px-4 py-2 text-white duration-100 hover:border-[#832b17] hover:bg-[#be4a30]"
                       >
                         Reject
                       </button>
@@ -237,7 +237,7 @@ const ReportFieldStyle1 = ({ label, user }) => {
               <button className="center-thing rounded-md border-b border-b-[#235281] bg-[#357CC2] px-2 text-sm text-white  shadow-lg duration-100 hover:bg-[#1e4a77]">
                 Chat
                 <FontAwesomeIcon
-                  className="ml-3 mt-1 scale-y-75 scale-x-100"
+                  className="ml-3 mt-1 scale-x-100 scale-y-75"
                   size="xl"
                   icon={faMessage}
                 />

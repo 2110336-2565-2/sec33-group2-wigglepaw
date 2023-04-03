@@ -69,8 +69,8 @@ model User {
     phoneNumber   String?
     address       String?
     imageUri      String?
-    bankAccount   String? // Assume 1 per user
-    bankName      String? // Assume 1 per user
+    // bankAccount   String? // Assume 1 per user
+    // bankName      String? // Assume 1 per user
     accounts      Account[] // Needed for Auth
     sessions      Session[] // Needed for Auth
     createdAt     DateTime       @default(now())
@@ -131,8 +131,9 @@ model PetSitter {
     review             Review[]
     avgRating          Float?
     reviewCount        Int                 @default(0)
-    ApprovalRequest    ApprovalRequest[]
     Chatroom           Chatroom[]
+    ApprovalRequest    ApprovalRequest[]
+    recipientId        String              @unique /// Associated Omise's recipient ID (for getting paid)
 }
 
 model FreelancePetSitter {
@@ -170,6 +171,7 @@ enum BookingStatus {
     accepted
     canceled
     rejected
+    paid
 }
 
 model Pet {
@@ -260,14 +262,13 @@ enum ApprovalRequestStatus {
 
 model ApprovalRequest {
     requestId            String                @id @default(cuid())
-    petSitterId          String
+    petSitterId          String                @unique
     petSitter            PetSitter             @relation(fields: [petSitterId], references: [userId], onDelete: Cascade)
     status               ApprovalRequestStatus
     adminId              String?
-    latestStatusUpdateby Admin?                @relation(fields: [adminUserId], references: [userId])
+    latestStatusUpdateby Admin?                @relation(fields: [adminId], references: [userId])
     notes                String? // Notes made by admins
     createdAt            DateTime              @default(now())
-    adminUserId          String?
 }
 
 model Chatroom {

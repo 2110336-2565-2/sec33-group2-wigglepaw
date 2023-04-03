@@ -24,6 +24,7 @@ export const serverSchema = z.object({
   S3_ENDPOINT: z.string().url(),
   S3_BUCKET: z.string(),
   S3_PUBLIC_URL: z.string().url(),
+  OMISE_SECRET_KET: z.string(),
   // DISCORD_CLIENT_ID: z.string(),
   // DISCORD_CLIENT_SECRET: z.string(),
 });
@@ -43,6 +44,7 @@ export const serverEnv = {
   S3_ENDPOINT: process.env.S3_ENDPOINT,
   S3_BUCKET: process.env.S3_BUCKET,
   S3_PUBLIC_URL: process.env.S3_PUBLIC_URL,
+  OMISE_SECRET_KET: process.env.OMISE_SECRET_KET,
   // DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
   // DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
 };
@@ -54,6 +56,7 @@ export const serverEnv = {
  */
 export const clientSchema = z.object({
   // NEXT_PUBLIC_CLIENTVAR: z.string(),
+  NEXT_PUBLIC_OMISE_PUBLISHABLE_KEY: z.string(),
 });
 
 /**
@@ -64,4 +67,6 @@ export const clientSchema = z.object({
  */
 export const clientEnv = {
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+  NEXT_PUBLIC_OMISE_PUBLISHABLE_KEY:
+    process.env.NEXT_PUBLIC_OMISE_PUBLISHABLE_KEY,
 };

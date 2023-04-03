@@ -41,7 +41,7 @@ export default function VerifyPetSitter() {
         <div className="flex h-full w-[200px] border-2">
           Please connect sidetab given I am done with my life.
         </div>
-        <div className="w-full overflow-scroll sm:px-[40px] sm:pt-[20px] sm:pb-[40px] xl:px-[80px] xl:pt-[40px] xl:pb-[60px]">
+        <div className="w-full overflow-scroll sm:px-[40px] sm:pb-[40px] sm:pt-[20px] xl:px-[80px] xl:pb-[60px] xl:pt-[40px]">
           <div className="flex h-full flex-col gap-5">
             {/* HEADER */}
             <h1 className="text-[40px] font-semibold">

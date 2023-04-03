@@ -213,6 +213,38 @@ export const bookingRouter = createTRPCRouter({
       return getSuccessResponse(update.status);
     }),
 
+  // pay booking by petOwner
+  pay: protectedProcedure
+    .input(
+      z.object({
+        bookingId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userType: UserType = ctx.session.user?.userType ?? null;
+      if (!UserTypeLogic.isPetOwner(userType)) return USER_TYPE_MISMATCH;
+      const userId = ctx.session.user.id;
+      const qualified = await findBookingById(
+        ctx.prisma,
+        userId,
+        input.bookingId
+      );
+      if (qualified == null || input.bookingId != qualified.bookingId)
+        return NO_BOOKING_FOUND;
+      if (qualified.status != BookingStatus.accepted)
+        return BOOKING_STATUS_UNAVAILABLE;
+      const status = BookingStatus.paid;
+      const update = await ctx.prisma.booking.update({
+        where: {
+          bookingId: input.bookingId,
+        },
+        data: {
+          status: status,
+        },
+      });
+      return getSuccessResponse(update.status);
+    }),
+
   // search booking by petSitter
   search: protectedProcedure
     .input(searchBookingField)

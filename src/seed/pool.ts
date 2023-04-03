@@ -251,3 +251,19 @@ export const ticketDescription: string[] = [
 ];
 
 export const ticketNotes: string[] = ["LGTM", "lgtm but idk man", "sus"];
+
+export const citysSubstr: string[] = [
+  "Bang",
+  "Chiang",
+  "Rai",
+  "Nakhon",
+  "Si",
+  "Ratchaburi",
+  "Udon",
+  "Thani",
+  "Phetchabun",
+  "Surin",
+  "Trang",
+  "Samut",
+  "Sakhon",
+];

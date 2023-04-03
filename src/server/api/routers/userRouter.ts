@@ -23,7 +23,8 @@ import type {
 } from "@prisma/client";
 import postPic from "../logic/s3Op/postPic";
 import profilePic from "../logic/s3Op/profilePic";
-import { S3Client } from "@aws-sdk/client-s3";
+import type { S3Client } from "@aws-sdk/client-s3";
+import type { IOmise } from "omise";
 
 export const userRouter = createTRPCRouter({
   getByUsername: publicProcedure
@@ -189,17 +190,10 @@ export const userRouter = createTRPCRouter({
       });
   }),
 
-  // Deprecated
-  // post: publicProcedure.input(userFields).mutation(({ ctx, input }) => {
-  //   return ctx.prisma.user.create({
-  //     data: input,
-  //   });
-  // }),
-
   deleteByUserId: publicProcedure
     .input(z.object({ userId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return await deleteByUser(ctx.s3, ctx.prisma, {
+      return await deleteByUser(ctx.s3, ctx.prisma, ctx.omise, {
         userId: input.userId,
       });
     }),
@@ -207,7 +201,7 @@ export const userRouter = createTRPCRouter({
   deleteByUsername: publicProcedure
     .input(z.object({ username: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return await deleteByUser(ctx.s3, ctx.prisma, {
+      return await deleteByUser(ctx.s3, ctx.prisma, ctx.omise, {
         username: input.username,
       });
     }),
@@ -215,7 +209,7 @@ export const userRouter = createTRPCRouter({
   deleteByEmail: publicProcedure
     .input(z.object({ email: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return await deleteByUser(ctx.s3, ctx.prisma, {
+      return await deleteByUser(ctx.s3, ctx.prisma, ctx.omise, {
         email: input.email,
       });
     }),
@@ -244,6 +238,7 @@ export const userRouter = createTRPCRouter({
 async function deleteByUser(
   s3: S3Client,
   prisma: PrismaClient,
+  omise: IOmise,
   where: Prisma.UserWhereUniqueInput
 ) {
   // Delete user in db
@@ -252,25 +247,47 @@ async function deleteByUser(
     include: {
       petSitter: {
         select: {
+          recipientId: true,
           post: {
             select: { postId: true },
           },
         },
       },
+      petOwner: {
+        select: {
+          customerId: true,
+        },
+      },
     },
   });
 
-  const { petSitter, ...userData } = user;
+  const { petSitter, petOwner, ...userData } = user;
 
-  // Delete user's profile pic
-  await profilePic.delete(s3, userData.userId);
-
-  // If the deleted user is a pet sitter, delete all their post images.
-  if (petSitter) {
-    await Promise.allSettled(
-      petSitter.post.map(({ postId }) => postPic.deleteOfPost(s3, postId))
-    );
-  }
+  // Run clean up tasks concurrently
+  await Promise.allSettled([
+    // Delete user's profile pic
+    profilePic.delete(s3, userData.userId),
+    // If the deleted user is a pet sitter, delete all their post images.
+    (async () => {
+      if (petSitter) {
+        await Promise.allSettled(
+          petSitter.post.map(({ postId }) => postPic.deleteOfPost(s3, postId))
+        );
+      }
+    })(),
+    // If the deleted user is a pet owner, delete the Omise's customer
+    (async () => {
+      if (petOwner) {
+        await omise.customers.destroy(petOwner.customerId);
+      }
+    })(),
+    // If the deleted user is a pet sitter, delete the Omise's recipient
+    (async () => {
+      if (petSitter) {
+        await omise.recipients.destroy(petSitter.recipientId);
+      }
+    })(),
+  ]);
 
   return userData as User;
 }
@@ -325,10 +342,10 @@ function flattenUserForProfilePage(
       | null;
   }
 ): UserProfile & UserProfileSubType {
-  const { petOwner, petSitter, password, salt, ...userData } = user;
+  const { petOwner, petSitter, ...userData } = user;
 
   if (petOwner) {
-    const { emailVerified, bankAccount, bankName, ...result } = {
+    const { password, emailVerified, customerId, ...result } = {
       userType: UserType.PetOwner as UserType.PetOwner, // I HAVE TO PUT THIS, IDK WHY IT HAS BUG
       ...userData,
       ...petOwner,
@@ -339,7 +356,14 @@ function flattenUserForProfilePage(
   if (petSitter) {
     const { freelancePetSitter, petHotel, ...petSitterData } = petSitter;
     if (freelancePetSitter) {
-      const { emailVerified, bankAccount, bankName, ...result } = {
+      const {
+        password,
+        emailVerified,
+        recipientId,
+        startPrice,
+        endPrice,
+        ...result
+      } = {
         userType: UserType.FreelancePetSitter as UserType.FreelancePetSitter,
         ...userData,
         ...petSitterData,
@@ -348,7 +372,14 @@ function flattenUserForProfilePage(
       return result;
     }
     if (petHotel) {
-      const { emailVerified, bankAccount, bankName, ...result } = {
+      const {
+        password,
+        emailVerified,
+        recipientId,
+        startPrice,
+        endPrice,
+        ...result
+      } = {
         userType: UserType.PetHotel as UserType.PetHotel,
         ...userData,
         ...petSitterData,

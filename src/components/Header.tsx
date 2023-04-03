@@ -161,7 +161,7 @@ const Header = (props: any) => {
                     ></Image>
                   </Menu.Button>
                 </div>
-                <Menu.Items className="absolute top-full right-0 z-20 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <Menu.Items className="absolute right-0 top-full z-20 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div className="px-1 py-[0.1rem]">
                     <Menu.Item>
                       <Link
@@ -245,7 +245,7 @@ const Header = (props: any) => {
                   </Menu.Button>
                 )}
 
-                <Menu.Items className="absolute top-full right-0 z-20 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <Menu.Items className="absolute right-0 top-full z-20 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   {!isLoggedIn && (
                     <>
                       <div className="px-1 py-[0.1rem]">
