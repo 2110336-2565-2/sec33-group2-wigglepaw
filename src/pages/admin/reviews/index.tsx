@@ -1,4 +1,4 @@
-import { PetSitter } from "@prisma/client";
+import { PetSitter, ReviewStatus } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -9,7 +9,7 @@ import DataTable, {
 } from "react-data-table-component";
 import { HiCheck, HiMenuAlt1 } from "react-icons/hi";
 import { string } from "zod";
-import FixedHeader from "../../../components/FixedHeader";
+import FixedHeader from "../../../components/Header";
 import { UserType } from "../../../types/user";
 import { api } from "../../../utils/api";
 import ReactDOMServer from "react-dom/server";
@@ -46,21 +46,13 @@ interface DataRow {
   petOwnerUsername: string;
   petOwnerImageUri: string | null | undefined;
   petOwnerFullName: string | null;
-  petSitterId: string; //PetOwner
-  petSitterUsername: string;
-  petSitterImageUri: string | null | undefined;
-  petSitterFullName: string | null;
-  //hotelName: string | null;
-  //type: "Freelance" | "Hotel";
-  //certificationUri: string | null;
-  title: string | null;
-  titleId: string;
   rating: number;
-  review: string;
+  review: string | null;
   reviewId: string;
+  reviewDate: Date;
   lastUpdate: string | null;
   lastUpdateTime: number;
-  status: "Pending" | "Verified" | null;
+  status: ReviewStatus;
 }
 
 function Table() {
@@ -95,39 +87,19 @@ function Table() {
         petOwnerUsername: review.petOwner.user.username,
         petOwnerImageUri: review.petOwner.user.imageUri,
         petOwnerFullName: `${review.petOwner.firstName} ${review.petOwner.lastName}`,
-        petSitterId: review.petSitterId,
-        petSitterUsername: review.petSitter.user.username,
-        petSitterImageUri: review.petSitter.user.imageUri,
-        petSitterFullName:
-          review.petSitter === UserType.FreelancePetSitter
-            ? `${petSitter.firstName} ${petSitter.lastName}`
-            : null,
-        hotelName:
-          petSitter.userType === UserType.PetHotel ? petSitter.hotelName : null,
-        type:
-          petSitter.userType === UserType.FreelancePetSitter
-            ? "Freelance"
-            : "Hotel",
-        certificationUri:
-          petSitter.userType === UserType.FreelancePetSitter ||
-          petSitter.userType === UserType.PetHotel
-            ? petSitter.certificationUri
-            : null,
+        rating: review.rating,
+        review: review.text,
+        reviewId: review.reviewId,
+        reviewDate: review.createdAt,
         lastUpdate: formatTime(new Date(Date.now() - 86400100)), // dummy
         lastUpdateTime: Date.now() - 86400100, // dummy
-        status:
-          (petSitter.userType === UserType.FreelancePetSitter ||
-            petSitter.userType === UserType.PetHotel) &&
-          petSitter.verifyStatus
-            ? "Verified"
-            : "Pending",
+        status: review.status,
       }))
     : [];
 
   // filter data
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-
   // filter component (subheader)
   const SubHeaderComponent = (
     <div className="relative mt-[10px] flex items-center">
@@ -160,15 +132,14 @@ function Table() {
   // columns to show
   const columns: TableColumn<DataRow>[] = [
     {
-      name: "Pet Sitter",
-      selector: (row) =>
-        row.type === "Freelance" ? row.fullName || "" : row.hotelName || "",
+      name: "Pet Owner",
+      selector: (row) => row.petOwnerFullName || "",
       cell: (row) => (
         <RecursivePropsProvider data-tag="allowRowEvents">
           <div className="flex h-[60px] w-full items-center gap-2">
             <div className="relative min-h-[40px] min-w-[40px] rounded-full border border-black drop-shadow-md">
               <Image
-                src={row.imageUri || "/profiledummy.png"}
+                src={row.petOwnerImageUri || "/profiledummy.png"}
                 alt=""
                 fill
                 className="rounded-full object-cover"
@@ -176,10 +147,10 @@ function Table() {
             </div>
             <div className="flex w-[80%] flex-col">
               <div className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-[18px]">
-                {row.fullName || row.hotelName}
+                {row.petOwnerFullName}
               </div>
               <div className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-[16px] text-wp-blue">
-                #{row.username}
+                #{row.petOwnerUsername}
               </div>
             </div>
           </div>
@@ -189,16 +160,12 @@ function Table() {
       sortable: true,
     },
     {
-      name: "Type",
-      selector: (row) => row.type,
+      name: "Rating",
+      selector: (row) => row.rating,
       cell: (row) => (
         <RecursivePropsProvider data-tag="allowRowEvents">
-          <div
-            className={`w-full overflow-hidden text-ellipsis whitespace-nowrap text-[18px] font-semibold ${
-              row.type === "Freelance" ? "text-freelance" : "text-hotel"
-            } `}
-          >
-            {row.type === "Freelance" ? "Freelance" : "Hotel"}
+          <div className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-[18px] font-semibold">
+            {row.rating}
           </div>
         </RecursivePropsProvider>
       ),
@@ -206,19 +173,14 @@ function Table() {
       sortable: true,
     },
     {
-      name: "Certification URI",
-      selector: (row) => row.certificationUri || "",
+      name: "Review",
+      selector: (row) => row.review || "",
       cell: (row) => (
         <div
           data-tag="allowRowEvents"
           className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-[18px]"
         >
-          <Link href={row.certificationUri || ""} className="link">
-            {(row.certificationUri || "none").replace(
-              /^(https?:\/\/)?(www\.)?/i,
-              ""
-            )}
-          </Link>
+          <div>{row.review}</div>
         </div>
       ),
       width: "20%",
@@ -244,7 +206,7 @@ function Table() {
         <RecursivePropsProvider data-tag="allowRowEvents">
           <div
             className={`flex h-[28px] w-[100px] items-center justify-center rounded-lg text-[18px] font-semibold text-white drop-shadow-md ${
-              row.status === "Verified" ? "bg-good" : "bg-neutral"
+              row.status === ReviewStatus.resolved ? "bg-good" : "bg-neutral"
             }`}
           >
             {row.status}
@@ -277,7 +239,7 @@ function Table() {
   // conditional styles
   const conditionalRowStyles = [
     {
-      when: (row: DataRow) => row.status === "Pending",
+      when: (row: DataRow) => row.status === ReviewStatus.pending,
       style: {
         cursor: "help",
       },
@@ -292,13 +254,13 @@ function Table() {
     setSelectedRows(selectedRows);
   };
 
-  const rowDisabledCriteria = (row: DataRow) => row.status === "Verified";
+  const rowDisabledCriteria = (row: DataRow) =>
+    row.status === ReviewStatus.resolved;
 
   const onRowClicked = (row: DataRow) => {
-    if (row.status === "Pending")
-      router.push(`/admin/verification/${row.username}`);
+    if (row.status === ReviewStatus.pending)
+      router.push(`/admin/verification/${row.reviewId}`);
   };
-
   // manage selected rows
   const ContextActions = (
     <button
@@ -319,7 +281,7 @@ function Table() {
     <DataTable
       keyField="username"
       title={Title}
-      data={filteredData}
+      data={data}
       subHeader
       subHeaderComponent={SubHeaderComponent}
       columns={columns}
@@ -338,7 +300,7 @@ function Table() {
       contextActions={ContextActions}
       // contextComponent={}
       // selectableRowsComponent={}
-      progressPending={users.isLoading}
+      progressPending={review.isLoading}
       progressComponent={<>DOG DOG DOG DOG is loading bro...</>}
       striped
       highlightOnHover
