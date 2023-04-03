@@ -26,6 +26,7 @@ import {
   updateOwnerPetTypes,
 } from "../../../seed/util";
 import {
+  makeAdmin,
   makeBooking,
   makeFree,
   makeHotel,
@@ -113,6 +114,25 @@ export const seedRouter = createTRPCRouter({
         }
       }
       return "Seeded Users";
+    }),
+
+  seedAdmins: publicProcedure
+    .input(
+      z.object({
+        clearAdmins: z.boolean(),
+        numberOfAdmins: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.clearAdmins) {
+        await ctx.prisma.admin.deleteMany();
+      }
+      resetRand();
+      for (let i = 0; i < input.numberOfAdmins; i++) {
+        const code = "Admin" + getRandomIntFromInterval(100, 999).toString();
+        await makeAdmin(code);
+      }
+      return "Seeded Admins";
     }),
 
   seedPets: publicProcedure

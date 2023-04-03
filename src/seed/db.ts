@@ -180,6 +180,27 @@ export async function makeOwner(
   return;
 }
 
+export async function makeAdmin(code: string) {
+  const saltHash = saltHashPassword("p" + code);
+  const salt = saltHash.salt;
+  const hash = saltHash.hash;
+  return await prisma.admin.create({
+    data: {
+      user: {
+        create: {
+          username: "u" + code,
+          email: "e" + code + "@gmail.com",
+          password: hash,
+          salt: salt,
+        },
+      },
+    },
+    include: {
+      user: true,
+    },
+  });
+}
+
 export async function makeReview(
   petSitterId: string,
   petOwnerId: string,
