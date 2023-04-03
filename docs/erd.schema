@@ -52,6 +52,9 @@ Table User {
   sessions Session [not null]
   createdAt DateTime [default: `now()`, not null]
   salt String [not null]
+  Admin Admin
+  ReportTicket ReportTicket [not null]
+  messages Message [not null]
 }
 
 Table PetOwner {
@@ -81,6 +84,8 @@ Table PetSitter {
   review Review [not null]
   avgRating Float
   reviewCount Int [not null, default: 0]
+  ApprovalRequest ApprovalRequest [not null]
+  Chatroom Chatroom [not null]
 }
 
 Table FreelancePetSitter {
@@ -160,6 +165,58 @@ Table Post {
   createdAt DateTime [default: `now()`, not null]
 }
 
+Table Admin {
+  userId String [pk]
+  user User [not null]
+  ActiveTickets ReportTicket [not null]
+  ApprovalRequest ApprovalRequest [not null]
+}
+
+Table ReportTicket {
+  ticketId String [pk]
+  reporterId String [not null]
+  reporter User [not null]
+  title String [not null]
+  description String
+  adminId String
+  admin Admin
+  status ReportTicketStatus [not null]
+  notes String
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table ApprovalRequest {
+  requestId String [pk]
+  petSitterId String [not null]
+  petSitter PetSitter [not null]
+  status ApprovalRequestStatus [not null]
+  adminId String
+  latestStatusUpdateby Admin
+  notes String
+  createdAt DateTime [default: `now()`, not null]
+  adminUserId String
+}
+
+Table Chatroom {
+  chatroomId String [pk]
+  petOwnerId String [not null]
+  petOwner PetOwner [not null]
+  petSitterId String [not null]
+  petSitter PetSitter [not null]
+  messages Message [not null]
+}
+
+Table Message {
+  messageId String [pk]
+  type MessageType [not null, default: 'text']
+  data String [not null]
+  senderId String [not null]
+  sender User [not null]
+  createdAt DateTime [default: `now()`, not null]
+  chatroomId String [not null]
+  Chatroom Chatroom
+}
+
 Table MyRelationTable {
   petId String [ref: > Pet.petId]
   bookingId String [ref: > Booking.bookingId]
@@ -170,6 +227,30 @@ Enum BookingStatus {
   accepted
   canceled
   rejected
+}
+
+Enum ReviewStatus {
+  submitted
+  pending
+  resolved
+}
+
+Enum ReportTicketStatus {
+  pending
+  acked
+  canceled
+  resolved
+}
+
+Enum ApprovalRequestStatus {
+  pending
+  declined
+  approved
+}
+
+Enum MessageType {
+  text
+  image
 }
 
 Ref: Account.userId > User.userId [delete: Cascade]
@@ -195,3 +276,21 @@ Ref: Review.petOwnerId > PetOwner.userId [delete: Cascade]
 Ref: Review.petSitterId > PetSitter.userId [delete: Cascade]
 
 Ref: Post.petSitterId > PetSitter.userId [delete: Cascade]
+
+Ref: Admin.userId - User.userId [delete: Cascade]
+
+Ref: ReportTicket.reporterId > User.userId [delete: Cascade]
+
+Ref: ReportTicket.adminId > Admin.userId [delete: Cascade]
+
+Ref: ApprovalRequest.petSitterId > PetSitter.userId [delete: Cascade]
+
+Ref: ApprovalRequest.adminUserId > Admin.userId
+
+Ref: Chatroom.petOwnerId > PetOwner.userId
+
+Ref: Chatroom.petSitterId > PetSitter.userId
+
+Ref: Message.senderId > User.userId
+
+Ref: Message.chatroomId > Chatroom.chatroomId

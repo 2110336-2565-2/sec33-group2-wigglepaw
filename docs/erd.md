@@ -7,7 +7,7 @@ accepted accepted
 canceled canceled
 rejected rejected
         }
-
+    
 
 
         ReviewStatus {
@@ -15,7 +15,7 @@ rejected rejected
 pending pending
 resolved resolved
         }
-
+    
 
 
         ReportTicketStatus {
@@ -24,7 +24,7 @@ acked acked
 canceled canceled
 resolved resolved
         }
-
+    
 
 
         ApprovalRequestStatus {
@@ -32,19 +32,19 @@ resolved resolved
 declined declined
 approved approved
         }
-
+    
 
 
         MessageType {
             text text
 image image
         }
-
+    
   Account {
-    String id PK
-    String type
-    String provider
-    String providerAccountId
+    String id PK 
+    String type  
+    String provider  
+    String providerAccountId  
     String refresh_token  "nullable"
     String access_token  "nullable"
     Int expires_at  "nullable"
@@ -53,147 +53,147 @@ image image
     String id_token  "nullable"
     String session_state  "nullable"
     }
-
+  
 
   Session {
-    String id PK
-    String sessionToken
-    DateTime expires
+    String id PK 
+    String sessionToken  
+    DateTime expires  
     }
-
+  
 
   User {
-    String userId PK
-    String username
-    String password
-    String email
+    String userId PK 
+    String username  
+    String password  
+    String email  
     DateTime emailVerified  "nullable"
     String phoneNumber  "nullable"
     String address  "nullable"
     String imageUri  "nullable"
     String bankAccount  "nullable"
     String bankName  "nullable"
-    DateTime createdAt
-    String salt
+    DateTime createdAt  
+    String salt  
     }
-
+  
 
   PetOwner {
-    String petTypes
-    String firstName
-    String lastName
+    String petTypes  
+    String firstName  
+    String lastName  
     }
-
+  
 
   PetSitter {
-    String petTypes
-    Boolean verifyStatus
+    String petTypes  
+    Boolean verifyStatus  
     String certificationUri  "nullable"
     Float startPrice  "nullable"
     Float endPrice  "nullable"
     Float avgRating  "nullable"
-    Int reviewCount
+    Int reviewCount  
     }
-
+  
 
   FreelancePetSitter {
-    String firstName
-    String lastName
+    String firstName  
+    String lastName  
     }
-
+  
 
   PetHotel {
     String businessLicenseUri  "nullable"
-    String hotelName
+    String hotelName  
     }
-
+  
 
   Booking {
-    String bookingId PK
-    Float totalPrice
-    DateTime startDate
-    DateTime endDate
-    Int numberOfPets
-    BookingStatus status
+    String bookingId PK 
+    Float totalPrice  
+    DateTime startDate  
+    DateTime endDate  
+    Int numberOfPets  
+    BookingStatus status  
     String note  "nullable"
-    DateTime createdAt
+    DateTime createdAt  
     }
-
+  
 
   Pet {
-    String petId PK
-    String petType
+    String petId PK 
+    String petType  
     String name  "nullable"
     String sex  "nullable"
     String breed  "nullable"
     Float weight  "nullable"
-    DateTime createdAt
+    DateTime createdAt  
     }
-
+  
 
   VerificationToken {
-    String identifier
-    String token
-    DateTime expires
+    String identifier  
+    String token  
+    DateTime expires  
     }
-
+  
 
   Review {
-    String reviewId PK
-    ReviewStatus status
+    String reviewId PK 
+    ReviewStatus status  
     String adminComment  "nullable"
     String text  "nullable"
-    Int rating
-    DateTime createdAt
+    Int rating  
+    DateTime createdAt  
     }
-
+  
 
   Post {
-    String postId PK
-    String title
+    String postId PK 
+    String title  
     String text  "nullable"
-    String pictureUri
+    String pictureUri  
     String videoUri  "nullable"
-    DateTime createdAt
+    DateTime createdAt  
     }
-
+  
 
   Admin {
 
     }
-
+  
 
   ReportTicket {
-    String ticketId PK
-    String title
+    String ticketId PK 
+    String title  
     String description  "nullable"
-    ReportTicketStatus status
+    ReportTicketStatus status  
     String notes  "nullable"
-    DateTime createdAt
+    DateTime createdAt  
     }
-
+  
 
   ApprovalRequest {
-    String requestId PK
-    ApprovalRequestStatus status
+    String requestId PK 
+    ApprovalRequestStatus status  
     String adminId  "nullable"
     String notes  "nullable"
-    DateTime createdAt
+    DateTime createdAt  
     }
-
+  
 
   Chatroom {
-    String chatroomId PK
+    String chatroomId PK 
     }
-
+  
 
   Message {
-    String messageId PK
-    MessageType type
-    String data
-    DateTime createdAt
+    String messageId PK 
+    MessageType type  
+    String data  
+    DateTime createdAt  
     }
-
+  
     Account o{--|| User : "user"
     Session o{--|| User : "user"
     PetOwner o|--|| User : "user"
