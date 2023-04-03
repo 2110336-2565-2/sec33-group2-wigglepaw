@@ -79,7 +79,7 @@ const Dashboard = () => {
           />
           <div id="review-report-flex-wrapper" className="flex gap-4">
             <TableDisplay
-              linkTo={"/admin/review"}
+              linkTo={"/admin/reviews"}
               dataRows={reviews}
               isLoading={reviewsIsLoading}
               tableTitle={"Review Moderation"}
