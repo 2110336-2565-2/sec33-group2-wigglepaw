@@ -56,14 +56,14 @@ export const reportTicketRouter = createTRPCRouter({
         throwErr(err);
       }
     }),
-  getAll: publicProcedure.mutation(async ({ ctx, input }) => {
+  getAll: publicProcedure.query(async ({ ctx, input }) => {
     try {
       return await ctx.prisma.reportTicket.findMany();
     } catch (err) {
       throwErr(err);
     }
   }),
-  getPending: publicProcedure.mutation(async ({ ctx, input }) => {
+  getPending: publicProcedure.query(async ({ ctx, input }) => {
     try {
       return await ctx.prisma.reportTicket.findMany({
         where: {
@@ -74,7 +74,7 @@ export const reportTicketRouter = createTRPCRouter({
       throwErr(err);
     }
   }),
-  getCanceled: publicProcedure.mutation(async ({ ctx, input }) => {
+  getCanceled: publicProcedure.query(async ({ ctx, input }) => {
     try {
       return await ctx.prisma.reportTicket.findMany({
         where: {
@@ -85,7 +85,7 @@ export const reportTicketRouter = createTRPCRouter({
       throwErr(err);
     }
   }),
-  getResolved: publicProcedure.mutation(async ({ ctx, input }) => {
+  getResolved: publicProcedure.query(async ({ ctx, input }) => {
     try {
       return await ctx.prisma.reportTicket.findMany({
         where: {
@@ -103,7 +103,7 @@ export const reportTicketRouter = createTRPCRouter({
         userId: z.string().cuid(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
       try {
         return await ctx.prisma.reportTicket.findMany({
           where: {
@@ -120,7 +120,7 @@ export const reportTicketRouter = createTRPCRouter({
         adminId: z.string().cuid(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
       try {
         return await ctx.prisma.reportTicket.findMany({
           where: {
