@@ -17,6 +17,8 @@ import {
   updateAvgRating,
 } from "../../../seed/db";
 import { ReviewStatus } from "@prisma/client";
+import { TRPCClientError } from "@trpc/client";
+import { TRPCError } from "@trpc/server";
 
 export const reviewRouter = createTRPCRouter({
   create: publicProcedure
@@ -49,15 +51,23 @@ export const reviewRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const deleted = await ctx.prisma.review.delete({
-        where: {
-          reviewId: input.reviewId,
-        },
-      });
-      const petSitterId = deleted.petSitterId;
+      try {
+        const deleted = await ctx.prisma.review.delete({
+          where: {
+            reviewId: input.reviewId,
+          },
+        });
+        const petSitterId = deleted.petSitterId;
 
-      await updateAvgRating(petSitterId);
-      return;
+        await updateAvgRating(petSitterId);
+        return;
+      } catch (err) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "reviewRouter fucked up",
+          cause: err,
+        });
+      }
     }),
 
   report: publicProcedure
@@ -115,6 +125,24 @@ export const reviewRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx, input }) => {
     return await ctx.prisma.review.findMany();
   }),
+
+  getById: publicProcedure
+    .input(z.object({ reviewId: z.string().cuid() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.review.findUnique({
+        where: { reviewId: input.reviewId },
+        include: {
+          petSitter: {
+            include: {
+              user: true,
+              freelancePetSitter: true,
+              petHotel: true,
+            },
+          },
+          petOwner: true,
+        },
+      });
+    }),
 
   getAllPending: publicProcedure.query(async ({ ctx, input }) => {
     return await ctx.prisma.review.findMany({

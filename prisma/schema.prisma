@@ -268,6 +268,7 @@ model ApprovalRequest {
     status               ApprovalRequestStatus
     adminId              String?
     latestStatusUpdateby Admin?                @relation(fields: [adminId], references: [userId])
+    latestStatusUpdateAt DateTime
     notes                String? // Notes made by admins
     createdAt            DateTime              @default(now())
 }
@@ -297,9 +298,9 @@ model Message {
     type       MessageType @default(text)
     data       String // text or imageUrl
     senderId   String
-    sender     User        @relation(fields: [senderId], references: [userId])
+    sender     User        @relation(fields: [senderId], references: [userId], onDelete: Cascade)
     createdAt  DateTime    @default(now())
     chatroomId String
-    Chatroom   Chatroom?   @relation(fields: [chatroomId], references: [chatroomId])
+    Chatroom   Chatroom?   @relation(fields: [chatroomId], references: [chatroomId], onDelete: Cascade)
     read       Boolean     @default(false)
 }

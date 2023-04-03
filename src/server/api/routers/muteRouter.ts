@@ -50,7 +50,7 @@ export const muteRouter = createTRPCRouter({
     }),
 
   // unmute s/o
-  unMute: protectedProcedure
+  unmute: protectedProcedure
     .input(userIdObject)
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;

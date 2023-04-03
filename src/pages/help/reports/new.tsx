@@ -75,7 +75,7 @@ const NewReportPage = () => {
       console.log("report created success");
       setSubmitReportSuccess(true);
       setTimeout(function () {
-        router.push(`help/reports/${response.reportTicket.ticketId}`);
+        router.push(`/help/reports/${response.reportTicket.ticketId}`);
         setSubmitReportSuccess(false);
       }, 1500);
     } catch (err) {

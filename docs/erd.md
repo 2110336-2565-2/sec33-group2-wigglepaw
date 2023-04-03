@@ -188,6 +188,7 @@ image image
   "ApprovalRequest" {
     String requestId "🗝️"
     ApprovalRequestStatus status 
+    DateTime latestStatusUpdateAt 
     String notes "❓"
     DateTime createdAt 
     }

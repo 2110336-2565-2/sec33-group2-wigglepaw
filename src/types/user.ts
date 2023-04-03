@@ -4,6 +4,7 @@ import {
   type FreelancePetSitter,
   type PetHotel,
   type Admin,
+  ApprovalRequest,
 } from "@prisma/client";
 
 /**
@@ -81,6 +82,7 @@ export type PetSitterProfileType = {
   certificationUri: string | null;
   startPrice: number | null;
   endPrice: number | null;
+  ApprovalRequest: ApprovalRequest[];
 };
 
 export type FreelancePetSitterProfileType = {

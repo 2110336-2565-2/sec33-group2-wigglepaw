@@ -19,6 +19,7 @@ import { UserTypeLogic } from "../logic/session";
 import { BookingSearchLogic } from "../logic/search/bookingSearchLogic";
 import { BookingStateLogic, BookingState } from "../logic/bookingStateLogic";
 import { chargeAndTransfer } from "../logic/payment";
+import { TRPCError } from "@trpc/server";
 
 type returnFieldType = z.TypeOf<typeof returnField>;
 
@@ -323,4 +324,53 @@ export const bookingRouter = createTRPCRouter({
       };
       return await searchBooking(ctx.prisma, args);
     }),
+
+  // Search my transaction
+  myTransaction: protectedProcedure.query(async ({ ctx, input }) => {
+    const userId = ctx.session.user.id;
+    const { petOwner } = await ctx.prisma.user.findUniqueOrThrow({
+      where: {
+        userId: userId,
+      },
+      select: {
+        petOwner: {
+          select: {
+            customerId: true,
+          },
+        },
+      },
+    });
+
+    if (!petOwner) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You are not a pet owner, so you can't view transactions.",
+      });
+    }
+
+    return await ctx.prisma.booking.findMany({
+      where: {
+        status: BookingStatus.paid,
+      },
+      include: {
+        petSitter: {
+          include: {
+            user: {
+              select: {
+                username: true,
+                imageUri: true,
+              },
+            },
+            freelancePetSitter: {
+              select: {
+                firstName: true,
+                lastName: true,
+              },
+            },
+            petHotel: true,
+          },
+        },
+      },
+    });
+  }),
 });

@@ -20,6 +20,7 @@ import type {
   PrismaClient,
   User,
   Prisma,
+  ApprovalRequest,
   Admin,
 } from "@prisma/client";
 import postPic from "../logic/s3Op/postPic";
@@ -143,6 +144,7 @@ export const userRouter = createTRPCRouter({
             include: {
               freelancePetSitter: true,
               petHotel: true,
+              ApprovalRequest: true,
             },
           },
         },
@@ -156,7 +158,7 @@ export const userRouter = createTRPCRouter({
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "userRouter fucked up",
+          message: "user router fucked up",
           cause: error,
         });
       }
@@ -170,6 +172,7 @@ export const userRouter = createTRPCRouter({
           include: {
             freelancePetSitter: true,
             petHotel: true,
+            ApprovalRequest: true,
           },
         },
         Admin: true,
@@ -340,6 +343,7 @@ function flattenUserForProfilePage(
       | (PetSitter & {
           freelancePetSitter: FreelancePetSitter | null;
           petHotel: PetHotel | null;
+          ApprovalRequest: ApprovalRequest[];
         })
       | null;
     Admin: Admin | null;
@@ -365,7 +369,8 @@ function flattenUserForProfilePage(
   }
 
   if (petSitter) {
-    const { freelancePetSitter, petHotel, ...petSitterData } = petSitter;
+    const { freelancePetSitter, petHotel, ApprovalRequest, ...petSitterData } =
+      petSitter;
     if (freelancePetSitter) {
       const {
         password,
@@ -379,6 +384,7 @@ function flattenUserForProfilePage(
         ...userData,
         ...petSitterData,
         ...freelancePetSitter,
+        ApprovalRequest,
       };
       return result;
     }
@@ -395,6 +401,7 @@ function flattenUserForProfilePage(
         ...userData,
         ...petSitterData,
         ...petHotel,
+        ApprovalRequest,
       };
       return result;
     }

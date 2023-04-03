@@ -43,6 +43,10 @@ export const Chatmain = (props: ChatMainProps) => {
 
   const [lastmsgSender, setLastmsgSender] = useState(false);
 
+  const [isBlock, setIsBlock] = useState(false);
+
+  const [isMute, setIsMute] = useState(false);
+
   const messageEndRef = useRef(null);
 
   const sendchat = api.chat.createMessage.useMutation();
@@ -61,6 +65,19 @@ export const Chatmain = (props: ChatMainProps) => {
       );
     }
   }, [props.chatroomid]);
+
+  api.mute.isUserMuted.useQuery(
+    { userId: props.toid },
+    {
+      onSuccess: setIsMute,
+    }
+  );
+  api.block.isUserBlocked.useQuery(
+    { userId: props.toid },
+    {
+      onSuccess: setIsBlock,
+    }
+  );
 
   const socketInitializer = async () => {
     // We just call it because we don't need anything else out of it
@@ -161,10 +178,13 @@ export const Chatmain = (props: ChatMainProps) => {
         {props.chatroomid && (
           <>
             <div className="px-1">
-              <MuteButton></MuteButton>
+              <MuteButton otherUserId={props.toid} isMute={isMute}></MuteButton>
             </div>
             <div className="px-1">
-              <BlockButton></BlockButton>
+              <BlockButton
+                otherUserId={props.toid}
+                isBlock={isBlock}
+              ></BlockButton>
             </div>
           </>
         )}

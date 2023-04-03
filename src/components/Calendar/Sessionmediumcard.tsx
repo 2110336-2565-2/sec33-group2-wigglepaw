@@ -6,8 +6,10 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { api } from "../../utils/api";
+import { useRouter } from "next/router";
 export const SessionMediumCard = ({ data }) => {
   const { data: session, status } = useSession();
+  const router = useRouter();
 
   const sitter =
     session?.user?.userType === "PetHotel" ||
@@ -37,6 +39,7 @@ export const SessionMediumCard = ({ data }) => {
   };
   const mutate = api.booking.accept.useMutation();
   const mutatecan = api.booking.reject.useMutation();
+  const payMutation = api.booking.pay.useMutation();
 
   const dummyPet = [
     {
@@ -132,8 +135,33 @@ export const SessionMediumCard = ({ data }) => {
         if (sitter) {
         } else {
           return (
-            <div className=" center-thing mb-5 mt-5 rounded-md  bg-[#2A4764] py-4 text-white">
-              <button className="text-xl">Confirm and Pay</button>
+            <div className=" center-thing mb-5 mt-5 rounded-md  bg-[#2A4764] py-4 text-white disabled:opacity-50">
+              <button
+                disabled={payMutation.isLoading}
+                className="text-xl"
+                onClick={async () => {
+                  if (!confirm(`Are you sure you want to pay?`)) {
+                    return;
+                  }
+
+                  try {
+                    await payMutation.mutateAsync({
+                      bookingId: data.bookingId,
+                    });
+                  } catch (error) {
+                    alert(JSON.stringify(error?.message));
+                    return;
+                  }
+
+                  alert("Payment successful!");
+
+                  await router.push(
+                    `/user/${session?.user.userId}/transaction`
+                  );
+                }}
+              >
+                Confirm and Pay
+              </button>
             </div>
           );
         }
@@ -169,7 +197,7 @@ export const SessionMediumCard = ({ data }) => {
     <div>
       <div
         style={{ backgroundColor: colorbg() }}
-        className="center-thing border-l-5 absolute top-0 right-[-0.5rem] h-7 skew-x-[30deg] bg-black  px-5 text-black shadow-xl"
+        className="center-thing border-l-5 absolute right-[-0.5rem] top-0 h-7 skew-x-[30deg] bg-black  px-5 text-black shadow-xl"
       >
         <div className="-skew-x-[30deg] text-xs">{data.status}</div>
         {/* change to status instead, 'Pending' forn example */}
@@ -215,10 +243,10 @@ export const SessionMediumCard = ({ data }) => {
                   : data.petSitter.petHotel.hotelName}
               </div>
               <div className="center-thing col-span-2">
-                <button className="center-thing drop-s rounded-md bg-[#357CC2] py-1 px-4 text-white  shadow-lg drop-shadow-lg">
+                <button className="center-thing drop-s rounded-md bg-[#357CC2] px-4 py-1 text-white  shadow-lg drop-shadow-lg">
                   Chat
                   <FontAwesomeIcon
-                    className="ml-3 scale-y-75 scale-x-110"
+                    className="ml-3 scale-x-110 scale-y-75"
                     size="xl"
                     icon={faMessage}
                   />
@@ -242,7 +270,7 @@ export const SessionMediumCard = ({ data }) => {
                   <span className=" pr-5 text-sm">
                     <div className="center-thing">
                       <span
-                        className="rounded-full py-0.5 px-3 text-white shadow-sm"
+                        className="rounded-full px-3 py-0.5 text-white shadow-sm"
                         style={{ backgroundColor: "blue" }}
                       >
                         {" "}
@@ -259,7 +287,7 @@ export const SessionMediumCard = ({ data }) => {
                             }
                             setTickarray(newTick);
                           }}
-                          className="ml-2 mb-0.5 text-xl"
+                          className="mb-0.5 ml-2 text-xl"
                         >
                           +
                         </button>
@@ -274,7 +302,7 @@ export const SessionMediumCard = ({ data }) => {
                             }
                             setTickarray(newTick);
                           }}
-                          className="ml-2 mb-0.5 text-xl"
+                          className="mb-0.5 ml-2 text-xl"
                         >
                           -
                         </button>
@@ -283,7 +311,7 @@ export const SessionMediumCard = ({ data }) => {
                   </span>
                 </div>
                 {!tickArray[index] ? (
-                  <div className="animate-showing rounded-b-md border border-[#9D9D9D] bg-[#F3F3F3] py-2 px-3.5 opacity-0 ">
+                  <div className="animate-showing rounded-b-md border border-[#9D9D9D] bg-[#F3F3F3] px-3.5 py-2 opacity-0 ">
                     <div className="flex justify-between">
                       <span className="text-sm font-bold text-[#7B7B7B]">
                         {" "}
