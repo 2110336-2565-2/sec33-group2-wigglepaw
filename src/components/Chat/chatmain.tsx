@@ -173,6 +173,7 @@ export const Chatmain = (props: ChatMainProps) => {
       <div className=" h-[82%] w-full  px-10">
         <div className=" h-full w-full  overflow-y-scroll ">
           {listmsg.map((data: ChatMessage, index) => {
+            console.log(listmsg);
             let who = false; //let sender = other person
 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -241,7 +242,7 @@ export const Chatmain = (props: ChatMainProps) => {
                     <div
                       className={
                         who
-                          ? "bg-wp-orange my-1 inline-block rounded-md  p-1 px-3"
+                          ? "my-1 inline-block rounded-md bg-orange-300  p-1 px-3"
                           : "my-1 inline-block rounded-md bg-[#E9E9E9]  p-1 px-3"
                       }
                     >

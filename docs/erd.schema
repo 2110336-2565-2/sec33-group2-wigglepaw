@@ -198,6 +198,7 @@ Table Admin {
   user User [not null]
   ActiveTickets ReportTicket [not null]
   ApprovalRequest ApprovalRequest [not null]
+  Chatroom Chatroom [not null]
 }
 
 Table ReportTicket {
@@ -228,11 +229,15 @@ Table ApprovalRequest {
 
 Table Chatroom {
   chatroomId String [pk]
-  petOwnerId String [not null]
-  petOwner PetOwner [not null]
-  petSitterId String [not null]
-  petSitter PetSitter [not null]
+  user1Id String [not null]
+  user2Id String [not null]
   messages Message [not null]
+  PetOwner PetOwner
+  petOwnerUserId String
+  PetSitter PetSitter
+  petSitterUserId String
+  Admin Admin
+  adminUserId String
 }
 
 Table Message {
@@ -325,9 +330,11 @@ Ref: ApprovalRequest.petSitterId > PetSitter.userId [delete: Cascade]
 
 Ref: ApprovalRequest.adminUserId > Admin.userId
 
-Ref: Chatroom.petOwnerId > PetOwner.userId
+Ref: Chatroom.petOwnerUserId > PetOwner.userId
 
-Ref: Chatroom.petSitterId > PetSitter.userId
+Ref: Chatroom.petSitterUserId > PetSitter.userId
+
+Ref: Chatroom.adminUserId > Admin.userId
 
 Ref: Message.senderId > User.userId
 

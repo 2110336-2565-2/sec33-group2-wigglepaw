@@ -64,10 +64,7 @@ const ChatRoomPage: NextPage = () => {
   useEffect(() => {
     if (rdy && rdyforchat) {
       void getAllChatroom.mutateAsync(
-        session?.user?.userType === "PetHotel" ||
-          session?.user?.userType === "FreelancePetSitter"
-          ? { petSitterid: session.user.userId }
-          : { petOwnerid: session?.user?.userId },
+        { finderid: session?.user?.userId },
         {
           onSuccess(data) {
             setAllchatroom(data);
@@ -85,6 +82,7 @@ const ChatRoomPage: NextPage = () => {
   useEffect(() => {
     if (check) {
       if (username) {
+        //if it is admin?
         void alreadyChatroom.mutateAsync(
           {
             petOwnerid: session?.user?.userId,
@@ -123,6 +121,7 @@ const ChatRoomPage: NextPage = () => {
         >
           <div>
             {allchatroom?.map((data: DataAllchat, index) => {
+              console.log(allchatroom);
               const date1 = new Date();
 
               let formattedDate = "";
@@ -157,13 +156,10 @@ const ChatRoomPage: NextPage = () => {
                     onClick={() => {
                       togglemode();
                       setCurrentChatroomid(data.chatroomId);
-                      if (
-                        session?.user?.userType === "PetHotel" ||
-                        session?.user?.userType === "FreelancePetSitter"
-                      ) {
-                        setToid(data.petOwnerId);
-                      } else {
+                      if (session?.user?.userId === data.petOwnerId) {
                         setToid(data.petSitterId);
+                      } else {
+                        setToid(data.petOwnerId);
                       }
                       setSendusername(data.username);
                     }}

@@ -42,8 +42,16 @@ export const chatRouter = createTRPCRouter({
       if (input.petSitterid && input.petOwnerid) {
         const found = await ctx.prisma.chatroom.findFirst({
           where: {
-            petOwnerId: input.petOwnerid,
-            petSitterId: input.petSitterid,
+            OR: [
+              {
+                user1Id: input.petOwnerid,
+                user2Id: input.petSitterid,
+              },
+              {
+                user1Id: input.petSitterid,
+                user2Id: input.petOwnerid,
+              },
+            ],
           },
         });
         if (found) {
@@ -51,8 +59,8 @@ export const chatRouter = createTRPCRouter({
         } else {
           const newone = await ctx.prisma.chatroom.create({
             data: {
-              petOwnerId: input.petOwnerid,
-              petSitterId: input.petSitterid,
+              user1Id: input.petOwnerid,
+              user2Id: input.petSitterid,
             },
           });
           return newone.chatroomId;
@@ -65,111 +73,83 @@ export const chatRouter = createTRPCRouter({
   getAllChatroom: publicProcedure
     .input(
       z.object({
-        petSitterid: z.string().optional(),
-        petOwnerid: z.string().optional(),
+        finderid: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       let Result = [];
-      if (input.petSitterid) {
-        const chatroomlist = await ctx.prisma.chatroom.findMany({
+      const chatroomlist = await ctx.prisma.chatroom.findMany({
+        where: {
+          OR: [
+            {
+              user2Id: input.finderid,
+            },
+            {
+              user1Id: input.finderid,
+            },
+          ],
+        },
+      });
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const promises = chatroomlist.map(async (element) => {
+        let whoU = true;
+        let usernamela;
+        if (input.finderid === element.user1Id) {
+          usernamela = await ctx.prisma.user.findFirst({
+            where: {
+              userId: element.user2Id,
+            },
+          });
+        } else {
+          whoU = false;
+          usernamela = await ctx.prisma.user.findFirst({
+            where: {
+              userId: element.user1Id,
+            },
+          });
+        }
+        let firstmsg;
+        const firstmsg1 = await ctx.prisma.message.findMany({
           where: {
-            petSitterId: input.petSitterid,
-          },
-        });
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        const promises = chatroomlist.map(async (element) => {
-          const usernamela = await ctx.prisma.user.findFirst({
-            where: {
-              userId: element.petOwnerId,
-            },
-          });
-          let firstmsg;
-          const firstmsg1 = await ctx.prisma.message.findMany({
-            where: {
-              chatroomId: element.chatroomId,
-            },
-            orderBy: {
-              messageId: "desc",
-            },
-            take: 1,
-          });
-
-          const unread = await ctx.prisma.message.findMany({
-            where: {
-              chatroomId: element.chatroomId,
-              senderId: element.petOwnerId,
-              read: false,
-            },
-          });
-
-          if (firstmsg1) {
-            firstmsg = firstmsg1;
-          } else {
-            firstmsg = [{ data: "" }];
-          }
-
-          const smallresult = {
             chatroomId: element.chatroomId,
-            petSitterId: element.petSitterId,
-            petOwnerId: element.petOwnerId,
-            firstmsg: firstmsg[0],
-            username: usernamela?.username,
-            imageuri: usernamela?.imageUri,
-            unread: unread.length,
-          };
-          return smallresult;
+          },
+          orderBy: {
+            messageId: "desc",
+          },
+          take: 1,
         });
 
-        const results = await Promise.all(promises);
-        return results;
-      } else {
-        const chatroomlist = await ctx.prisma.chatroom.findMany({
+        const unread = await ctx.prisma.message.findMany({
           where: {
-            petOwnerId: input.petOwnerid,
+            chatroomId: element.chatroomId,
+            senderId: whoU ? element.user2Id : element.user1Id,
+            read: false,
           },
         });
 
-        const promises = chatroomlist.map(async (element) => {
-          const usernamela = await ctx.prisma.user.findFirst({
-            where: {
-              userId: element.petSitterId,
-            },
-          });
+        if (firstmsg1) {
+          firstmsg = firstmsg1;
+        } else {
+          firstmsg = [{ data: "" }];
+        }
 
-          const firstmsg = await ctx.prisma.message.findMany({
-            where: {
-              chatroomId: element.chatroomId,
-            },
-            orderBy: {
-              messageId: "desc",
-            },
-            take: 1,
-          });
+        const smallresult = {
+          chatroomId: element.chatroomId,
+          petSitterId: element.user1Id,
+          petOwnerId: element.user2Id,
+          firstmsg: firstmsg[0],
+          username: usernamela?.username,
+          imageuri:
+            usernamela?.imageUri === null
+              ? "/dogpaw1.png"
+              : usernamela?.imageUri,
+          unread: unread.length,
+        };
+        return smallresult;
+      });
 
-          const unread = await ctx.prisma.message.findMany({
-            where: {
-              chatroomId: element.chatroomId,
-              senderId: element.petSitterId,
-              read: false,
-            },
-          });
-
-          const smallresult = {
-            chatroomId: element.chatroomId,
-            petSitterId: element.petSitterId,
-            petOwnerId: element.petOwnerId,
-            firstmsg: firstmsg ? firstmsg[0] : { data: "" },
-            username: usernamela?.username,
-            imageuri: usernamela?.imageUri,
-            unread: unread.length,
-          };
-          return smallresult;
-        });
-
-        const results = await Promise.all(promises);
-        return results;
-      }
+      const results = await Promise.all(promises);
+      return results;
     }),
 
   getAllChatMessage: publicProcedure

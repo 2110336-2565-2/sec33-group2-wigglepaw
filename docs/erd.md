@@ -195,6 +195,8 @@ image image
 
   Chatroom {
     String chatroomId PK 
+    String user1Id  
+    String user2Id  
     }
   
 
@@ -233,8 +235,9 @@ image image
     ApprovalRequest o{--|| PetSitter : "petSitter"
     ApprovalRequest o|--|| ApprovalRequestStatus : "enum:status"
     ApprovalRequest o{--|o Admin : "latestStatusUpdateby"
-    Chatroom o{--|| PetOwner : "petOwner"
-    Chatroom o{--|| PetSitter : "petSitter"
+    Chatroom o{--|o PetOwner : "PetOwner"
+    Chatroom o{--|o PetSitter : "PetSitter"
+    Chatroom o{--|o Admin : "Admin"
     Message o|--|| MessageType : "enum:type"
     Message o{--|| User : "sender"
     Message o{--|o Chatroom : "Chatroom"
