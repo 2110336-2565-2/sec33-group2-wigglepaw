@@ -1,17 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faVolumeMute, faVolumeHigh } from "@fortawesome/free-solid-svg-icons";
 import { api } from "../../utils/api";
 
 type MuteButtonProps = {
   otherUserId: string;
-  isMuted?: boolean;
+  isMute: boolean;
 };
 
 export default function MuteButton(props: MuteButtonProps) {
   const muteUser = api.mute.mute.useMutation();
   const unmuteUser = api.mute.unmute.useMutation();
-  const [mute, setMute] = React.useState(false);
+  const [mute, setMute] = React.useState(props.isMute);
+  useEffect(() => {
+    setMute(props.isMute);
+  }, [props.isMute]);
   return (
     <div>
       {/*Mute Button*/}
