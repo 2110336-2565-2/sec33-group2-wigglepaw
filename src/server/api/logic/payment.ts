@@ -15,6 +15,10 @@ export async function chargeAndTransfer(
   if (customer == null) throw new Error("Customer not found");
   const recipient = await omise.recipients.retrieve(recipientId);
   if (recipient == null) throw new Error("Recipient not found");
+  if (!recipient.active)
+    throw new Error(
+      `Recipient ${recipient.id} is inactive, must activate in Omise dashboard`
+    );
 
   // Do charge and transfer
   const charges = await omise.charges.create({
