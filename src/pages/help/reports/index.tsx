@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Header from "../../../components/Header";
 import SideTab from "../../../components/SideTab";
 import { api } from "../../../utils/api";
+import { ReportTicket } from "@prisma/client";
 
 const ReportHome = () => {
   return (
@@ -29,26 +30,28 @@ const ReportsTable = () => {
   const reports = data;
 
   return (
-    <div>
-      Report Table
+    <div className="min-h-screen">
+      My Report Table
       <ul>
         {isLoading && <>Loading</>}
-        {!isLoading && reports?.length === 0 && <>No Reports</>}
         {!isLoading &&
-          reports &&
-          reports.map((report) => {
-            return (
-              <Link
-                href={`/admin/report/${report.ticketId}`}
-                key={report.ticketId}
-              >
-                <li className="flex gap-1 border">
-                  <p>{report.title}</p>
-                  <p>{report.status}</p>
-                </li>
-              </Link>
-            );
-          })}
+          (reports?.length !== 0 ? (
+            reports?.map((report: any) => {
+              return (
+                <Link
+                  href={`/help/reports/${report.ticketId}`}
+                  key={report.ticketId}
+                >
+                  <li className="flex gap-1 border">
+                    <p>{report.title}</p>
+                    <p>{report.status}</p>
+                  </li>
+                </Link>
+              );
+            })
+          ) : (
+            <>No Reports</>
+          ))}
       </ul>
     </div>
   );

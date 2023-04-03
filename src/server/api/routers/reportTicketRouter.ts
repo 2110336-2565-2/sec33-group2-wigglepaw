@@ -206,10 +206,15 @@ export const reportTicketRouter = createTRPCRouter({
           },
           select: {
             username: true,
+            imageUri: true,
           },
         });
 
-        return { ...reportTicket, username: reporter?.username };
+        return {
+          ...reportTicket,
+          username: reporter?.username,
+          imageUri: reporter?.imageUri,
+        };
       } catch (err) {
         throwErr(err);
       }

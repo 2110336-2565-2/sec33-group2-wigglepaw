@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Header from "../../../components/Header";
 import { api } from "../../../utils/api";
 import { ReportTicket } from "@prisma/client";
+import SideTab from "../../../components/SideTab";
 
 const ReportPage = () => {
   const router = useRouter();
@@ -54,64 +55,75 @@ const ReportPage = () => {
       pictureUri,
       reporterId,
       username,
+      imageUri,
     } = data;
 
     console.log(data);
 
     return (
-      <>
+      <div className="min-h-screen">
         <Header />
-        <div className="m-5">
-          <h1 className="text-[40px] text-[#213951]">Problem Report</h1>
-          <div className=" border border-[#a3bad1] p-5">
-            <div className="mb-6 flex">
-              <div id="title-and-text-wrapper" className="mr-6 flex-1">
-                {/* the report ticket id */}
-                <ReportFieldStyle2 label={"Report Id"} text={ticketId} />
+        <div className="flex min-h-screen">
+          <SideTab help />
+          <div className="content-with-sidetab my-5 max-w-[50rem] ">
+            <h1 className="text-[40px] text-[#213951]">Problem Report</h1>
+            <div className="border border-[#a3bad1] p-5">
+              <div className="mb-6 flex flex-col lg:flex-row ">
+                <div id="title-and-text-wrapper" className="mr-6">
+                  {/* the report ticket id */}
+                  <ReportFieldStyle2 label={"Report Id"} text={ticketId} />
 
-                {/* the report status */}
-                <ReportFieldStyle2 label={"Status"} text={status} />
+                  {/* the report status */}
+                  <ReportFieldStyle2 label={"Status"} text={status} />
 
-                {/* the reported user */}
-                <ReportFieldStyle1
-                  label={"User"}
-                  user={{ name: username, id: reporterId }}
-                />
-
-                {/* the reported date */}
-                <ReportFieldStyle2 label={"Date"} text={createdAt.toString()} />
-
-                {/* the report title */}
-                <ReportFieldStyle2 label={"Title"} text={title} />
-
-                {/* the report text */}
-                <ReportFieldStyle3 label={"Description"} text={description} />
-
-                {/* admin comments if any */}
-                {status !== "pending" && notes && (
-                  <ReportFieldStyle3 label={"Admin Comment"} text={notes} />
-                )}
-              </div>
-
-              <div id="image-upload-wrapper" className=" mr-4">
-                <p className="text-lg text-slate-700">Problem Screenshot</p>
-                <div className="relative flex h-48 w-48 justify-center rounded-sm border">
-                  <Image
-                    fill
-                    alt="preview-report-problem"
-                    className="object-cover"
-                    src={
-                      typeof pictureUri[0] === "string"
-                        ? pictureUri[0]
-                        : "/nomatch_saddog.png"
-                    }
+                  {/* the reported user */}
+                  <ReportFieldStyle1
+                    label={"User"}
+                    user={{
+                      name: username,
+                      id: reporterId,
+                      imageUri: imageUri,
+                    }}
                   />
+
+                  {/* the reported date */}
+                  <ReportFieldStyle2
+                    label={"Date"}
+                    text={createdAt.toString()}
+                  />
+
+                  {/* the report title */}
+                  <ReportFieldStyle2 label={"Title"} text={title} />
+
+                  {/* the report text */}
+                  <ReportFieldStyle3 label={"Description"} text={description} />
+
+                  {/* admin comments if any */}
+                  {status !== "pending" && notes && (
+                    <ReportFieldStyle3 label={"Admin Comment"} text={notes} />
+                  )}
+                </div>
+
+                <div id="image-upload-wrapper" className="mr-4">
+                  <p className="text-lg text-slate-700">Problem Screenshot</p>
+                  <div className="relative flex h-48 w-48 justify-center rounded-sm border">
+                    <Image
+                      fill
+                      alt="preview-report-problem"
+                      className="object-cover"
+                      src={
+                        typeof pictureUri[0] === "string"
+                          ? pictureUri[0]
+                          : "/nomatch_saddog.png"
+                      }
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 };
@@ -123,16 +135,15 @@ const ReportFieldStyle1 = ({ label, user }) => {
       <div className="flex flex-1">
         <div id="image wrapper">
           <Image
-            alt="sitter profile image"
-            src={"/nomatch_saddog.png"}
+            alt={"Profile Image"}
+            src={user.imageUri ?? "/profiledummy.png"}
             className="rounded-full border-2 border-[#213951cb]"
             width={45}
             height={45}
           />
         </div>
         <div className="ml-2 flex flex-1 flex-col">
-          <p className="text-slate-400">{user.name}</p>
-          <p className="text-slate-400">{user.id}</p>
+          <p className="text-slate-500">{user.name}</p>
         </div>
       </div>
     </div>
@@ -144,7 +155,7 @@ const ReportFieldStyle2 = ({ label, text }) => {
     <div className="mb-2 flex">
       <p className="w-28 text-lg  text-slate-700">{label}</p>
       <div className="flex flex-1 flex-col">
-        <div className="rounded-sm text-slate-400">{text}</div>
+        <div className="rounded-sm text-slate-500">{text}</div>
       </div>
     </div>
   );
@@ -155,7 +166,7 @@ const ReportFieldStyle3 = ({ label, text }) => {
     <div className="mb-2 flex">
       <p className="w-28 text-lg  text-slate-700">{label}</p>
       <div className="flex flex-1 flex-col">
-        <div className="rounded-sm border border-[#dbdbdb] px-1 py-1 text-slate-400">
+        <div className="rounded-sm border border-[#dbdbdb] px-1 py-1 text-slate-500">
           {text}
         </div>
       </div>
