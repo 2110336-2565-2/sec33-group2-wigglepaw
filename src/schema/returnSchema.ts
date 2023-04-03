@@ -52,6 +52,17 @@ abstract class InnerReturn {
     status: true,
     note: true,
   };
+  public static admin: object = {
+    userId: true,
+  };
+  public static approvalRequest: object = {
+    requestId: true,
+    petSitterId: true,
+    status: true,
+    adminId: true,
+    notes: true,
+    createdAt: true,
+  };
 }
 export abstract class Return {
   public static user: object = {
@@ -59,9 +70,11 @@ export abstract class Return {
   };
   public static petOwner: object = {
     ...InnerReturn.petOwner,
+    user: { select: InnerReturn.user },
   };
   public static petSitter: object = {
     ...InnerReturn.petSitter,
+    user: { select: InnerReturn.user },
     petHotel: { select: InnerReturn.petHotel },
     freelancePetSitter: { select: InnerReturn.freelancePetSitter },
   };
@@ -73,5 +86,14 @@ export abstract class Return {
     pet: { select: InnerReturn.pet },
     petOwner: { select: InnerReturn.petOwner },
     petSitter: { select: this.petSitter },
+  };
+  public static admin: object = {
+    ...InnerReturn.admin,
+    user: { select: InnerReturn.user },
+  };
+  public static approvalRequest: object = {
+    ...InnerReturn.approvalRequest,
+    petSitter: { select: this.petSitter },
+    latestStatusUpdateby: { select: this.admin },
   };
 }

@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import { Return } from "../../../schema/returnSchema";
 
 const NO_CERTIFICATION_RESPONSE =
   "The pet sitter hasn't assigned a certificate.";
@@ -54,9 +55,7 @@ export const approvalRequestRouter = createTRPCRouter({
           status: ApprovalRequestStatus.pending,
           notes: "",
         },
-        include: {
-          petSitter: true,
-        },
+        select: Return.approvalRequest,
       });
     }),
   deleteById: publicProcedure
@@ -69,6 +68,7 @@ export const approvalRequestRouter = createTRPCRouter({
       // Check if pet sitter exists
       return await ctx.prisma.approvalRequest.delete({
         where: { requestId: input.requestId },
+        select: Return.approvalRequest,
       });
     }),
   approve: publicProcedure
@@ -86,6 +86,7 @@ export const approvalRequestRouter = createTRPCRouter({
           status: ApprovalRequestStatus.approved,
           adminId: input.adminId,
         },
+        select: Return.approvalRequest,
       });
     }),
   decline: publicProcedure
@@ -103,6 +104,7 @@ export const approvalRequestRouter = createTRPCRouter({
           status: ApprovalRequestStatus.declined,
           adminId: input.adminId,
         },
+        select: Return.approvalRequest,
       });
     }),
   pend: publicProcedure
@@ -117,6 +119,7 @@ export const approvalRequestRouter = createTRPCRouter({
       return await ctx.prisma.approvalRequest.update({
         where: { requestId: input.requestId },
         data: { status: ApprovalRequestStatus.pending, adminId: input.adminId },
+        select: Return.approvalRequest,
       });
     }),
   updateNotes: publicProcedure
@@ -131,12 +134,15 @@ export const approvalRequestRouter = createTRPCRouter({
       return await ctx.prisma.approvalRequest.update({
         where: { requestId: input.requestId },
         data: { notes: input.notes },
+        select: Return.approvalRequest,
       });
     }),
 
   getAll: publicProcedure.query(async ({ ctx, input }) => {
     // Check if pet sitter exists
-    return await ctx.prisma.approvalRequest.findMany();
+    return await ctx.prisma.approvalRequest.findMany({
+      select: Return.approvalRequest,
+    });
   }),
   getPending: publicProcedure.query(async ({ ctx, input }) => {
     // Check if pet sitter exists
@@ -144,6 +150,7 @@ export const approvalRequestRouter = createTRPCRouter({
       where: {
         status: ApprovalRequestStatus.pending,
       },
+      select: Return.approvalRequest,
     });
   }),
   getDeclined: publicProcedure.query(async ({ ctx, input }) => {
@@ -152,6 +159,7 @@ export const approvalRequestRouter = createTRPCRouter({
       where: {
         status: ApprovalRequestStatus.declined,
       },
+      select: Return.approvalRequest,
     });
   }),
   getApproved: publicProcedure.query(async ({ ctx, input }) => {
@@ -160,6 +168,7 @@ export const approvalRequestRouter = createTRPCRouter({
       where: {
         status: ApprovalRequestStatus.approved,
       },
+      select: Return.approvalRequest,
     });
   }),
 });

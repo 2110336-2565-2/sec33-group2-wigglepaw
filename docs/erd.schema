@@ -257,4 +257,4 @@ Ref: ReportTicket.adminId > Admin.userId [delete: Cascade]
 
 Ref: ApprovalRequest.petSitterId > PetSitter.userId [delete: Cascade]
 
-Ref: ApprovalRequest.adminUserId > Admin.userId
+Ref: ApprovalRequest.adminId > Admin.userId

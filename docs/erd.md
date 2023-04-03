@@ -169,9 +169,9 @@ approved approved
   ApprovalRequest {
     String requestId PK 
     ApprovalRequestStatus status  
-    String adminId  "nullable"
     String notes  "nullable"
     DateTime createdAt  
+    String adminUserId  "nullable"
     }
   
     Account o{--|| User : "user"
