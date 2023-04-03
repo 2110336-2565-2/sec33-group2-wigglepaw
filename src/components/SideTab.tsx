@@ -22,12 +22,12 @@ export default function SideTab(props: SideTabProps) {
         {OpenSideTabButton()}
         {/* SIDE TAB */}
         <div
-          className={`fixed top-0 z-20 h-screen w-[219px] bg-[#E5D4C2] pt-[30%] sm:relative sm:z-0 sm:h-full ${
-            !openTab ? "max-sm:hidden" : ""
+          className={`fixed top-0 z-20 h-screen w-[219px] bg-[#E5D4C2] pt-[30%] md:relative md:z-0 md:h-full ${
+            !openTab ? "max-md:hidden" : ""
           }`}
         >
           {/* Close Button */}
-          <div className="top-50 absolute right-0 block sm:hidden">
+          <div className="top-50 absolute right-0 block md:hidden">
             <button
               className={`flex items-center justify-center`}
               onClick={() => {
@@ -100,12 +100,12 @@ export default function SideTab(props: SideTabProps) {
         {OpenSideTabButton()}
         {/* SIDE TAB */}
         <div
-          className={`fixed top-0 z-20 h-screen w-[219px] bg-[#B6B6B6] pt-[30%] sm:relative sm:z-0 sm:h-full ${
-            !openTab ? "max-sm:hidden" : ""
+          className={`fixed top-0 z-20 h-screen w-[219px] bg-[#B6B6B6] pt-[30%] md:relative md:z-0 md:h-full ${
+            !openTab ? "max-md:hidden" : ""
           }`}
         >
           {/* Close Button */}
-          <div className="top-50 absolute right-0 block sm:hidden">
+          <div className="top-50 absolute right-0 block md:hidden">
             <button
               className={`flex items-center justify-center`}
               onClick={() => {
@@ -149,12 +149,12 @@ export default function SideTab(props: SideTabProps) {
         {OpenSideTabButton()}
         {/* SIDE TAB */}
         <div
-          className={`fixed top-0 z-20 h-screen w-[219px] bg-[#B6B6B6] pt-[30%] sm:relative sm:z-0 sm:h-full ${
-            !openTab ? "max-sm:hidden" : ""
+          className={`fixed top-0 z-20 h-screen w-[219px] bg-[#B6B6B6] pt-[30%] md:relative md:z-0 md:h-full ${
+            !openTab ? "max-md:hidden" : ""
           }`}
         >
           {/* Close Button */}
-          <div className="top-50 absolute right-0 block sm:hidden">
+          <div className="top-50 absolute right-0 block md:hidden">
             <button
               className={`flex items-center justify-center`}
               onClick={() => {
@@ -211,7 +211,7 @@ export default function SideTab(props: SideTabProps) {
 
   function OpenSideTabButton() {
     return (
-      <div className="top-50 fixed left-0 z-10 block sm:hidden">
+      <div className="top-50 fixed left-0 z-10 block md:hidden">
         <button
           className={`flex items-center justify-center`}
           onClick={() => {
