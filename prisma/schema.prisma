@@ -76,7 +76,6 @@ model User {
     createdAt     DateTime       @default(now())
     salt          String
     messages      Message[] // Just to make prisma work
-    Admin         Admin[]
     Admin         Admin?
     ReportTicket  ReportTicket[]
 }

@@ -42,10 +42,10 @@ export default function Verification() {
 }
 // DATATABLE
 interface DataRow {
-  userId: string; //PetOwner
-  username: string;
-  imageUri: string | null | undefined;
-  fullName: string | null;
+  petOwnerId: string; //PetOwner
+  petOwnerUsername: string;
+  petOwnerImageUri: string | null | undefined;
+  petOwnerFullName: string | null;
   //hotelName: string | null;
   //type: "Freelance" | "Hotel";
   //certificationUri: string | null;
@@ -67,12 +67,13 @@ function Table() {
   const router = useRouter();
 
   // query
-  const users = api.user.getAllForProfile.useQuery();
-  const verifyPetSitters = api.petSitter.verifyMany.useMutation({
+  const review = api.review.getAllReport.useQuery();
+  //const users = api.user.getAllForProfile.useQuery();
+  /*const verifyPetSitters = api.petSitter.verifyMany.useMutation({
     async onSettled() {
       utils.user.getAllForProfile.invalidate();
     },
-  });
+  });*/
 
   // react hooks
   const [selectedRows, setSelectedRows] = useState<DataRow[]>([]);
@@ -84,67 +85,38 @@ function Table() {
   );
 
   // available data
-  const data: DataRow[] = users.data
-    ? users.data
-        .filter(
-          (user) =>
-            user &&
-            (user.userType === UserType.FreelancePetSitter ||
-              user.userType === UserType.PetHotel)
-        )
-        .map((petSitter) => ({
-          userId: petSitter.userId,
-          username: petSitter.username,
-          imageUri: petSitter.imageUri,
-          fullName:
-            petSitter.userType === UserType.FreelancePetSitter
-              ? `${petSitter.firstName} ${petSitter.lastName}`
-              : null,
-          hotelName:
-            petSitter.userType === UserType.PetHotel
-              ? petSitter.hotelName
-              : null,
-          type:
-            petSitter.userType === UserType.FreelancePetSitter
-              ? "Freelance"
-              : "Hotel",
-          certificationUri:
-            petSitter.userType === UserType.FreelancePetSitter ||
-            petSitter.userType === UserType.PetHotel
-              ? petSitter.certificationUri
-              : null,
-          lastUpdate: formatTime(new Date(Date.now() - 86400100)), // dummy
-          lastUpdateTime: Date.now() - 86400100, // dummy
-          status:
-            (petSitter.userType === UserType.FreelancePetSitter ||
-              petSitter.userType === UserType.PetHotel) &&
-            petSitter.verifyStatus
-              ? "Verified"
-              : "Pending",
-        }))
+  const data: DataRow[] = review.data
+    ? review.data.map((review) => ({
+        petOwnerId: review.petOwnerId,
+        petOwnerUsername: review.petOwner.user.username,
+        petOwnerImageUri: review.petOwner.user.imageUri,
+        petOwnerFullName: `${review.petOwner.firstName} ${review.petOwner.lastName}`,
+        title: review.rating,
+        hotelName:
+          petSitter.userType === UserType.PetHotel ? petSitter.hotelName : null,
+        type:
+          petSitter.userType === UserType.FreelancePetSitter
+            ? "Freelance"
+            : "Hotel",
+        certificationUri:
+          petSitter.userType === UserType.FreelancePetSitter ||
+          petSitter.userType === UserType.PetHotel
+            ? petSitter.certificationUri
+            : null,
+        lastUpdate: formatTime(new Date(Date.now() - 86400100)), // dummy
+        lastUpdateTime: Date.now() - 86400100, // dummy
+        status:
+          (petSitter.userType === UserType.FreelancePetSitter ||
+            petSitter.userType === UserType.PetHotel) &&
+          petSitter.verifyStatus
+            ? "Verified"
+            : "Pending",
+      }))
     : [];
 
   // filter data
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-
-  const filteredData = data.filter((row: DataRow) =>
-    // row.fullName &&
-    // row.fullName.toLowerCase().includes(filterText.toLowerCase())
-    filterText
-      .toLowerCase()
-      .split(/\s+/)
-      .every(
-        (word) =>
-          row.fullName?.toLowerCase().includes(word) ||
-          row.hotelName?.toLowerCase().includes(word) ||
-          row.username?.toLowerCase().includes(word) ||
-          row.type.toLowerCase().includes(word) ||
-          row.certificationUri?.toLowerCase().includes(word) ||
-          row.lastUpdate?.toLowerCase().includes(word) ||
-          row.status?.toLowerCase().includes(word)
-      )
-  );
 
   // filter component (subheader)
   const SubHeaderComponent = (

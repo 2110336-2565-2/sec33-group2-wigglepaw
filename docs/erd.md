@@ -10,13 +10,17 @@ rejected rejected
     
 
 
-        MessageType {
-            text text
-image image
         ReviewStatus {
             submitted submitted
 pending pending
 resolved resolved
+        }
+    
+
+
+        MessageType {
+            text text
+image image
         }
     
 
@@ -210,7 +214,6 @@ approved approved
     Message o|--|| MessageType : "enum:type"
     Message o{--|| User : "sender"
     Message o{--|o Chatroom : "Chatroom"
-    Admin o{--|| User : "user"
     Admin o|--|| User : "user"
     ReportTicket o{--|| User : "reporter"
     ReportTicket o{--|o Admin : "admin"

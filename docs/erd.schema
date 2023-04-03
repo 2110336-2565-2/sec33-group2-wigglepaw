@@ -53,7 +53,6 @@ Table User {
   createdAt DateTime [default: `now()`, not null]
   salt String [not null]
   messages Message [not null]
-  Admin Admin [not null]
   Admin Admin
   ReportTicket ReportTicket [not null]
 }
@@ -229,13 +228,15 @@ Enum BookingStatus {
   rejected
 }
 
-Enum MessageType {
-  text
-  image
 Enum ReviewStatus {
   submitted
   pending
   resolved
+}
+
+Enum MessageType {
+  text
+  image
 }
 
 Enum ReportTicketStatus {
@@ -283,7 +284,6 @@ Ref: Message.senderId > User.userId
 
 Ref: Message.chatroomId > Chatroom.chatroomId
 
-Ref: Admin.userId > User.userId [delete: Cascade]
 Ref: Admin.userId - User.userId [delete: Cascade]
 
 Ref: ReportTicket.reporterId > User.userId [delete: Cascade]
