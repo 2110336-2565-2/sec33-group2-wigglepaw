@@ -11,11 +11,13 @@ import type { ReportFormDataT } from "../../../schema/schema";
 import { api } from "../../../utils/api";
 import { useAddNewReport, useAddNewReportTicket } from "../../../utils/upload";
 import ResponsePopup from "../../../components/ResponsePopup";
+import router from "next/router";
 
 type ReportFormDataT = z.infer<typeof ReportFormDataT>;
 
 const NewReportPage = () => {
   const [submitReportSuccess, setSubmitReportSuccess] = useState(false);
+  const [ticketId, setTicketId] = useState("");
 
   // define the form
   const {
@@ -72,9 +74,10 @@ const NewReportPage = () => {
         data.image
       );
       console.log("report created success");
-      console.log(response);
+      setTicketId(response.reportTicket.ticketId);
       setSubmitReportSuccess(true);
       setTimeout(function () {
+        router.push(`help/reports/${ticketId}`);
         setSubmitReportSuccess(false);
       }, 1500);
     } catch (err) {
@@ -153,7 +156,7 @@ const NewReportPage = () => {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="rounded-sm border-b-2 border-[#35924e] bg-[#3FBD61] py-2 px-4 text-white hover:border-[#20512d] hover:bg-[#35924e]"
+                  className="rounded-sm border-b-2 border-[#35924e] bg-[#3FBD61] px-4 py-2 text-white hover:border-[#20512d] hover:bg-[#35924e]"
                 >
                   Submit
                 </button>
@@ -163,7 +166,9 @@ const NewReportPage = () => {
           <ResponsePopup
             show={submitReportSuccess}
             setShow={setSubmitReportSuccess}
-            doBeforeClose={() => {}}
+            doBeforeClose={() => {
+              router.push(`help/reports/${ticketId}`);
+            }}
             panelCSS={"bg-green-400 text-green-700"}
           >
             <div className="font-bold">Report Submitted Successful!</div>
