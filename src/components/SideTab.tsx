@@ -15,7 +15,7 @@ type SideTabProps = {
 export default function SideTab(props: SideTabProps) {
   const [openTab, setOpenTab] = React.useState(false);
 
-  if (props.booking !== undefined) {
+  if (props.booking) {
     return (
       <div>
         {/* TAB BUTTON */}
@@ -93,7 +93,7 @@ export default function SideTab(props: SideTabProps) {
         </div>
       </div>
     );
-  } else if (props.help !== undefined) {
+  } else if (props.help) {
     return (
       <div>
         {/* TAB BUTTON */}
@@ -142,7 +142,7 @@ export default function SideTab(props: SideTabProps) {
         </div>
       </div>
     );
-  } else if (props.admin !== undefined) {
+  } else if (props.admin) {
     return (
       <div>
         {/* TAB BUTTON */}
@@ -206,7 +206,7 @@ export default function SideTab(props: SideTabProps) {
       </div>
     );
   } else {
-    return <></>;
+    return <div></div>;
   }
 
   function OpenSideTabButton() {
