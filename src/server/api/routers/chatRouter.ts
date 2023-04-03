@@ -14,27 +14,27 @@ import { ChatRoomProcedureLogic } from "../logic/procedure/chatProcedureLogic";
 import { BlockProcedureLogic } from "../logic/procedure/blockProcedureLogic";
 
 export const chatRouter = createTRPCRouter({
-  createMessage: publicProcedure
-    .input(messageFields)
-    .mutation(async ({ ctx, input }) => {
-      const chatroom = await ChatRoomProcedureLogic.getById(
-        ctx.prisma,
-        input.chatroomId
-      );
-      if (
-        chatroom === null ||
-        (await BlockProcedureLogic.isChatRoomBlocked(ctx.prisma, chatroom))
-      )
-        return null;
-      const newmessage = await ctx.prisma.message.create({
-        data: {
-          senderId: input.senderId,
-          chatroomId: input.chatroomId,
-          data: input.data,
-        },
-      });
-      return newmessage;
-    }),
+  // createMessage: publicProcedure
+  //   .input(messageFields)
+  //   .mutation(async ({ ctx, input }) => {
+  //     const chatroom = await ChatRoomProcedureLogic.getById(
+  //       ctx.prisma,
+  //       input.chatroomId
+  //     );
+  //     if (
+  //       chatroom === null ||
+  //       (await BlockProcedureLogic.isChatRoomBlocked(ctx.prisma, chatroom))
+  //     )
+  //       return null;
+  //     const newmessage = await ctx.prisma.message.create({
+  //       data: {
+  //         senderId: input.senderId,
+  //         chatroomId: input.chatroomId,
+  //         data: input.data,
+  //       },
+  //     });
+  //     return newmessage;
+  //   }),
 
   checkChatroomid: publicProcedure
     .input(z.object({ petSitterid: z.string(), petOwnerid: z.string() }))
