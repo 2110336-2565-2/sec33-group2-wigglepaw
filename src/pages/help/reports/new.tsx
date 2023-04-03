@@ -10,15 +10,19 @@ import SideTab from "../../../components/SideTab";
 import type { ReportFormDataT } from "../../../schema/schema";
 import { api } from "../../../utils/api";
 import { useAddNewReport, useAddNewReportTicket } from "../../../utils/upload";
+import ResponsePopup from "../../../components/ResponsePopup";
 
 type ReportFormDataT = z.infer<typeof ReportFormDataT>;
 
 const NewReportPage = () => {
+  const [submitReportSuccess, setSubmitReportSuccess] = useState(false);
+
   // define the form
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm<ReportFormDataT>();
 
@@ -59,7 +63,7 @@ const NewReportPage = () => {
         throw new Error("not logged in");
       }
 
-      await createReportTicket.mutateAsync(
+      const response = await createReportTicket.mutateAsync(
         user.id,
         {
           title: data.title,
@@ -67,8 +71,12 @@ const NewReportPage = () => {
         },
         data.image
       );
-
       console.log("report created success");
+      console.log(response);
+      setSubmitReportSuccess(true);
+      setTimeout(function () {
+        setSubmitReportSuccess(false);
+      }, 1500);
     } catch (err) {
       console.log("error: ", err);
     }
@@ -105,8 +113,8 @@ const NewReportPage = () => {
                       {errors.description && (
                         <p className="text-red-500">This field is required</p>
                       )}
-                      <input
-                        className="h-60 rounded-sm border border-slate-400 px-2 py-2 text-start"
+                      <textarea
+                        className="h-40 max-h-80 min-h-[3rem] rounded-sm border border-slate-400 p-2 text-start"
                         {...register("description", { required: true })}
                         placeholder="What do you want to report ?"
                       />
@@ -152,6 +160,14 @@ const NewReportPage = () => {
               </div>
             </div>
           </form>
+          <ResponsePopup
+            show={submitReportSuccess}
+            setShow={setSubmitReportSuccess}
+            doBeforeClose={() => {}}
+            panelCSS={"bg-green-400 text-green-700"}
+          >
+            <div className="font-bold">Report Submitted Successful!</div>
+          </ResponsePopup>
         </div>
       </div>
     </div>

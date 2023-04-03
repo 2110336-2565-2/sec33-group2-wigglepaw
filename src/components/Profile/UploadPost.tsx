@@ -62,16 +62,16 @@ const UploadPost = (props: UploadPostProps) => {
         },
         image
       );
+      setIsPosting(false);
+      reset();
+      setIsUploadSuccess(true);
+      setTimeout(function () {
+        setIsUploadSuccess(false);
+      }, 1500);
     } catch (e) {
       alert(e);
       return;
     }
-    setIsPosting(false);
-    reset();
-    setIsUploadSuccess(true);
-    setTimeout(function () {
-      setIsUploadSuccess(false);
-    }, 1500);
   };
 
   //Images

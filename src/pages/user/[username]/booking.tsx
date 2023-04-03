@@ -82,19 +82,23 @@ const booking: NextPage = () => {
         return;
       }
 
-      await requestBooking.mutateAsync({
-        petSitterId: petSitterData?.userId,
-        startDate: new Date(data.startDate),
-        endDate: new Date(data.endDate),
-        petIdList: petIdList,
-        totalPrice: data.totalPrice,
-        note: data.note,
-      });
-      setIsBookSuccess(true);
-      setTimeout(function () {
-        setIsBookSuccess(false);
-        router.push("/schedule");
-      }, 1500);
+      try {
+        await requestBooking.mutateAsync({
+          petSitterId: petSitterData?.userId,
+          startDate: new Date(data.startDate),
+          endDate: new Date(data.endDate),
+          petIdList: petIdList,
+          totalPrice: data.totalPrice,
+          note: data.note,
+        });
+        setIsBookSuccess(true);
+        setTimeout(function () {
+          setIsBookSuccess(false);
+          router.push("/schedule");
+        }, 1500);
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
