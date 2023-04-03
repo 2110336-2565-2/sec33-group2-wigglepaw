@@ -47,9 +47,10 @@ const ReviewBox = ({
           <div className="m-1">
             <button
               className="rounded-md border-4 bg-red-500 p-1 font-bold"
-              onClick={async () =>
-                deleteMutation.mutateAsync({ reviewId: reviewId })
-              }
+              onClick={async () => {
+                await deleteMutation.mutateAsync({ reviewId: reviewId });
+                window.location.reload();
+              }}
             >
               Delete
             </button>
