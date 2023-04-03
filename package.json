@@ -58,6 +58,7 @@
     "react": "18.2.0",
     "react-async-hook": "^4.0.0",
     "react-calendar": "^4.1.0",
+    "react-data-table-component": "^7.5.3",
     "react-dom": "18.2.0",
     "react-grid-gallery": "^1.0.0",
     "react-hook-form": "^7.43.8",
@@ -66,7 +67,13 @@
     "react-intersection-observer": "^9.4.3",
     "react-range": "^1.8.14",
     "react-simple-star-rating": "^5.1.7",
+
     "react-time-ago": "^7.2.1",
+
+    "socket.io": "^4.6.1",
+    "socket.io-client": "^4.6.1",
+    "styled-components": "^5.3.9",
+
     "superjson": "1.9.1",
     "trpc-panel": "^1.2.8",
     "trpc-playground": "^1.0.4",

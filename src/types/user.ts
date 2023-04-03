@@ -51,6 +51,7 @@ export type UserProfile = {
   phoneNumber: string | null;
   address: string | null;
   imageUri: string | null;
+  createdAt: Date;
 };
 
 export type UserProfileSubType =
@@ -75,6 +76,8 @@ export type PetSitterProfileType = {
   petTypes: string[];
   verifyStatus: boolean;
   certificationUri: string | null;
+  startPrice: number | null;
+  endPrice: number | null;
 };
 
 export type FreelancePetSitterProfileType = {

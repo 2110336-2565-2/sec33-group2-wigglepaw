@@ -107,6 +107,12 @@
 .fc-widget-header {
 }
 
+/* Link (currently) used in admin page */
+.link {
+  color: #004cff;
+  text-decoration: underline;
+}
+
 html {
   font-size: 16px;
   /* font-family: 'Ubuntu', sans-serif; */

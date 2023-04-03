@@ -140,6 +140,20 @@ export const reviewRouter = createTRPCRouter({
           { status: ReviewStatus.pending },
         ],
       },
+      include: {
+        petOwner: {
+          include: {
+            user: true,
+          },
+        },
+        petSitter: {
+          include: {
+            user: true,
+            freelancePetSitter: true,
+            petHotel: true,
+          },
+        },
+      },
     });
   }),
 });

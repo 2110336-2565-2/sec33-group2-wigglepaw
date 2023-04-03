@@ -13,6 +13,7 @@ const Header = (props: any) => {
   const isLoggedIn = status === "authenticated";
   const logout = () => signOut();
   const username = session?.user?.username;
+  const fixed = typeof props.fixed !== "undefined";
 
   const router = useRouter();
   const asPath = router.asPath;
@@ -30,9 +31,10 @@ const Header = (props: any) => {
 
   return (
     <span
-      className={
-        "flex h-fit w-screen flex-col bg-wp-blue md:pr-2 " + props.className
-      }
+      className={`z-10 flex h-fit w-screen flex-col bg-wp-blue md:pr-2 ${
+        fixed ? "sticky inset-auto top-0" : ""
+      } ${props.className}
+      `}
     >
       <nav className="flex w-full justify-between">
         <Link href={"/"} className="flex shrink-0">
@@ -159,7 +161,7 @@ const Header = (props: any) => {
                     ></Image>
                   </Menu.Button>
                 </div>
-                <Menu.Items className="absolute top-full right-0 z-20 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <Menu.Items className="absolute right-0 top-full z-20 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div className="px-1 py-[0.1rem]">
                     <Menu.Item>
                       <Link
@@ -243,7 +245,7 @@ const Header = (props: any) => {
                   </Menu.Button>
                 )}
 
-                <Menu.Items className="absolute top-full right-0 z-20 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <Menu.Items className="absolute right-0 top-full z-20 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white p-[0.2rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   {!isLoggedIn && (
                     <>
                       <div className="px-1 py-[0.1rem]">
