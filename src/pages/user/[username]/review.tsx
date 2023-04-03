@@ -129,8 +129,8 @@ const ReviewPage: NextPage = () => {
     <div className="min-h-screen">
       <Header></Header>
       <div className="flex min-h-[90vh]">
-        <SideTab user={petSitterData} isPetOwner={isPetOwner} />
-        <div className="mx-auto mt-4 flex w-3/5 min-w-fit flex-col items-center text-xl">
+        <SideTab booking user={petSitterData} isPetOwner={isPetOwner} />
+        <div className="content-with-sidetab mt-4 flex w-3/5 min-w-fit flex-col items-center text-xl">
           <ReviewImage img={img ?? ""} size={6}></ReviewImage>
           <h1 className="font-bold">{petSitterData?.username}</h1>
           <div className="box-border flex flex-col items-center rounded-md border-4 bg-wp-light-blue p-4">
