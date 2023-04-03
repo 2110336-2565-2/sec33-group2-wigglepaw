@@ -194,7 +194,6 @@ Table ApprovalRequest {
   latestStatusUpdateby Admin
   notes String
   createdAt DateTime [default: `now()`, not null]
-  adminUserId String
 }
 
 Table Chatroom {
@@ -286,11 +285,3 @@ Ref: ReportTicket.adminId > Admin.userId [delete: Cascade]
 Ref: ApprovalRequest.petSitterId > PetSitter.userId [delete: Cascade]
 
 Ref: ApprovalRequest.adminUserId > Admin.userId
-
-Ref: Chatroom.petOwnerId > PetOwner.userId
-
-Ref: Chatroom.petSitterId > PetSitter.userId
-
-Ref: Message.senderId > User.userId
-
-Ref: Message.chatroomId > Chatroom.chatroomId
