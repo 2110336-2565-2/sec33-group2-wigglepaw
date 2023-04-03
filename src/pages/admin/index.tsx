@@ -1,65 +1,85 @@
+import { ReportTicket } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import type { FunctionComponent } from "react";
 import Header from "../../components/Header";
+import SideTab from "../../components/SideTab";
+import { UserType } from "../../types/user";
+import { api } from "../../utils/api";
 
 const Dashboard = () => {
+  const { data: session } = useSession();
+  // convert all the queries into a unified format for TableDisplay Component
+
+  // query the verification
+  const { data: queryVerifications, isLoading: verificationsIsLoading } =
+    api.user.getAllForProfile.useQuery();
+  const verifications = queryVerifications?.slice(0, 5).map((obj) => {
+    return {
+      firstField:
+        obj.userType === UserType.FreelancePetSitter
+          ? `${obj.firstName} ${obj.lastName}`
+          : obj.userType === UserType.PetHotel
+          ? obj.hotelName
+          : "No name",
+      id: obj.userId,
+      status:
+        (obj.userType === UserType.FreelancePetSitter ||
+          obj.userType === UserType.PetHotel) &&
+        obj.verifyStatus
+          ? "Verified"
+          : "Pending",
+    };
+  });
+
+  // query the reportTickets
+  const { data: queryReports, isLoading: reportIsLoading } =
+    api.reportTicket.getAll.useQuery();
+  const reports = queryReports?.slice(0, 5).map((obj) => {
+    return {
+      firstField: obj.title,
+      id: obj.ticketId,
+      status: obj.status,
+    };
+  });
+
+  // query the reviews
+  const { data: queryReviews, isLoading: reviewsIsLoading } =
+    api.review.getAllReport.useQuery();
+  const reviews = queryReviews?.slice(0, 5).map((obj) => {
+    return {
+      firstField: obj.text,
+      id: obj.reviewId,
+      status: obj.status,
+    };
+  });
+
   return (
     <div className="min-h-screen">
       <Header></Header>
-      <div id="" className="my-10 flex flex-col items-center">
-        <div className="w-[85vw] max-w-4xl">
-          <h1 className="text-[50px] font-extrabold text-[#173554]">
-            Help Center
-          </h1>
-
-          <p className="mb-6 text-[#6f768c]">
-            Unhappy about something ? You&apos;ve come to the right place
-          </p>
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-            <HelpMenuCard
-              linkURL={"/help/reports/new"}
-              iconUrl={"/help_pencil.png"}
-              bgColor={"rgb(142, 108, 240)"}
-              borderColor={"#5b21b6"}
-              headerText={"New Report"}
-              subText={[
-                "Found something off ?",
-                "Submit a new problem report to our admins, we'll get back to you in less than a week",
-              ]}
+      <div className="flex gap-4">
+        <SideTab admin />
+        <div id="main-wrapper" className="my-5 flex flex-col gap-5 px-6">
+          <h1 className="text-3xl font-semibold md:text-4xl">Dashboard</h1>
+          <TableDisplay
+            linkTo={"/admin/verification"}
+            dataRows={verifications}
+            isLoading={verificationsIsLoading}
+            tableTitle={"Pet Sitter Verification"}
+          />
+          <div id="review-report-flex-wrapper" className="flex gap-4">
+            <TableDisplay
+              linkTo={"/admin/review"}
+              dataRows={reviews}
+              isLoading={reviewsIsLoading}
+              tableTitle={"Review Moderation"}
             />
-            <HelpMenuCard
-              linkURL={"/help/reports"}
-              iconUrl={"/help_barchart.png"}
-              bgColor={"#D95BD1"}
-              borderColor={"#c026d3"}
-              headerText={"View My Reports"}
-              subText={[
-                "So you’ve submitted a report earlier ?",
-                "Now it’s time to see how our admins response to you. Make sure to read them la.",
-              ]}
-            />
-            <HelpMenuCard
-              linkURL={"/help/contactAdmin"}
-              iconUrl={"/help_people.png"}
-              bgColor={"#F07F6C"}
-              borderColor={"#ea580c"}
-              headerText={"Contact Admin"}
-              subText={[
-                "I don’t know what this feature does.",
-                "But let’s keep it here for now. Tell us if you know something we don’t.",
-              ]}
-            />
-            <HelpMenuCard
-              linkURL={"/help/faq"}
-              iconUrl={"/help_book.png"}
-              bgColor={"#eab308"}
-              borderColor={"#a16207"}
-              headerText={"FAQ"}
-              subText={[
-                "Browse through the answers to some frequently asked questions.",
-                "Currently, we have zero users and zero questions though.",
-              ]}
+            <TableDisplay
+              linkTo={"/admin/report"}
+              dataRows={reports}
+              isLoading={reportIsLoading}
+              tableTitle={"User Reports"}
             />
           </div>
         </div>
@@ -68,49 +88,66 @@ const Dashboard = () => {
   );
 };
 
-interface HelpMenuCardProps {
-  iconUrl: string;
-  bgColor: string;
-  headerText: string;
-  subText: string[];
-  linkURL: string;
-  borderColor: string;
-}
-
-const HelpMenuCard: FunctionComponent<HelpMenuCardProps> = ({
-  iconUrl,
-  bgColor,
-  headerText,
-  subText,
-  linkURL,
-  borderColor,
-}) => {
+const TableDisplay = ({ linkTo, dataRows, isLoading, tableTitle }) => {
   return (
-    <Link
-      className="flex h-min min-h-[13rem] flex-col rounded-lg border-red-500 p-5 text-white opacity-90 duration-100 hover:scale-[1.01] hover:opacity-100 hover:shadow-lg hover:shadow-slate-400"
-      style={{
-        background: bgColor,
+    <div className="rounded-md border p-4">
+      <Link href={linkTo}>
+        <p className="mb-4 text-xl font-bold hover:underline">{tableTitle}</p>
+      </Link>
+      <ul className="">
+        {isLoading && <>Loading</>}
+        {!isLoading &&
+          (dataRows?.length !== 0 ? (
+            dataRows?.map(
+              (dataRow: any /* FIXME: fix this to generic type */, idx) => {
+                let liClassName =
+                  "flex w-full items-center justify-between px-3 py-0.5 hover:bg-slate-300 duration-150 ";
+                if (idx === 0) {
+                  liClassName += "rounded-t-md border-t border-l border-r ";
+                } else if (idx === dataRows?.length - 1) {
+                  liClassName += "rounded-b-md border-b border-l border-r ";
+                } else {
+                  liClassName += "border ";
+                }
 
-        borderStyle: "solid",
-        borderColor: borderColor,
-        borderWidth: "2px",
-      }}
-      href={linkURL}
-    >
-      <div id="" className="mb-2 flex justify-between">
-        <p className="text-xl font-bold drop-shadow-lg md:text-3xl">
-          {headerText}
-        </p>
-        <Image src={iconUrl} width={45} height={45} alt={iconUrl}></Image>
-      </div>
-
-      <div id="" className="my-4 flex flex-col gap-2 text-[1rem] font-light">
-        {subText.map((text, idx) => (
-          <p key={idx}>{text}</p>
-        ))}
-      </div>
-    </Link>
+                if (idx % 2 == 1) {
+                  liClassName += "bg-[#f0f0f0] ";
+                }
+                return (
+                  <Link
+                    href={`${linkTo}/${dataRow.id}`}
+                    key={dataRow.id}
+                    className={liClassName}
+                  >
+                    <p className="float-left h-full ">{dataRow.firstField}</p>
+                    <StatusDisplay status={dataRow.status} />
+                  </Link>
+                );
+              }
+            )
+          ) : (
+            <>No Data</>
+          ))}
+      </ul>
+    </div>
   );
+};
+
+const StatusDisplay = (props: any) => {
+  const classname =
+    "text-white rounded-lg p-1 w-[6.5rem] whitespace-nowrap text-center";
+  switch (props.status) {
+    case "pending":
+      return <p className={classname + " bg-yellow-400"}>Pending</p>;
+    case "acked":
+      return <p className={classname + " bg-orange-400"}>In Progress</p>;
+    case "canceled":
+      return <p className={classname + " bg-red-400"}>Canceled</p>;
+    case "resolved":
+      return <p className={classname + " bg-green-400"}>Resolved</p>;
+    default:
+      return <p className={classname + "bg-gray-600"}>{props.status}</p>;
+  }
 };
 
 export default Dashboard;
