@@ -66,15 +66,16 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen">
       <Header></Header>
-      <div className="flex gap-4">
+      <div className="flex h-screen gap-4">
         <SideTab admin />
-        <div id="main-wrapper" className="my-5 flex flex-col gap-5 px-6">
+        <div id="main-wrapper" className="my-5 flex w-full flex-col gap-5 px-6">
           <h1 className="text-3xl font-semibold md:text-4xl">Dashboard</h1>
           <TableDisplay
             linkTo={"/admin/verification"}
             dataRows={verifications}
             isLoading={verificationsIsLoading}
             tableTitle={"Pet Sitter Verification"}
+            fill={true}
           />
           <div id="review-report-flex-wrapper" className="flex gap-4">
             <TableDisplay
@@ -82,12 +83,14 @@ const Dashboard = () => {
               dataRows={reviews}
               isLoading={reviewsIsLoading}
               tableTitle={"Review Moderation"}
+              fill={false}
             />
             <TableDisplay
               linkTo={"/admin/report"}
               dataRows={reports}
               isLoading={reportIsLoading}
               tableTitle={"User Reports"}
+              fill={false}
             />
           </div>
         </div>
@@ -96,9 +99,15 @@ const Dashboard = () => {
   );
 };
 
-const TableDisplay = ({ linkTo, dataRows, isLoading, tableTitle }) => {
+const TableDisplay = ({ linkTo, dataRows, isLoading, tableTitle, fill }) => {
+  let wrapperClassName = "rounded-md border p-4 shadow-md ";
+  if (fill) {
+    wrapperClassName += "w-full ";
+  } else {
+    wrapperClassName += "flex-grow ";
+  }
   return (
-    <div className="rounded-md border p-4 shadow-md">
+    <div className={wrapperClassName}>
       <Link href={linkTo}>
         <p className="mb-4 text-xl font-bold hover:underline">{tableTitle}</p>
       </Link>
@@ -106,33 +115,41 @@ const TableDisplay = ({ linkTo, dataRows, isLoading, tableTitle }) => {
         {isLoading && <>Loading</>}
         {!isLoading &&
           (dataRows?.length !== 0 ? (
-            dataRows?.map(
-              (dataRow: any /* FIXME: fix this to generic type */, idx) => {
-                let liClassName =
-                  "flex w-full items-center justify-between px-3 py-0.5 hover:bg-slate-300 duration-150 ";
-                if (idx === 0) {
-                  liClassName += "rounded-t-md border-t border-l border-r ";
-                } else if (idx === dataRows?.length - 1) {
-                  liClassName += "rounded-b-md border-b border-l border-r ";
-                } else {
-                  liClassName += "border ";
-                }
+            <>
+              {dataRows?.map(
+                (dataRow: any /* FIXME: fix this to generic type */, idx) => {
+                  let liClassName =
+                    "flex w-full items-center justify-between px-3 py-0.5 hover:bg-slate-300 duration-150 ";
+                  if (idx === 0) {
+                    liClassName += "rounded-t-md border-t border-l border-r ";
+                  } else if (idx === dataRows?.length - 1) {
+                    liClassName += "rounded-b-md border-b border-l border-r ";
+                  } else {
+                    liClassName += "border ";
+                  }
 
-                if (idx % 2 == 1) {
-                  liClassName += "bg-[#f0f0f0] ";
+                  if (idx % 2 == 1) {
+                    liClassName += "bg-[#f0f0f0] ";
+                  }
+                  return (
+                    <Link
+                      href={`${linkTo}/${dataRow.id}`}
+                      key={dataRow.id}
+                      className={liClassName}
+                    >
+                      <p className="float-left h-full ">{dataRow.firstField}</p>
+                      <StatusDisplay status={dataRow.status} />
+                    </Link>
+                  );
                 }
-                return (
-                  <Link
-                    href={`${linkTo}/${dataRow.id}`}
-                    key={dataRow.id}
-                    className={liClassName}
-                  >
-                    <p className="float-left h-full ">{dataRow.firstField}</p>
-                    <StatusDisplay status={dataRow.status} />
-                  </Link>
-                );
-              }
-            )
+              )}
+              <Link
+                href={linkTo}
+                className="ml-1 mt-2 inline-block text-[#B3B3B3] hover:text-[#7f7f7f]"
+              >
+                show more ...
+              </Link>
+            </>
           ) : (
             <>No Data</>
           ))}
@@ -143,18 +160,18 @@ const TableDisplay = ({ linkTo, dataRows, isLoading, tableTitle }) => {
 
 const StatusDisplay = (props: any) => {
   const classname =
-    "text-white rounded-lg p-1 w-[6.5rem] whitespace-nowrap text-center";
+    "text-white rounded-lg p-0.5 w-[6.5rem] whitespace-nowrap text-center";
   switch (props.status) {
     case "pending":
-      return <p className={classname + " bg-yellow-400"}>Pending</p>;
+      return <p className={classname + " bg-datatable_pending"}>Pending</p>;
     case "acked":
-      return <p className={classname + " bg-orange-400"}>In Progress</p>;
+      return <p className={classname + " bg-datatable_acked"}>In Progress</p>;
     case "canceled":
-      return <p className={classname + " bg-red-400"}>Canceled</p>;
+      return <p className={classname + " bg-datatable_rejected"}>Canceled</p>;
     case "resolved":
-      return <p className={classname + " bg-green-400"}>Resolved</p>;
+      return <p className={classname + " bg-datatable_resolved"}>Resolved</p>;
     case "verified":
-      return <p className={classname + " bg-green-400"}>Verified</p>;
+      return <p className={classname + " bg-datatable_resolved"}>Verified</p>;
     default:
       return <p className={classname + "bg-gray-600"}>{props.status}</p>;
   }

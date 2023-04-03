@@ -21,6 +21,11 @@ module.exports = {
         good: "#40be62",
         neutral: "#ee9500",
         bad: "#EA4E2C",
+        // for admin, help centers
+        datatable_pending: "#EE9500",
+        datatable_acked: "#43A4DA",
+        datatable_resolved: "#3FBD61",
+        datatable_rejected: "#BDBDBD", // gray to not distract, save red for noti
       },
       fontFamily: {
         sans: ["Ubuntu", "sans-serif"],
