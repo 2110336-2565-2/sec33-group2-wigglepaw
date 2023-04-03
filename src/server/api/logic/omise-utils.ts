@@ -10,7 +10,7 @@ import { env } from "../../../env/server.mjs";
  *
  * @see https://www.omise.co/recipients-api#create
  */
-interface ICreateBackAccount {
+interface ICreateBankAccount {
   name: string;
   number: number;
   bank_code?: string;
@@ -24,7 +24,7 @@ interface ICreateBackAccount {
  *
  */
 type ActualRecipientsIRequest = Omit<Recipients.IRequest, "back_account"> & {
-  bank_account: ICreateBackAccount;
+  bank_account: ICreateBankAccount;
 };
 
 export async function createRecipients(
