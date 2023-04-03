@@ -10,6 +10,8 @@ const NO_CERTIFICATION_RESPONSE =
 
 const NO_PETSITTER_RESPONSE = "Pet sitter id does not exist.";
 
+const ALREADY_REQUESTED = "This pet sitter already submitted a request.";
+
 export const approvalRequestRouter = createTRPCRouter({
   create: publicProcedure
     .input(
@@ -33,7 +35,19 @@ export const approvalRequestRouter = createTRPCRouter({
           code: "NOT_FOUND",
           message: NO_CERTIFICATION_RESPONSE,
         });
-
+      // Check if pet sitter already submitted request to the system
+      const request = await ctx.prisma.approvalRequest.findUnique({
+        where: {
+          petSitterId: input.petSitterId,
+        },
+      });
+      // If request already in database
+      if (request != null) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: ALREADY_REQUESTED,
+        });
+      }
       return await ctx.prisma.approvalRequest.create({
         data: {
           petSitterId: input.petSitterId,

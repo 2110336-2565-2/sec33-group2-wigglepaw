@@ -184,7 +184,7 @@ Table ReportTicket {
 
 Table ApprovalRequest {
   requestId String [pk]
-  petSitterId String [not null]
+  petSitterId String [unique, not null]
   petSitter PetSitter [not null]
   status ApprovalRequestStatus [not null]
   adminId String
