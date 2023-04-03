@@ -1,19 +1,29 @@
-import { faMessage, faPencil } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleLeft,
+  faMessage,
+  faPencil,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useContext } from "react";
 import io from "socket.io-client";
 
 import { api } from "../../utils/api";
+import { list } from "postcss";
+import { ModeContext } from "../../pages/chat";
+import BlockButton from "./BlockButton";
+import MuteButton from "./MuteButton";
 
 let socket;
 type ChatMessage = {
   data: string;
   sender: object;
   createdAt: Date;
+  read: boolean;
 };
 
 type ChatMainProps = {
@@ -25,9 +35,13 @@ type ChatMainProps = {
 export const Chatmain = (props: ChatMainProps) => {
   const { data: session } = useSession();
 
+  const { mode, togglemode } = useContext(ModeContext);
+
   const [listmsg, setListmsg] = useState([]);
 
   const [sessionReady, setSessionReady] = useState(false);
+
+  const [lastmsgSender, setLastmsgSender] = useState(false);
 
   const messageEndRef = useRef(null);
 
@@ -38,7 +52,7 @@ export const Chatmain = (props: ChatMainProps) => {
     if (props.chatroomid === "") {
     } else {
       void getAllmessage.mutateAsync(
-        { chatroomid: props.chatroomid },
+        { chatroomid: props.chatroomid, otheruser: props.toid },
         {
           onSuccess: (data) => {
             setListmsg(data);
@@ -65,6 +79,7 @@ export const Chatmain = (props: ChatMainProps) => {
         data: msg1,
         sender: { username: props.username || "Unknown" },
         createdAt: new Date(),
+        read: true,
       };
 
       setListmsg((oldArray) => [...oldArray, obj127]);
@@ -119,6 +134,7 @@ export const Chatmain = (props: ChatMainProps) => {
       data: text,
       sender: { username: session?.user?.username },
       createdAt: new Date(),
+      read: false,
     };
 
     setListmsg((oldArray) => [...oldArray, obj127]);
@@ -128,18 +144,46 @@ export const Chatmain = (props: ChatMainProps) => {
   };
 
   return (
-    <div className="relative h-full w-full ">
-      <div className=" flex w-full items-center border-b-2 border-[#F0A21F] py-1">
-        <span className=" px-4 py-2">{props.username}</span>
+    <div
+      className={
+        mode
+          ? "relative h-full w-full md:w-full "
+          : "relative h-full w-0 md:w-full"
+      }
+    >
+      <div className="border-wp-orange flex w-full items-center border-b-2 py-1">
+        <div className="ml-4 hidden w-5 md:visible" onClick={togglemode}>
+          <FontAwesomeIcon className="" size="xl" icon={faAngleLeft} />
+        </div>
+        <span className="flex-1 px-4 py-2">{props.username}</span>
+
+        {/* Block button */}
+        {props.chatroomid && (
+          <>
+            <div className="px-1">
+              <MuteButton></MuteButton>
+            </div>
+            <div className="px-1">
+              <BlockButton></BlockButton>
+            </div>
+          </>
+        )}
       </div>
 
       <div className=" h-[82%] w-full  px-10">
         <div className=" h-full w-full  overflow-y-scroll ">
           {listmsg.map((data: ChatMessage, index) => {
-            let who = false;
-            let last = false;
+            console.log(listmsg);
+            let who = false; //let sender = other person
+
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
+            let last = false;
             let newday: boolean = false;
+
+            if (data.sender.username === session?.user?.username) {
+              who = true;
+            } //change sender to whoever using now
 
             const date = new Date(data.createdAt.toString());
             const formattedDate = date.toLocaleTimeString([], {
@@ -153,14 +197,12 @@ export const Chatmain = (props: ChatMainProps) => {
               day: "numeric",
             });
             if (index === listmsg.length - 1) {
-              console.log(data);
+              //console.log(data);
               last = true;
-            }
-            if (data.sender.username === session?.user?.username) {
-              who = true;
             }
 
             const date2: Date = listmsg[index].createdAt;
+
             if (index !== 0) {
               const date1: Date = listmsg[index - 1].createdAt;
 
@@ -200,8 +242,8 @@ export const Chatmain = (props: ChatMainProps) => {
                     <div
                       className={
                         who
-                          ? "my-1 inline-block  bg-[#F0A21F] px-3"
-                          : "my-1 inline-block  bg-[#E9E9E9] px-3"
+                          ? "my-1 inline-block rounded-md bg-orange-300  p-1 px-3"
+                          : "my-1 inline-block rounded-md bg-[#E9E9E9]  p-1 px-3"
                       }
                     >
                       <span className={who ? "text-white" : "text-[#909090]"}>
@@ -210,13 +252,19 @@ export const Chatmain = (props: ChatMainProps) => {
                       <br />
                       <span
                         className={
-                          who ? " break-all  text-white" : "  text-black"
+                          who
+                            ? " break-all  text-white"
+                            : "break-all  text-black"
                         }
                       >
                         {data.data}
                       </span>
                     </div>
+                    {who && data.read && (
+                      <div className="text-[0.7rem] text-[#909090] ">Read</div>
+                    )}
                   </div>
+
                   {last && <div ref={messageEndRef} />}
                 </div>
               </>

@@ -161,12 +161,34 @@ export const userRouter = createTRPCRouter({
       }
     }),
 
-  // Deprecated
-  // post: publicProcedure.input(userFields).mutation(({ ctx, input }) => {
-  //   return ctx.prisma.user.create({
-  //     data: input,
-  //   });
-  // }),
+  getAllForProfile: publicProcedure.query(async ({ ctx }) => {
+    const users = await ctx.prisma.user.findMany({
+      include: {
+        petOwner: true,
+        petSitter: {
+          include: {
+            freelancePetSitter: true,
+            petHotel: true,
+          },
+        },
+      },
+    });
+
+    return users
+      .filter((user) => user)
+      .map((user) => {
+        // NEED SOME TRY CATCH EXCEPTION HERE
+        try {
+          return flattenUserForProfilePage(user);
+        } catch (error) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "userRouter fucked up",
+            cause: error,
+          });
+        }
+      });
+  }),
 
   deleteByUserId: publicProcedure
     .input(z.object({ userId: z.string() }))

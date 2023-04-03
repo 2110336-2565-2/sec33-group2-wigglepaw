@@ -77,6 +77,7 @@ export abstract class Return {
     user: { select: InnerReturn.user },
     petHotel: { select: InnerReturn.petHotel },
     freelancePetSitter: { select: InnerReturn.freelancePetSitter },
+    user: { select: InnerReturn.user },
   };
   public static pet: object = {
     ...InnerReturn.pet,
@@ -84,7 +85,12 @@ export abstract class Return {
   public static booking: object = {
     ...InnerReturn.booking,
     pet: { select: InnerReturn.pet },
-    petOwner: { select: InnerReturn.petOwner },
+    petOwner: { select: this.petOwner },
+    petSitter: { select: this.petSitter },
+  };
+  public static userWithType: object = {
+    ...this.user,
+    petOwner: { select: this.petOwner },
     petSitter: { select: this.petSitter },
   };
   public static admin: object = {

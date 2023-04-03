@@ -75,9 +75,33 @@ model User {
     sessions      Session[] // Needed for Auth
     createdAt     DateTime       @default(now())
     salt          String
-    messages      Message[] // Just to make prisma work
     Admin         Admin?
     ReportTicket  ReportTicket[]
+    messages      Message[] // Just to make prisma work
+    blockedUsers  BlockedUser[]  @relation("blockedUser")
+    blockedBy     BlockedUser[]  @relation("blockedBy")
+    mutedUser     MutedUser[]    @relation("mutedUser")
+    mutedBy       MutedUser[]    @relation("mutedBy")
+}
+
+model BlockedUser {
+    blockedBy     User     @relation("blockedBy", fields: [blockedById], references: [userId], onDelete: Cascade)
+    blockedById   String
+    blockedUser   User     @relation("blockedUser", fields: [blockedUserId], references: [userId], onDelete: Cascade)
+    blockedUserId String
+    createdAt     DateTime @default(now())
+
+    @@id([blockedById, blockedUserId], name: "id")
+}
+
+model MutedUser {
+    mutedBy     User     @relation("mutedBy", fields: [mutedById], references: [userId], onDelete: Cascade)
+    mutedById   String
+    mutedUser   User     @relation("mutedUser", fields: [mutedUserId], references: [userId], onDelete: Cascade)
+    mutedUserId String
+    createdAt   DateTime @default(now())
+
+    @@id([mutedById, mutedUserId], name: "id")
 }
 
 model PetOwner {
@@ -201,36 +225,12 @@ model Post {
     createdAt   DateTime  @default(now())
 }
 
-model Chatroom {
-    chatroomId  String    @id @default(cuid())
-    petOwnerId  String
-    petOwner    PetOwner  @relation(fields: [petOwnerId], references: [userId])
-    petSitterId String
-    petSitter   PetSitter @relation(fields: [petSitterId], references: [userId])
-    messages    Message[]
-}
-
-enum MessageType {
-    text
-    image
-}
-
-model Message {
-    messageId  String      @id @default(cuid())
-    type       MessageType @default(text)
-    data       String // text or imageUrl
-    senderId   String
-    sender     User        @relation(fields: [senderId], references: [userId])
-    createdAt  DateTime    @default(now())
-    chatroomId String
-    Chatroom   Chatroom?   @relation(fields: [chatroomId], references: [chatroomId])
-}
-
 model Admin {
     userId          String            @id @default(cuid())
     user            User              @relation(fields: [userId], references: [userId], onDelete: Cascade)
     ActiveTickets   ReportTicket[]
     ApprovalRequest ApprovalRequest[]
+    Chatroom        Chatroom[]
 }
 
 enum ReportTicketStatus {
@@ -251,6 +251,7 @@ model ReportTicket {
     status      ReportTicketStatus
     notes       String? // Notes made by admins
     createdAt   DateTime           @default(now())
+    pictureUri  String[]
 }
 
 enum ApprovalRequestStatus {
@@ -268,4 +269,36 @@ model ApprovalRequest {
     latestStatusUpdateby Admin?                @relation(fields: [adminId], references: [userId])
     notes                String? // Notes made by admins
     createdAt            DateTime              @default(now())
+}
+
+model Chatroom {
+    chatroomId String @id @default(cuid())
+    user1Id    String @unique
+
+    user2Id  String    @unique
+    messages Message[]
+
+    PetOwner        PetOwner?  @relation(fields: [petOwnerUserId], references: [userId])
+    petOwnerUserId  String?
+    PetSitter       PetSitter? @relation(fields: [petSitterUserId], references: [userId])
+    petSitterUserId String?
+    Admin           Admin?     @relation(fields: [adminUserId], references: [userId])
+    adminUserId     String?
+}
+
+enum MessageType {
+    text
+    image
+}
+
+model Message {
+    messageId  String      @id @default(cuid())
+    type       MessageType @default(text)
+    data       String // text or imageUrl
+    senderId   String
+    sender     User        @relation(fields: [senderId], references: [userId])
+    createdAt  DateTime    @default(now())
+    chatroomId String
+    Chatroom   Chatroom?   @relation(fields: [chatroomId], references: [chatroomId])
+    read       Boolean     @default(false)
 }

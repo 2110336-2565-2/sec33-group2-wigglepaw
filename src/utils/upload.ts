@@ -10,6 +10,8 @@ import { Post } from "@prisma/client";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import image from "next/image";
+import { z } from "zod";
+import { baseReportTicketFields } from "../schema/schema";
 import { api } from "./api";
 
 /**
@@ -91,4 +93,41 @@ export function useAddNewPost() {
 
   const { mutate: _mutate, mutateAsync: _mutateAsync, ...rest } = createPost;
   return { ...rest, mutateAsync };
+}
+
+// a custom hook for uploading new user reports
+// using the same template as useAddNewPost
+// กราบ 1 กราบ 2 กราบ 3 dkomplex ท่านผู้เจริญ
+export function useAddNewReportTicket() {
+  const createReport = api.reportTicket.create.useMutation();
+
+  // defining our special mutateAsync that will handle the image uploading ceremony
+  // the front end form's onSubmit will call this
+  const mutateAsync = async (
+    userId: string,
+    reportTicket: z.infer<typeof baseReportTicketFields>,
+    images: FileList
+  ) => {
+    const response = await createReport.mutateAsync({
+      reporterId: userId,
+      reportTicket: {
+        title: reportTicket.title,
+        description: reportTicket.description,
+      },
+      pictureCount: images.length,
+    });
+
+    // sanity check
+    console.assert(response.uploadUrls.length === images.length);
+
+    // perform multiple HTTP upload requests concurrently
+    // not creating a new resource, but rather uploading an object to an existing S3 bucket.
+    // Therefore, the HTTP method that is appropriate for this operation is PUT, not POST
+    await Promise.all(
+      response.uploadUrls.map((url, i) => axios.put(url, images[i]))
+    );
+    return response;
+  };
+
+  return { mutateAsync };
 }

@@ -1,4 +1,4 @@
-import { faArrowLeft, faPaw, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import Image from "next/image";
@@ -15,7 +15,7 @@ type SideTabProps = {
 export default function SideTab(props: SideTabProps) {
   const [openTab, setOpenTab] = React.useState(false);
 
-  if (props.booking !== undefined) {
+  if (props.booking) {
     return (
       <div>
         {/* TAB BUTTON */}
@@ -93,7 +93,7 @@ export default function SideTab(props: SideTabProps) {
         </div>
       </div>
     );
-  } else if (props.help !== undefined) {
+  } else if (props.help) {
     return (
       <div>
         {/* TAB BUTTON */}
@@ -142,7 +142,7 @@ export default function SideTab(props: SideTabProps) {
         </div>
       </div>
     );
-  } else if (props.admin !== undefined) {
+  } else if (props.admin) {
     return (
       <div>
         {/* TAB BUTTON */}
@@ -195,7 +195,7 @@ export default function SideTab(props: SideTabProps) {
               </Link>
               {/*User Reports Tab*/}
               <Link
-                href={`/admin/reports`}
+                href={`/admin/report`}
                 className="flex h-[58px] w-[219px] items-center justify-center border bg-[#D9D9D9] text-lg font-medium hover:bg-[#A3A3A3]"
               >
                 User Reports
@@ -206,7 +206,7 @@ export default function SideTab(props: SideTabProps) {
       </div>
     );
   } else {
-    return <></>;
+    return <div></div>;
   }
 
   function OpenSideTabButton() {

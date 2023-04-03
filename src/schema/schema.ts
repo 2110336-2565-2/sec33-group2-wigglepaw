@@ -144,6 +144,7 @@ export const messageFields = z.object({
   petSitterId: z.string().optional().default(""),
   petOwnerId: z.string().optional().default(""),
 });
+
 export const ticketStatus = z.enum([
   ReportTicketStatus.acked,
   ReportTicketStatus.canceled,
@@ -151,9 +152,20 @@ export const ticketStatus = z.enum([
   ReportTicketStatus.resolved,
 ]);
 
-export const reportTicketFields = z.object({
+// base ReportTicketFields zod objects
+export const baseReportTicketFields = z.object({
   title: z.string(),
   description: z.string().optional().default(""),
+});
+
+// This will be used by prisma backend, storing images as S3 publicURL
+export const reportTicketFields = baseReportTicketFields.extend({
+  image: z.string(),
+});
+
+// This will be used by the front end, uploading images as a Filelist
+export const ReportFormDataT = baseReportTicketFields.extend({
+  image: z.custom<FileList>(),
 });
 
 export const approvalStatus = z.enum([
@@ -164,4 +176,16 @@ export const approvalStatus = z.enum([
 
 export const approvalRequestFields = z.object({
   notes: z.string().optional(),
+});
+
+export const messageFields = z.object({
+  senderId: z.string(),
+  chatroomId: z.string().optional().default(""),
+  data: z.string(),
+  petSitterId: z.string().optional().default(""),
+  petOwnerId: z.string().optional().default(""),
+});
+
+export const userIdObject = z.object({
+  userId: userId,
 });
