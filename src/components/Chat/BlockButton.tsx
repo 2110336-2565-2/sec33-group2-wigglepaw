@@ -1,17 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faUserSlash } from "@fortawesome/free-solid-svg-icons";
 import { api } from "../../utils/api";
 
 type BlockButtonProps = {
   otherUserId: string;
-  isBlock?: boolean;
+  isBlock: boolean;
 };
 
 export default function BlockButton(props: BlockButtonProps) {
   const blockUser = api.block.block.useMutation();
   const unblockUser = api.block.unblock.useMutation();
-  const [block, setBlock] = React.useState(false);
+  const [block, setBlock] = React.useState(props.isBlock);
+  useEffect(() => {
+    setBlock(props.isBlock);
+  }, [props.isBlock]);
   return (
     <div>
       {/*Block Button*/}
