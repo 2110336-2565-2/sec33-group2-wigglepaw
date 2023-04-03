@@ -126,6 +126,24 @@ export const reviewRouter = createTRPCRouter({
     return await ctx.prisma.review.findMany();
   }),
 
+  getById: publicProcedure
+    .input(z.object({ reviewId: z.string().cuid() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.review.findUnique({
+        where: { reviewId: input.reviewId },
+        include: {
+          petSitter: {
+            include: {
+              user: true,
+              freelancePetSitter: true,
+              petHotel: true,
+            },
+          },
+          petOwner: true,
+        },
+      });
+    }),
+
   getAllPending: publicProcedure.query(async ({ ctx, input }) => {
     return await ctx.prisma.review.findMany({
       where: {

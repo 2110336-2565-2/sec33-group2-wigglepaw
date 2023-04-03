@@ -77,7 +77,7 @@ function Table() {
 
   // table title
   const Title = (
-    <h1 className="text-[40px] font-semibold">Pet Sitter Verification</h1>
+    <h1 className="text-[40px] font-semibold">Pet Sitter Reported Reviews</h1>
   );
 
   // available data
@@ -259,7 +259,7 @@ function Table() {
 
   const onRowClicked = (row: DataRow) => {
     if (row.status === ReviewStatus.pending)
-      router.push(`/admin/verification/${row.reviewId}`);
+      router.push(`/admin/reviews/${row.reviewId}`);
   };
   // manage selected rows
   const ContextActions = (
