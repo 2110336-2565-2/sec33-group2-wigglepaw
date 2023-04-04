@@ -37,6 +37,7 @@ specifiers:
   browser-image-compression: ^2.0.2
   eslint: ^8.36.0
   eslint-config-next: 13.1.2
+  html-to-image: ^1.11.11
   husky: ^8.0.3
   javascript-time-ago: ^2.5.9
   lint-staged: ^13.2.0
@@ -106,6 +107,7 @@ dependencies:
   bcrypt: 5.1.0
   bcrypt-ts: 3.0.0
   browser-image-compression: 2.0.2
+  html-to-image: 1.11.11
   javascript-time-ago: 2.5.9
   next: 13.1.2_biqbaboplfbrettd7655fr4n2y
   next-auth: 4.20.1_7jnwqgtpcnwg4nzft4b6xlzlfi
@@ -4530,6 +4532,10 @@ packages:
 
   /html-escaper/2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
+    dev: false
+
+  /html-to-image/1.11.11:
+    resolution: {integrity: sha512-9gux8QhvjRO/erSnDPv28noDZcPZmYE7e1vFsBLKLlRlKDSqNJYebj6Qz1TGd5lsRV+X+xYyjCKjuZdABinWjA==}
     dev: false
 
   /http-proxy-agent/5.0.0:

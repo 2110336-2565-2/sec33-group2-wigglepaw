@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Ubuntu");
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Ubuntu+Condensed");
 @tailwind base;
 @tailwind components;
@@ -7,7 +7,7 @@
 @layer base {
   /* main */
   .find-link {
-    @apply mx-2 block w-fit rounded bg-wp-blue py-2 px-2 text-xl text-white transition-colors hover:bg-wp-light-blue md:mx-4 md:px-5;
+    @apply mx-2 block w-fit rounded bg-wp-blue px-2 py-2 text-xl text-white transition-colors hover:bg-wp-light-blue md:mx-4 md:px-5;
   }
 
   .content-with-sidetab {
@@ -18,13 +18,13 @@
 @layer components {
   /* Header */
   .header-mobile-menu {
-    @apply rounded py-2 px-4 text-xl font-bold text-white transition-all hover:bg-wp-blue;
+    @apply rounded px-4 py-2 text-xl font-bold text-white transition-all hover:bg-wp-blue;
   }
   .header-dropdown {
     @apply flex w-full items-center rounded-md bg-wp-blue px-2 py-2 font-semibold text-white transition-all hover:bg-wp-light-blue;
   }
   .header-desktop-button {
-    @apply my-auto rounded bg-wp-blue py-2 px-4 text-lg font-bold text-white transition-all hover:bg-wp-light-blue;
+    @apply my-auto rounded bg-wp-blue px-4 py-2 text-lg font-bold text-white transition-all hover:bg-wp-light-blue;
   }
   .header-at-page {
     @apply border-2 border-wp-blue bg-white text-wp-blue hover:bg-white;
