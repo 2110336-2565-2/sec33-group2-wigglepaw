@@ -85,10 +85,10 @@ const NewReportPage = () => {
 
   return (
     <div className="min-h-screen">
-      <Header />
-      <div className="flex">
+      <Header></Header>
+      <div className="flex h-screen gap-4 pr-5 ">
         <SideTab help />
-        <div className="m-5 mx-auto min-h-[90vh] w-[85vw] max-w-4xl">
+        <div className="min-w-mx-auto m-5 min-h-[90vh] w-full">
           <h1 className="text-[40px] text-[#213951]">New Report</h1>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className=" border border-[#a3bad1] p-5">
@@ -154,7 +154,7 @@ const NewReportPage = () => {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="rounded-sm border-b-2 border-[#35924e] bg-[#3FBD61] px-4 py-2 text-white hover:border-[#20512d] hover:bg-[#35924e]"
+                  className="w-[200px] rounded-sm border-b-2 border-[#35924e] bg-[#3FBD61] px-4 py-2 text-white duration-100 hover:border-[#20512d] hover:bg-[#35924e]"
                 >
                   Submit
                 </button>

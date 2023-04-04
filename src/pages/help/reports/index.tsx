@@ -31,7 +31,7 @@ const ReportsTable = () => {
 
   return (
     <div className="min-h-screen">
-      <p className="mb-4 text-2xl font-bold">My Report Table</p>
+      <p className="mb-4 text-2xl font-bold">My Reports</p>
       <ul>
         {isLoading && <>Loading</>}
         {!isLoading &&
