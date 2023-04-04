@@ -50,6 +50,7 @@ interface DataRow {
 }
 
 function ContentDataTable() {
+  const session = useSession();
   // ctx
   const utils = api.useContext();
 
@@ -70,18 +71,26 @@ function ContentDataTable() {
   );
 
   // available data
+  // filter only posts that are unacked or acked by this admin
   // extract only some important fields
+  console.log("id: ", session.data?.user?.userId);
   const data: DataRow[] = reportTickets.data
-    ? reportTickets.data.map((reportTicket) => ({
-        ticketId: reportTicket.ticketId,
-        userId: reportTicket.reporterId,
-        reporterUsername: reportTicket.reporter.username,
-        imageUri: reportTicket.reporter.imageUri,
-        reporterFullname: "FirstName LastName",
-        title: reportTicket.title,
+    ? reportTickets.data
+        .filter(
+          (r) =>
+            r.status === ReportTicketStatus.pending ||
+            r.adminId === session.data?.user?.userId
+        )
+        .map((reportTicket) => ({
+          ticketId: reportTicket.ticketId,
+          userId: reportTicket.reporterId,
+          reporterUsername: reportTicket.reporter.username,
+          imageUri: reportTicket.reporter.imageUri,
+          reporterFullname: "FirstName LastName",
+          title: reportTicket.title,
 
-        status: reportTicket.status,
-      }))
+          status: reportTicket.status,
+        }))
     : [];
 
   // filter data

@@ -1,4 +1,4 @@
-import { ReportTicket } from "@prisma/client";
+import { ReportTicket, ReportTicketStatus } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -44,13 +44,20 @@ const Dashboard = () => {
   // query the reportTickets
   const { data: queryReports, isLoading: reportIsLoading } =
     api.reportTicket.getAll.useQuery();
-  const reports = queryReports?.slice(0, 5).map((obj) => {
-    return {
-      firstField: obj.title,
-      id: obj.ticketId,
-      status: obj.status,
-    };
-  });
+  const reports = queryReports
+    ?.filter(
+      (r) =>
+        r.status === ReportTicketStatus.pending ||
+        r.adminId === session?.user?.userId
+    )
+    .slice(0, 5)
+    .map((obj) => {
+      return {
+        firstField: obj.title,
+        id: obj.ticketId,
+        status: obj.status,
+      };
+    });
 
   // query the reviews
   const { data: queryReviews, isLoading: reviewsIsLoading } =

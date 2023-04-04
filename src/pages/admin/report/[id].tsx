@@ -92,13 +92,13 @@ const AdminReportPage = () => {
     console.log(data);
 
     return (
-      <>
-        <Header />
-        <div className="flex">
+      <div className="min-h-screen">
+        <Header></Header>
+        <div className="flex h-screen gap-4 pr-5">
           <SideTab admin />
-          <div className="m-5">
+          <div className="m-5 w-full">
             <h1 className="text-[40px] text-[#213951]">Problem Report</h1>
-            <div className=" border border-[#a3bad1] p-5">
+            <div className=" rounded-md border border-[#a3bad1] p-5 ">
               <div className="mb-6 flex">
                 <div id="title-and-text-wrapper" className="mr-6 flex-1">
                   {/* the report ticket id */}
@@ -206,7 +206,7 @@ const AdminReportPage = () => {
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 };
