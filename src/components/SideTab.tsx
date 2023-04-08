@@ -174,7 +174,7 @@ export default function SideTab(props: SideTabProps) {
             <div className="flex flex-col  ">
               {/*Dashboard Tab*/}
               <Link
-                href={`/admin/dashborad`}
+                href={`/admin/`}
                 className="flex h-[58px] w-[219px] items-center justify-center border bg-[#D9D9D9] text-lg font-medium hover:bg-[#A3A3A3]"
               >
                 Dashboard

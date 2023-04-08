@@ -50,7 +50,7 @@ export default function AdminandHelpSideTab() {
           <div className="flex flex-col  ">
             {/*Dashboard Tab*/}
             <Link
-              href={`/admin/dashborad`}
+              href={`/admin`}
               className="flex h-[58px] w-[219px] items-center justify-center border bg-[#D9D9D9] text-lg font-medium hover:bg-[#A3A3A3]"
             >
               Dashboard
@@ -71,7 +71,7 @@ export default function AdminandHelpSideTab() {
             </Link>
             {/*User Reports Tab*/}
             <Link
-              href={`/admin/reports`}
+              href={`/admin/report`}
               className="flex h-[58px] w-[219px] items-center justify-center border bg-[#D9D9D9] text-lg font-medium hover:bg-[#A3A3A3]"
             >
               User Reports

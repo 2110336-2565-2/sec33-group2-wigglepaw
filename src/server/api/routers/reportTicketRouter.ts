@@ -113,7 +113,21 @@ export const reportTicketRouter = createTRPCRouter({
     }),
   getAll: publicProcedure.query(async ({ ctx, input }) => {
     try {
-      return await ctx.prisma.reportTicket.findMany();
+      return await ctx.prisma.reportTicket.findMany({
+        include: {
+          reporter: {
+            include: {
+              petOwner: true,
+              petSitter: {
+                include: {
+                  petHotel: true,
+                  freelancePetSitter: true,
+                },
+              },
+            },
+          },
+        },
+      });
     } catch (err) {
       throwErr(err);
     }

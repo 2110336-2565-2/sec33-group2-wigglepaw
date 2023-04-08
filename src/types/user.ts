@@ -66,7 +66,10 @@ export type UserProfileSubType =
   | ({
       userType: UserType.PetHotel;
     } & PetSitterProfileType &
-      PetHotelProfileType);
+      PetHotelProfileType)
+  | {
+      userType: UserType.Admin;
+    };
 
 export type PetOwnerProfileType = {
   firstName: string;

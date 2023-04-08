@@ -21,6 +21,7 @@ import type {
   User,
   Prisma,
   ApprovalRequest,
+  Admin,
 } from "@prisma/client";
 import postPic from "../logic/s3Op/postPic";
 import profilePic from "../logic/s3Op/profilePic";
@@ -174,6 +175,7 @@ export const userRouter = createTRPCRouter({
             ApprovalRequest: true,
           },
         },
+        Admin: true,
       },
     });
 
@@ -344,9 +346,18 @@ function flattenUserForProfilePage(
           ApprovalRequest: ApprovalRequest[];
         })
       | null;
+    Admin: Admin | null;
   }
 ): UserProfile & UserProfileSubType {
-  const { petOwner, petSitter, ...userData } = user;
+  const { petOwner, petSitter, Admin, ...userData } = user;
+
+  if (Admin) {
+    const { password, emailVerified, customerId, ...result } = {
+      userType: UserType.Admin,
+      ...userData,
+    };
+    return result;
+  }
 
   if (petOwner) {
     const { password, emailVerified, customerId, ...result } = {
