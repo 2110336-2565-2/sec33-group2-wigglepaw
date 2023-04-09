@@ -61,7 +61,6 @@ const Header = (props: any) => {
                   </Link>
                 </div>
               )}
-              {/* TODO: My Schedule Button for Pet Sitters */}
               {(session?.user?.userType == UserType.FreelancePetSitter ||
                 session?.user?.userType == UserType.PetHotel) && (
                 <div className="my-auto h-fit">
