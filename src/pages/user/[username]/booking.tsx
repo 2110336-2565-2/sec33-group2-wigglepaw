@@ -27,10 +27,7 @@ const booking: NextPage = () => {
 
   const requestBooking = api.booking.request.useMutation();
   const myPetList = api.pet.getMyPetList.useQuery().data;
-
-  // const updateMyPetList = () => {
-  //   myPetList = api.pet.getMyPetList.useQuery().data;
-  // };
+  // TODO: Refetch pet list when successfully added pet
 
   const [selectedPetList, setSelectedPetList] = useState(new Array());
 
@@ -170,11 +167,13 @@ const booking: NextPage = () => {
                             {name} ({type})
                           </p>
                           <HiPencilAlt />
+                          {/* TODO: Edit pet */}
                         </div>
                       );
                     })}
                   <AddPet />
                 </span>
+                {/* TODO: Display Error to choose at least one pet */}
               </div>
               <div>
                 <label htmlFor="totalPrice" className="mr-1">
