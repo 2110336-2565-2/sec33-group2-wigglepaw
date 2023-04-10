@@ -230,7 +230,8 @@ export const userRouter = createTRPCRouter({
       });
       return update;
     }),
-  getMyImageUri: protectedProcedure.query(async ({ ctx }) => {
+  getMyImageUri: publicProcedure.query(async ({ ctx }) => {
+    if (ctx.session?.user == null) return null;
     const userId = ctx.session.user.id;
     const result = await ctx.prisma.user.findUnique({
       where: { userId: userId },
