@@ -219,3 +219,4 @@ export const ownerProcedure = t.procedure.use(isOwner);
 export const sitterProcedure = t.procedure.use(isSitter);
 export const freelancerProcedure = t.procedure.use(isFree);
 export const hotelProcedure = t.procedure.use(isHotel);
+export const devProcedure = t.procedure; // TO-DO DONE IF WE CAN DESIGN A WAY TO MAKE SOME FUNCTIONS PRIVATE TO DEV
