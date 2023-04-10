@@ -12,6 +12,9 @@ import { useState, useEffect } from "react";
 import { z } from "zod";
 import { Chatmain } from "../components/Chat/chatmain";
 
+import type { GetServerSideProps } from "next";
+import { getServerAuthSession } from "../server/auth";
+
 let socket;
 
 type DataAllchat = {
@@ -229,3 +232,25 @@ const ChatRoomPage: NextPage = () => {
 };
 
 export default ChatRoomPage;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  console.log("in server side props woiiii");
+
+  if (!session || !session.user) {
+    console.log("redirecting wooooooiiii");
+
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  console.log("normally render pagee no redirect woiii");
+
+  return {
+    props: { session }, // prefetched session on the serverside, no loading on the front
+  };
+};

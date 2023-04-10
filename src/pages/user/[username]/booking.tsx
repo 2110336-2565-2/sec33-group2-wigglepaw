@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import { api } from "../../../utils/api";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -13,6 +13,7 @@ import { Pet } from "@prisma/client";
 import AddPet from "../../../components/Pet/AddPet";
 import { HiPencilAlt } from "react-icons/hi";
 import { bookingFields } from "../../../schema/schema";
+import { getServerAuthSession } from "../../../server/auth";
 
 const formDataSchema = bookingFields;
 
@@ -237,3 +238,25 @@ const booking: NextPage = () => {
   );
 };
 export default booking;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  console.log("in server side props woiiii");
+
+  if (!session || !session.user) {
+    console.log("redirecting wooooooiiii");
+
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  console.log("normally render pagee no redirect woiii");
+
+  return {
+    props: { session }, // prefetched session on the serverside, no loading on the front
+  };
+};

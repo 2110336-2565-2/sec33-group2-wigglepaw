@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import Header from "../../../components/Header";
 import { useSession } from "next-auth/react";
@@ -6,6 +6,7 @@ import { messageFields } from "../../../schema/schema";
 import io from "socket.io-client";
 import { useState, useEffect } from "react";
 import { api } from "../../../utils/api";
+import { getServerAuthSession } from "../../../server/auth";
 
 let socket;
 
@@ -142,3 +143,25 @@ const ChatRoomPage: NextPage = () => {
 };
 
 export default ChatRoomPage;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  console.log("in server side props woiiii");
+
+  if (!session || !session.user) {
+    console.log("redirecting wooooooiiii");
+
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  console.log("normally render pagee no redirect woiii");
+
+  return {
+    props: { session }, // prefetched session on the serverside, no loading on the front
+  };
+};

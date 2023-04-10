@@ -9,9 +9,11 @@ import Header from "../../../components/Header";
 import SideTab from "../../../components/SideTab";
 import type { ReportFormDataT } from "../../../schema/schema";
 import { api } from "../../../utils/api";
-import { useAddNewReport, useAddNewReportTicket } from "../../../utils/upload";
+import { useAddNewReportTicket } from "../../../utils/upload";
 import ResponsePopup from "../../../components/ResponsePopup";
 import router from "next/router";
+import type { GetServerSideProps } from "next";
+import { getServerAuthSession } from "../../../server/auth";
 
 type ReportFormDataT = z.infer<typeof ReportFormDataT>;
 
@@ -23,7 +25,6 @@ const NewReportPage = () => {
     register,
     handleSubmit,
     watch,
-    reset,
     formState: { errors },
   } = useForm<ReportFormDataT>();
 
@@ -175,3 +176,25 @@ const NewReportPage = () => {
 };
 
 export default NewReportPage;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  console.log("in server side props woiiii");
+
+  if (!session || !session.user) {
+    console.log("redirecting wooooooiiii");
+
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  console.log("normally render pagee no redirect woiii");
+
+  return {
+    props: { session }, // prefetched session on the serverside, no loading on the front
+  };
+};

@@ -12,6 +12,8 @@ import SessionSmallCard from "../components/Calendar/Sessionsmallcard";
 import SessionMediumCard from "../components/Calendar/Sessionmediumcard";
 import Image from "next/image";
 import { api } from "../utils/api";
+import type { GetServerSideProps } from "next";
+import { getServerAuthSession } from "../server/auth";
 
 const Scheulde: NextPage = () => {
   type Insid = { title: string; start: string; end: string };
@@ -180,7 +182,7 @@ const Scheulde: NextPage = () => {
               eventContent={eventContent}
             />
           </div>
-          <div className="relative z-10 mt-10 w-[90%] overflow-x-hidden overflow-y-scroll border-2 border-[#E7E7E7] bg-white md:mt-0 md:ml-5 md:h-[90%] md:w-[50%]">
+          <div className="relative z-10 mt-10 w-[90%] overflow-x-hidden overflow-y-scroll border-2 border-[#E7E7E7] bg-white md:ml-5 md:mt-0 md:h-[90%] md:w-[50%]">
             {mode === false ? (
               <div className="center-thing mb-5 bg-[#7B7B7B] py-5 text-2xl text-white">
                 {" "}
@@ -322,3 +324,25 @@ const Scheulde: NextPage = () => {
   );
 };
 export default Scheulde;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  console.log("in server side props woiiii");
+
+  if (!session || !session.user) {
+    console.log("redirecting wooooooiiii");
+
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  console.log("normally render pagee no redirect woiii");
+
+  return {
+    props: { session }, // prefetched session on the serverside, no loading on the front
+  };
+};

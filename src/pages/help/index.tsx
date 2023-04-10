@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import type { FunctionComponent } from "react";
 import Header from "../../components/Header";
+import type { GetServerSideProps } from "next";
+import { getServerAuthSession } from "../../server/auth";
 
 const HelpCenter = () => {
   return (
@@ -114,3 +116,25 @@ const HelpMenuCard: FunctionComponent<HelpMenuCardProps> = ({
 };
 
 export default HelpCenter;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  console.log("in server side props woiiii");
+
+  if (!session || !session.user) {
+    console.log("redirecting wooooooiiii");
+
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  console.log("normally render pagee no redirect woiii");
+
+  return {
+    props: { session }, // prefetched session on the serverside, no loading on the front
+  };
+};

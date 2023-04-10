@@ -5,6 +5,8 @@ import Header from "../../../components/Header";
 import { api } from "../../../utils/api";
 import { ReportTicket } from "@prisma/client";
 import SideTab from "../../../components/SideTab";
+import type { GetServerSideProps } from "next";
+import { getServerAuthSession } from "../../../server/auth";
 
 const ReportPage = () => {
   const router = useRouter();
@@ -174,3 +176,25 @@ const ReportFieldStyle3 = ({ label, text }) => {
   );
 };
 export default ReportPage;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  console.log("in server side props woiiii");
+
+  if (!session || !session.user) {
+    console.log("redirecting wooooooiiii");
+
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  console.log("normally render pagee no redirect woiii");
+
+  return {
+    props: { session }, // prefetched session on the serverside, no loading on the front
+  };
+};

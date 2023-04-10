@@ -145,6 +145,8 @@ const ReviewPage: NextPage = () => {
               />
               ({Rate})
             </h2>
+
+            {/* FIXME: this button should only be visible to relevant users */}
             <button
               onClick={openModal}
               className="items-center rounded-md border-4 bg-amber-50 p-1 font-bold"

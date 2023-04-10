@@ -4,7 +4,7 @@ import {
   PetHotel,
   PetSitter,
 } from "@prisma/client";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import Header from "../../../components/Header";
 import { AppRouter } from "../../../server/api/root";
 import { api } from "../../../utils/api";
@@ -21,6 +21,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "next-auth/react";
 import { toPng } from "html-to-image";
+import { getServerAuthSession } from "../../../server/auth";
 
 const Transaction: NextPage = () => {
   const transactions = api.booking.myTransaction.useQuery();
@@ -328,3 +329,25 @@ const TransactionDisplay = (props: {
   );
 };
 export default Transaction;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  console.log("in server side props woiiii");
+
+  if (!session || !session.user) {
+    console.log("redirecting wooooooiiii");
+
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  console.log("normally render pagee no redirect woiii");
+
+  return {
+    props: { session }, // prefetched session on the serverside, no loading on the front
+  };
+};
