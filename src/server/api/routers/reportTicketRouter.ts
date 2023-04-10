@@ -3,7 +3,12 @@ import { reportTicketFields, ticketStatus } from "./../../../schema/schema";
 import { prisma } from "./../../db";
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+import {
+  createTRPCRouter,
+  publicProcedure,
+  protectedProcedure,
+  adminProcedure,
+} from "../trpc";
 import { ReportTicketStatus } from "@prisma/client";
 import reportTicketPic from "../logic/s3Op/reportTicketPic";
 
@@ -35,7 +40,7 @@ export const reportTicketRouter = createTRPCRouter({
   // Create
   // using postRouter as a template to upload picture
   // กราบ 1 กราบ 2 กราบ 3 dkomplex ท่านผู้เจริญ
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
         reporterId: z.string().cuid(),
@@ -111,7 +116,7 @@ export const reportTicketRouter = createTRPCRouter({
         uploadUrls,
       };
     }),
-  getAll: publicProcedure.query(async ({ ctx, input }) => {
+  getAll: adminProcedure.query(async ({ ctx, input }) => {
     try {
       return await ctx.prisma.reportTicket.findMany({
         include: {
@@ -132,7 +137,7 @@ export const reportTicketRouter = createTRPCRouter({
       throwErr(err);
     }
   }),
-  getPending: publicProcedure.query(async ({ ctx, input }) => {
+  getPending: adminProcedure.query(async ({ ctx, input }) => {
     try {
       return await ctx.prisma.reportTicket.findMany({
         where: {
@@ -143,7 +148,7 @@ export const reportTicketRouter = createTRPCRouter({
       throwErr(err);
     }
   }),
-  getCanceled: publicProcedure.query(async ({ ctx, input }) => {
+  getCanceled: adminProcedure.query(async ({ ctx, input }) => {
     try {
       return await ctx.prisma.reportTicket.findMany({
         where: {
@@ -154,7 +159,7 @@ export const reportTicketRouter = createTRPCRouter({
       throwErr(err);
     }
   }),
-  getResolved: publicProcedure.query(async ({ ctx, input }) => {
+  getResolved: adminProcedure.query(async ({ ctx, input }) => {
     try {
       return await ctx.prisma.reportTicket.findMany({
         where: {
@@ -166,7 +171,7 @@ export const reportTicketRouter = createTRPCRouter({
     }
   }),
 
-  getByUserId: publicProcedure
+  getByUserId: adminProcedure
     .input(
       z.object({
         userId: z.string().cuid(),
@@ -183,7 +188,7 @@ export const reportTicketRouter = createTRPCRouter({
         throwErr(err);
       }
     }),
-  getByAdminId: publicProcedure
+  getByAdminId: adminProcedure
     .input(
       z.object({
         adminId: z.string().cuid(),
@@ -200,7 +205,7 @@ export const reportTicketRouter = createTRPCRouter({
         throwErr(err);
       }
     }),
-  getByTicketId: publicProcedure
+  getByTicketId: adminProcedure
     .input(
       z.object({
         ticketId: z.string().cuid(),
@@ -234,7 +239,7 @@ export const reportTicketRouter = createTRPCRouter({
       }
     }),
   // Delete by Id
-  deleteById: publicProcedure
+  deleteById: adminProcedure
     .input(
       z.object({
         ticketId: z.string().cuid(),
@@ -253,7 +258,7 @@ export const reportTicketRouter = createTRPCRouter({
     }),
 
   // Acknowledge
-  ack: publicProcedure
+  ack: adminProcedure
     .input(
       z.object({
         ticketId: z.string().cuid(),
@@ -297,7 +302,7 @@ export const reportTicketRouter = createTRPCRouter({
     }),
 
   // Cancel
-  cancel: publicProcedure
+  cancel: adminProcedure
     .input(
       z.object({
         ticketId: z.string().cuid(),
@@ -352,7 +357,7 @@ export const reportTicketRouter = createTRPCRouter({
     }),
 
   // Resolve
-  resolve: publicProcedure
+  resolve: adminProcedure
     .input(
       z.object({
         ticketId: z.string().cuid(),
