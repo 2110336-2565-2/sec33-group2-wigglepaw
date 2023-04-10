@@ -229,8 +229,8 @@ Table ApprovalRequest {
 
 Table Chatroom {
   chatroomId String [pk]
-  user1Id String [unique, not null]
-  user2Id String [unique, not null]
+  user1Id String [not null]
+  user2Id String [not null]
   messages Message [not null]
   PetOwner PetOwner
   petOwnerUserId String

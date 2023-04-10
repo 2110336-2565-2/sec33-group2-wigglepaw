@@ -275,9 +275,9 @@ model ApprovalRequest {
 
 model Chatroom {
     chatroomId String @id @default(cuid())
-    user1Id    String @unique
+    user1Id    String 
 
-    user2Id  String    @unique
+    user2Id  String    
     messages Message[]
 
     PetOwner        PetOwner?  @relation(fields: [petOwnerUserId], references: [userId])
