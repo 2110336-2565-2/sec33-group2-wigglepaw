@@ -1,4 +1,4 @@
-import { Chatroom, PrismaClient } from "@prisma/client";
+import { Block, Chatroom, PrismaClient } from "@prisma/client";
 
 export abstract class BlockProcedureLogic {
   public static async getBlockFromUserId(
@@ -15,6 +15,23 @@ export abstract class BlockProcedureLogic {
       },
     });
   }
+  //                                                                                    ^^^^^^^^^^^^^^^^^^^^
+  // NOTE: in case of emergency, uncomment below "getBlockFromUserId" and comment upper "getBlockFromUserId"
+  //                                             vvvvvvvvvvvvvvvvvvv
+  // public static async getBlockFromUserId(
+  //   prisma: PrismaClient,
+  //   byId: string,
+  //   toId: string
+  // ) {
+  //   return await prisma.blockedUser.findFirst({
+  //     where: {
+  //       AND: [
+  //         {blockedById: byId},
+  //         {blockedUserId: toId},
+  //       ],
+  //     },
+  //   });
+  // }
   public static async isUserBlocked(
     prisma: PrismaClient,
     byId: string,
@@ -39,8 +56,8 @@ export abstract class BlockProcedureLogic {
     chatroom: Chatroom
   ) {
     return await this.isAnyBlocked(prisma, [
-      chatroom.petOwnerId,
-      chatroom.petSitterId,
+      chatroom.user1Id,
+      chatroom.user2Id,
     ]);
   }
 }
