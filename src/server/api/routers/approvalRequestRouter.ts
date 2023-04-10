@@ -16,7 +16,7 @@ const NO_CERTIFICATION_RESPONSE =
   "The pet sitter hasn't assigned a certificate.";
 
 const NO_PETSITTER_RESPONSE = "Pet sitter id does not exist.";
-
+const NO_REQUEST_RESPONSE = "Request does not exist.";
 const ALREADY_REQUESTED = "This pet sitter already submitted a request.";
 
 export const approvalRequestRouter = createTRPCRouter({
@@ -95,6 +95,11 @@ export const approvalRequestRouter = createTRPCRouter({
           petSitter: true,
         },
       });
+      if (!request)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: NO_REQUEST_RESPONSE,
+        });
       const petSitterId = request.petSitter.userId;
       await ctx.prisma.petSitter.update({
         where: {

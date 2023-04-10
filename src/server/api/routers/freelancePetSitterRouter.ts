@@ -7,7 +7,11 @@ import {
 import { TRPCError, initTRPC } from "@trpc/server";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
 import { env } from "../../../env/server.mjs";
-import { createTRPCContext, devProcedure } from "../../../server/api/trpc";
+import {
+  createTRPCContext,
+  devProcedure,
+  freelancerProcedure,
+} from "../../../server/api/trpc";
 import { appRouter } from "../../../server/api/root";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
@@ -203,14 +207,17 @@ export const freelancePetSitterRouter = createTRPCRouter({
       return freelancer == null ? null : ans;
     }),
 
-  update: publicProcedure
+  update: freelancerProcedure
     .input(
-      z.object({ userId: z.string(), data: freelancePetSitterFields.partial() })
+      z.object({
+        userId: z.string().optional(),
+        data: freelancePetSitterFields.partial(),
+      })
     )
     .mutation(async ({ ctx, input }) => {
       const update = await prisma?.freelancePetSitter.update({
         where: {
-          userId: input.userId,
+          userId: ctx.session.user.userId,
         },
         data: { ...input.data },
       });
