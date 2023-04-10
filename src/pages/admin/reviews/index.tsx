@@ -16,6 +16,9 @@ import ReactDOMServer from "react-dom/server";
 import Notification from "../../../components/Admin/Notification";
 import { title } from "process";
 import AdminSideTab from "../../../components/AdminSideTab";
+import { GetServerSideProps } from "next";
+import { getServerAuthSession } from "../../../server/auth";
+
 export default function Verification() {
   const router = useRouter();
 
@@ -391,3 +394,25 @@ function TailwindBugFix() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  console.log("in server side props woiiii");
+
+  if (!session || !session.user || session.user.userType !== UserType.Admin) {
+    console.log("redirecting wooooooiiii");
+
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  console.log("normally render pagee no redirect woiii");
+
+  return {
+    props: { session }, // prefetched session on the serverside, no loading on the front
+  };
+};

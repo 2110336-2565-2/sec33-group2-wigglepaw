@@ -11,6 +11,9 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage } from "@fortawesome/free-solid-svg-icons";
 import SideTab from "../../../components/SideTab";
+import { GetServerSideProps } from "next";
+import { getServerAuthSession } from "../../../server/auth";
+import { UserType } from "../../../types/user";
 
 type AdminSubmitForm = { notes: string };
 
@@ -278,3 +281,25 @@ const ReportFieldStyle3 = ({ label, text }) => {
   );
 };
 export default AdminReportPage;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  console.log("in server side props woiiii");
+
+  if (!session || !session.user || session.user.userType !== UserType.Admin) {
+    console.log("redirecting wooooooiiii");
+
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  console.log("normally render pagee no redirect woiii");
+
+  return {
+    props: { session }, // prefetched session on the serverside, no loading on the front
+  };
+};

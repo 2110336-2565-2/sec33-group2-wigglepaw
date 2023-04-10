@@ -9,6 +9,8 @@ import Header from "../../../components/Header";
 import { useSession } from "next-auth/react";
 import SideTab from "../../../components/SideTab";
 import { Review } from "@prisma/client";
+import { GetServerSideProps } from "next";
+import { getServerAuthSession } from "../../../server/auth";
 
 export default function VerifyPetSitter() {
   // ctx
@@ -374,3 +376,25 @@ function TailwindBugFix() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  console.log("in server side props woiiii");
+
+  if (!session || !session.user || session.user.userType !== UserType.Admin) {
+    console.log("redirecting wooooooiiii");
+
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  console.log("normally render pagee no redirect woiii");
+
+  return {
+    props: { session }, // prefetched session on the serverside, no loading on the front
+  };
+};

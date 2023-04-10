@@ -11,6 +11,8 @@ import SideTab from "../../../components/SideTab";
 import { ApprovalRequestStatus, ReportTicketStatus } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Error from "next/error";
+import { GetServerSideProps } from "next";
+import { getServerAuthSession } from "../../../server/auth";
 
 export default function DatatableIndex() {
   const session = useSession();
@@ -325,3 +327,25 @@ function formatTime(date: Date) {
     }
   }
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  console.log("in server side props woiiii");
+
+  if (!session || !session.user || session.user.userType !== UserType.Admin) {
+    console.log("redirecting wooooooiiii");
+
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  console.log("normally render pagee no redirect woiii");
+
+  return {
+    props: { session }, // prefetched session on the serverside, no loading on the front
+  };
+};
