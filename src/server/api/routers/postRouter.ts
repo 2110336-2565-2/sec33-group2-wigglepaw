@@ -1,13 +1,21 @@
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+  sitterProcedure,
+} from "../trpc";
 import { postFields } from "../../../schema/schema";
 import { TRPCError } from "@trpc/server";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import postPic from "../logic/s3Op/postPic";
 
+const POST_NOT_FOUND_ERR = "Post does not exist.";
+const NOT_AUTHOR_ERR = "Session's user not author of this post.";
+
 export const postRouter = createTRPCRouter({
-  create: publicProcedure
+  create: sitterProcedure
     .input(
       z.object({
         petSitterId: z.string().cuid(),
@@ -86,7 +94,7 @@ export const postRouter = createTRPCRouter({
       return post;
     }),
 
-  delete: publicProcedure
+  delete: sitterProcedure
     .input(
       z.object({
         postId: z.string(),
@@ -94,6 +102,29 @@ export const postRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
+        const thisPost = await ctx.prisma.post.findUnique({
+          where: { postId: input.postId },
+          include: {
+            petSitter: {
+              select: { userId: true },
+            },
+          },
+        });
+        // If post with postId does not exist
+        if (!thisPost) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: POST_NOT_FOUND_ERR,
+          });
+        }
+        const posterId = thisPost.petSitter.userId;
+        // If post's owner is not the same with the user session --> don't allow
+        if (posterId != ctx.session.user.userId) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: NOT_AUTHOR_ERR,
+          });
+        }
         await postPic.deleteOfPost(ctx.s3, input.postId);
         const post = await ctx.prisma.post.delete({
           where: {
@@ -115,7 +146,7 @@ export const postRouter = createTRPCRouter({
       }
     }),
 
-  update: publicProcedure
+  update: sitterProcedure
     .input(
       z.object({
         postId: z.string(),
@@ -123,12 +154,42 @@ export const postRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const update = await ctx.prisma.post.update({
-        where: {
-          postId: input.postId,
-        },
-        data: { ...input.data },
-      });
-      return update;
+      try {
+        const thisPost = await ctx.prisma.post.findUnique({
+          where: { postId: input.postId },
+          include: {
+            petSitter: {
+              select: { userId: true },
+            },
+          },
+        });
+        // If post with postId does not exist
+        if (!thisPost) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: POST_NOT_FOUND_ERR,
+          });
+        }
+        const posterId = thisPost.petSitter.userId;
+        // If post's owner is not the same with the user session --> don't allow
+        if (posterId != ctx.session.user.userId) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: NOT_AUTHOR_ERR,
+          });
+        }
+        const update = await ctx.prisma.post.update({
+          where: {
+            postId: input.postId,
+          },
+          data: { ...input.data },
+        });
+        return update;
+      } catch (err) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          cause: err,
+        });
+      }
     }),
 });

@@ -134,7 +134,7 @@ model PetSitter {
     reviewCount        Int                 @default(0)
     Chatroom           Chatroom[]
     ApprovalRequest    ApprovalRequest[]
-    recipientId        String?             @unique /// Associated Omise's recipient ID (for getting paid)
+    recipientId        String              @unique /// Associated Omise's recipient ID (for getting paid)
 }
 
 model FreelancePetSitter {
