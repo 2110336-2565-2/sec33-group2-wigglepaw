@@ -19,6 +19,7 @@ import {
 import { useSession } from "next-auth/react";
 import { toPng } from "html-to-image";
 import { UserType } from "../types/user";
+import Link from "next/link";
 
 const Transaction: NextPage = () => {
   const transactions = api.booking.myTransaction.useQuery();
@@ -343,10 +344,13 @@ const TransactionDisplay = (props: {
 
         {!printMode && (
           <section className="flex gap-4 px-6 py-6">
-            <button className="w-full rounded-xl bg-wp-blue p-2 text-lg text-white hover:bg-wp-light-blue">
+            <Link
+              href={`user/${sitter.user.username}/booking`}
+              className="w-full rounded-xl bg-wp-blue p-2 text-center text-lg text-white hover:bg-wp-light-blue"
+            >
               <FontAwesomeIcon icon={faArchive} className="px-2" />
               Booking
-            </button>
+            </Link>
             <button
               className="w-full rounded-xl bg-wp-blue p-2 text-lg text-white hover:bg-wp-light-blue"
               onClick={() => download()}
