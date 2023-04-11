@@ -1,15 +1,12 @@
-import {
-  Booking,
-  FreelancePetSitter,
-  PetHotel,
-  PetSitter,
-} from "@prisma/client";
-import { NextPage } from "next";
+import type { FreelancePetSitter, PetHotel, PetSitter } from "@prisma/client";
+import { Booking } from "@prisma/client";
+import type { NextPage } from "next";
 import Header from "../components/Header";
-import { AppRouter } from "../server/api/root";
+import type { AppRouter } from "../server/api/root";
 import { api } from "../utils/api";
-import { inferProcedureOutput } from "@trpc/server";
+import type { inferProcedureOutput } from "@trpc/server";
 import Image from "next/image";
+import type { HTMLAttributes } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -21,6 +18,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "next-auth/react";
 import { toPng } from "html-to-image";
+import { UserType } from "../types/user";
 
 const Transaction: NextPage = () => {
   const transactions = api.booking.myTransaction.useQuery();
@@ -28,10 +26,16 @@ const Transaction: NextPage = () => {
   const [selectTransactionId, setSelectTransaction] = useState<string | null>(
     null
   );
+  const [hoverTransactionId, setHoverTransaction] = useState<string | null>(
+    null
+  );
 
-  const selectedTransaction = useMemo(
-    () => transactions.data?.find((t) => t.bookingId == selectTransactionId),
-    [selectTransactionId, transactions.data]
+  const displayingTransaction = useMemo(
+    () =>
+      hoverTransactionId
+        ? transactions.data?.find((t) => t.bookingId == hoverTransactionId)
+        : transactions.data?.find((t) => t.bookingId == selectTransactionId),
+    [selectTransactionId, hoverTransactionId, transactions.data]
   );
 
   return (
@@ -52,12 +56,18 @@ const Transaction: NextPage = () => {
                 transactions={transactions.data ?? []}
                 selectTransactionId={selectTransactionId}
                 setSelectTransaction={setSelectTransaction}
+                setHoverTransaction={setHoverTransaction}
               />
             )}
           </div>
 
-          <div>
-            <TransactionDisplay booking={selectedTransaction} />
+          <div
+            className={
+              "transition-all duration-150" +
+              (hoverTransactionId ? " opacity-80" : "")
+            }
+          >
+            <TransactionDisplay booking={displayingTransaction} />
           </div>
         </main>
       </div>
@@ -95,8 +105,14 @@ const TransactionTable = (props: {
   transactions: Transaction[];
   selectTransactionId: string | null;
   setSelectTransaction: (id: string) => void;
+  setHoverTransaction: (id: string | null) => void;
 }) => {
-  const { transactions, selectTransactionId, setSelectTransaction } = props;
+  const {
+    transactions,
+    selectTransactionId,
+    setSelectTransaction,
+    setHoverTransaction,
+  } = props;
 
   useEffect(() => {
     const firstTransaction = transactions[0];
@@ -121,8 +137,16 @@ const TransactionTable = (props: {
           <TransactionRow
             key={t.bookingId}
             booking={t}
-            selected={props.selectTransactionId === t.bookingId}
-            onClick={() => props.setSelectTransaction(t.bookingId)}
+            selected={selectTransactionId === t.bookingId}
+            onClick={() => {
+              setSelectTransaction(t.bookingId);
+              setHoverTransaction(null);
+            }}
+            onMouseOver={() => {
+              if (selectTransactionId !== t.bookingId)
+                setHoverTransaction(t.bookingId);
+            }}
+            onMouseOut={() => setHoverTransaction(null)}
           />
         ))}
       </tbody>
@@ -130,12 +154,15 @@ const TransactionTable = (props: {
   );
 };
 
-const TransactionRow = (props: {
-  booking: Transaction;
-  selected: boolean;
-  onClick: () => void;
-}) => {
-  const booking = props.booking;
+const TransactionRow = (
+  props: {
+    booking: Transaction;
+    selected: boolean;
+    onClick: () => void;
+  } & HTMLAttributes<HTMLTableRowElement>
+) => {
+  const { booking, selected, onClick, className, ...rest } = props;
+
   const sitter = booking.petSitter;
   const user = sitter.user;
 
@@ -143,10 +170,12 @@ const TransactionRow = (props: {
 
   return (
     <tr
-      className={`border-b-2  ${
-        props.selected ? "bg-amber-100" : "hover:bg-amber-50"
-      }`}
-      onClick={() => props.onClick()}
+      className={
+        `border-b-2  ${selected ? "bg-amber-100" : "hover:bg-amber-50"}` +
+        (className ?? "")
+      }
+      onClick={onClick}
+      {...rest}
     >
       <td className="p-2">
         <div className="flex flex-col">
@@ -195,6 +224,10 @@ const TransactionDisplay = (props: {
   }
   const sitter = booking.petSitter;
   const user = sitter.user;
+
+  if (session.user.userType !== UserType.PetOwner) {
+    throw new Error("Only pet owner can view this page");
+  }
 
   const ownerDisplayName = `${session?.user.firstName} ${session?.user.lastName}`;
   const sitterDisplayName = calDisplayName(sitter);
@@ -273,7 +306,7 @@ const TransactionDisplay = (props: {
             width={64}
             height={64}
             className="h-14 w-14 rounded-full object-cover"
-            src={session.user.imageUri ?? "/profiledummy.png"}
+            src={session.user.picture ?? "/profiledummy.png"}
             alt="Profile"
           />
           <div className="flex flex-col">
