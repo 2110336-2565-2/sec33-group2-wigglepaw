@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { api } from "../../../utils/api";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { boolean, custom, z } from "zod";
 import Header from "../../../components/Header";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -14,7 +14,15 @@ import AddPet from "../../../components/Pet/AddPet";
 import { HiPencilAlt } from "react-icons/hi";
 import { bookingFields } from "../../../schema/schema";
 
-const formDataSchema = bookingFields;
+const formDataSchema = z.object({
+  petSitterId: z.string().cuid(),
+  totalPrice: z.number().gt(0),
+  startDate: z.date(),
+  endDate: z.date(),
+  petIdList: z.array(z.string().cuid()),
+  note: z.string().nullable().default(null),
+  selectedPet: z.any(),
+});
 
 type FormData = z.infer<typeof formDataSchema>;
 
@@ -26,7 +34,9 @@ const booking: NextPage = () => {
   const [isBookSuccess, setIsBookSuccess] = useState(false);
 
   const requestBooking = api.booking.request.useMutation();
-  const myPetList = api.pet.getMyPetList.useQuery().data;
+  const { data: myPetList, refetch: refetchMyPetList } =
+    api.pet.getMyPetList.useQuery();
+
   // TODO: Refetch pet list when successfully added pet
 
   const [selectedPetList, setSelectedPetList] = useState(new Array());
@@ -63,7 +73,9 @@ const booking: NextPage = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<FormData>();
+    setError,
+    clearErrors,
+  } = useForm<FormData>({ criteriaMode: "all" });
 
   const onSubmit = async (data: FormData) => {
     if (petSitterData) {
@@ -75,7 +87,11 @@ const booking: NextPage = () => {
       }, []);
 
       if (petIdList.length == 0) {
-        alert("Please select at least one pet");
+        //Throw error to use form
+        setError("selectedPet", {
+          type: "custom",
+          message: "Please select at least 1 pet",
+        });
         return;
       }
 
@@ -154,7 +170,10 @@ const booking: NextPage = () => {
                         <div
                           key={index}
                           className="mb-1 flex w-fit items-center rounded-md border-2 px-1"
-                          onClick={() => toggleCheckbox(id)}
+                          onClick={() => {
+                            toggleCheckbox(id);
+                            clearErrors("selectedPet");
+                          }}
                         >
                           <input
                             id={id}
@@ -171,10 +190,15 @@ const booking: NextPage = () => {
                         </div>
                       );
                     })}
-                  <AddPet />
+                  <AddPet refetch={refetchMyPetList} />
                 </span>
-                {/* TODO: Display Error to choose at least one pet */}
               </div>
+              {/* Display Error to choose at least one pet */}
+              {errors.selectedPet && (
+                <div className="w-full text-red-600">
+                  Please select at least 1 pet
+                </div>
+              )}
               <div>
                 <label htmlFor="totalPrice" className="mr-1">
                   Total Price:
