@@ -5,9 +5,9 @@ import {
   PetSitter,
 } from "@prisma/client";
 import { NextPage } from "next";
-import Header from "../../../components/Header";
-import { AppRouter } from "../../../server/api/root";
-import { api } from "../../../utils/api";
+import Header from "../components/Header";
+import { AppRouter } from "../server/api/root";
+import { api } from "../utils/api";
 import { inferProcedureOutput } from "@trpc/server";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -41,7 +41,7 @@ const Transaction: NextPage = () => {
       <div className="m-auto w-fit">
         <h1 className="p-2 text-2xl font-bold">Transactions</h1>
 
-        <main className="flex gap-4">
+        <main className="flex flex-wrap justify-center gap-4">
           <div>
             {transactions.data?.length === 0 ? (
               <span className="italic text-gray-500">
