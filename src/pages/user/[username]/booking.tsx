@@ -37,8 +37,6 @@ const booking: NextPage = () => {
   const { data: myPetList, refetch: refetchMyPetList } =
     api.pet.getMyPetList.useQuery();
 
-  // TODO: Refetch pet list when successfully added pet
-
   const [selectedPetList, setSelectedPetList] = useState(new Array());
 
   useEffect(() => {
@@ -75,7 +73,7 @@ const booking: NextPage = () => {
     formState: { errors },
     setError,
     clearErrors,
-  } = useForm<FormData>({ criteriaMode: "all" });
+  } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
     if (petSitterData) {

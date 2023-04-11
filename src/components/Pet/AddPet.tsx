@@ -52,6 +52,7 @@ const AddPet = (props: any) => {
       setAddSuccess(true);
       setTimeout(function () {
         setAddSuccess(false);
+        props.refetch();
       }, 1500);
     } catch (e) {
       alert(e);
@@ -220,6 +221,7 @@ const AddPet = (props: any) => {
         doBeforeClose={() => {
           props.refetch();
         }}
+        clickToClose
         panelCSS={"bg-green-400 text-green-700"}
       >
         <div className="font-bold">Add Pet Successful!</div>
