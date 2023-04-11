@@ -1,40 +1,89 @@
-import { setDefaultResultOrder } from "dns";
-import type { NextPage } from "next";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-
-import FreelancePetSitterProfile from "../../../components/Profile/FreelancePetSitterProfile";
-import PetHotelProfile from "../../../components/Profile/PetHotelProfile";
-import PetOwnerProfile from "../../../components/Profile/PetOwnerProfile";
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+  NextPage,
+} from "next";
+import { lazy } from "react";
+import superjson from "superjson";
+import { appRouter } from "../../../server/api/root";
+import { createInnerTRPCContext } from "../../../server/api/trpc";
+import { getServerAuthSession } from "../../../server/auth";
+import type { UserProfile, UserProfileSubType } from "../../../types/user";
 import { UserType } from "../../../types/user";
-import { api } from "../../../utils/api";
 
-const ProfilePage: NextPage = () => {
-  const { data: session } = useSession();
-  const router = useRouter();
-  const { username } = router.query;
+const FreelancePetSitterProfile = lazy(
+  () => import("../../../components/Profile/FreelancePetSitterProfile")
+);
+const PetHotelProfile = lazy(
+  () => import("../../../components/Profile/PetHotelProfile")
+);
+const PetOwnerProfile = lazy(
+  () => import("../../../components/Profile/PetOwnerProfile")
+);
 
-  const { data, error: userError } = api.user.getForProfilePage.useQuery(
-    { username: typeof username === "string" ? username : "" },
-    {
-      enabled: typeof username === "string",
-    }
+// ssr, this function is run on server before page is sent to client
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  // Fetch user and profile data concurrently
+  const [user, profile] = await Promise.all([
+    getServerAuthSession(ctx).then((session) => session?.user),
+    (async () => {
+      const caller = appRouter.createCaller(
+        createInnerTRPCContext({ session: null })
+      );
+      return await caller.user.getForProfilePage({
+        username: ctx.query.username as string,
+      });
+    })(),
+  ]);
+
+  // if not logged in, redirect to login
+  if (!user) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  // if profile not found, redirect to 404
+  if (!profile) {
+    return {
+      redirect: {
+        destination: "/404",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      // use superjson to serialize complex data (such as Date).
+      profile: superjson.stringify(profile),
+      user: {
+        username: user.username,
+        userType: user.userType,
+      },
+    },
+  };
+};
+
+const ProfilePage: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ user, profile }) => {
+  // deserialize data back (see the return in getServerSideProps)
+  const data = superjson.parse<(UserProfile & UserProfileSubType) | null>(
+    profile
   );
 
-  if (userError) return <div>Error จ้า: {userError.message}</div>;
-  if (data === undefined) return <div>Loading...</div>;
   if (data === null) return <div>Not found</div>;
 
-  const editable = session?.user?.username
-    ? session?.user?.username == username
-    : false;
-  const isPetOwner = session?.user?.userType == UserType.PetOwner;
+  const editable = user.username === data.username;
+  const isPetOwner = user.userType === UserType.PetOwner;
 
   switch (data.userType) {
     case UserType.PetOwner:
-      return (
-        <PetOwnerProfile user={data} editable={editable}></PetOwnerProfile>
-      );
+      return <PetOwnerProfile user={data} editable={editable} />;
 
     case UserType.FreelancePetSitter:
       return (
@@ -42,7 +91,7 @@ const ProfilePage: NextPage = () => {
           user={data}
           editable={editable}
           isPetOwner={isPetOwner}
-        ></FreelancePetSitterProfile>
+        />
       );
 
     case UserType.PetHotel:
@@ -51,7 +100,7 @@ const ProfilePage: NextPage = () => {
           user={data}
           editable={editable}
           isPetOwner={isPetOwner}
-        ></PetHotelProfile>
+        />
       );
 
     default:
