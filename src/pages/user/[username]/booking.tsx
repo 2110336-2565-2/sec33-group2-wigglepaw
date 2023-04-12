@@ -11,8 +11,6 @@ import { UserType } from "../../../types/user";
 import ResponsePopup from "../../../components/ResponsePopup";
 import { Pet } from "@prisma/client";
 import AddPet from "../../../components/Pet/AddPet";
-import { HiPencilAlt } from "react-icons/hi";
-import { bookingFields } from "../../../schema/schema";
 
 const formDataSchema = z.object({
   petSitterId: z.string().cuid(),
@@ -168,7 +166,9 @@ const booking: NextPage = () => {
                         <div
                           key={index}
                           className="mb-1 flex w-fit items-center rounded-md border-2 px-1"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
                             toggleCheckbox(id);
                             clearErrors("selectedPet");
                           }}
@@ -183,8 +183,8 @@ const booking: NextPage = () => {
                           <p className="mx-2">
                             {name} ({type})
                           </p>
-                          <HiPencilAlt />
                           {/* TODO: Edit pet */}
+                          <AddPet edit refetch={refetchMyPetList} />
                         </div>
                       );
                     })}

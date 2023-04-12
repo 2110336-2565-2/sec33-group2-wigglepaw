@@ -6,12 +6,18 @@ import { z } from "zod";
 import { petFields } from "../../schema/schema";
 import { api } from "../../utils/api";
 import ResponsePopup from "../ResponsePopup";
+import { HiPencilAlt } from "react-icons/hi";
 
 type FormData = z.infer<typeof petFields>;
 
 const sex = [{ name: "Male" }, { name: "Female" }];
 
-const AddPet = (props: any) => {
+type AddPetProps = {
+  refetch: () => void;
+  edit?: boolean;
+};
+
+const AddPet = (props: AddPetProps) => {
   const [addingPet, setAddingPet] = useState(false);
   const [addSuccess, setAddSuccess] = useState(false);
   const [selected, setSelected] = useState(sex[0]);
@@ -36,39 +42,58 @@ const AddPet = (props: any) => {
       return;
     }
 
-    try {
-      await addPet.mutateAsync({
-        pet: {
-          petType: data.petType,
-          name: data.name,
-          sex: data.sex,
-          breed: data.breed,
-          weight: data.weight,
-        },
-        petOwnerId: user.userId,
-      });
-      setAddingPet(false);
-      reset();
-      setAddSuccess(true);
-      setTimeout(function () {
-        setAddSuccess(false);
-        props.refetch();
-      }, 1500);
-    } catch (e) {
-      alert(e);
-      return;
+    if (props.edit) {
+    } else {
+      try {
+        await addPet.mutateAsync({
+          pet: {
+            petType: data.petType,
+            name: data.name,
+            sex: data.sex,
+            breed: data.breed,
+            weight: data.weight,
+          },
+          petOwnerId: user.userId,
+        });
+        setAddingPet(false);
+        reset();
+        setAddSuccess(true);
+        setTimeout(function () {
+          setAddSuccess(false);
+          props.refetch();
+        }, 1500);
+      } catch (e) {
+        alert(e);
+        return;
+      }
     }
   };
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setAddingPet(true)}
-        className="flex w-fit items-center rounded-md border-2 px-1"
-      >
-        + Add Pet
-      </button>
+      {props.edit ? (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setAddingPet(true);
+          }}
+          className="h-full"
+        >
+          <HiPencilAlt />
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => {
+            setAddingPet(true);
+          }}
+          className="flex w-fit items-center rounded-md border-2 px-1"
+        >
+          + Add Pet
+        </button>
+      )}
       <Transition show={addingPet} as={Fragment}>
         <Dialog onClose={() => undefined}>
           <Transition.Child
@@ -99,7 +124,7 @@ const AddPet = (props: any) => {
               <div className="flex min-h-full items-center justify-center">
                 <Dialog.Panel className="mx-auto w-[90vw] max-w-[30rem] rounded bg-white p-4">
                   <Dialog.Title className="mb-2 text-xl font-bold">
-                    Add New Pet
+                    {props.edit ? `Edit Pet` : `Add New Pet`}
                   </Dialog.Title>
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="mx-auto mb-2 grid w-min grid-cols-[5rem,minmax(10rem,15rem)] items-center gap-2">
