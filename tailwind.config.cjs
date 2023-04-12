@@ -30,6 +30,7 @@ module.exports = {
       fontFamily: {
         sans: ["Ubuntu", "sans-serif"],
         mono: ['"Ubuntu Condensed"', "ui-monospace"],
+        card: ["Goldman", "cursive"],
       },
     },
   },

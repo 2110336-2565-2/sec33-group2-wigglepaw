@@ -50,6 +50,19 @@ export const petOwnerRouter = createTRPCRouter({
       });
     }),
 
+  getMyCardInfo: protectedProcedure.query(async ({ ctx }) => {
+    const petOwner = await ctx.prisma.petOwner.findFirstOrThrow({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      select: {
+        customerId: true,
+      },
+    });
+    const customer = await ctx.omise.customers.retrieve(petOwner.customerId);
+    return customer.cards.data[0];
+  }),
+
   createDummy: publicProcedure
     .input(
       z.object({

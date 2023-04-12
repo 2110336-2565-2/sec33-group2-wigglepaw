@@ -1,5 +1,4 @@
 import type { FreelancePetSitter, PetHotel, PetSitter } from "@prisma/client";
-import { Booking } from "@prisma/client";
 import type { NextPage } from "next";
 import Header from "../components/Header";
 import type { AppRouter } from "../server/api/root";
@@ -20,6 +19,8 @@ import { useSession } from "next-auth/react";
 import { toPng } from "html-to-image";
 import { UserType } from "../types/user";
 import Link from "next/link";
+import { AiFillCreditCard } from "react-icons/ai";
+import { Popover } from "@headlessui/react";
 
 const Transaction: NextPage = () => {
   const transactions = api.booking.myTransaction.useQuery();
@@ -44,7 +45,10 @@ const Transaction: NextPage = () => {
       <Header />
 
       <div className="m-auto w-fit">
-        <h1 className="p-2 text-2xl font-bold">Transactions</h1>
+        <header className="flex p-2 text-2xl font-bold">
+          <span>Transactions</span>
+          <CardButton />
+        </header>
 
         <main className="flex flex-wrap justify-center gap-4">
           <div>
@@ -76,6 +80,12 @@ const Transaction: NextPage = () => {
   );
 };
 
+/**
+ * Calculate the display name of a pet sitter.
+ *
+ * For freelance pet sitter, "firstName lastName";
+ * for pet hotel, it will be "hotelName".
+ */
 function calDisplayName(
   sitter: PetSitter & {
     freelancePetSitter: Pick<
@@ -365,3 +375,63 @@ const TransactionDisplay = (props: {
   );
 };
 export default Transaction;
+
+/**
+ * Card icon button which display a popover with card info when clicked
+ */
+const CardButton = () => {
+  const { data } = api.petOwner.getMyCardInfo.useQuery();
+
+  const digit = useMemo(() => {
+    if (!data?.last_digits) {
+      return null;
+    }
+
+    // Make card number from last 4 digits
+    // it should look like "**** **** **** 1234" when 1234 is the last 4 digits
+    const encoder = new TextEncoder();
+    const charArr = encoder.encode(data.last_digits.padStart(16 + 3, "*"));
+    charArr[4] = 32;
+    charArr[9] = 32;
+    charArr[14] = 32;
+    return new TextDecoder().decode(charArr);
+  }, [data?.last_digits]);
+
+  if (!data || !digit) {
+    return null;
+  }
+
+  return (
+    <Popover>
+      <Popover.Button className="transition-transform duration-75 hover:scale-110">
+        <AiFillCreditCard className="mx-2 inline" size={24} />
+      </Popover.Button>
+      <Popover.Overlay className="fixed inset-0 bg-black opacity-30" />
+
+      <Popover.Panel className="absolute z-10 w-80">
+        <div className="rounded-xl bg-wp-light-blue p-4 font-card font-thin text-white shadow-black">
+          <div className="text-md col-span-3">{digit}</div>
+
+          <div className="my-1 flex gap-2 text-sm">
+            <span className="flex-1 text-right">
+              {data.expiration_month.toString().padStart(2, "0")}/
+              {data.expiration_year % 100}
+            </span>
+
+            <span className="float-right text-justify">
+              {data.financing.toUpperCase()}
+            </span>
+          </div>
+
+          <div className="flex">
+            <span className="flex-1 text-sm">{data.name}</span>
+
+            <div className="float-right inline-block bg-slate-50 px-1 text-xl text-blue-700">
+              <span>{data.brand}</span>
+            </div>
+          </div>
+        </div>
+      </Popover.Panel>
+    </Popover>
+  );
+};
