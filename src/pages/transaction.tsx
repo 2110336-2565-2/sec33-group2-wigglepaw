@@ -182,8 +182,9 @@ const TransactionRow = (
   return (
     <tr
       className={
-        `border-b-2  ${selected ? "bg-amber-100" : "hover:bg-amber-50"}` +
-        (className ?? "")
+        `border-b-2  ${selected ? "bg-amber-100" : "hover:bg-amber-50"} ${
+          selected ? "" : "cursor-pointer"
+        }` + (className ?? "")
       }
       onClick={onClick}
       {...rest}
