@@ -22,10 +22,7 @@ const ReviewPage: NextPage = () => {
   const isPetOwner = session?.user?.userType == UserType.PetOwner;
   const utils = api.useContext();
   const formDataSchema = z.object({
-    petOwnerId: z.string().min(10),
-    petSisterId: z.string().min(10),
     review: z.string(),
-    rate: z.number().int(),
   });
   const { data: petSitterData, error: userError } =
     api.user.getForProfilePage.useQuery(
@@ -93,7 +90,6 @@ const ReviewPage: NextPage = () => {
   const mutation = api.review.create.useMutation();
   const user = session?.user;
   const OnSubmit = async (data: FormData) => {
-    setHasReview(true);
     if (user && petSitterData) {
       await mutation.mutateAsync({
         petOwnerId: user?.userId,
@@ -103,17 +99,13 @@ const ReviewPage: NextPage = () => {
           text: data.review,
         },
       });
-
       await utils.petSitter.getReviewsByUserId.invalidate();
     }
-
-    setText(data.review);
     closeModal();
+    window.location.reload();
   };
   const [isOpen, setIsOpen] = useState(false);
   const [rating, setRating] = useState(0);
-  const [text, setText] = useState("");
-  const [hasReview, setHasReview] = useState(false);
   function closeModal() {
     setIsOpen(false);
   }
@@ -196,7 +188,6 @@ const ReviewPage: NextPage = () => {
                         <h1>Enter star</h1>
 
                         <Rating
-                          {...register("rate")}
                           transition={true}
                           onClick={handleRating}
                           className="inline"
@@ -215,14 +206,7 @@ const ReviewPage: NextPage = () => {
                           <button type="reset" onClick={closeModal}>
                             Cancel
                           </button>
-                          <button
-                            type="submit"
-                            onClick={() => {
-                              window.location.reload();
-                            }}
-                          >
-                            Submit
-                          </button>
+                          <button type="submit">Submit</button>
                         </div>
                       </form>
                     </div>

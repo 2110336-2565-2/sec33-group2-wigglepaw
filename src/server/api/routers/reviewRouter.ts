@@ -139,7 +139,11 @@ export const reviewRouter = createTRPCRouter({
               petHotel: true,
             },
           },
-          petOwner: true,
+          petOwner: {
+            include: {
+              user: true,
+            },
+          },
         },
       });
     }),
