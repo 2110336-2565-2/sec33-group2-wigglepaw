@@ -112,122 +112,141 @@ const booking: NextPage = () => {
             user={petSitterData}
             isPetOwner={session?.user?.userType == UserType.PetOwner}
           />
-          <div className="content-with-sidetab my-10 h-fit w-5/12 min-w-fit max-w-[96rem] rounded-md border-[4px] border-blue-500 px-3 py-4">
-            <div className="relative mb-2 flex justify-center">
-              <h1 className="text-2xl font-bold">Booking</h1>
-            </div>
-            <h2 className="text-lg font-semibold sm:hidden">
-              Pet Sitter: {username}
-            </h2>
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="mt-1 flex flex-col gap-2"
-            >
-              <div>
-                <label htmlFor="startDate" className="mr-1">
-                  Start Date:
-                </label>
-                <input
-                  id="startDate"
-                  className="rounded-md border-2"
-                  type="datetime-local"
-                  {...register("startDate", { required: true })}
-                />
+          <div className="content-with-sidetab my-6 w-5/12 min-w-fit max-w-[96rem]">
+            <div className="my-4 h-fit rounded-md border-[4px] border-blue-500 px-3 py-4">
+              <div className="relative mb-2 flex justify-center">
+                <h1 className="text-2xl font-bold">Booking</h1>
               </div>
-              <div>
-                <label htmlFor="endDate" className="mr-1">
-                  End Date:
-                </label>
-                <input
-                  id="endDate"
-                  className="rounded-md border-2"
-                  type="datetime-local"
-                  {...register("endDate", { required: true })}
-                />
-              </div>
-              <div className="flex">
-                <label htmlFor="petIdList" className="mr-1">
-                  Pets:
-                </label>
-                <span className="block">
-                  {selectedPetList.length != 0 &&
-                    selectedPetList.map((pet, index) => {
-                      const { petId, name, petType, selected } = pet;
-                      return (
-                        <div
-                          key={index}
-                          className="mb-1 flex w-fit items-center rounded-md border-2 px-1"
-                          onClick={() => {
-                            toggleCheckbox(petId);
-                            clearErrors("selectedPet");
-                          }}
-                        >
-                          <input
-                            id={petId}
-                            className=""
-                            type="checkbox"
-                            checked={selected}
-                            readOnly
-                          />
-                          <p className="mx-2">
-                            {name} ({petType})
-                          </p>
-                          <AddPet edit refetch={refetchMyPetList} pet={pet} />
-                        </div>
-                      );
-                    })}
-                  <AddPet refetch={refetchMyPetList} />
-                </span>
-              </div>
-              {/* Display Error to choose at least one pet */}
-              {errors.selectedPet && (
-                <div className="w-full text-red-600">
-                  Please select at least 1 pet
+              <h2 className="text-lg font-semibold sm:hidden">
+                Pet Sitter: {username}
+              </h2>
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="mt-1 flex flex-col gap-2"
+              >
+                <div>
+                  <label htmlFor="startDate" className="mr-1">
+                    Start Date:
+                  </label>
+                  <input
+                    id="startDate"
+                    className="rounded-md border-2"
+                    type="datetime-local"
+                    {...register("startDate", { required: true })}
+                  />
                 </div>
-              )}
-              <div>
-                <label htmlFor="totalPrice" className="mr-1">
-                  Total Price:
+                <div>
+                  <label htmlFor="endDate" className="mr-1">
+                    End Date:
+                  </label>
+                  <input
+                    id="endDate"
+                    className="rounded-md border-2"
+                    type="datetime-local"
+                    {...register("endDate", { required: true })}
+                  />
+                </div>
+                <div className="flex">
+                  <label htmlFor="petIdList" className="mr-1">
+                    Pets:
+                  </label>
+                  <span className="block">
+                    {selectedPetList.length != 0 &&
+                      selectedPetList.map((pet, index) => {
+                        const { petId, name, petType, selected } = pet;
+                        return (
+                          <div
+                            key={index}
+                            className="mb-1 flex w-fit items-center rounded-md border-2 px-2"
+                            onClick={() => {
+                              toggleCheckbox(petId);
+                              clearErrors("selectedPet");
+                            }}
+                          >
+                            <input
+                              id={petId}
+                              className=""
+                              type="checkbox"
+                              checked={selected}
+                              readOnly
+                            />
+                            <p className="ml-2">
+                              {name} ({petType})
+                            </p>
+                          </div>
+                        );
+                      })}
+                  </span>
+                </div>
+                {/* Display Error to choose at least one pet */}
+                {errors.selectedPet && (
+                  <div className="w-full text-red-600">
+                    Please select at least 1 pet
+                  </div>
+                )}
+                <div>
+                  <label htmlFor="totalPrice" className="mr-1">
+                    Total Price:
+                  </label>
+                  <input
+                    id="totalPrice"
+                    type="number"
+                    className="w-40 rounded-md border-2 px-1 text-right"
+                    step="0.01"
+                    min={0}
+                    {...register("totalPrice", {
+                      required: true,
+                      valueAsNumber: true,
+                    })}
+                  />
+                </div>
+                <label htmlFor="note" className="">
+                  Note:
                 </label>
-                <input
-                  id="totalPrice"
-                  type="number"
-                  className="w-40 rounded-md border-2 px-1 text-right"
-                  step="0.01"
-                  min={0}
-                  {...register("totalPrice", {
-                    required: true,
-                    valueAsNumber: true,
-                  })}
+                <textarea
+                  id="note"
+                  className="mb-2 max-h-[10rem] min-h-[2rem] w-full border-2 p-1"
+                  placeholder="Note to the pet sitter"
+                  {...register("note")}
                 />
-              </div>
-              <label htmlFor="note" className="">
-                Note:
-              </label>
-              <textarea
-                id="note"
-                className="mb-2 max-h-[10rem] min-h-[2rem] w-full border-2 p-1"
-                placeholder="Note to the pet sitter"
-                {...register("note")}
-              />
-              <div className="flex w-full justify-between">
-                <button
-                  className="rounded-full bg-red-800 px-2 py-1 font-semibold text-white hover:bg-red-600"
-                  onClick={() => {
-                    reset();
-                  }}
-                  type="reset"
-                >
-                  Cancel Request
-                </button>
-                <button
-                  className="rounded-full bg-sky-800 px-2 py-1 font-semibold text-white hover:bg-sky-600"
-                  type="submit"
-                >
-                  Send Request
-                </button>
-              </div>
-            </form>
+                <div className="flex w-full justify-between">
+                  <button
+                    className="rounded-full bg-red-800 px-2 py-1 font-semibold text-white hover:bg-red-600"
+                    onClick={() => {
+                      reset();
+                    }}
+                    type="reset"
+                  >
+                    Cancel Request
+                  </button>
+                  <button
+                    className="rounded-full bg-sky-800 px-2 py-1 font-semibold text-white hover:bg-sky-600"
+                    type="submit"
+                  >
+                    Send Request
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div className="mb-4 rounded-md border-[4px] border-teal-500 px-4 py-2">
+              <h2 className="mb-2 text-lg font-semibold">Manage My Pet</h2>
+              {selectedPetList.length != 0 &&
+                selectedPetList.map((pet, index) => {
+                  const { name, petType } = pet;
+                  return (
+                    <div
+                      key={index}
+                      className="mb-2 flex w-fit items-center rounded-md border-2 px-1"
+                    >
+                      <p className="mx-2">
+                        {name} ({petType})
+                      </p>
+                      <AddPet edit refetch={refetchMyPetList} pet={pet} />
+                    </div>
+                  );
+                })}
+              <AddPet refetch={refetchMyPetList} />
+            </div>
           </div>
         </div>
       </div>

@@ -34,7 +34,6 @@ const AddPet = (props: AddPetProps) => {
   const {
     register,
     handleSubmit,
-    watch,
     reset,
     formState: { errors },
   } = useForm<FormData>();
@@ -114,7 +113,7 @@ const AddPet = (props: AddPetProps) => {
           onClick={() => {
             setAddingPet(true);
           }}
-          className="flex w-fit items-center rounded-md border-2 px-1"
+          className="flex w-fit items-center rounded-md bg-teal-600 px-6 font-bold text-white"
         >
           + Add Pet
         </button>
