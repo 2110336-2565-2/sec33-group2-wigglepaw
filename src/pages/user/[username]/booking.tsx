@@ -11,16 +11,9 @@ import { UserType } from "../../../types/user";
 import ResponsePopup from "../../../components/ResponsePopup";
 import { Pet } from "@prisma/client";
 import AddPet from "../../../components/Pet/AddPet";
+import { bookingFields } from "../../../schema/schema";
 
-const formDataSchema = z.object({
-  petSitterId: z.string().cuid(),
-  totalPrice: z.number().gt(0),
-  startDate: z.date(),
-  endDate: z.date(),
-  petIdList: z.array(z.string().cuid()),
-  note: z.string().nullable().default(null),
-  selectedPet: z.any(),
-});
+const formDataSchema = bookingFields.extend({ selectedPet: z.any() });
 
 type FormData = z.infer<typeof formDataSchema>;
 

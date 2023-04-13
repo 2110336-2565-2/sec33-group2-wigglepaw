@@ -248,7 +248,10 @@ const AddPet = (props: AddPetProps) => {
                         min={0}
                         className="rounded border-2 p-1 text-lg placeholder-gray-400"
                         placeholder="(kg)"
-                        {...register("weight", { valueAsNumber: true })}
+                        {...register("weight", {
+                          setValueAs: (v) =>
+                            v === "" ? undefined : parseInt(v, 10),
+                        })}
                         defaultValue={props.edit ? props.pet.weight : null}
                       />
                     </div>
