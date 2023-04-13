@@ -15,16 +15,20 @@ const sex = [{ name: "Male" }, { name: "Female" }];
 type AddPetProps = {
   refetch: () => void;
   edit?: boolean;
+  pet?: any;
 };
 
 const AddPet = (props: AddPetProps) => {
   const [addingPet, setAddingPet] = useState(false);
   const [addSuccess, setAddSuccess] = useState(false);
-  const [selected, setSelected] = useState(sex[0]);
+  const [selected, setSelected] = useState(
+    props.edit ? { name: props.pet.sex } : sex[0]
+  );
 
   const { data: session } = useSession();
 
   const addPet = api.pet.create.useMutation();
+  const editPet = api.pet.update.useMutation();
 
   // Form ==================================================
   const {
@@ -43,22 +47,44 @@ const AddPet = (props: AddPetProps) => {
     }
 
     if (props.edit) {
+      try {
+        await editPet.mutateAsync({
+          petId: props.pet.petId,
+          data: {
+            petType: data.petType,
+            name: data.name,
+            sex: selected?.name,
+            breed: data.breed,
+            weight: data.weight,
+          },
+        });
+        setAddingPet(false);
+        setAddSuccess(true);
+        setTimeout(function () {
+          reset();
+          setAddSuccess(false);
+          props.refetch();
+        }, 1500);
+      } catch (e) {
+        alert(e);
+        return;
+      }
     } else {
       try {
         await addPet.mutateAsync({
           pet: {
             petType: data.petType,
             name: data.name,
-            sex: data.sex,
+            sex: selected?.name,
             breed: data.breed,
             weight: data.weight,
           },
           petOwnerId: user.userId,
         });
         setAddingPet(false);
-        reset();
         setAddSuccess(true);
         setTimeout(function () {
+          reset();
           setAddSuccess(false);
           props.refetch();
         }, 1500);
@@ -75,7 +101,6 @@ const AddPet = (props: AddPetProps) => {
         <button
           type="button"
           onClick={(e) => {
-            e.preventDefault();
             e.stopPropagation();
             setAddingPet(true);
           }}
@@ -123,8 +148,19 @@ const AddPet = (props: AddPetProps) => {
               {/* Container to center the panel */}
               <div className="flex min-h-full items-center justify-center">
                 <Dialog.Panel className="mx-auto w-[90vw] max-w-[30rem] rounded bg-white p-4">
-                  <Dialog.Title className="mb-2 text-xl font-bold">
-                    {props.edit ? `Edit Pet` : `Add New Pet`}
+                  <Dialog.Title className="mb-2 flex justify-between text-xl font-bold">
+                    {props.edit ? (
+                      <>
+                        <div>
+                          Edit Pet
+                          <p className="text-xs text-gray-400">
+                            Pet ID: {props.pet.petId}
+                          </p>
+                        </div>
+                      </>
+                    ) : (
+                      <div>Add New Pet</div>
+                    )}
                   </Dialog.Title>
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="mx-auto mb-2 grid w-min grid-cols-[5rem,minmax(10rem,15rem)] items-center gap-2">
@@ -134,12 +170,14 @@ const AddPet = (props: AddPetProps) => {
                         className="max-w-full rounded border-2 p-1 text-lg placeholder-gray-400"
                         placeholder="Cat/Dog"
                         {...register("petType", { required: true })}
+                        defaultValue={props.edit ? props.pet.petType : null}
                       />
                       <label htmlFor="name">Name:</label>
                       <input
                         id="name"
                         className="rounded border-2 p-1 text-lg placeholder-gray-400"
                         {...register("name")}
+                        defaultValue={props.edit ? props.pet.name : null}
                       />
                       <label htmlFor="sex">Sex:</label>
                       {/* <input
@@ -201,6 +239,7 @@ const AddPet = (props: AddPetProps) => {
                       <input
                         className="rounded border-2 p-1 text-lg placeholder-gray-400"
                         {...register("breed")}
+                        defaultValue={props.edit ? props.pet.breed : null}
                       />
                       <label htmlFor="weight">Weight:</label>
                       <input
@@ -209,7 +248,8 @@ const AddPet = (props: AddPetProps) => {
                         min={0}
                         className="rounded border-2 p-1 text-lg placeholder-gray-400"
                         placeholder="(kg)"
-                        {...(register("weight"), { valueAsNumber: true })}
+                        {...register("weight", { valueAsNumber: true })}
+                        defaultValue={props.edit ? props.pet.weight : null}
                       />
                     </div>
 
@@ -228,7 +268,7 @@ const AddPet = (props: AddPetProps) => {
                         className="rounded-full bg-sky-800 px-2 py-1 font-semibold text-white hover:bg-sky-600"
                         type="submit"
                       >
-                        Add
+                        {props.edit ? "Edit" : "Add"}
                       </button>
                     </div>
                   </form>
@@ -249,7 +289,9 @@ const AddPet = (props: AddPetProps) => {
         clickToClose
         panelCSS={"bg-green-400 text-green-700"}
       >
-        <div className="font-bold">Add Pet Successful!</div>
+        <div className="font-bold">
+          {props.edit ? "Edit Pet Successful!" : "Add Pet Successful!"}
+        </div>
       </ResponsePopup>
     </>
   );

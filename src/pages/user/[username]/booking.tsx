@@ -38,12 +38,10 @@ const booking: NextPage = () => {
   const [selectedPetList, setSelectedPetList] = useState(new Array());
 
   useEffect(() => {
-    if (myPetList != undefined && myPetList.length != selectedPetList.length) {
+    if (myPetList != undefined) {
       setSelectedPetList(
         myPetList.map((pet: Pet) => ({
-          id: pet.petId,
-          name: pet.name,
-          type: pet.petType,
+          ...pet,
           selected: false,
         }))
       );
@@ -53,7 +51,7 @@ const booking: NextPage = () => {
   const toggleCheckbox = (id: string) => {
     setSelectedPetList(
       selectedPetList.map((pet) =>
-        pet.id === id ? { ...pet, selected: !pet.selected } : pet
+        pet.petId === id ? { ...pet, selected: !pet.selected } : pet
       )
     );
   };
@@ -77,7 +75,7 @@ const booking: NextPage = () => {
     if (petSitterData) {
       const petIdList = selectedPetList.reduce(function (result, pet) {
         if (pet.selected) {
-          result.push(pet.id);
+          result.push(pet.petId);
         }
         return result;
       }, []);
@@ -130,7 +128,7 @@ const booking: NextPage = () => {
             </h2>
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="mt-1 flex flex-col gap-1"
+              className="mt-1 flex flex-col gap-2"
             >
               <div>
                 <label htmlFor="startDate" className="mr-1">
@@ -161,30 +159,27 @@ const booking: NextPage = () => {
                 <span className="block">
                   {selectedPetList.length != 0 &&
                     selectedPetList.map((pet, index) => {
-                      const { id, name, type, selected } = pet;
+                      const { petId, name, petType, selected } = pet;
                       return (
                         <div
                           key={index}
                           className="mb-1 flex w-fit items-center rounded-md border-2 px-1"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            toggleCheckbox(id);
+                          onClick={() => {
+                            toggleCheckbox(petId);
                             clearErrors("selectedPet");
                           }}
                         >
                           <input
-                            id={id}
+                            id={petId}
                             className=""
                             type="checkbox"
                             checked={selected}
                             readOnly
                           />
                           <p className="mx-2">
-                            {name} ({type})
+                            {name} ({petType})
                           </p>
-                          {/* TODO: Edit pet */}
-                          <AddPet edit refetch={refetchMyPetList} />
+                          <AddPet edit refetch={refetchMyPetList} pet={pet} />
                         </div>
                       );
                     })}
