@@ -146,7 +146,7 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
                   className="profile-edit-button"
                 >
                   Edit my profile&nbsp;
-                  <HiPencilAlt className="mt-auto mb-[0.2rem] ml-1 fill-white" />
+                  <HiPencilAlt className="mb-[0.2rem] ml-1 mt-auto fill-white" />
                 </button>
               )}
             </div>
@@ -269,7 +269,9 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
           </div>
           <div className="mx-3 mt-2">
             <div className="mx-auto max-w-lg md:w-2/3 md:max-w-2xl">
-              <div className="mb-2 w-full text-xl font-bold">Posts</div>
+              <div className="mb-4 w-full rounded-b border-b-4 border-wp-blue pb-2 text-xl font-bold">
+                Posts
+              </div>
               {props.editable && <UploadPost refetch={refetchPosts} />}
               {/* Posts display */}
               {posts ? (

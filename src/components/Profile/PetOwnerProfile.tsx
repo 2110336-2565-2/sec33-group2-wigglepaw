@@ -75,7 +75,7 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
     <div className="min-h-screen">
       <Header></Header>
       <div className="flex min-h-[90vh]">
-        <div className="mt-6 max-w-[100vw] px-2">
+        <div className="mx-auto mt-6 max-w-[100vw] px-2">
           <div className="mx-3 flex flex-wrap justify-center">
             <div className="my-auto flex w-screen flex-col md:m-4 md:w-1/5 md:min-w-min">
               <div className="relative mx-auto flex h-[6rem] w-[6rem]">
@@ -97,7 +97,7 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
                   className="profile-edit-button"
                 >
                   Edit my profile&nbsp;
-                  <HiPencilAlt className="mt-auto mb-[0.2rem] ml-1 fill-white" />
+                  <HiPencilAlt className="mb-[0.2rem] ml-1 mt-auto fill-white" />
                 </button>
               )}
             </div>
