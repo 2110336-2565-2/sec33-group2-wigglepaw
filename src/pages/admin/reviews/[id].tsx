@@ -9,7 +9,8 @@ import Header from "../../../components/Header";
 import { useSession } from "next-auth/react";
 import SideTab from "../../../components/SideTab";
 import { Review } from "@prisma/client";
-
+import ReviewImage from "../../../components/Profile/ReviewImage";
+import { Rating } from "react-simple-star-rating";
 export default function VerifyPetSitter() {
   // ctx
   const utils = api.useContext();
@@ -40,7 +41,11 @@ export default function VerifyPetSitter() {
   // const review: any = reviews.data?.petSitter;
 
   const petSitter = review.data?.petSitter;
-
+  const petOwner = review.data?.petOwner;
+  const date = review.data?.createdAt;
+  const splitdate = date?.toString().split(" ");
+  review.data?.createdAt.getTime;
+  //const reviewDate = date.toDateString().substring(4).split(" ");
   if (session.data?.user?.userType !== UserType.Admin)
     return <Error statusCode={404} />;
   if (review.isLoading) return <Header />;
@@ -65,76 +70,63 @@ export default function VerifyPetSitter() {
               <div className="flex h-full w-full gap-8">
                 {/* LEFT SIDE */}
                 <div className="flex flex-grow flex-col gap-6 text-[24px]">
-                  <div className="flex w-full items-end leading-none">
-                    <div className="w-[30%] font-semibold">Type</div>
+                  {/*<div className="flex w-full items-end leading-none">
+                    <div className="w-[30%] font-semibold">Pet Owner</div>
                     <div className="w-[70%] text-[30px]">
-                      {petSitter.freelancePetSitter ? "Freelance" : "Hotel"}
+                      {petOwner?.firstName}{" "}{petOwner?.lastName}<br/>
+                      {"#"}{petOwner?.userId}
                     </div>
-                  </div>
+                  </div>*/}
                   <div className="flex flex-col">
                     <div className="flex w-full items-end leading-none">
-                      <div className="w-[30%] font-semibold">Name</div>
-                      <div className="flex w-[70%] flex-col">
-                        {petSitter.freelancePetSitter ? (
+                      <div className="w-[30%] font-semibold">Pet Owner</div>
+                      <div className="grid-rows-8 grid w-full grid-cols-2">
+                        <ReviewImage
+                          img={petOwner?.user.imageUri ?? ""}
+                          size={4}
+                        ></ReviewImage>
+                        <div className="">
                           <div className="text-[30px]">
-                            {petSitter.freelancePetSitter.firstName}{" "}
-                            {petSitter.freelancePetSitter.lastName}
+                            <br />
+                            {petOwner?.firstName + " " + petOwner?.lastName}
                           </div>
-                        ) : (
-                          <div className="text-[30px]">
-                            {petSitter.petHotel.hotelName}
+                          <div className="flex w-full items-end leading-none">
+                            <div className="flex w-[70%] flex-col text-[22.5px] text-wp-blue">
+                              #{petOwner?.user.username}
+                            </div>
                           </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex w-full items-end leading-none">
-                      <div className="w-[30%]"></div>
-                      <div className="flex w-[70%] flex-col text-[22.5px] text-wp-blue">
-                        #{petSitter.user.username}
+                        </div>
                       </div>
                     </div>
                   </div>
                   <div className="flex w-full items-center leading-none">
-                    <div className="w-[30%] font-semibold">Pet Types</div>
+                    <div className="w-[30%] font-semibold">Review Date</div>
                     <div className="flex w-[70%] gap-2">
-                      <PetTypes petTypes={petSitter.petTypes} />
+                      {review.data?.createdAt.toLocaleString().slice(0, -3)}
                     </div>
                   </div>
                   <div className="flex w-full items-end leading-none">
-                    <div className="w-[30%] font-semibold text-wp-blue">
-                      Price Range
-                    </div>
+                    <div className="w-[30%] font-semibold">Rating</div>
                     <div className="w-[70%]r">
-                      ฿{petSitter.startPrice} - ฿{petSitter.endPrice}
-                    </div>
-                  </div>
-                  <div className="flex w-full items-end leading-none">
-                    <div className="w-[30%] font-semibold">Certification</div>
-                    <div className="w-[70%] overflow-hidden text-ellipsis whitespace-nowrap">
-                      <Link
-                        href={petSitter.certificationUri || ""}
-                        className="link"
-                      >
-                        {petSitter.certificationUri}
-                      </Link>
+                      <Rating
+                        initialValue={review.data.rating}
+                        SVGclassName="inline-block"
+                        size={30}
+                        readonly
+                      ></Rating>{" "}
+                      {review.data.rating}
                     </div>
                   </div>
                   <div className="flex w-full">
-                    <div className="w-[30%] font-semibold">Introduction</div>
+                    <div className="w-[30%] font-semibold">Text</div>
                     <div className="w-[70%]">
                       <textarea
                         className="-mb-[3px] w-[80%] resize-none rounded-sm border-2 p-[5px] text-[18px] text-[#434D54] focus:border-[#80bdff] focus:shadow-[0_0_0_0.2rem_rgba(0,123,255,.25)] focus:outline-none"
                         rows={4}
                         readOnly
                       >
-                        I will eat your pets.
+                        {review.data?.text}
                       </textarea>
-                    </div>
-                  </div>
-                  <div className="flex w-full">
-                    <div className="w-[30%] font-semibold">Register Date</div>
-                    <div className="w-[70%] text-wp-blue">
-                      {review.data?.createdAt.toLocaleString()}
                     </div>
                   </div>
                 </div>
@@ -142,22 +134,44 @@ export default function VerifyPetSitter() {
                 <div className="flex w-[304px] flex-col gap-5 px-8 text-[24px]">
                   <div className="relative aspect-square w-full rounded-lg drop-shadow-lg">
                     <Image
-                      src={petSitter.user.imageUri || "/profiledummy.png"}
+                      src={petSitter?.user.imageUri || "/profiledummy.png"}
                       alt=""
                       fill
                       className="rounded-lg object-cover"
                     />
                   </div>
                   <div className="flex flex-col gap-[10px]">
-                    <div className="font-semibold">Address</div>
-                    <div className="text-[20px] text-[#434D54]">
-                      {petSitter.user.address}
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-[10px]">
-                    <div className="font-semibold">Phone Number</div>
-                    <div className="text-wp-blue">
-                      {petSitter.user.phoneNumber}
+                    <div className="text-[30px]">
+                      {petSitter.freelancePetSitter ? (
+                        <>
+                          <div className="text-center font-semibold">
+                            {petSitter.freelancePetSitter.firstName}{" "}
+                            {petSitter.freelancePetSitter.lastName}
+                            <br />
+                          </div>
+                          <div className="text-center text-[22.5px] font-semibold">
+                            #{petSitter?.user.username}
+                          </div>
+                          <br />
+                          <div className="text-center text-[25px] font-semibold text-emerald-600">
+                            Freelance
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="text-center font-semibold">
+                            {petSitter.petHotel.hotelName}
+                            <br />
+                          </div>
+                          <div className="text-center text-[22.5px] font-semibold">
+                            #{petSitter?.user.username}
+                          </div>
+                          <br />
+                          <div className="text-center text-[25px] font-semibold text-cyan-500">
+                            Pet Hotel
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>

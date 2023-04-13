@@ -61,6 +61,16 @@ const ReviewBox = ({
             >
               Delete
             </button>
+          </div>
+        )}
+        {!canDelete && (
+          <div
+            className=".topcorner{ position:absolute;
+            top:0;
+            right:0;
+            }
+           m-1"
+          >
             <button
               className="rounded-md border-4 bg-red-500 p-1 font-bold"
               onClick={async () => {
