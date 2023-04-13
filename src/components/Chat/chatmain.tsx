@@ -193,7 +193,6 @@ export const Chatmain = (props: ChatMainProps) => {
       <div className=" h-[82%] w-full  px-10">
         <div className=" h-full w-full  overflow-y-scroll ">
           {listmsg.map((data: ChatMessage, index) => {
-            console.log(listmsg);
             let who = false; //let sender = other person
 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

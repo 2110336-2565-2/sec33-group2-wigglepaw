@@ -30,6 +30,7 @@ export default function SocketHandler(req, res) {
 
     //new message from client coming, ready to sent to other client
     socket.on("createdMessage", (msg) => {
+      console.log(`I am sending to ${target}`);
       io.to(target).emit("newIncomingMessage", msg);
 
       //console.log(socket.id);

@@ -170,6 +170,12 @@ export const approvalRequestFields = z.object({
   notes: z.string().optional(),
 });
 
+export const messageFields = z.object({
+  senderId: z.string(),
+  chatroomId: z.string().optional().default(""),
+  data: z.string(),
+});
+
 export const userIdObject = z.object({
   userId: userId,
 });

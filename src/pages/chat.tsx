@@ -56,7 +56,7 @@ const ChatRoomPage: NextPage = () => {
 
   useEffect(() => {
     if (session?.user?.userId) {
-      console.log(session.user.userId);
+      //console.log(session.user.userId);
       setRdy(true);
     }
   }, [session]);
@@ -90,7 +90,7 @@ const ChatRoomPage: NextPage = () => {
           },
           {
             onSuccess: (data) => {
-              setCurrentChatroomid(data);
+              //setCurrentChatroomid(data);
               setRdyforchat(true);
             },
           }
@@ -121,7 +121,7 @@ const ChatRoomPage: NextPage = () => {
         >
           <div>
             {allchatroom?.map((data: DataAllchat, index) => {
-              console.log(allchatroom);
+              //console.log(allchatroom);
               const date1 = new Date();
 
               let formattedDate = "";
