@@ -11,57 +11,9 @@ const Home: NextPage = () => {
   return (
     <div className="relative">
       <section className="h-[32rem] min-h-screen w-full md:h-screen">
-        {/* <div className="-z-10 h-screen w-[100%] origin-bottom-right bg-[url('/dog-bg.jpg')] bg-auto bg-left bg-no-repeat"> */}
         <div className="-z-10 flex h-full w-full origin-bottom-right flex-col bg-[url('/dog-bg-2.jpg')] bg-cover bg-right bg-no-repeat md:h-full md:bg-center">
           <Header />
-
           <div className="center-thing -mt-4 flex-grow">
-            {/* <div className="absolute right-[-5%] bottom-0 -z-0 ">
-              <img
-                src="/dogwalking.png"
-                width={560}
-                height={560}
-                className="invisible md:visible"
-                alt="cat"
-              />
-            </div> */}
-            {/* <div className="absolute left-[10%] top-[20%] -z-0 ">
-              <img
-                src="/dogpaw1.png"
-                width={160}
-                height={160}
-                className="invisible md:visible"
-                alt="cat"
-              />
-            </div>
-            <div className="absolute right-[5%] bottom-[30%] -z-0 ">
-              <img
-                src="/dogpaw1.png"
-                width={140}
-                height={140}
-                className="invisible md:visible"
-                alt="cat"
-              />
-            </div>
-            <div className="absolute right-[0%] top-[40%] -z-0 ">
-              <img
-                src="/dogpaw2.png"
-                width={80}
-                height={80}
-                className="invisible md:visible"
-                alt="cat"
-              />
-            </div>
-            <div className="absolute left-[0%] top-[30%] -z-0 ">
-              <img
-                src="/dogpaw3.png"
-                width={120}
-                height={120}
-                className="invisible md:visible"
-                alt="cat"
-              />
-            </div> */}
-
             <div className="mx-5 grid max-h-[80%] w-full max-w-lg grid-cols-3 grid-rows-5 rounded-2xl  bg-white bg-opacity-50 px-6 pb-6 pt-4 shadow-2xl ">
               <h1 className="center-thing col-span-3 row-span-2 text-center text-[2rem] font-semibold md:w-full">
                 <span className="w-full">
@@ -86,7 +38,10 @@ const Home: NextPage = () => {
               </h3>
               <div className="col-span-3 grid grid-cols-1">
                 <div className="center-thing w-full">
-                  <Link href="/matching" className="find-link rounded-xl">
+                  <Link
+                    href="/matching"
+                    className="find-pet-sitters-button find-link rounded-xl"
+                  >
                     Find Pet Sitters &gt;
                   </Link>
                 </div>
