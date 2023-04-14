@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { NextPage } from "next";
+import type { GetServerSidePropsContext, NextPage } from "next";
 import { api } from "../../../utils/api";
 import { useForm } from "react-hook-form";
 import { boolean, custom, z } from "zod";
@@ -12,6 +12,7 @@ import ResponsePopup from "../../../components/ResponsePopup";
 import { Pet } from "@prisma/client";
 import AddPet from "../../../components/Pet/AddPet";
 import { bookingFields } from "../../../schema/schema";
+import { getServerAuthSession } from "../../../server/auth";
 
 const formDataSchema = bookingFields.extend({ selectedPet: z.any() });
 
@@ -265,3 +266,23 @@ const booking: NextPage = () => {
   );
 };
 export default booking;
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = await getServerAuthSession(ctx);
+
+  if (
+    session?.user?.userType == UserType.FreelancePetSitter ||
+    session?.user?.userType == UserType.PetHotel
+  ) {
+    const { username } = ctx.query;
+    return {
+      redirect: {
+        destination: `/user/${username}/profile`,
+        permanent: false,
+      },
+    };
+  }
+
+  // Default return
+  return { props: {} };
+}
