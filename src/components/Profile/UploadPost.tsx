@@ -95,7 +95,7 @@ const UploadPost = (props: UploadPostProps) => {
   return (
     <>
       <button
-        className="profile-post mb-0 py-2 text-center font-semibold"
+        className="new-post-button profile-post mb-0 py-2 text-center font-semibold"
         onClick={() => {
           setIsPosting(true);
         }}
@@ -140,16 +140,19 @@ const UploadPost = (props: UploadPostProps) => {
                     className="flex flex-col"
                   >
                     <input
+                      id="title-input"
                       className="mb-2 rounded border-2 p-1 text-lg font-bold placeholder-gray-400"
                       placeholder="Title"
                       {...register("title", { required: true })}
                     />
                     <textarea
+                      id="content-input"
                       className="mb-2 max-h-[15rem] min-h-[4rem] w-full border-2 p-1"
                       placeholder="Post something about your pet setting experience!"
                       {...register("content")}
                     ></textarea>
                     <input
+                      id="image-input"
                       {...register("image")}
                       type="file"
                       multiple
@@ -159,6 +162,7 @@ const UploadPost = (props: UploadPostProps) => {
                     <ShowImages imagesURLs={imagesURLs} images={images} />
                     <div className="flex w-full justify-between">
                       <button
+                        id="cancel-button"
                         className="rounded-full bg-red-800 px-2 py-1 font-semibold text-white hover:bg-red-600"
                         onClick={() => {
                           setIsPosting(false);
@@ -169,6 +173,7 @@ const UploadPost = (props: UploadPostProps) => {
                         Cancel
                       </button>
                       <button
+                        id="post-button"
                         className="rounded-full bg-sky-800 px-2 py-1 font-semibold text-white hover:bg-sky-600"
                         type="submit"
                       >
