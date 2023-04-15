@@ -80,12 +80,14 @@ export default function VerifyPetSitter() {
                   <div className="flex flex-col">
                     <div className="flex w-full items-end leading-none">
                       <div className="w-[30%] font-semibold">Pet Owner</div>
-                      <div className="grid-rows-8 grid w-full grid-cols-2">
-                        <ReviewImage
-                          img={petOwner?.user.imageUri ?? ""}
-                          size={4}
-                        ></ReviewImage>
-                        <div className="">
+                      <div className="flex flex-row gap-5">
+                        <div className="grid content-end justify-self-center">
+                          <ReviewImage
+                            img={petOwner?.user.imageUri ?? ""}
+                            size={4}
+                          ></ReviewImage>
+                        </div>
+                        <div className="grid justify-self-start">
                           <div className="text-[30px]">
                             <br />
                             {petOwner?.firstName + " " + petOwner?.lastName}
