@@ -105,6 +105,7 @@ const NewReportPage = () => {
                         className="flex-1 rounded-sm border border-slate-400 px-2 py-2"
                         {...register("title", { required: true })}
                         placeholder="What is your report title?"
+                        id="title-input"
                       />
                     </div>
                   </div>
@@ -119,6 +120,7 @@ const NewReportPage = () => {
                         className="h-40 max-h-80 min-h-[3rem] rounded-sm border border-slate-400 p-2 text-start"
                         {...register("description", { required: true })}
                         placeholder="What do you want to report ?"
+                        id="description-input"
                       />
                     </div>
                   </div>
@@ -148,6 +150,7 @@ const NewReportPage = () => {
                     {...register("image")}
                     type="file"
                     accept="image/*"
+                    id="image-input"
                   />
                 </div>
               </div>
