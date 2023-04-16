@@ -11,13 +11,15 @@ const HelpCenter = () => {
       <Header></Header>
       <div id="" className="my-10 flex flex-col items-center">
         <div className="w-[85vw] max-w-4xl">
-          <h1 className="text-[50px] font-extrabold text-[#173554]">
-            Help Center
-          </h1>
+          <div className="flex flex-col items-center md:items-start">
+            <h1 className="text-[36px] font-extrabold text-[#173554] md:text-[50px]">
+              Help Center
+            </h1>
+            <p className="mb-6 text-[#6f768c]">
+              Unhappy about something ? You&apos;ve come to the right place
+            </p>
+          </div>
 
-          <p className="mb-6 text-[#6f768c]">
-            Unhappy about something ? You&apos;ve come to the right place
-          </p>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
             <HelpMenuCard
               linkURL={"/help/reports/new"}
@@ -89,7 +91,7 @@ const HelpMenuCard: FunctionComponent<HelpMenuCardProps> = ({
 }) => {
   return (
     <Link
-      className="flex h-min min-h-[13rem] flex-col rounded-lg border-red-500 p-5 text-white opacity-90 duration-100 hover:scale-[1.01] hover:opacity-100 hover:shadow-lg hover:shadow-slate-400"
+      className="flex h-min min-h-[10rem] flex-col rounded-lg border-red-500 p-5 text-white opacity-90 duration-100 hover:scale-[1.01] hover:opacity-100 hover:shadow-lg hover:shadow-slate-400 md:min-h-[16rem]"
       style={{
         background: bgColor,
 
