@@ -63,10 +63,6 @@ function ContentDataTable() {
   // TODO: extract
   const reportTickets = api.reportTicket.getAll.useQuery();
 
-  // react hooks
-  const [selectedRows, setSelectedRows] = useState<DataRow[]>([]);
-  const [toggledClearRows, setToggleClearRows] = useState(false);
-
   // table title
   const Title = (
     <h1 className="text-3xl font-semibold md:text-4xl">User Reports</h1>
@@ -88,44 +84,12 @@ function ContentDataTable() {
           userId: reportTicket.reporterId,
           reporterUsername: reportTicket.reporter.username,
           imageUri: reportTicket.reporter.imageUri,
-          reporterFullname: "FirstName LastName",
+          reporterFullname: "FirstName LastName", // TODO: fix this
           title: reportTicket.title,
 
           status: reportTicket.status,
         }))
     : [];
-
-  // filter data
-  const [filterText, setFilterText] = useState("");
-
-  // filter component (subheader)
-  const SubHeaderComponent = (
-    <div className="relative mt-2 flex items-center">
-      <label className="mr-2">Filter</label>
-      <input
-        className="peer w-[200px] rounded-md border-2 p-1.5 px-2 text-[16px] text-[#434D54] focus:border-[#80bdff] focus:shadow-[0_0_0_0.2rem_rgba(0,123,255,.25)] focus:outline-none"
-        value={filterText}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          setFilterText(e.target.value);
-        }}
-      />
-      <div className="absolute right-[2px] z-10 hidden h-[80%] bg-white pr-1 hover:flex hover:items-center first:hover:flex first:hover:items-center peer-hover:flex peer-hover:items-center">
-        <button
-          className="rounded-md text-[#434D54] hover:bg-[#434D54]/[.4] hover:text-white"
-          onClick={() => setFilterText("")}
-        >
-          <svg
-            viewBox="0 0 512 512"
-            fill="currentColor"
-            height="18px"
-            width="18px"
-          >
-            <path d="M289.94 256l95-95A24 24 0 00351 127l-95 95-95-95a24 24 0 00-34 34l95 95-95 95a24 24 0 1034 34l95-95 95 95a24 24 0 0034-34z" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  );
 
   // columns to show
   const columns: TableColumn<DataRow>[] = [
@@ -232,19 +196,14 @@ function ContentDataTable() {
       keyField="username"
       title={Title}
       data={data}
-      subHeader
-      subHeaderComponent={SubHeaderComponent}
       columns={columns}
       defaultSortFieldId={4}
       defaultSortAsc={false}
       customStyles={customStyles}
       onRowClicked={onRowClicked}
-      selectableRows
-      onSelectedRowsChange={handleSelectedRowChange}
-      clearSelectedRows={toggledClearRows}
       contextMessage={{
-        singular: "pet sitter",
-        plural: "pet sitters",
+        singular: "report",
+        plural: "reports",
         message: "selected",
       }}
       // contextComponent={}
