@@ -38,11 +38,12 @@ const LoginPage: NextPage = () => {
     });
 
     if (result?.ok) {
-      // redict to previous page
+      // redirect to an intermediate redirector page, then check if usertype is admin or not
+      // if not an admin, redirect to previous page
       const previousPage: string = router.query.previousPage
         ? router.query.previousPage.toString()
         : "/";
-      await router.push(previousPage);
+      await router.push(`/redirector?prev=${previousPage}`);
     } else {
       alert(`Login failed: ${result?.error ?? "unknown error"}`);
     }
@@ -51,7 +52,7 @@ const LoginPage: NextPage = () => {
   return (
     <div className="flex flex-col gap-2">
       <Header></Header>
-      <div className="my-[10vh] mx-auto rounded-xl bg-slate-300 px-6 py-3 text-xl ">
+      <div className="mx-auto my-[10vh] rounded-xl bg-slate-300 px-6 py-3 text-xl ">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="w-fit border-b-2 border-b-gray-400 pb-3 leading-10"
