@@ -235,7 +235,7 @@ export default function RegisterPetSitter() {
             <div className="grid  grid-cols-1 grid-rows-6">
               <div className="m-3">
                 <Input
-                  id="hotelname"
+                  id="hotelName"
                   label="Hotel Name"
                   defaultValue={page2hotel.hotelName}
                   register={register}
@@ -266,16 +266,17 @@ export default function RegisterPetSitter() {
               </div>
               <div className="mx-3 flex flex-wrap content-end items-center justify-evenly">
                 <button
+                  id="back-button"
                   type="button"
                   onClick={(e: { target: any }) => {
                     setState(0);
                   }}
                   className="buttonstyle"
                 >
-                  <p>Back</p>
+                  Back
                 </button>
-                <button type="submit" className="buttonstyle">
-                  <p>Next</p>
+                <button id="next-button" type="submit" className="buttonstyle">
+                  Next
                 </button>
               </div>
             </div>
@@ -337,7 +338,7 @@ export default function RegisterPetSitter() {
                 <div className=" flex w-full flex-col">
                   <label>Bank Name*</label>
                   <input
-                    id="bankname"
+                    id="bankName"
                     placeholder="ABC"
                     className="block w-full rounded border border-gray-100 bg-gray-100 p-1 px-2 text-sm text-gray-900 drop-shadow-md focus:border-blue-500 focus:bg-white focus:ring-blue-500"
                   />
@@ -346,7 +347,7 @@ export default function RegisterPetSitter() {
                 <div className="flex w-full flex-col">
                   <label>Bank No*</label>
                   <input
-                    id="bankno"
+                    id="bankNo"
                     className="block w-full rounded border border-gray-100 bg-gray-100 p-1 px-2 text-sm text-gray-900 drop-shadow-md focus:border-blue-500 focus:bg-white focus:ring-blue-500"
                     placeholder="xxx-x-xxxxx-x"
                     type="number"
@@ -355,7 +356,7 @@ export default function RegisterPetSitter() {
                 <div className=" flex w-full flex-col">
                   <label>Bank Code*</label>
                   <select
-                    id="bankcode"
+                    id="bankCode"
                     placeholder="ABC"
                     className="block w-full rounded border border-gray-100 bg-gray-100 p-1 px-2 text-sm text-gray-900 drop-shadow-md focus:border-blue-500 focus:bg-white focus:ring-blue-500"
                   >
@@ -381,6 +382,7 @@ export default function RegisterPetSitter() {
               </div>
               <div className="mt-5 flex w-full justify-evenly">
                 <button
+                  id="back-button"
                   type="button"
                   onClick={() => {
                     if (page1.type === "petfreelance") {
@@ -393,7 +395,9 @@ export default function RegisterPetSitter() {
                 >
                   Back
                 </button>
-                <button className="buttonstyle">Register</button>
+                <button id="register-button" className="buttonstyle">
+                  Register
+                </button>
               </div>
             </form>
           </div>

@@ -122,7 +122,10 @@ const TableDisplay = ({ linkTo, dataRows, isLoading, tableTitle, fill }) => {
           (dataRows?.length !== 0 ? (
             <>
               {dataRows?.map(
-                (dataRow: any /* FIXME: fix this to generic type */, idx) => {
+                (
+                  dataRow: any /* FIXME: fix this to generic type */,
+                  idx: number
+                ) => {
                   let liClassName =
                     "flex w-full items-center justify-between px-3 py-0.5 hover:bg-slate-300 duration-150 ";
                   if (idx === 0) {

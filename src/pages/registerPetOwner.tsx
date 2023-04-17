@@ -184,7 +184,7 @@ const RegisterPage: NextPage = () => {
               <div className="flex justify-between gap-12">
                 <div className="flex w-full flex-col">
                   <Input
-                    id="firstname"
+                    id="firstName"
                     label="First Name*"
                     placeholder="John"
                     register={register}
@@ -194,7 +194,7 @@ const RegisterPage: NextPage = () => {
                 </div>
                 <div className="flex w-full flex-col">
                   <Input
-                    id="lastname"
+                    id="lastName"
                     label="Last Name*"
                     placeholder="Greenwood"
                     register={register}
@@ -257,7 +257,7 @@ const RegisterPage: NextPage = () => {
               </div>
               <div className="flex w-full flex-col">
                 <Input
-                  id="confirmpassword"
+                  id="confirmPassword"
                   label="Confirm Password"
                   register={register}
                   errors={errors}
@@ -330,8 +330,9 @@ const RegisterPage: NextPage = () => {
               </div>
             </div>
             <div className="my-5 mb-10 flex w-full justify-evenly">
-              <Button>Back</Button>
+              <Button id="back-button">Back</Button>
               <Button
+                id="next-button"
                 type="button"
                 onClick={async () => {
                   // Trigger validation only for field in the first page
@@ -384,7 +385,7 @@ const RegisterPage: NextPage = () => {
                 </div>
                 <div className="col-span-2 flex w-full  flex-col">
                   <Input
-                    id="holdername"
+                    id="holderName"
                     label="Holder Name *"
                     placeholder="Adam Smith"
                     register={register}
@@ -396,7 +397,7 @@ const RegisterPage: NextPage = () => {
                 <div className="col-span-2"></div>
                 <div className="col-span-2 flex w-full  flex-col">
                   <Input
-                    id="cardno"
+                    id="cardNo"
                     label="Card No.*"
                     placeholder="xxxx xxxx xxxx xxxx"
                     register={register}
@@ -409,7 +410,7 @@ const RegisterPage: NextPage = () => {
 
                 <div className="flex w-full flex-col">
                   <Input
-                    id="expdate"
+                    id="expDate"
                     label="Expiration Date*"
                     register={register}
                     errors={errors}
@@ -472,6 +473,7 @@ const RegisterPage: NextPage = () => {
               </div>
               <div className="flex w-full justify-evenly">
                 <Button
+                  id="back-button"
                   type="button"
                   onClick={() => {
                     setPage(0);
@@ -479,7 +481,9 @@ const RegisterPage: NextPage = () => {
                 >
                   Back
                 </Button>
-                <Button type="submit">Register</Button>
+                <Button id="register-button" type="submit">
+                  Register
+                </Button>
               </div>
             </form>
           </div>
