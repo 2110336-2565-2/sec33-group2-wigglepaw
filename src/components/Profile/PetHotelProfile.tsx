@@ -100,9 +100,9 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
     });
     // Refetch user data
     // console.log("Invalidating cache");
-    await utils.user.getByUsername.invalidate({
-      username: props.user.username,
-    });
+    await utils.user.invalidate();
+    await utils.petSitter.invalidate();
+    await utils.petHotel.invalidate();
 
     setEditing(false);
   };

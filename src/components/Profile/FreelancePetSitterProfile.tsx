@@ -104,9 +104,9 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
 
     // Refetch user data
     // console.log("Invalidating cache");
-    await utils.user.getByUsername.invalidate({
-      username: props.user.username,
-    });
+    await utils.user.invalidate();
+    await utils.petSitter.invalidate();
+    await utils.freelancePetSitter.invalidate();
 
     setEditing(false);
   };
