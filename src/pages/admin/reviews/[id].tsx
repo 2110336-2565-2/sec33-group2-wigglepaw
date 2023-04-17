@@ -1,6 +1,5 @@
 import Error from "next/error";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { UserType } from "../../../types/user";
@@ -8,9 +7,9 @@ import { api } from "../../../utils/api";
 import Header from "../../../components/Header";
 import { useSession } from "next-auth/react";
 import SideTab from "../../../components/SideTab";
-import { Review } from "@prisma/client";
 import ReviewImage from "../../../components/Profile/ReviewImage";
 import { Rating } from "react-simple-star-rating";
+
 export default function VerifyPetSitter() {
   // ctx
   const utils = api.useContext();

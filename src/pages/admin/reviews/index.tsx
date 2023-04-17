@@ -1,21 +1,12 @@
-import { PetSitter, ReviewStatus } from "@prisma/client";
+import { ReviewStatus } from "@prisma/client";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactNode, useState } from "react";
-import DataTable, {
-  TableColumn,
-  ConditionalStyles,
-} from "react-data-table-component";
-import { HiCheck, HiMenuAlt1 } from "react-icons/hi";
-import { string } from "zod";
+import DataTable, { TableColumn } from "react-data-table-component";
 import FixedHeader from "../../../components/Header";
-import { UserType } from "../../../types/user";
 import { api } from "../../../utils/api";
-import ReactDOMServer from "react-dom/server";
 import Notification from "../../../components/Admin/Notification";
-import { title } from "process";
-import AdminSideTab from "../../../components/AdminSideTab";
+import SideTab from "../../../components/SideTab";
 export default function Verification() {
   const router = useRouter();
 
@@ -24,7 +15,7 @@ export default function Verification() {
       <FixedHeader />
       <div className="flex flex-grow">
         <div className="flex h-full w-[200px] border-2 max-lg:hidden">
-          <AdminSideTab />
+          <SideTab admin />
         </div>
         <div className="flex w-full flex-col gap-5 overflow-scroll sm:px-[20px] sm:py-[10px] lg:px-[40px] lg:py-[20px] xl:px-[80px] xl:py-[40px]">
           <Notification
