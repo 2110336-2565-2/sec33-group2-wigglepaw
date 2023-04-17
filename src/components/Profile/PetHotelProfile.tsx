@@ -71,6 +71,7 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<FormDataInformation>({
     resolver: zodResolver(formDataSchema),
@@ -238,16 +239,10 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
                   <p className="data-field">
                     <IoPaw className="profile-icon" />
                     &nbsp;Pet Types:&nbsp;
-                    <span className="mt-1 inline-flex flex-wrap gap-2">
-                      {props.user.petTypes.map((petType) => (
-                        <span
-                          key={petType}
-                          className="rounded-xl bg-slate-200 pl-2 pr-2"
-                        >
-                          {petType}
-                        </span>
-                      ))}
-                    </span>
+                    <TagInput
+                      defaultValue={props.user.petTypes}
+                      onChange={(val) => setValue("petTypes", val)}
+                    />
                   </p>
 
                   <div className="mt-3 flex">
