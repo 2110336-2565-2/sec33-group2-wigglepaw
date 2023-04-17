@@ -11,7 +11,7 @@ import Router, { useRouter } from "next/router";
 import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { Rating } from "react-simple-star-rating";
-import ReviewBox from "../../../components/ReviewBox";
+import ReviewBox from "../../../components/Profile/ReviewBox";
 import { UserType } from "../../../types/user";
 import ReviewImage from "../../../components/Profile/ReviewImage";
 import SideTab from "../../../components/SideTab";
@@ -86,11 +86,20 @@ const ReviewPage: NextPage = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
+    clearErrors,
   } = useForm();
   const mutation = api.review.create.useMutation();
   const user = session?.user;
   const OnSubmit = async (data: FormData) => {
     if (user && petSitterData) {
+      if (rating < 1) {
+        setError("rating", {
+          type: "custom",
+          message: "Please choose a rating",
+        });
+        return;
+      }
       await mutation.mutateAsync({
         petOwnerId: user?.userId,
         petSitterId: petSitterData?.userId,
@@ -115,6 +124,7 @@ const ReviewPage: NextPage = () => {
   }
   const handleRating = (rate: number) => {
     setRating(rate);
+    clearErrors();
   };
   const img = petSitterData?.imageUri;
   return (
@@ -194,13 +204,14 @@ const ReviewPage: NextPage = () => {
                           SVGclassName="inline-block"
                           initialValue={rating}
                         />
-                        <br />
+                        {errors.rating && (
+                          <p className="text-red-400">Please choose a rating</p>
+                        )}
                         <h1>Enter your review</h1>
-                        <input
+                        <textarea
                           {...register("review")}
-                          type="text"
-                          className="block w-full border border-black bg-gray-50"
-                        ></input>
+                          className="block max-h-[12rem] min-h-[2rem] w-full border border-black bg-gray-50"
+                        ></textarea>
                         <br />
                         <div className="grid grid-cols-2">
                           <button type="reset" onClick={closeModal}>

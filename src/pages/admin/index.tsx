@@ -71,7 +71,7 @@ const Dashboard = () => {
   });
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen max-w-[100%]">
       <Header></Header>
       <div className="flex h-screen gap-4">
         <SideTab admin />
@@ -144,7 +144,9 @@ const TableDisplay = ({ linkTo, dataRows, isLoading, tableTitle, fill }) => {
                       key={dataRow.id}
                       className={liClassName}
                     >
-                      <p className="float-left h-full ">{dataRow.firstField}</p>
+                      <p className="float-left h-full whitespace-break-spaces">
+                        {dataRow.firstField}
+                      </p>
                       <StatusDisplay status={dataRow.status} />
                     </Link>
                   );

@@ -194,11 +194,7 @@ export default function VerifyPetSitter() {
                           pathname: "/admin/reviews",
                           query: {
                             code: 6901,
-                            notice: `${
-                              petSitter.userType === UserType.FreelancePetSitter
-                                ? "Freelance pet sitter"
-                                : "Pet hotel"
-                            } #${petSitter.user.username} has been resolved.`,
+                            notice: `#${petOwner.user.username}'s review has been resolved.`,
                           },
                         },
                         "/admin/reviews"
@@ -223,11 +219,7 @@ export default function VerifyPetSitter() {
                           pathname: "/admin/reviews",
                           query: {
                             code: 6899,
-                            notice: `${
-                              petSitter.userType === UserType.FreelancePetSitter
-                                ? "Freelance pet sitter"
-                                : "Pet hotel"
-                            } #${petSitter.user.username} has been deleted.`,
+                            notice: `#${petOwner.user.username}'s review has been deleted.`,
                           },
                         },
                         "/admin/reviews"
