@@ -73,6 +73,17 @@ const Header = (props: any) => {
                   </Link>
                 </div>
               )}
+              {session?.user?.userType == UserType.Admin && (
+                <div className="my-auto h-fit">
+                  <Link
+                    href="/admin"
+                    className={`admin-button header-desktop-button 
+                ${asPath.includes("/admin") ? "header-at-page" : ""}`}
+                  >
+                    Admin
+                  </Link>
+                </div>
+              )}
             </>
           )}
 
@@ -320,24 +331,40 @@ const Header = (props: any) => {
                           </Link>
                         </Menu.Item>
                       </div>
-                      {
-                        <div className="px-1 py-[0.1rem]">
-                          <Menu.Item>
-                            <Link
-                              href="/schedule"
-                              className={`
+                      <div className="px-1 py-[0.1rem]">
+                        <Menu.Item>
+                          <Link
+                            href="/schedule"
+                            className={`
                               my-schedule-button header-dropdown group
                               ${
                                 asPath.includes("/schedule")
                                   ? "header-at-page"
                                   : ""
                               }`}
+                          >
+                            My Schedule
+                          </Link>
+                        </Menu.Item>
+                      </div>
+                      {session?.user?.userType == UserType.Admin && (
+                        <div className="px-1 py-[0.1rem]">
+                          <Menu.Item>
+                            <Link
+                              href="/admin"
+                              className={`
+                              admin-button header-dropdown group
+                              ${
+                                asPath.includes("/admin")
+                                  ? "header-at-page"
+                                  : ""
+                              }`}
                             >
-                              My Schedule
+                              Admin
                             </Link>
                           </Menu.Item>
                         </div>
-                      }
+                      )}
                     </>
                   )}
                   <div className="px-1 py-[0.1rem]">
