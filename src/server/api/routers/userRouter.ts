@@ -34,7 +34,7 @@ export const userRouter = createTRPCRouter({
       description: "Get user by username",
       openapi: {
         method: "GET",
-        path: "/api/user/getByUsername",
+        path: "/user/getByUsername",
         tags: ["user"],
       },
     })

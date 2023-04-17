@@ -53,7 +53,6 @@ export const appRouter = createTRPCRouter({
         path: "/healthcheck",
       },
     })
-    .input(z.void())
     .output(z.boolean())
     .query(() => true),
   // OpenAPI schema route, return OpenAPI schema document
@@ -65,8 +64,6 @@ export const appRouter = createTRPCRouter({
         path: "/openapi",
       },
     })
-    .input(z.void())
-    .output(z.any())
     .query(() => {
       const openApiDoc = generateOpenApiDocument(appRouter, {
         title: "WigglePaw API",

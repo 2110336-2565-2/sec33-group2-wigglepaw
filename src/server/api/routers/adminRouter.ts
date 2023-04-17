@@ -6,6 +6,12 @@ import { saltHashPassword } from "../../../pages/api/auth/[...nextauth]";
 
 export const adminRouter = trpc.createTRPCRouter({
   create: trpc.publicProcedure
+    .meta({
+      openapi: {
+        path: "/admin/create",
+        method: "POST",
+      },
+    })
     .input(
       z.object({
         user: schema.userFields,

@@ -78,7 +78,7 @@ async function searchBooking(
 export const bookingRouter = createTRPCRouter({
   //public procedure that get booking by ID
   getById: protectedProcedure
-    .input(z.object({ bookingId: z.string() }))
+    .input(z.object({ bookingId: z.string().cuid2() }))
     .meta({
       openapi: {
         method: "GET",
@@ -88,7 +88,6 @@ export const bookingRouter = createTRPCRouter({
         tags: ["booking"],
       },
     })
-    .output(z.any())
     .query(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
       const result = await findBookingById(ctx.prisma, userId, input.bookingId);
@@ -106,8 +105,6 @@ export const bookingRouter = createTRPCRouter({
         tags: ["booking"],
       },
     })
-    .input(z.void())
-    .output(z.any())
     .query(({ ctx }) => {
       const userId = ctx.session.user.id;
       const result = searchBooking(ctx.prisma, {
@@ -129,7 +126,6 @@ export const bookingRouter = createTRPCRouter({
       },
     })
     .input(bookingFields)
-    .output(z.any())
     .mutation(async ({ ctx, input }) => {
       const userType: UserType = ctx.session.user?.userType ?? null;
       if (!UserTypeLogic.isPetOwner(userType)) return USER_TYPE_MISMATCH;
@@ -173,7 +169,6 @@ export const bookingRouter = createTRPCRouter({
         bookingId: z.string(),
       })
     )
-    .output(z.any())
     .mutation(async ({ ctx, input }) => {
       const userType: UserType = ctx.session.user?.userType ?? null;
       if (!UserTypeLogic.isPetSitter(userType)) return USER_TYPE_MISMATCH;
@@ -214,7 +209,6 @@ export const bookingRouter = createTRPCRouter({
         bookingId: z.string(),
       })
     )
-    .output(z.any())
     .mutation(async ({ ctx, input }) => {
       const userType: UserType = ctx.session.user?.userType ?? null;
       if (!UserTypeLogic.isPetOwner(userType)) return USER_TYPE_MISMATCH;
@@ -256,7 +250,6 @@ export const bookingRouter = createTRPCRouter({
         bookingId: z.string(),
       })
     )
-    .output(z.any())
     .mutation(async ({ ctx, input }) => {
       const userType: UserType = ctx.session.user?.userType ?? null;
       if (!UserTypeLogic.isPetSitter(userType)) return USER_TYPE_MISMATCH;
@@ -295,10 +288,9 @@ export const bookingRouter = createTRPCRouter({
     })
     .input(
       z.object({
-        bookingId: z.string(),
+        bookingId: z.string().cuid2(),
       })
     )
-    .output(z.any())
     .mutation(async ({ ctx, input }) => {
       const userType: UserType = ctx.session.user?.userType ?? null;
       if (!UserTypeLogic.isPetOwner(userType)) return USER_TYPE_MISMATCH;
@@ -376,7 +368,6 @@ export const bookingRouter = createTRPCRouter({
       },
     })
     .input(searchBookingField)
-    .output(z.any())
     .query(async ({ ctx, input }) => {
       if (ctx.session.user == null) return [];
       const userId = ctx.session.user.id;
@@ -415,10 +406,9 @@ export const bookingRouter = createTRPCRouter({
         path: "/booking/myTransaction",
         summary: "Get the current user (my) transaction (finished booking)",
         protect: true,
+        tags: ["booking", "transaction"],
       },
     })
-    .input(z.void())
-    .output(z.any())
     .query(async ({ ctx }) => {
       const userId = ctx.session.user.id;
       const { petOwner } = await ctx.prisma.user.findUniqueOrThrow({
