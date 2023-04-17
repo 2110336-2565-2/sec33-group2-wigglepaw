@@ -29,6 +29,7 @@ export default function SideTab(props: SideTabProps) {
           {/* Close Button */}
           <div className="top-50 absolute right-0 block md:hidden">
             <button
+              id="toggle-sidetab-button"
               className={`flex items-center justify-center`}
               onClick={() => {
                 setOpenTab((prev) => !prev);
@@ -55,6 +56,7 @@ export default function SideTab(props: SideTabProps) {
             <div className="flex flex-col border ">
               {/*Profile Tab*/}
               <Link
+                id="profile-sidetab-link"
                 href={`/user/${props.user?.username}/profile`}
                 className="flex h-[58px] w-[219px] items-center justify-center border bg-[#B77B59] text-lg font-medium hover:bg-[#A96037]"
               >
@@ -63,6 +65,7 @@ export default function SideTab(props: SideTabProps) {
               {/*Booking Tab*/}
               {props.isPetOwner && (
                 <Link
+                  id="booking-sidetab-link"
                   href={`/user/${props.user?.username}/booking`}
                   className="flex h-[58px] w-[219px] items-center justify-center border bg-[#B77B59] text-lg font-medium hover:bg-[#A96037]"
                 >
@@ -71,6 +74,7 @@ export default function SideTab(props: SideTabProps) {
               )}
               {/*Review Tab*/}
               <Link
+                id="review-sidetab-link"
                 href={`/user/${props.user?.username}/review`}
                 className="flex h-[58px] w-[219px] items-center justify-center border bg-[#B77B59] text-lg font-medium hover:bg-[#A96037]"
               >
@@ -79,6 +83,7 @@ export default function SideTab(props: SideTabProps) {
               {/*Contact Tab*/}
               {props.isPetOwner && (
                 <Link
+                  id="chat-sidetab-link"
                   href={{
                     pathname: "/chat",
                     query: { username: props.user?.userId },
@@ -107,6 +112,7 @@ export default function SideTab(props: SideTabProps) {
           {/* Close Button */}
           <div className="top-50 absolute right-0 block md:hidden">
             <button
+              id="toggle-sidetab-button"
               className={`flex items-center justify-center`}
               onClick={() => {
                 setOpenTab((prev) => !prev);
@@ -125,6 +131,7 @@ export default function SideTab(props: SideTabProps) {
             <div className="flex flex-col  ">
               {/*Report problem Tab*/}
               <Link
+                id="report-problem-sidetab-link"
                 href={`/help/reports/new`}
                 className="flex h-[58px] w-[219px] items-center justify-center border bg-[#D9D9D9] text-lg font-medium hover:bg-[#A3A3A3]"
               >
@@ -132,6 +139,7 @@ export default function SideTab(props: SideTabProps) {
               </Link>
               {/*View My Report Tab*/}
               <Link
+                id="view-problem-sidetab-link"
                 href={`/help/reports`}
                 className="flex h-[58px] w-[219px] items-center justify-center border bg-[#D9D9D9] text-lg font-medium hover:bg-[#A3A3A3]"
               >
@@ -156,6 +164,7 @@ export default function SideTab(props: SideTabProps) {
           {/* Close Button */}
           <div className="top-50 absolute right-0 block md:hidden">
             <button
+              id="toggle-sidetab-button"
               className={`flex items-center justify-center`}
               onClick={() => {
                 setOpenTab((prev) => !prev);
@@ -174,6 +183,7 @@ export default function SideTab(props: SideTabProps) {
             <div className="flex flex-col  ">
               {/*Dashboard Tab*/}
               <Link
+                id="admin-dashboard-sidetab-link"
                 href={`/admin/`}
                 className="flex h-[58px] w-[219px] items-center justify-center border bg-[#D9D9D9] text-lg font-medium hover:bg-[#A3A3A3]"
               >
@@ -181,6 +191,7 @@ export default function SideTab(props: SideTabProps) {
               </Link>
               {/*Pet Sitters Tab*/}
               <Link
+                id="admin-verify-sidetab-link"
                 href={`/admin/verification`}
                 className="flex h-[58px] w-[219px] items-center justify-center border bg-[#D9D9D9] text-lg font-medium hover:bg-[#A3A3A3]"
               >
@@ -188,6 +199,7 @@ export default function SideTab(props: SideTabProps) {
               </Link>
               {/*Review Tab*/}
               <Link
+                id="admin-review-sidetab-link"
                 href={`/admin/reviews`}
                 className="flex h-[58px] w-[219px] items-center justify-center border bg-[#D9D9D9] text-lg font-medium hover:bg-[#A3A3A3]"
               >
@@ -195,6 +207,7 @@ export default function SideTab(props: SideTabProps) {
               </Link>
               {/*User Reports Tab*/}
               <Link
+                id="admin-reports-sidetab-link"
                 href={`/admin/report`}
                 className="flex h-[58px] w-[219px] items-center justify-center border bg-[#D9D9D9] text-lg font-medium hover:bg-[#A3A3A3]"
               >
@@ -213,6 +226,7 @@ export default function SideTab(props: SideTabProps) {
     return (
       <div className="top-50 fixed left-0 z-10 block md:hidden">
         <button
+          id="open-sidetab-button"
           className={`flex items-center justify-center`}
           onClick={() => {
             setOpenTab((prev) => !prev);
