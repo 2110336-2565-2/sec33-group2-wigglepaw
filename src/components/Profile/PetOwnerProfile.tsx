@@ -93,6 +93,7 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
 
               {props.editable && !editing && (
                 <button
+                  id="edit-profile-button"
                   onClick={() => setEditing(true)}
                   className="profile-edit-button"
                 >
@@ -130,6 +131,7 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
                     <HiUserCircle className="profile-icon" />
                     &nbsp;Name:&nbsp;
                     <input
+                      id="firstname-lastname-input"
                       defaultValue={`${props.user.firstName} ${props.user.lastName}`}
                       placeholder="Name"
                       className="profile-input"
@@ -145,6 +147,7 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
                     <HiPhone className="profile-icon" />
                     &nbsp;Phone:&nbsp;
                     <input
+                      id="phone-number-input"
                       defaultValue={`${
                         props.user.phoneNumber ? props.user.phoneNumber : ""
                       }`}
@@ -162,6 +165,7 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
                     <HiMap className="profile-icon" />
                     &nbsp;Address:&nbsp;
                     <textarea
+                      id="address-input"
                       defaultValue={`${
                         props.user.address ? props.user.address : ""
                       }`}
@@ -179,6 +183,7 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
                     <HiAtSymbol className="profile-icon" />
                     &nbsp;Email:&nbsp;
                     <input
+                      id="email-input"
                       type="email"
                       defaultValue={`${props.user.email}`}
                       placeholder="Email"
@@ -194,12 +199,14 @@ const PetOwnerProfile = (props: PetOwnerProfileProps) => {
 
                   <div className="mt-3 flex">
                     <button
+                      id="edit-cancel-button"
                       onClick={() => setEditing(false)}
                       className="profile-edit-button bg-red-600 hover:bg-red-500"
                     >
                       Cancel
                     </button>
                     <input
+                      id="edit-save-button"
                       className="profile-edit-button"
                       type="submit"
                       value="Save profile"

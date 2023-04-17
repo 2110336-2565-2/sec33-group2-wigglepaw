@@ -147,6 +147,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
 
               {props.editable && !editing && (
                 <button
+                  id="edit-profile-button"
                   onClick={() => setEditing(true)}
                   className="profile-edit-button"
                 >
@@ -198,6 +199,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
                     <HiUserCircle className="profile-icon" />
                     &nbsp;Name:&nbsp;
                     <input
+                      id="firstname-lastname-input"
                       defaultValue={`${props.user.firstName} ${props.user.lastName}`}
                       placeholder="Name"
                       className="profile-input"
@@ -208,6 +210,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
                     <HiPhone className="profile-icon" />
                     &nbsp;Phone:&nbsp;
                     <input
+                      id="phone-number-input"
                       defaultValue={`${
                         props.user.phoneNumber ? props.user.phoneNumber : ""
                       }`}
@@ -220,6 +223,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
                     <HiMap className="profile-icon" />
                     &nbsp;Address:&nbsp;
                     <textarea
+                      id="address-input"
                       defaultValue={`${
                         props.user.address ? props.user.address : ""
                       }`}
@@ -232,6 +236,7 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
                     <HiAtSymbol className="profile-icon" />
                     &nbsp;Email:&nbsp;
                     <input
+                      id="email-input"
                       defaultValue={`${
                         props.user.email ? props.user.email : ""
                       }`}
@@ -251,16 +256,19 @@ const FreelancePetSitterProfile = (props: FreelancePetSitterProfileProps) => {
 
                   <div className="mt-3 flex">
                     <button
+                      id="edit-cancel-button"
                       onClick={() => setEditing(false)}
                       className="profile-edit-button bg-red-600 hover:bg-red-500"
                     >
                       Cancel
                     </button>
-                    <input
+                    <button
+                      id="edit-save-button"
                       className="profile-edit-button"
                       type="submit"
-                      value="Save profile"
-                    />
+                    >
+                      Save profile
+                    </button>
                   </div>
                 </form>
               </div>
@@ -327,6 +335,7 @@ const TagInput = (props: TagInputProps) => {
           {/* small close/delete button */}
           <button
             type="button"
+            id="tag-input-button"
             className="duration-250 ml-1 rounded-xl ring-slate-500 transition-all ease-in-out hover:bg-slate-300 hover:ring-1"
             onClick={() =>
               setEditingPetTypes(
@@ -354,6 +363,7 @@ const TagInput = (props: TagInputProps) => {
               {unusedPetTypes.map((petType) => (
                 <button
                   key={petType}
+                  id={petType}
                   type="button"
                   className="inline rounded-xl bg-slate-200 pl-2 pr-2 transition-all hover:bg-blue-100 hover:pl-3 hover:pr-3"
                   onClick={() => {
