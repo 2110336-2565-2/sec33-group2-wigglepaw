@@ -1,8 +1,6 @@
-import { ReportTicket, ReportTicketStatus } from "@prisma/client";
+import { ReportTicketStatus } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
-import type { FunctionComponent } from "react";
 import Header from "../../components/Header";
 import SideTab from "../../components/SideTab";
 import { UserType } from "../../types/user";
@@ -71,7 +69,7 @@ const Dashboard = () => {
   });
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen max-w-[100%]">
       <Header></Header>
       <div className="flex h-screen gap-4">
         <SideTab admin />
@@ -82,7 +80,7 @@ const Dashboard = () => {
             dataRows={verifications}
             isLoading={verificationsIsLoading}
             tableTitle={"Pet Sitter Verification"}
-            fill={true}
+            fill={false}
           />
           <div id="review-report-flex-wrapper" className="flex gap-4">
             <TableDisplay
@@ -90,14 +88,14 @@ const Dashboard = () => {
               dataRows={reviews}
               isLoading={reviewsIsLoading}
               tableTitle={"Review Moderation"}
-              fill={false}
+              fill={true}
             />
             <TableDisplay
               linkTo={"/admin/report"}
               dataRows={reports}
               isLoading={reportIsLoading}
               tableTitle={"User Reports"}
-              fill={false}
+              fill={true}
             />
           </div>
         </div>
@@ -107,11 +105,11 @@ const Dashboard = () => {
 };
 
 const TableDisplay = ({ linkTo, dataRows, isLoading, tableTitle, fill }) => {
-  let wrapperClassName = "rounded-md border p-4 shadow-md ";
+  let wrapperClassName = "rounded-md border p-4 shadow-md min-w-[33%rem] ";
   if (fill) {
-    wrapperClassName += "w-full ";
+    wrapperClassName += " w-full";
   } else {
-    wrapperClassName += "flex-grow ";
+    wrapperClassName += " flex-grow";
   }
   return (
     <div className={wrapperClassName}>
@@ -144,7 +142,9 @@ const TableDisplay = ({ linkTo, dataRows, isLoading, tableTitle, fill }) => {
                       key={dataRow.id}
                       className={liClassName}
                     >
-                      <p className="float-left h-full ">{dataRow.firstField}</p>
+                      <p className="float-left h-12 truncate whitespace-break-spaces">
+                        {dataRow.firstField}
+                      </p>
                       <StatusDisplay status={dataRow.status} />
                     </Link>
                   );

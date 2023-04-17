@@ -9,8 +9,8 @@ import Router, { useRouter } from "next/router";
 import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { Rating } from "react-simple-star-rating";
-import { api } from "../utils/api";
-import ReviewImage from "./Profile/ReviewImage";
+import { api } from "../../utils/api";
+import ReviewImage from "./ReviewImage";
 import { stringify } from "querystring";
 const formDataSchema = z.object({
   rating: z.number(),
@@ -94,7 +94,7 @@ const ReviewBox = ({
           {datearray[1]} {datearray[0]} {datearray[2]}
         </div>
       </div>
-      <h1 className="text-l max-w-lg whitespace-normal break-all">{text}</h1>
+      <h1 className="max-w-lg whitespace-normal break-all text-lg">{text}</h1>
     </div>
   );
 };

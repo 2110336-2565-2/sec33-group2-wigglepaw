@@ -1,6 +1,5 @@
 import Error from "next/error";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { UserType } from "../../../types/user";
@@ -8,9 +7,9 @@ import { api } from "../../../utils/api";
 import Header from "../../../components/Header";
 import { useSession } from "next-auth/react";
 import SideTab from "../../../components/SideTab";
-import { Review } from "@prisma/client";
 import ReviewImage from "../../../components/Profile/ReviewImage";
 import { Rating } from "react-simple-star-rating";
+
 export default function VerifyPetSitter() {
   // ctx
   const utils = api.useContext();
@@ -80,12 +79,14 @@ export default function VerifyPetSitter() {
                   <div className="flex flex-col">
                     <div className="flex w-full items-end leading-none">
                       <div className="w-[30%] font-semibold">Pet Owner</div>
-                      <div className="grid-rows-8 grid w-full grid-cols-2">
-                        <ReviewImage
-                          img={petOwner?.user.imageUri ?? ""}
-                          size={4}
-                        ></ReviewImage>
-                        <div className="">
+                      <div className="flex flex-row gap-5">
+                        <div className="grid content-end justify-self-center">
+                          <ReviewImage
+                            img={petOwner?.user.imageUri ?? ""}
+                            size={4}
+                          ></ReviewImage>
+                        </div>
+                        <div className="grid justify-self-start">
                           <div className="text-[30px]">
                             <br />
                             {petOwner?.firstName + " " + petOwner?.lastName}
@@ -192,11 +193,7 @@ export default function VerifyPetSitter() {
                           pathname: "/admin/reviews",
                           query: {
                             code: 6901,
-                            notice: `${
-                              petSitter.userType === UserType.FreelancePetSitter
-                                ? "Freelance pet sitter"
-                                : "Pet hotel"
-                            } #${petSitter.user.username} has been resolved.`,
+                            notice: `#${petOwner.user.username}'s review has been resolved.`,
                           },
                         },
                         "/admin/reviews"
@@ -221,11 +218,7 @@ export default function VerifyPetSitter() {
                           pathname: "/admin/reviews",
                           query: {
                             code: 6899,
-                            notice: `${
-                              petSitter.userType === UserType.FreelancePetSitter
-                                ? "Freelance pet sitter"
-                                : "Pet hotel"
-                            } #${petSitter.user.username} has been deleted.`,
+                            notice: `#${petOwner.user.username}'s review has been deleted.`,
                           },
                         },
                         "/admin/reviews"
