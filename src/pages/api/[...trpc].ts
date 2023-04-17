@@ -4,7 +4,7 @@ import { createOpenApiNextHandler } from "trpc-openapi";
 import { appRouter } from "../../server/api/root";
 import { createTRPCContext } from "../../server/api/trpc";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = (req: NextApiRequest, res: NextApiResponse) => {
   // Handle incoming OpenAPI requests.
   // This is for exposing trpc endpoints as REST.
   return createOpenApiNextHandler({
