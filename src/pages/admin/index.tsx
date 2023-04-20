@@ -71,9 +71,9 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen max-w-[100%]">
       <Header></Header>
-      <div className="flex h-screen gap-4">
+      <div className="flex min-h-screen gap-4">
         <SideTab admin />
-        <div id="main-wrapper" className="my-5 flex w-full flex-col gap-5 px-6">
+        <div id="main-wrapper" className="my-5 flex w-full flex-col px-6 py-4">
           <h1 className="text-3xl font-semibold md:text-4xl">Dashboard</h1>
           <TableDisplay
             linkTo={"/admin/verification"}
@@ -82,7 +82,7 @@ const Dashboard = () => {
             tableTitle={"Pet Sitter Verification"}
             fill={false}
           />
-          <div id="review-report-flex-wrapper" className="flex gap-4">
+          <div id="review-report-flex-wrapper" className="block gap-4 md:flex">
             <TableDisplay
               linkTo={"/admin/reviews"}
               dataRows={reviews}
@@ -105,7 +105,7 @@ const Dashboard = () => {
 };
 
 const TableDisplay = ({ linkTo, dataRows, isLoading, tableTitle, fill }) => {
-  let wrapperClassName = "rounded-md border p-4 shadow-md min-w-[33%rem] ";
+  let wrapperClassName = "mb-4 rounded-md border p-4 shadow-md min-w-[33%rem] ";
   if (fill) {
     wrapperClassName += " w-full";
   } else {
@@ -122,7 +122,10 @@ const TableDisplay = ({ linkTo, dataRows, isLoading, tableTitle, fill }) => {
           (dataRows?.length !== 0 ? (
             <>
               {dataRows?.map(
-                (dataRow: any /* FIXME: fix this to generic type */, idx) => {
+                (
+                  dataRow: any /* FIXME: fix this to generic type */,
+                  idx: number
+                ) => {
                   let liClassName =
                     "flex w-full items-center justify-between px-3 py-0.5 hover:bg-slate-300 duration-150 ";
                   if (idx === 0) {

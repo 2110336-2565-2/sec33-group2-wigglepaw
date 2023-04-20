@@ -77,6 +77,7 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
     resolver: zodResolver(formDataSchema),
     mode: "onSubmit",
   });
+
   const onSubmit = async (data: FormDataInformation) => {
     const petTypesArray: string[] = data.petTypes;
     await updatePetHotel.mutateAsync({
@@ -143,6 +144,7 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
 
               {props.editable && !editing && (
                 <button
+                  id="edit-profile-button"
                   onClick={() => setEditing(true)}
                   className="profile-edit-button"
                 >
@@ -194,16 +196,19 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
                     <HiUserCircle className="profile-icon" />
                     &nbsp;Hotel Name:&nbsp;
                     <input
+                      id="hotelname-input"
                       defaultValue={`${props.user.hotelName}`}
                       placeholder="Hotel Name"
                       className="profile-input"
                       {...register("hotelName", { required: true })}
                     />
                   </p>
+                  {errors.hotelName && <span>This field is required</span>}
                   <p className="data-field">
                     <HiPhone className="profile-icon" />
                     &nbsp;Phone:&nbsp;
                     <input
+                      id="phone-number-input"
                       defaultValue={`${
                         props.user.phoneNumber ? props.user.phoneNumber : ""
                       }`}
@@ -212,10 +217,12 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
                       {...register("phoneNumber", { required: true })}
                     />
                   </p>
+                  {errors.phoneNumber && <span>This field is required</span>}
                   <p className="data-field">
                     <HiMap className="profile-icon" />
                     &nbsp;Address:&nbsp;
                     <textarea
+                      id="address-input"
                       defaultValue={`${
                         props.user.address ? props.user.address : ""
                       }`}
@@ -224,10 +231,12 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
                       {...register("address", { required: true })}
                     />
                   </p>
+                  {errors.address && <span>This field is required</span>}
                   <p className="data-field">
                     <HiAtSymbol className="profile-icon" />
                     &nbsp;Email:&nbsp;
                     <input
+                      id="email-input"
                       defaultValue={`${
                         props.user.email ? props.user.email : ""
                       }`}
@@ -236,6 +245,7 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
                       {...register("email", { required: true })}
                     />
                   </p>
+                  {errors.email && <span>This field is required</span>}
                   <p className="data-field">
                     <IoPaw className="profile-icon" />
                     &nbsp;Pet Types:&nbsp;
@@ -247,12 +257,15 @@ const PetHotelProfile = (props: PetHotelProfileProps) => {
 
                   <div className="mt-3 flex">
                     <button
+                      id="edit-cancel-button"
                       onClick={() => setEditing(false)}
                       className="profile-edit-button bg-red-600 hover:bg-red-500"
+                      type="reset"
                     >
                       Cancel
                     </button>
                     <input
+                      id="edit-save-button"
                       className="profile-edit-button"
                       type="submit"
                       value="Save profile"
@@ -323,6 +336,7 @@ const TagInput = (props: TagInputProps) => {
           {/* small close/delete button */}
           <button
             type="button"
+            id="tag-input-button"
             className="duration-250 ml-1 rounded-xl ring-slate-500 transition-all ease-in-out hover:bg-slate-300 hover:ring-1"
             onClick={() =>
               setEditingPetTypes(
@@ -350,6 +364,7 @@ const TagInput = (props: TagInputProps) => {
               {unusedPetTypes.map((petType) => (
                 <button
                   key={petType}
+                  id={petType}
                   type="button"
                   className="inline rounded-xl bg-slate-200 pl-2 pr-2 transition-all hover:bg-blue-100 hover:pl-3 hover:pr-3"
                   onClick={() => {

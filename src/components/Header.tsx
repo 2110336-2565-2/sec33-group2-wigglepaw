@@ -31,13 +31,13 @@ const Header = (props: any) => {
 
   return (
     <span
-      className={`z-10 flex h-fit w-screen flex-col bg-wp-blue md:pr-2 ${
+      className={`header z-10 flex h-fit w-screen flex-col bg-wp-blue md:pr-2 ${
         fixed ? "sticky inset-auto top-0" : ""
       } ${props.className}
       `}
     >
-      <nav className="flex w-full justify-between">
-        <Link href={"/"} className="flex shrink-0">
+      <nav className="header-nav flex w-full justify-between">
+        <Link href={"/"} className="home-button flex shrink-0">
           <div className="relative m-2 flex h-[4rem] w-[5rem]">
             <Image src={"/logo_w.png"} alt={"WigglePaw"} fill></Image>
           </div>
@@ -54,7 +54,7 @@ const Header = (props: any) => {
                 <div className="my-auto h-fit">
                   <Link
                     href="/matching"
-                    className={`header-desktop-button 
+                    className={`find-pet-sitters-button header-desktop-button
                 ${asPath.includes("/matching") ? "header-at-page" : ""}`}
                   >
                     Find Pet Sitters
@@ -66,10 +66,21 @@ const Header = (props: any) => {
                 <div className="my-auto h-fit">
                   <Link
                     href="/schedule"
-                    className={`header-desktop-button 
+                    className={`my-schedule-button header-desktop-button 
                 ${asPath.includes("/schedule") ? "header-at-page" : ""}`}
                   >
                     My Schedule
+                  </Link>
+                </div>
+              )}
+              {session?.user?.userType == UserType.Admin && (
+                <div className="my-auto h-fit">
+                  <Link
+                    href="/admin"
+                    className={`admin-button header-desktop-button 
+                ${asPath.includes("/admin") ? "header-at-page" : ""}`}
+                  >
+                    Admin
                   </Link>
                 </div>
               )}
@@ -91,12 +102,12 @@ const Header = (props: any) => {
                         <Link
                           href="/registerPetOwner"
                           className={`
-                      header-dropdown group
-                      ${
-                        asPath.includes("/registerPetOwner")
-                          ? "header-at-page border-green-700 text-green-700"
-                          : "bg-green-700 hover:bg-green-500"
-                      }`}
+                          register-pet-owner-button header-dropdown group
+                          ${
+                            asPath.includes("/registerPetOwner")
+                              ? "header-at-page border-green-700 text-green-700"
+                              : "bg-green-700 hover:bg-green-500"
+                          }`}
                         >
                           Register Pet Owner
                         </Link>
@@ -105,12 +116,12 @@ const Header = (props: any) => {
                         <Link
                           href="/registerPetSitter"
                           className={`
-                      header-dropdown group
-                      ${
-                        asPath.includes("/registerPetSitter")
-                          ? "header-at-page border-green-700 text-green-700"
-                          : "bg-green-700 hover:bg-green-500"
-                      }`}
+                          register-pet-sitter-button header-dropdown group
+                          ${
+                            asPath.includes("/registerPetSitter")
+                              ? "header-at-page border-green-700 text-green-700"
+                              : "bg-green-700 hover:bg-green-500"
+                          }`}
                         >
                           Register Pet Sitter
                         </Link>
@@ -125,7 +136,7 @@ const Header = (props: any) => {
                     pathname: "/login",
                     query: { previousPage: previousPage },
                   }}
-                  className={`header-desktop-button
+                  className={`login-button header-desktop-button
                   ${
                     asPath.includes("/login")
                       ? "header-at-page pointer-events-none cursor-default"
@@ -142,7 +153,7 @@ const Header = (props: any) => {
             <div className="relative my-auto flex">
               <Link
                 href="/chat"
-                className={`header-desktop-button my-auto p-2 text-3xl
+                className={`chat-button header-desktop-button my-auto p-2 text-3xl
                 ${asPath.includes("/about") ? "" : ""}`}
               >
                 <HiChatAlt2 className=""></HiChatAlt2>
@@ -150,7 +161,9 @@ const Header = (props: any) => {
               <Menu>
                 <div className="my-auto">
                   <Menu.Button
-                    className={"relative m-2 flex h-[4rem] w-[4rem]"}
+                    className={
+                      "menu-button relative m-2 flex h-[4rem] w-[4rem]"
+                    }
                   >
                     <Image
                       src={profileImageUri}
@@ -166,7 +179,7 @@ const Header = (props: any) => {
                       <Link
                         href={profileLink}
                         className={`
-                        header-dropdown group
+                        profile-button header-dropdown group
                         ${
                           asPath.includes(profileLink) ? "header-at-page" : ""
                         }`}
@@ -180,7 +193,7 @@ const Header = (props: any) => {
                       <Link
                         href={"/schedule"}
                         className={`
-                        header-dropdown group
+                        my-schedule-button header-dropdown group
                         ${
                           asPath.includes("/schedule") ? "header-at-page" : ""
                         }`}
@@ -194,7 +207,7 @@ const Header = (props: any) => {
                       <Link
                         href={"/help"}
                         className={`
-                        header-dropdown group
+                        help-button header-dropdown group
                         ${asPath.includes("/help") ? "header-at-page" : ""}`}
                       >
                         Help
@@ -205,7 +218,7 @@ const Header = (props: any) => {
                     <Menu.Item>
                       <button
                         onClick={logout}
-                        className={`header-dropdown group`}
+                        className={`logout-button header-dropdown group`}
                       >
                         Logout
                       </button>
@@ -223,7 +236,7 @@ const Header = (props: any) => {
             <div className="relative flex sm:hidden">
               <Link
                 href="/chat"
-                className={`header-desktop-button my-auto p-1 text-2xl
+                className={`chat-button header-desktop-button my-auto p-1 text-2xl
                 ${asPath.includes("/chat") ? "header-at-page" : ""}`}
               >
                 <HiChatAlt2 className=""></HiChatAlt2>
@@ -235,11 +248,13 @@ const Header = (props: any) => {
                       src={profileImageUri}
                       alt={"Icon"}
                       fill
-                      className="rounded-full object-cover"
+                      className="menu-button rounded-full object-cover"
                     ></Image>
                   </Menu.Button>
                 ) : (
-                  <Menu.Button className={"header-mobile-menu my-auto h-fit"}>
+                  <Menu.Button
+                    className={"menu-button header-mobile-menu my-auto h-fit"}
+                  >
                     Menu
                   </Menu.Button>
                 )}
@@ -255,7 +270,7 @@ const Header = (props: any) => {
                               query: { previousPage: previousPage },
                             }}
                             className={`
-                            header-dropdown group
+                            login-button header-dropdown group
                             ${
                               asPath.includes("/login")
                                 ? "header-at-page pointer-events-none cursor-default"
@@ -271,12 +286,12 @@ const Header = (props: any) => {
                           <Link
                             href="/registerPetOwner"
                             className={`
-                      header-dropdown group
-                      ${
-                        asPath.includes("/registerPetOwner")
-                          ? "header-at-page border-green-700 text-green-700"
-                          : "bg-green-700 hover:bg-green-500"
-                      }`}
+                            register-pet-owner-button header-dropdown group
+                            ${
+                              asPath.includes("/registerPetOwner")
+                                ? "header-at-page border-green-700 text-green-700"
+                                : "bg-green-700 hover:bg-green-500"
+                            }`}
                           >
                             Register Pet Owner
                           </Link>
@@ -285,12 +300,12 @@ const Header = (props: any) => {
                           <Link
                             href="/registerPetSitter"
                             className={`
-                      header-dropdown group
-                      ${
-                        asPath.includes("/registerPetSitter")
-                          ? "header-at-page border-green-700 text-green-700"
-                          : "bg-green-700 hover:bg-green-500"
-                      }`}
+                            register-pet-sitter-button header-dropdown group
+                            ${
+                              asPath.includes("/registerPetSitter")
+                                ? "header-at-page border-green-700 text-green-700"
+                                : "bg-green-700 hover:bg-green-500"
+                            }`}
                           >
                             Register Pet Sitter
                           </Link>
@@ -305,47 +320,51 @@ const Header = (props: any) => {
                           <Link
                             href={profileLink}
                             className={`
-                        header-dropdown group
-                        ${
-                          asPath.includes(profileLink) ? "header-at-page" : ""
-                        }`}
+                            profile-button header-dropdown group
+                            ${
+                              asPath.includes(profileLink)
+                                ? "header-at-page"
+                                : ""
+                            }`}
                           >
                             Profile
                           </Link>
                         </Menu.Item>
                       </div>
-                      {/* {session?.user?.userType == UserType.PetOwner && (
                       <div className="px-1 py-[0.1rem]">
                         <Menu.Item>
                           <Link
-                            href="/matching"
+                            href="/schedule"
                             className={`
-                        header-dropdown group
-                        ${
-                          asPath.includes("/matching") ? "header-at-page" : ""
-                        }`}
+                              my-schedule-button header-dropdown group
+                              ${
+                                asPath.includes("/schedule")
+                                  ? "header-at-page"
+                                  : ""
+                              }`}
                           >
-                            Find Pet Sitters
+                            My Schedule
                           </Link>
                         </Menu.Item>
                       </div>
-                    )} */}
-                      {
+                      {session?.user?.userType == UserType.Admin && (
                         <div className="px-1 py-[0.1rem]">
                           <Menu.Item>
                             <Link
-                              href="/schedule"
+                              href="/admin"
                               className={`
-                        header-dropdown group
-                        ${
-                          asPath.includes("/schedule") ? "header-at-page" : ""
-                        }`}
+                              admin-button header-dropdown group
+                              ${
+                                asPath.includes("/admin")
+                                  ? "header-at-page"
+                                  : ""
+                              }`}
                             >
-                              My Schedule
+                              Admin
                             </Link>
                           </Menu.Item>
                         </div>
-                      }
+                      )}
                     </>
                   )}
                   <div className="px-1 py-[0.1rem]">
@@ -353,8 +372,8 @@ const Header = (props: any) => {
                       <Link
                         href="/help"
                         className={`
-                      header-dropdown group
-                      ${asPath.includes("/help") ? " header-at-page" : ""}`}
+                        help-button header-dropdown group
+                        ${asPath.includes("/help") ? " header-at-page" : ""}`}
                       >
                         Help
                       </Link>
@@ -364,7 +383,7 @@ const Header = (props: any) => {
                     <Menu.Item>
                       <button
                         onClick={logout}
-                        className={`header-dropdown group`}
+                        className={`logout-button header-dropdown group`}
                       >
                         Logout
                       </button>

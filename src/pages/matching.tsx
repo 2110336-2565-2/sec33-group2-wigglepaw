@@ -32,7 +32,7 @@ const Matching: NextPage = () => {
       <Header />
       <div
         id="content-wrapper"
-        className="-mt-4 mb-8 flex flex-row justify-center gap-8 pt-4 max-md:flex-col max-md:px-6"
+        className="mb-8 mt-4 flex flex-row justify-center gap-8 max-md:flex-col max-md:px-6"
       >
         <MatchingFormProvider
           num={num}
