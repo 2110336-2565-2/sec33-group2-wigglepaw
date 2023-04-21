@@ -13,6 +13,7 @@ import { Pet } from "@prisma/client";
 import AddPet from "../../../components/Pet/AddPet";
 import { bookingFields } from "../../../schema/schema";
 import { getServerAuthSession } from "../../../server/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const formDataSchema = bookingFields.extend({ selectedPet: z.any() });
 
@@ -63,7 +64,10 @@ const booking: NextPage = () => {
     formState: { errors },
     setError,
     clearErrors,
-  } = useForm<FormData>();
+  } = useForm<FormData>({
+    resolver: zodResolver(formDataSchema),
+    mode: "onSubmit",
+  });
 
   const onSubmit = async (data: FormData) => {
     if (petSitterData) {
@@ -84,7 +88,7 @@ const booking: NextPage = () => {
       }
 
       try {
-        await requestBooking.mutateAsync({
+        const response = await requestBooking.mutateAsync({
           petSitterId: petSitterData?.userId,
           startDate: new Date(data.startDate),
           endDate: new Date(data.endDate),
@@ -92,11 +96,16 @@ const booking: NextPage = () => {
           totalPrice: data.totalPrice,
           note: data.note,
         });
-        setIsBookSuccess(true);
-        setTimeout(function () {
-          setIsBookSuccess(false);
-          router.push("/schedule");
-        }, 1500);
+        console.log(JSON.stringify(errors));
+        if (response.status == "ERROR") {
+          alert(response.reason);
+        } else {
+          setIsBookSuccess(true);
+          setTimeout(function () {
+            setIsBookSuccess(false);
+            router.push("/schedule");
+          }, 1500);
+        }
       } catch (err) {
         console.log(err);
       }
@@ -135,6 +144,11 @@ const booking: NextPage = () => {
                     type="datetime-local"
                     {...register("startDate", { required: true })}
                   />
+                  {errors.startDate && (
+                    <div className="w-full text-red-600">
+                      Please enter Start Date
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label htmlFor="endDate" className="mr-1">
@@ -146,6 +160,11 @@ const booking: NextPage = () => {
                     type="datetime-local"
                     {...register("endDate", { required: true })}
                   />
+                  {errors.endDate && (
+                    <div className="w-full text-red-600">
+                      Please enter End Date
+                    </div>
+                  )}
                 </div>
                 <div className="flex">
                   <label htmlFor="petIdList" className="mr-1">
@@ -193,13 +212,19 @@ const booking: NextPage = () => {
                     id="totalPrice"
                     type="number"
                     className="w-40 rounded-md border-2 px-1 text-right"
-                    step="0.01"
-                    min={0}
                     {...register("totalPrice", {
                       required: true,
                       valueAsNumber: true,
                     })}
                   />
+                  {errors.totalPrice && (
+                    <div className="w-full text-red-600">
+                      {errors.totalPrice?.message ==
+                      "Expected number, received nan"
+                        ? "Please enter Total Price"
+                        : errors.totalPrice?.message}
+                    </div>
+                  )}
                 </div>
                 <label htmlFor="note" className="">
                   Note:
