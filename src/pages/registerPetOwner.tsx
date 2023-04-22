@@ -23,14 +23,14 @@ import { env } from "../env/client.mjs";
 
 // Schema for first page of form
 const formDataSchema1 = z.object({
-  firstname: z.string().min(1, { message: "Required" }),
-  lastname: z.string().min(1, { message: "Required" }),
+  firstName: z.string().min(1, { message: "Required" }),
+  lastName: z.string().min(1, { message: "Required" }),
   email: z.string().email(),
   address: z.string().min(1, { message: "Required" }),
   phone: z.string().regex(/^\d{10}$/, { message: "Invalid phone number" }),
   username: z.string().min(1, { message: "Required" }),
   password: z.string().min(1, { message: "Required" }),
-  confirmpassword: z.string().min(1, { message: "Required" }),
+  confirmPassword: z.string().min(1, { message: "Required" }),
   type: z.string().min(1, { message: "Required" }),
   breed: z.string().min(1, { message: "Required" }),
   weight: z
@@ -41,9 +41,9 @@ const formDataSchema1 = z.object({
 });
 // Schema for second page of form
 const formDataSchema2 = z.object({
-  holdername: z.string().min(1, { message: "Required" }),
-  cardno: z.string(), //.regex(/^\d{16}$/),
-  expdate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  holderName: z.string().min(1, { message: "Required" }),
+  cardNo: z.string(), //.regex(/^\d{16}$/),
+  expDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   cvv: z.string().regex(/^\d{3}$/),
   // bankno: z.string(), //.regex(/^\d{12}$/),
   // bankname: z.string(),
@@ -51,7 +51,7 @@ const formDataSchema2 = z.object({
 // Schema for entire form, includes validation for password confirmation
 const formDataSchema = formDataSchema1.merge(formDataSchema2).refine(
   (data) => {
-    return data.password === data.confirmpassword;
+    return data.password === data.confirmPassword;
   },
   {
     message: "Passwords do not match",
@@ -83,8 +83,8 @@ const RegisterPage: NextPage = () => {
 
     // Collect card into omise
     // follow the offical guide: https://www.omise.co/collecting-card-information
-    const exp_month = +data.expdate.slice(5, 7);
-    const exp_year = +data.expdate.slice(0, 4);
+    const exp_month = +data.expDate.slice(5, 7);
+    const exp_year = +data.expDate.slice(0, 4);
     if (exp_month < 1 || exp_month > 12) {
       throw new Error("Invalid expiration month");
     }
@@ -100,8 +100,8 @@ const RegisterPage: NextPage = () => {
       }
 
       cardToken = await createTokenPromise("card", {
-        name: data.holdername,
-        number: data.cardno,
+        name: data.holderName,
+        number: data.cardNo,
         expiration_month: exp_month,
         expiration_year: exp_year,
         security_code: +data.cvv,
@@ -113,19 +113,19 @@ const RegisterPage: NextPage = () => {
     }
 
     //when send Pet type  send tag instead of data.type !!
-    console.assert(data.password === data.confirmpassword);
+    console.assert(data.password === data.confirmPassword);
     try {
       await mutation.mutateAsync({
         user: {
           username: data.username,
-          password: data.confirmpassword,
+          password: data.confirmPassword,
           email: data.email,
           phoneNumber: data.phone,
           address: data.address,
         },
         petOwner: {
-          firstName: data.firstname,
-          lastName: data.lastname,
+          firstName: data.firstName,
+          lastName: data.lastName,
           petTypes: [data.type], // TODO: Please correct this, it's currently just a placeholder
         },
         cardToken,
