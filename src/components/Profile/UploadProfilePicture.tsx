@@ -87,7 +87,7 @@ const UploadProfilePicture = (props: UploadProfilePictureProps) => {
       >
         <HiPencilAlt className="my-auto fill-white text-3xl font-bold" />
       </button>
-      <p className="py-auto absolute left-full ml-2 h-full w-[6rem] text-sm md:hidden">
+      <p className="py-auto absolute left-full ml-2 h-fit w-[6.5rem] rounded-sm bg-sky-400 p-1 text-sm opacity-60 md:hidden">
         Click on your profile to change profile
       </p>
 
