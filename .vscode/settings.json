@@ -1,5 +1,6 @@
 {
     "marquee.widgets.npm-stats.packageNames": [
         "wiggle-muse"
-    ]
+    ],
+    "jest.jestCommandLine": "pnpm jest"
 }

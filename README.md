@@ -31,6 +31,7 @@ Dev: https://frontend-dev-a13f.up.railway.app/
 - `pnpm build`: Build project for production.
 - `pnpm prisma db push`: Push the Prisma schema to the database.
 - `pnpm prisma studio`: Open Prisma Studio, a GUI for viewing and editing data in your database.
+- `pnpm cypress open`: Open Cypress, a GUI for running end-to-end tests.
 
 ## Additional tools
 
