@@ -8,8 +8,7 @@ import type { z } from "zod";
 import Header from "../../../components/Header";
 import SideTab from "../../../components/SideTab";
 import type { ReportFormDataT } from "../../../schema/schema";
-import { api } from "../../../utils/api";
-import { useAddNewReport, useAddNewReportTicket } from "../../../utils/upload";
+import { useAddNewReportTicket } from "../../../utils/upload";
 import ResponsePopup from "../../../components/ResponsePopup";
 import router from "next/router";
 
@@ -86,44 +85,41 @@ const NewReportPage = () => {
   return (
     <div className="min-h-screen">
       <Header></Header>
-      <div className="flex h-screen gap-4 pr-5 ">
+      <div className="flex h-screen max-w-[100vw] gap-4 pr-5">
         <SideTab help />
-        <div className="min-w-mx-auto m-5 min-h-[90vh] w-full">
-          <h1 className="text-[40px] text-[#213951]">New Report</h1>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className=" border border-[#a3bad1] p-5">
-              <div className="mb-6 flex">
-                <div id="title-and-text-wrapper" className="mr-6 flex-1">
-                  <div className="mb-2 flex">
-                    <p className="w-20 text-lg  text-slate-700">Title</p>
-                    <div className="flex flex-1 flex-col">
-                      {errors.title && (
-                        <p className="text-red-500">This field is required</p>
-                      )}
-                      <input
-                        className="flex-1 rounded-sm border border-slate-400 px-2 py-2"
-                        {...register("title", { required: true })}
-                        placeholder="What is your report title?"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mb-2 flex">
-                    <p className="w-20 text-lg  text-slate-700">Text</p>
-                    <div className="flex flex-1 flex-col">
-                      {errors.description && (
-                        <p className="text-red-500">This field is required</p>
-                      )}
-                      <textarea
-                        className="h-40 max-h-80 min-h-[3rem] rounded-sm border border-slate-400 p-2 text-start"
-                        {...register("description", { required: true })}
-                        placeholder="What do you want to report ?"
-                      />
-                    </div>
-                  </div>
+        <div className="content-with-sidetab mt-6">
+          <div className="mx-auto w-fit">
+            <h1 className="mb-2 w-fit text-2xl font-bold">New Report</h1>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="w-fit rounded-md border-2 border-[#a3bad1] p-5 "
+            >
+              <div className="flex w-fit flex-wrap">
+                <div id="title-and-text-wrapper" className="mr-8 min-w-min">
+                  <p className="mb-4 flex h-fit flex-wrap">
+                    <label className="mr-2 text-lg text-slate-700">Title</label>
+                    {errors.title && (
+                      <p className="text-red-500">This field is required</p>
+                    )}
+                    <input
+                      className="float-right rounded-sm border border-slate-400 p-1"
+                      {...register("title", { required: true })}
+                      placeholder="What is your report title?"
+                    />
+                  </p>
+                  <p className="mb-4 flex h-fit flex-wrap">
+                    <label className="mr-2 text-lg text-slate-700">Text</label>
+                    {errors.description && (
+                      <p className="text-red-500">This field is required</p>
+                    )}
+                    <textarea
+                      className="float-right max-h-[12rem] min-h-[3rem] rounded-sm border border-slate-400 p-1"
+                      {...register("description", { required: true })}
+                      placeholder="What do you want to report?"
+                    />
+                  </p>
                 </div>
-
-                <div id="image-upload-wrapper" className=" mr-4">
+                <div id="image-upload-wrapper" className="">
                   <p className="text-lg text-slate-700">Problem Screenshot</p>
                   {imagePreview ? (
                     <div className="relative flex h-48 w-48 justify-center rounded-sm border">
@@ -150,25 +146,24 @@ const NewReportPage = () => {
                   />
                 </div>
               </div>
-
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="w-[200px] rounded-sm border-b-2 border-[#35924e] bg-[#3FBD61] px-4 py-2 text-white duration-100 hover:border-[#20512d] hover:bg-[#35924e]"
+                  className="mt-4 w-[10rem] rounded-sm border-b-2 border-[#35924e] bg-[#3FBD61] px-4 py-2 text-white duration-100 hover:border-[#20512d] hover:bg-[#35924e]"
                 >
                   Submit
                 </button>
               </div>
-            </div>
-          </form>
-          <ResponsePopup
-            show={submitReportSuccess}
-            setShow={setSubmitReportSuccess}
-            panelCSS={"bg-green-400 text-green-700"}
-          >
-            <div className="font-bold">Report Submitted Successful!</div>
-          </ResponsePopup>
+            </form>
+          </div>
         </div>
+        <ResponsePopup
+          show={submitReportSuccess}
+          setShow={setSubmitReportSuccess}
+          panelCSS={"bg-green-400 text-green-700"}
+        >
+          <div className="font-bold">Report Submitted Successful!</div>
+        </ResponsePopup>
       </div>
     </div>
   );

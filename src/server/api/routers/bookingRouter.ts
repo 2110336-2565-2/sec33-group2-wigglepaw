@@ -36,10 +36,13 @@ const BOOKING_STATUS_UNAVAILABLE: returnFieldType = {
   reason:
     "booking status can not be changed ( it may already be either canceled or accepted )",
 };
-const INPUT_DATE_NOT_SUPPORT: returnFieldType = {
+const END_DATE_BEFORE_START_DATE: returnFieldType = {
   status: "ERROR",
-  reason:
-    "Please avoid setting the start date to be earlier than the current date or later than the end date. The start date should be equal to or later than the current date and earlier than or equal to the end date.",
+  reason: "Start Date should be before End Date.",
+};
+const START_DATE_BEFORE_NOW: returnFieldType = {
+  status: "ERROR",
+  reason: "Start Date should be after current time.",
 };
 const PAYMENT_FAILED: returnFieldType = {
   status: "ERROR",
@@ -104,8 +107,12 @@ export const bookingRouter = createTRPCRouter({
       const petOwnerId = ctx.session.user.id;
       const uniquePetIdList = [...new Set(input.petIdList)];
 
-      if (input.startDate < new Date() || input.endDate <= input.startDate)
-        return INPUT_DATE_NOT_SUPPORT;
+      if (input.startDate < new Date()) {
+        return START_DATE_BEFORE_NOW;
+      }
+      if (input.endDate <= input.startDate) {
+        return END_DATE_BEFORE_START_DATE;
+      }
 
       return await ctx.prisma.booking.create({
         data: {

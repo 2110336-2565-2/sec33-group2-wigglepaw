@@ -28,7 +28,7 @@ module.exports = {
         datatable_rejected: "#BDBDBD", // gray to not distract, save red for noti
       },
       fontFamily: {
-        sans: ["Ubuntu", "sans-serif"],
+        sans: ["Ubuntu", "Sarabun", "sans-serif"],
         mono: ['"Ubuntu Condensed"', "ui-monospace"],
       },
     },
