@@ -94,11 +94,8 @@ const NewReportPage = () => {
               onSubmit={handleSubmit(onSubmit)}
               className="w-fit rounded-md border-2 border-[#a3bad1] p-5 "
             >
-              <div className="flex w-fit flex-col lg:flex-row">
-                <div
-                  id="title-and-text-wrapper"
-                  className="inline-block min-w-min lg:mr-8"
-                >
+              <div className="flex w-fit flex-wrap">
+                <div id="title-and-text-wrapper" className="mr-8 min-w-min">
                   <p className="mb-4 flex h-fit flex-wrap">
                     <label className="mr-2 text-lg text-slate-700">Title</label>
                     {errors.title && (
@@ -116,7 +113,7 @@ const NewReportPage = () => {
                       <p className="text-red-500">This field is required</p>
                     )}
                     <textarea
-                      className="float-right min-h-[3rem] rounded-sm border border-slate-400 p-1"
+                      className="float-right max-h-[12rem] min-h-[3rem] rounded-sm border border-slate-400 p-1"
                       {...register("description", { required: true })}
                       placeholder="What do you want to report?"
                     />
