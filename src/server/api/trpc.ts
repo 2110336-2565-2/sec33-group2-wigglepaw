@@ -37,7 +37,7 @@ type CreateContextOptions = {
  * - trpc's `createSSGHelpers` where we don't have req/res
  * @see https://create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
-const createInnerTRPCContext = (opts: CreateContextOptions) => {
+export const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
     session: opts.session,
     prisma,
@@ -72,9 +72,11 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import type { TRPCPanelMeta } from "trpc-panel";
 import superjson from "superjson";
 import { UserType } from "../../types/user";
+import type { OpenApiMeta } from "trpc-openapi";
 
 const t = initTRPC
   .meta<TRPCPanelMeta>()
+  .meta<OpenApiMeta>()
   .context<typeof createTRPCContext>()
   .create({
     transformer: superjson,
@@ -130,7 +132,9 @@ const isAuthed = t.middleware(({ ctx, next }) => {
  *
  * @see https://trpc.io/docs/procedures
  */
-export const protectedProcedure = t.procedure.use(isAuthed);
+export const protectedProcedure = t.procedure.use(isAuthed).meta({
+  secure: true,
+});
 
 // Below is Touchy's authorization middlewares
 const isOwner = t.middleware(({ ctx, next }) => {

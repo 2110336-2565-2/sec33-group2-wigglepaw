@@ -103,7 +103,7 @@ image image
     Float endPrice "❓"
     Float avgRating "❓"
     Int reviewCount 
-    String recipientId "❓"
+    String recipientId 
     }
   
 

@@ -73,6 +73,7 @@
     "socket.io-client": "^4.6.1",
     "styled-components": "^5.3.9",
     "superjson": "1.9.1",
+    "trpc-openapi": "^1.1.2",
     "trpc-panel": "^1.2.8",
     "trpc-playground": "^1.0.4",
     "use-omise": "^1.2.1",
