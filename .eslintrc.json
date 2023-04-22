@@ -15,7 +15,7 @@
     "project": "./tsconfig.json"
   },
   "plugins": ["@typescript-eslint"],
-  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "plugin:cypress/recommended"],
   "rules": {
     "@typescript-eslint/consistent-type-imports": "warn",
     // https://github.com/react-hook-form/react-hook-form/discussions/8622?sort=old#discussioncomment-4060570
