@@ -322,6 +322,7 @@ export const Chatmain = (props: ChatMainProps) => {
                   placeholder="What do you want to say?"
                   id="chat"
                   className="text- my-1 mr-5 w-[90%] rounded-xl border  border-[#CCCCCC] bg-[#F8F8F8] px-2 py-1"
+                  required
                 ></input>
 
                 <button className="relative h-[40px] w-[40px]">
