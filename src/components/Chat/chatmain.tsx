@@ -169,7 +169,7 @@ export const Chatmain = (props: ChatMainProps) => {
       }
     >
       <div className="border-wp-orange flex w-full items-center border-b-2 py-1">
-        <div className="ml-4 hidden w-5 md:visible" onClick={togglemode}>
+        <div className="visible ml-4 w-5 md:hidden" onClick={togglemode}>
           <FontAwesomeIcon className="" size="xl" icon={faAngleLeft} />
         </div>
         <span className="flex-1 px-4 py-2">{props.username}</span>
