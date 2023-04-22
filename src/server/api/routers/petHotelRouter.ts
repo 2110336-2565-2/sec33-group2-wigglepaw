@@ -88,7 +88,8 @@ export const petHotelRouter = createTRPCRouter({
       return;
     }),
 
-  createDummy: publicProcedure
+  // DEPRECATED
+  /*  createDummy: publicProcedure
     .input(
       z.object({
         code: z.string(),
@@ -126,7 +127,7 @@ export const petHotelRouter = createTRPCRouter({
           },
         },
       });
-    }),
+    }), */
 
   getByUserId: publicProcedure
     .input(z.object({ userId: z.string() }))

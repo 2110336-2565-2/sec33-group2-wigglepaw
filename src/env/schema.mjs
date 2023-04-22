@@ -27,6 +27,7 @@ export const serverSchema = z.object({
   OMISE_SECRET_KET: z.string(),
   // DISCORD_CLIENT_ID: z.string(),
   // DISCORD_CLIENT_SECRET: z.string(),
+  DEV_SECRET: z.string(),
 });
 
 /**
@@ -47,6 +48,7 @@ export const serverEnv = {
   OMISE_SECRET_KET: process.env.OMISE_SECRET_KET,
   // DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
   // DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
+  DEV_SECRET: process.env.DEV_SECRET,
 };
 
 /**

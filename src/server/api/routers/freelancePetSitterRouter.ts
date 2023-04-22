@@ -4,15 +4,21 @@ import {
   petSitterFields,
   bankAccountCreateSchema,
 } from "./../../../schema/schema";
-import { initTRPC } from "@trpc/server";
+import { TRPCError, initTRPC } from "@trpc/server";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
 import { env } from "../../../env/server.mjs";
-import { createTRPCContext } from "../../../server/api/trpc";
+import {
+  createTRPCContext,
+  devProcedure,
+  freelancerProcedure,
+} from "../../../server/api/trpc";
 import { appRouter } from "../../../server/api/root";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { saltHashPassword } from "../../../pages/api/auth/[...nextauth]";
 import * as OmiseUtils from "../logic/omise-utils";
+
+const DEV_ERR = "Wrong developer password. (devPass)";
 
 export const freelancePetSitterRouter = createTRPCRouter({
   create: publicProcedure
@@ -87,13 +93,17 @@ export const freelancePetSitterRouter = createTRPCRouter({
       return;
     }),
 
-  createDummy: publicProcedure
+  createDummy: devProcedure
     .input(
       z.object({
         code: z.string(),
+        devPass: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
+      if (!input.devPass || input.devPass != process.env.DEV_SECRET) {
+        throw new TRPCError({ code: "FORBIDDEN", message: DEV_ERR });
+      }
       const code = input.code;
       const saltHash = saltHashPassword("password");
       const salt = saltHash.salt;
@@ -197,14 +207,17 @@ export const freelancePetSitterRouter = createTRPCRouter({
       return freelancer == null ? null : ans;
     }),
 
-  update: publicProcedure
+  update: freelancerProcedure
     .input(
-      z.object({ userId: z.string(), data: freelancePetSitterFields.partial() })
+      z.object({
+        userId: z.string().optional(),
+        data: freelancePetSitterFields.partial(),
+      })
     )
     .mutation(async ({ ctx, input }) => {
       const update = await prisma?.freelancePetSitter.update({
         where: {
-          userId: input.userId,
+          userId: ctx.session.user.userId,
         },
         data: { ...input.data },
       });

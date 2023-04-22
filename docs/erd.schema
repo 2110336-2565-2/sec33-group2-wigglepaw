@@ -113,7 +113,7 @@ Table PetSitter {
   reviewCount Int [not null, default: 0]
   Chatroom Chatroom [not null]
   ApprovalRequest ApprovalRequest [not null]
-  recipientId String [unique, not null, note: 'Associated Omise\'s recipient ID (for getting paid)']
+  recipientId String [unique, note: 'Associated Omise\'s recipient ID (for getting paid)']
 }
 
 Table FreelancePetSitter {

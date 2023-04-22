@@ -63,39 +63,6 @@ export const petOwnerRouter = createTRPCRouter({
     return customer.cards.data[0];
   }),
 
-  createDummy: publicProcedure
-    .input(
-      z.object({
-        code: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const saltHash = saltHashPassword("password");
-      const salt = saltHash.salt;
-      const hash = saltHash.hash;
-      const code = input.code;
-      return await ctx.prisma.petOwner.create({
-        data: {
-          user: {
-            create: {
-              username: "username" + code,
-              email: "email" + code + "@gmail.com",
-              password: hash,
-              salt: salt,
-            },
-          },
-
-          firstName: "firstname" + code,
-          lastName: "lastname" + code,
-        },
-        include: {
-          user: true,
-          pet: true,
-          review: true,
-        },
-      });
-    }),
-
   //update petOwner
   update: publicProcedure
     .input(
