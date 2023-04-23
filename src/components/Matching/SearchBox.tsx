@@ -67,7 +67,7 @@ const SearchBox = () => {
           priority={true}
           className="absolute left-0 right-0 mx-auto max-md:hidden"
         />
-        <p className="max-md:w-a absolute left-[2px] top-5 z-20 w-full text-center text-[25px] font-bold text-white drop-shadow-lg max-md:top-0 max-md:left-0 max-md:bg-[#EB945E] max-md:py-2 max-md:text-[18px]">
+        <p className="max-md:w-a absolute left-[2px] top-5 z-20 w-full text-center text-[25px] font-bold text-white drop-shadow-lg max-md:left-0 max-md:top-0 max-md:bg-[#EB945E] max-md:py-2 max-md:text-[18px]">
           Search Pet Sitters
         </p>
       </div>
@@ -77,7 +77,7 @@ const SearchBox = () => {
       ></div>
       <div
         id="search-pane"
-        className="mx-auto flex w-[312px] flex-col rounded-xl border-b-2 border-r border-r-[#dabf888d] border-b-[#d2b67d] bg-[#ffdfa0] px-7 pb-6 pt-[72px] max-md:w-auto max-md:pt-[66px]"
+        className="mx-auto flex w-[312px] flex-col rounded-xl border-b-2 border-r border-b-[#d2b67d] border-r-[#dabf888d] bg-[#ffdfa0] px-7 pb-6 pt-[72px] max-md:w-auto max-md:pt-[66px]"
       >
         <div id="search-params-wrapper" className="flex flex-col ">
           <div
@@ -88,6 +88,7 @@ const SearchBox = () => {
               Name
             </p>
             <input
+              id="searchName-input"
               className="rounded-md border border-[#633c015d] px-2 py-1 font-extrabold text-[#633c01] placeholder-[#caa79287] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663] max-md:text-[14px] "
               placeholder="Sitter Name"
               {...register("searchName")}
@@ -122,7 +123,11 @@ const SearchBox = () => {
                   </div>
                 </Fragment>
               ))}
-              <input hidden {...register("searchPetTypes")}></input>
+              <input
+                hidden
+                {...register("searchPetTypes")}
+                id="searchPetTypes-input"
+              ></input>
             </div>
           </div>
           <div id="price-range-input-wrapper" className="flex flex-col ">

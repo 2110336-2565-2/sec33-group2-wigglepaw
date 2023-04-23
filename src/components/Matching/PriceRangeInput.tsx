@@ -95,6 +95,7 @@ const PriceRangeInput = () => {
               </p>
             </label>
             <input
+              id="searchPriceMin-input"
               className="w-[90px] rounded-md border border-[#633c015d] px-2 py-1 text-center font-extrabold text-[#633c01] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663] max-md:text-[14px]"
               {...register("searchPriceMin", {
                 value: values[0],
@@ -145,6 +146,7 @@ const PriceRangeInput = () => {
               </p>
             </label>
             <input
+              id="searchPriceMax-input"
               className="w-[90px] rounded-md border border-[#633c015d] px-2 py-1 text-center font-extrabold text-[#633c01] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663] max-md:text-[14px]"
               {...register("searchPriceMax", {
                 value: values[1],
