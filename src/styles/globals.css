@@ -116,19 +116,27 @@
 }
 
 .blue-focus {
-  --tw-text-opacity: 1;
-  --tw-border-opacity: 1;
-  color: rgb(67 77 84 / var(--tw-text-opacity));
+  /* @apply text-[#434D54]; */
 }
 
 .blue-focus:focus {
-  --tw-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-  --tw-shadow-colored: 0 0 0 0.2rem var(--tw-shadow-color);
-  border-color: rgb(128 189 255 / var(--tw-border-opacity));
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
-    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-  outline: 2px solid transparent;
-  outline-offset: 2px;
+  @apply border-[#4081FF] bg-gray-50 shadow-[0_0_0_0.2rem_rgba(0,123,255,.25)] outline-none;
+}
+
+.blue-glow {
+  @apply border-[#4081FF] bg-gray-50 shadow-[0_0_0_0.2rem_rgba(0,123,255,.25)] outline-none;
+}
+
+.red-focus {
+  /* @apply text-[#434D54]; */
+}
+
+.red-focus:focus {
+  @apply border-[#dc3545] bg-gray-50 shadow-[0_0_0_0.2rem_rgba(220,53,69,.25)] outline-none;
+}
+
+.red-glow {
+  @apply border-[#dc3545] bg-gray-50 shadow-[0_0_0_0.2rem_rgba(220,53,69,.25)] outline-none;
 }
 
 html {
