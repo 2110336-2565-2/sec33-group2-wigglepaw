@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Fragment, useContext, useState } from "react";
+import { FocusEvent, Fragment, useContext, useState } from "react";
 import { Range, getTrackBackground } from "react-range";
 import { MatchingFormContext } from "./MatchingFormProvider";
 
@@ -114,6 +114,19 @@ const PriceRangeInput = () => {
                   ]);
                 }
               }}
+              onBlur={(e: FocusEvent<HTMLInputElement>) => {
+                if (
+                  ((e.target as HTMLInputElement).value as unknown as number) >
+                    0 &&
+                  ((e.target as HTMLInputElement).value as unknown as number) <
+                    (values[1] ?? MAX)
+                ) {
+                  setValues([
+                    (e.target as HTMLInputElement).value as unknown as number,
+                    values[1] as number,
+                  ]);
+                }
+              }}
             />
             {errors.searchPriceMin && (
               <span className="text-[10px] text-red-500">invalid input</span>
@@ -140,6 +153,19 @@ const PriceRangeInput = () => {
               onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
                 if (
                   e.key === "Enter" &&
+                  ((e.target as HTMLInputElement).value as unknown as number) <
+                    MAX &&
+                  ((e.target as HTMLInputElement).value as unknown as number) >
+                    (values[0] ?? MIN)
+                ) {
+                  setValues([
+                    values[0] as number,
+                    (e.target as HTMLInputElement).value as unknown as number,
+                  ]);
+                }
+              }}
+              onBlur={(e: FocusEvent<HTMLInputElement>) => {
+                if (
                   ((e.target as HTMLInputElement).value as unknown as number) <
                     MAX &&
                   ((e.target as HTMLInputElement).value as unknown as number) >

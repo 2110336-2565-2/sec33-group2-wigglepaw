@@ -59,7 +59,7 @@ const MatchingFormProvider: React.FunctionComponent<{
           searchSortBy: z.string().default(""),
         })
         .refine((obj) => obj.searchPriceMin <= obj.searchPriceMax, {
-          path: ["searchPriceMin", "searchPriceMax"],
+          path: ["searchPriceMax"],
         })
     ),
   });
