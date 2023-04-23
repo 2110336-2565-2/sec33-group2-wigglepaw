@@ -81,7 +81,16 @@ async function searchBooking(
 export const bookingRouter = createTRPCRouter({
   //public procedure that get booking by ID
   getById: protectedProcedure
-    .input(z.object({ bookingId: z.string() }))
+    .input(z.object({ bookingId: z.string().cuid2() }))
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/booking/getById",
+        summary: "get booking by ID",
+        protect: true,
+        tags: ["booking"],
+      },
+    })
     .query(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
       const result = await findBookingById(ctx.prisma, userId, input.bookingId);
@@ -89,17 +98,36 @@ export const bookingRouter = createTRPCRouter({
     }),
 
   //public procedure that get booking by logged in user ID
-  getMyBooking: protectedProcedure.query(({ ctx }) => {
-    const userId = ctx.session.user.id;
-    const result = searchBooking(ctx.prisma, {
-      where: BookingSearchLogic.byUserIdAuto(userId),
-      select: Return.booking,
-    });
-    return result;
-  }),
+  getMyBooking: protectedProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/booking/getMyBooking",
+        summary: "get booking of logged in user",
+        protect: true,
+        tags: ["booking"],
+      },
+    })
+    .query(({ ctx }) => {
+      const userId = ctx.session.user.id;
+      const result = searchBooking(ctx.prisma, {
+        where: BookingSearchLogic.byUserIdAuto(userId),
+        select: Return.booking,
+      });
+      return result;
+    }),
 
   // request booking petOwner
   request: protectedProcedure
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/booking/request",
+        summary: "Request a new booking for petOwner",
+        protect: true,
+        tags: ["booking"],
+      },
+    })
     .input(bookingFields)
     .mutation(async ({ ctx, input }) => {
       const userType: UserType = ctx.session.user?.userType ?? null;
@@ -134,6 +162,15 @@ export const bookingRouter = createTRPCRouter({
 
   // accept booking by petSitter
   accept: protectedProcedure
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/booking/accept",
+        summary: "Accept a booking by petSitter",
+        protect: true,
+        tags: ["booking"],
+      },
+    })
     .input(
       z.object({
         bookingId: z.string(),
@@ -165,6 +202,15 @@ export const bookingRouter = createTRPCRouter({
 
   // cancel booking by petOwner
   cancel: protectedProcedure
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/booking/cancel",
+        summary: "Cancel a booking by petOwner",
+        protect: true,
+        tags: ["booking"],
+      },
+    })
     .input(
       z.object({
         bookingId: z.string(),
@@ -197,6 +243,15 @@ export const bookingRouter = createTRPCRouter({
 
   // reject booking by petSitter
   reject: protectedProcedure
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/booking/reject",
+        summary: "Reject a booking by petSitter",
+        protect: true,
+        tags: ["booking"],
+      },
+    })
     .input(
       z.object({
         bookingId: z.string(),
@@ -229,9 +284,18 @@ export const bookingRouter = createTRPCRouter({
 
   // pay booking by petOwner
   pay: protectedProcedure
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/booking/pay",
+        summary: "Pay a booking by petOwner",
+        protect: true,
+        tags: ["booking"],
+      },
+    })
     .input(
       z.object({
-        bookingId: z.string(),
+        bookingId: z.string().cuid2(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -301,6 +365,15 @@ export const bookingRouter = createTRPCRouter({
 
   // search booking by petSitter
   search: protectedProcedure
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/booking/search",
+        summary: "Search booking by petSitter",
+        protect: true,
+        tags: ["booking"],
+      },
+    })
     .input(searchBookingField)
     .query(async ({ ctx, input }) => {
       if (ctx.session.user == null) return [];
@@ -333,51 +406,61 @@ export const bookingRouter = createTRPCRouter({
     }),
 
   // Search my transaction
-  myTransaction: protectedProcedure.query(async ({ ctx, input }) => {
-    const userId = ctx.session.user.id;
-    const { petOwner } = await ctx.prisma.user.findUniqueOrThrow({
-      where: {
-        userId: userId,
+  myTransaction: protectedProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/booking/myTransaction",
+        summary: "Get the current user (my) transaction (finished booking)",
+        protect: true,
+        tags: ["booking", "transaction"],
       },
-      select: {
-        petOwner: {
-          select: {
-            customerId: true,
+    })
+    .query(async ({ ctx }) => {
+      const userId = ctx.session.user.id;
+      const { petOwner } = await ctx.prisma.user.findUniqueOrThrow({
+        where: {
+          userId: userId,
+        },
+        select: {
+          petOwner: {
+            select: {
+              customerId: true,
+            },
           },
         },
-      },
-    });
-
-    if (!petOwner) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "You are not a pet owner, so you can't view transactions.",
       });
-    }
 
-    return await ctx.prisma.booking.findMany({
-      where: {
-        status: BookingStatus.paid,
-      },
-      include: {
-        petSitter: {
-          include: {
-            user: {
-              select: {
-                username: true,
-                imageUri: true,
+      if (!petOwner) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You are not a pet owner, so you can't view transactions.",
+        });
+      }
+
+      return await ctx.prisma.booking.findMany({
+        where: {
+          status: BookingStatus.paid,
+        },
+        include: {
+          petSitter: {
+            include: {
+              user: {
+                select: {
+                  username: true,
+                  imageUri: true,
+                },
               },
-            },
-            freelancePetSitter: {
-              select: {
-                firstName: true,
-                lastName: true,
+              freelancePetSitter: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                },
               },
+              petHotel: true,
             },
-            petHotel: true,
           },
         },
-      },
-    });
-  }),
+      });
+    }),
 });

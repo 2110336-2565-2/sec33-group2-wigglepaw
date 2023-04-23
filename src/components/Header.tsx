@@ -205,6 +205,22 @@ const Header = (props: any) => {
                   <div className="px-1 py-[0.1rem]">
                     <Menu.Item>
                       <Link
+                        href={"/transaction"}
+                        className={`
+                        header-dropdown group
+                        ${
+                          asPath.includes("/transaction")
+                            ? "header-at-page"
+                            : ""
+                        }`}
+                      >
+                        My Transaction
+                      </Link>
+                    </Menu.Item>
+                  </div>
+                  <div className="px-1 py-[0.1rem]">
+                    <Menu.Item>
+                      <Link
                         href={"/help"}
                         className={`
                         help-button header-dropdown group

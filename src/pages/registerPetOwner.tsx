@@ -32,12 +32,6 @@ const formDataSchema1 = z.object({
   password: z.string().min(1, { message: "Required" }),
   confirmPassword: z.string().min(1, { message: "Required" }),
   type: z.string().min(1, { message: "Required" }),
-  breed: z.string().min(1, { message: "Required" }),
-  weight: z
-    .string()
-    .trim()
-    .regex(/^\d+/, { message: "Invalid number" })
-    .transform((val) => parseInt(val)),
 });
 // Schema for second page of form
 const formDataSchema2 = z.object({
@@ -163,14 +157,14 @@ const RegisterPage: NextPage = () => {
   const [pettype, setPettype] = useState([]);
   if (page === 0)
     return (
-      <div className="flex h-screen flex-col">
+      <div className="flex flex-col">
         <div className="absolute top-[-4rem] -z-10 ">
           <img src="/Ipage1-1.png" width={468} height={315} alt="cat" />
         </div>
         <div className="absolute right-0 -z-10 ">
           <img src="/Ipage1-2.png" width={468} height={315} alt="cat" />
         </div>
-        <Header></Header>
+        <Header />
         <div className="mt-4 flex h-full flex-col items-center">
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -305,32 +299,11 @@ const RegisterPage: NextPage = () => {
                   {errors["type"]?.message}
                 </span>
               </div>
-              <div className="flex gap-6">
-                <div className="flex w-full flex-col">
-                  <Input
-                    id="breed"
-                    label="Breed of pet* :"
-                    placeholder="Corgi"
-                    register={register}
-                    errors={errors}
-                    validationRules={{ required: true }}
-                  />
-                </div>
-                <div className="flex w-full flex-col">
-                  <Input
-                    id="weight"
-                    label="Weight of pet* :"
-                    placeholder="5-10 kg"
-                    register={register}
-                    errors={errors}
-                    validationRules={{ required: true }}
-                    type="number"
-                  />
-                </div>
-              </div>
             </div>
             <div className="my-5 mb-10 flex w-full justify-evenly">
-              <Button id="back-button">Back</Button>
+              <Button disabled id="back-button">
+                Back
+              </Button>
               <Button
                 id="next-button"
                 type="button"
@@ -429,36 +402,6 @@ const RegisterPage: NextPage = () => {
                   />
                 </div>
                 <div className="col-span-2"></div>
-                {/* <div className="col-span-4 flex w-full items-center">
-                  <input className="mr-2" type="checkbox"></input>
-                  <label>Mobile banking</label>
-                  <div className="ml-4 h-7 w-7 rounded-full bg-blue-300"></div>
-                  <div className="ml-2 h-7 w-7 rounded-full bg-blue-300"></div>
-                  <div className="ml-2 h-7 w-7 rounded-full bg-blue-300"></div>
-                  <div className="ml-2 h-7 w-7 rounded-full bg-blue-300"></div>
-                </div>
-                <div className="flex w-full flex-col">
-                  <Input
-                    id="bankno"
-                    label="Bank No.*"
-                    placeholder="xxx-x-xxxxx-x"
-                    register={register}
-                    errors={errors}
-                    type="number"
-                    validationRules={{ required: true }}
-                  />
-                </div>
-                <div className=" flex w-full flex-col">
-                  <Input
-                    id="bankname"
-                    label="Bank Name*"
-                    register={register}
-                    errors={errors}
-                    validationRules={{ required: true }}
-                    placeholder="ABC"
-                  />
-                </div>
-                <div className="col-span-2"></div> */}
                 <div className="col-span-2 flex items-center">
                   <input className="mr-2" type="checkbox"></input>
                   <div>

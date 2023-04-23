@@ -1,15 +1,11 @@
-import {
-  Booking,
-  FreelancePetSitter,
-  PetHotel,
-  PetSitter,
-} from "@prisma/client";
-import { NextPage } from "next";
-import Header from "../../../components/Header";
-import { AppRouter } from "../../../server/api/root";
-import { api } from "../../../utils/api";
-import { inferProcedureOutput } from "@trpc/server";
+import type { FreelancePetSitter, PetHotel, PetSitter } from "@prisma/client";
+import type { NextPage } from "next";
+import Header from "../components/Header";
+import type { AppRouter } from "../server/api/root";
+import { api } from "../utils/api";
+import type { inferProcedureOutput } from "@trpc/server";
 import Image from "next/image";
+import type { HTMLAttributes } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -21,6 +17,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "next-auth/react";
 import { toPng } from "html-to-image";
+import { UserType } from "../types/user";
+import Link from "next/link";
+import { AiFillCreditCard } from "react-icons/ai";
+import { Popover } from "@headlessui/react";
 
 const Transaction: NextPage = () => {
   const transactions = api.booking.myTransaction.useQuery();
@@ -28,10 +28,16 @@ const Transaction: NextPage = () => {
   const [selectTransactionId, setSelectTransaction] = useState<string | null>(
     null
   );
+  const [hoverTransactionId, setHoverTransaction] = useState<string | null>(
+    null
+  );
 
-  const selectedTransaction = useMemo(
-    () => transactions.data?.find((t) => t.bookingId == selectTransactionId),
-    [selectTransactionId, transactions.data]
+  const displayingTransaction = useMemo(
+    () =>
+      hoverTransactionId
+        ? transactions.data?.find((t) => t.bookingId == hoverTransactionId)
+        : transactions.data?.find((t) => t.bookingId == selectTransactionId),
+    [selectTransactionId, hoverTransactionId, transactions.data]
   );
 
   return (
@@ -39,9 +45,12 @@ const Transaction: NextPage = () => {
       <Header />
 
       <div className="m-auto w-fit">
-        <h1 className="p-2 text-2xl font-bold">Transactions</h1>
+        <header className="flex p-2 text-2xl font-bold">
+          <span>Transactions</span>
+          <CardButton />
+        </header>
 
-        <main className="flex gap-4">
+        <main className="flex flex-wrap justify-center gap-4">
           <div>
             {transactions.data?.length === 0 ? (
               <span className="italic text-gray-500">
@@ -52,12 +61,18 @@ const Transaction: NextPage = () => {
                 transactions={transactions.data ?? []}
                 selectTransactionId={selectTransactionId}
                 setSelectTransaction={setSelectTransaction}
+                setHoverTransaction={setHoverTransaction}
               />
             )}
           </div>
 
-          <div>
-            <TransactionDisplay booking={selectedTransaction} />
+          <div
+            className={
+              "transition-all duration-150" +
+              (hoverTransactionId ? " opacity-80" : "")
+            }
+          >
+            <TransactionDisplay booking={displayingTransaction} />
           </div>
         </main>
       </div>
@@ -65,6 +80,12 @@ const Transaction: NextPage = () => {
   );
 };
 
+/**
+ * Calculate the display name of a pet sitter.
+ *
+ * For freelance pet sitter, "firstName lastName";
+ * for pet hotel, it will be "hotelName".
+ */
 function calDisplayName(
   sitter: PetSitter & {
     freelancePetSitter: Pick<
@@ -95,8 +116,14 @@ const TransactionTable = (props: {
   transactions: Transaction[];
   selectTransactionId: string | null;
   setSelectTransaction: (id: string) => void;
+  setHoverTransaction: (id: string | null) => void;
 }) => {
-  const { transactions, selectTransactionId, setSelectTransaction } = props;
+  const {
+    transactions,
+    selectTransactionId,
+    setSelectTransaction,
+    setHoverTransaction,
+  } = props;
 
   useEffect(() => {
     const firstTransaction = transactions[0];
@@ -121,8 +148,16 @@ const TransactionTable = (props: {
           <TransactionRow
             key={t.bookingId}
             booking={t}
-            selected={props.selectTransactionId === t.bookingId}
-            onClick={() => props.setSelectTransaction(t.bookingId)}
+            selected={selectTransactionId === t.bookingId}
+            onClick={() => {
+              setSelectTransaction(t.bookingId);
+              setHoverTransaction(null);
+            }}
+            onMouseOver={() => {
+              if (selectTransactionId !== t.bookingId)
+                setHoverTransaction(t.bookingId);
+            }}
+            onMouseOut={() => setHoverTransaction(null)}
           />
         ))}
       </tbody>
@@ -130,12 +165,15 @@ const TransactionTable = (props: {
   );
 };
 
-const TransactionRow = (props: {
-  booking: Transaction;
-  selected: boolean;
-  onClick: () => void;
-}) => {
-  const booking = props.booking;
+const TransactionRow = (
+  props: {
+    booking: Transaction;
+    selected: boolean;
+    onClick: () => void;
+  } & HTMLAttributes<HTMLTableRowElement>
+) => {
+  const { booking, selected, onClick, className, ...rest } = props;
+
   const sitter = booking.petSitter;
   const user = sitter.user;
 
@@ -143,10 +181,13 @@ const TransactionRow = (props: {
 
   return (
     <tr
-      className={`border-b-2  ${
-        props.selected ? "bg-amber-100" : "hover:bg-amber-50"
-      }`}
-      onClick={() => props.onClick()}
+      className={
+        `border-b-2  ${selected ? "bg-amber-100" : "hover:bg-amber-50"} ${
+          selected ? "" : "cursor-pointer"
+        }` + (className ?? "")
+      }
+      onClick={onClick}
+      {...rest}
     >
       <td className="p-2">
         <div className="flex flex-col">
@@ -195,6 +236,10 @@ const TransactionDisplay = (props: {
   }
   const sitter = booking.petSitter;
   const user = sitter.user;
+
+  if (session.user.userType !== UserType.PetOwner) {
+    throw new Error("Only pet owner can view this page");
+  }
 
   const ownerDisplayName = `${session?.user.firstName} ${session?.user.lastName}`;
   const sitterDisplayName = calDisplayName(sitter);
@@ -273,7 +318,7 @@ const TransactionDisplay = (props: {
             width={64}
             height={64}
             className="h-14 w-14 rounded-full object-cover"
-            src={session.user.imageUri ?? "/profiledummy.png"}
+            src={session.user.picture ?? "/profiledummy.png"}
             alt="Profile"
           />
           <div className="flex flex-col">
@@ -310,10 +355,13 @@ const TransactionDisplay = (props: {
 
         {!printMode && (
           <section className="flex gap-4 px-6 py-6">
-            <button className="w-full rounded-xl bg-wp-blue p-2 text-lg text-white hover:bg-wp-light-blue">
+            <Link
+              href={`user/${sitter.user.username}/booking`}
+              className="w-full rounded-xl bg-wp-blue p-2 text-center text-lg text-white hover:bg-wp-light-blue"
+            >
               <FontAwesomeIcon icon={faArchive} className="px-2" />
               Booking
-            </button>
+            </Link>
             <button
               className="w-full rounded-xl bg-wp-blue p-2 text-lg text-white hover:bg-wp-light-blue"
               onClick={() => download()}
@@ -328,3 +376,63 @@ const TransactionDisplay = (props: {
   );
 };
 export default Transaction;
+
+/**
+ * Card icon button which display a popover with card info when clicked
+ */
+const CardButton = () => {
+  const { data } = api.petOwner.getMyCardInfo.useQuery();
+
+  const digit = useMemo(() => {
+    if (!data?.last_digits) {
+      return null;
+    }
+
+    // Make card number from last 4 digits
+    // it should look like "**** **** **** 1234" when 1234 is the last 4 digits
+    const encoder = new TextEncoder();
+    const charArr = encoder.encode(data.last_digits.padStart(16 + 3, "*"));
+    charArr[4] = 32;
+    charArr[9] = 32;
+    charArr[14] = 32;
+    return new TextDecoder().decode(charArr);
+  }, [data?.last_digits]);
+
+  if (!data || !digit) {
+    return null;
+  }
+
+  return (
+    <Popover>
+      <Popover.Button className="transition-transform duration-75 hover:scale-110">
+        <AiFillCreditCard className="mx-2 inline" size={24} />
+      </Popover.Button>
+      <Popover.Overlay className="fixed inset-0 bg-black opacity-30" />
+
+      <Popover.Panel className="absolute z-10 w-80">
+        <div className="rounded-xl bg-wp-light-blue p-4 font-card font-thin text-white shadow-black">
+          <div className="text-md col-span-3">{digit}</div>
+
+          <div className="my-1 flex gap-2 text-sm">
+            <span className="flex-1 text-right">
+              {data.expiration_month.toString().padStart(2, "0")}/
+              {data.expiration_year % 100}
+            </span>
+
+            <span className="float-right text-justify">
+              {data.financing.toUpperCase()}
+            </span>
+          </div>
+
+          <div className="flex">
+            <span className="flex-1 text-sm">{data.name}</span>
+
+            <div className="float-right inline-block bg-slate-50 px-1 text-xl text-blue-700">
+              <span>{data.brand}</span>
+            </div>
+          </div>
+        </div>
+      </Popover.Panel>
+    </Popover>
+  );
+};

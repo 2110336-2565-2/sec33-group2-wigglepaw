@@ -148,15 +148,15 @@ const Scheulde: NextPage = () => {
   return (
     <>
       <Header />
-      <div className="relative mt-4 w-screen items-center  justify-start md:flex md:h-screen">
+      <div className="relative mt-4 w-screen items-center justify-start md:flex md:h-screen">
         <Image
           src="/calendarbg.png"
           className="hidden md:visible"
           alt="bg"
           fill
         />
-        <div className="mx-4 h-full w-full md:ml-20 md:mr-10 md:flex">
-          <div className="z-10 h-[90%] w-[92%] overflow-y-scroll  bg-white md:w-full">
+        <div className="mx-auto h-full w-[95vw] md:flex">
+          <div className="z-10 h-[90%] overflow-y-scroll  bg-white md:w-full">
             <FullCalendar
               plugins={[dayGridPlugin, timeGridPlugin]}
               initialView="dayGridMonth"
@@ -180,9 +180,9 @@ const Scheulde: NextPage = () => {
               eventContent={eventContent}
             />
           </div>
-          <div className="relative z-10 mt-10 w-[90%] overflow-x-hidden overflow-y-scroll border-2 border-[#E7E7E7] bg-white md:mt-0 md:ml-5 md:h-[90%] md:w-[50%]">
+          <div className="relative z-10 mx-auto my-8 w-[90%] overflow-x-hidden overflow-y-scroll border-2 border-[#E7E7E7] bg-white md:ml-5 md:mt-0 md:h-[90%] md:w-[50%]">
             {mode === false ? (
-              <div className="center-thing mb-5 bg-[#7B7B7B] py-5 text-2xl text-white">
+              <div className="center-thing bg-[#7B7B7B] py-5 text-2xl text-white">
                 {" "}
                 My Sessions
               </div>
@@ -201,7 +201,7 @@ const Scheulde: NextPage = () => {
               </div>
             )}
             {mode === false ? (
-              <div className=" px-5">
+              <div className="my-5 px-5">
                 <div
                   className="center-thing relative mb-1 border-b-4 border-orange-600 bg-orange-300 bg-opacity-50 px-10 py-2 text-center font-semibold text-orange-600 shadow-md "
                   onClick={() => {

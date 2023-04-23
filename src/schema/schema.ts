@@ -65,11 +65,11 @@ export const freelancePetSitterFields = z.object({
 });
 
 export const bookingFields = z.object({
-  petSitterId: z.string().cuid(),
+  petSitterId: z.string().cuid2(),
   totalPrice: z.number().gt(0),
   startDate: z.date(),
   endDate: z.date(),
-  petIdList: z.array(z.string().cuid()),
+  petIdList: z.array(z.string().cuid2()),
   note: z.string().nullable().default(null),
 });
 
@@ -100,7 +100,7 @@ export const bookingStatus = z.enum([
   BookingStatus.rejected,
 ]);
 
-const userId = z.string().cuid();
+const userId = z.string().cuid2();
 
 const date_from_to = z.object({
   from: z.date().nullable(),
@@ -108,7 +108,7 @@ const date_from_to = z.object({
 });
 
 export const searchBookingField = z.object({
-  searchBookingIdList: z.array(z.string().cuid()).default([]),
+  searchBookingIdList: z.array(z.string().cuid2()).default([]),
   searchUserIdList: z.array(userId).default([]),
   searchStatusList: z.array(bookingStatus).default([]),
   searchStartDate: date_from_to.optional(),
