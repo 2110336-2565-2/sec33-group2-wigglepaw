@@ -13,7 +13,11 @@ const PriceRangeInput = () => {
   const [values, setValues] = useState([BEGIN_MIN, BEGIN_MAX]);
 
   const {
-    useFormReturn: { register, setValue },
+    useFormReturn: {
+      register,
+      setValue,
+      formState: { errors },
+    },
   } = useContext(MatchingFormContext);
 
   return (
@@ -34,8 +38,8 @@ const PriceRangeInput = () => {
           rtl={false}
           onChange={(values) => {
             if (values[0] && values[1]) {
-              setValue("searchPriceMin", values[0]);
-              setValue("searchPriceMax", values[1]);
+              setValue("searchPriceMin", values[0], { shouldValidate: true });
+              setValue("searchPriceMax", values[1], { shouldValidate: true });
               setValues(values);
             }
           }}
@@ -84,7 +88,7 @@ const PriceRangeInput = () => {
         />
 
         <div id="min-max-label" className="flex flex-row justify-center gap-1">
-          <div id="" className="flex flex-col">
+          <div id="searchPriceMin-input-wrapper" className="flex flex-col">
             <label>
               <p className="text-[15px] font-medium text-[#8a5534] max-md:text-[13px]">
                 Min
@@ -111,6 +115,9 @@ const PriceRangeInput = () => {
                 }
               }}
             />
+            {errors.searchPriceMin && (
+              <span className="text-[10px] text-red-500">invalid input</span>
+            )}
           </div>
           <div id="separator-container" className="flex flex-col pt-[38px]">
             <div
@@ -118,7 +125,7 @@ const PriceRangeInput = () => {
               className="h-1 w-12 rounded-[50%] bg-[#c89d48]"
             ></div>
           </div>
-          <div id="" className="flex flex-col">
+          <div id="searchPriceMax-input-wrapper" className="flex flex-col">
             <label>
               <p className="text-[15px] font-medium text-[#8a5534] max-md:text-[13px] ">
                 Max
@@ -145,6 +152,9 @@ const PriceRangeInput = () => {
                 }
               }}
             ></input>
+            {errors.searchPriceMax && (
+              <span className="text-[10px] text-red-500">invalid input</span>
+            )}
           </div>
         </div>
       </div>
