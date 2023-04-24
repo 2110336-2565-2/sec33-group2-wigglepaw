@@ -15,7 +15,9 @@ import { bookingFields } from "../../../schema/schema";
 import { getServerAuthSession } from "../../../server/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const formDataSchema = bookingFields.extend({ selectedPet: z.any() });
+const formDataSchema = bookingFields
+  .omit({ petSitterId: true, petIdList: true })
+  .extend({ selectedPet: z.any() });
 
 type FormData = z.infer<typeof formDataSchema>;
 
@@ -66,7 +68,6 @@ const booking: NextPage = () => {
     clearErrors,
   } = useForm<FormData>({
     resolver: zodResolver(formDataSchema),
-    mode: "onSubmit",
   });
 
   const onSubmit = async (data: FormData) => {
@@ -86,10 +87,9 @@ const booking: NextPage = () => {
         });
         return;
       }
-
       try {
         const response = await requestBooking.mutateAsync({
-          petSitterId: petSitterData?.userId,
+          petSitterId: petSitterData.userId,
           startDate: new Date(data.startDate),
           endDate: new Date(data.endDate),
           petIdList: petIdList,
@@ -112,6 +112,11 @@ const booking: NextPage = () => {
     }
   };
 
+  const onErrors = async () => {
+    console.log(errors);
+    console.log({ petSitterData });
+  };
+
   return (
     <>
       <div className="min-h-screen">
@@ -131,7 +136,7 @@ const booking: NextPage = () => {
                 Pet Sitter: {username}
               </h2>
               <form
-                onSubmit={handleSubmit(onSubmit)}
+                onSubmit={handleSubmit(onSubmit, onErrors)}
                 className="mt-1 flex flex-col gap-2"
               >
                 <div>
