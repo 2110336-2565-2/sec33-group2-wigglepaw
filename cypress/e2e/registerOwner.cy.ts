@@ -73,7 +73,7 @@ describe("Fields validation", () => {
     cy.visit("/registerPetOwner");
   });
 
-  it("TC1-1", async () => {
+  it("TC1-1", () => {
     validInput(Ownerfields["TC1-1"]);
   });
 });
