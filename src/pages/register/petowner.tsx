@@ -191,38 +191,24 @@ const RegisterPage: NextPage = () => {
   };
 
   const { page, incPage, decPage, Pagination } = usePage();
-  const [isLoading, setLoading] = useState(false);
 
-  const userByUsername = api.user.getByUsername.useQuery({
-    username,
-  });
+  // const userByUsername = api.user.getByUsername.useQuery({
+  //   username,
+  // });
+
+  // THERE IS OPENAPI BUG IN GETBYUSERNAME
+  const userByUsername = {
+    data: undefined,
+    refetch() {
+      console.log("Dummy refetch");
+    },
+  };
   const userByEmail = api.user.getByEmail.useQuery({
     email,
   });
 
-  // NAIVE check password match
-  // useEffect(() => {
-  //   (async () => {
-  //     await new Promise((resolve) => {
-  //       setTimeout(resolve, 100);
-  //     });
-  //     console.log("2321");
-  //     if (confirmPassword !== password) {
-  //       setError("confirmPassword", { message: "Passwords do not match" });
-  //     } else {
-  //       clearErrors("confirmPassword");
-  //     }
-  //   })();
-  // }, [password, confirmPassword]);
-
   return (
     <div className="flex min-h-screen flex-col">
-      {/* <div className="absolute top-[-4rem] -z-10 ">
-        <img src="/Ipage1-1.png" width={468} height={315} alt="cat" />
-      </div>
-      <div className="absolute right-0 -z-10 ">
-        <img src="/Ipage1-2.png" width={468} height={315} alt="cat" />
-      </div> */}
       <Header />
       <div className="-mt-4 flex h-full w-full flex-1 items-center bg-[url('/maxsm-registerpetowner.jpg')] bg-cover bg-center bg-no-repeat sm:bg-[url('/registerpetowner.jpg')]">
         <form
@@ -232,9 +218,6 @@ const RegisterPage: NextPage = () => {
           <div className="py-12 max-sm:hidden">
             <Pagination />
           </div>
-          {/* <div className="flex w-full flex-col items-center">
-            <h1 className="text-xl font-medium">Register Pet Owner</h1>
-          </div> */}
           <div className="flex h-full w-full flex-col items-center justify-center gap-2 py-8">
             <h1 className="text-center text-3xl font-bold max-sm:max-w-[160px] max-sm:leading-normal sm:mb-4">
               Register Pet Owner

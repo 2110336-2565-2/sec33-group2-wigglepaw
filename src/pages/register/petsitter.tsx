@@ -284,9 +284,17 @@ const RegisterPage: NextPage = () => {
     Pagination,
   } = usePage();
 
-  const userByUsername = api.user.getByUsername.useQuery({
-    username,
-  });
+  // const userByUsername = api.user.getByUsername.useQuery({
+  //   username,
+  // });
+
+  // THERE IS OPENAPI BUG IN GETBYUSERNAME
+  const userByUsername = {
+    data: undefined,
+    refetch() {
+      console.log("Dummy refetch");
+    },
+  };
   const userByEmail = api.user.getByEmail.useQuery({
     email,
   });
