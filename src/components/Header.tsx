@@ -412,7 +412,7 @@ const Header = (props: any) => {
         )}
       </nav>
 
-      <ReminderBar />
+      {isLoggedIn && <ReminderBar />}
     </span>
   );
 };
