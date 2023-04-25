@@ -654,7 +654,9 @@ const RegisterPage: NextPage = () => {
                           validationSchema3.keyof().options,
                           { shouldFocus: true }
                         );
-                        alert(JSON.stringify(formState.errors));
+                        if (formState.errors) {
+                          alert(JSON.stringify(formState.errors));
+                        }
                         // If validation passes, go to the next page
                         if (validationResult) {
                           incPage();
