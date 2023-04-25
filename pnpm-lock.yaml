@@ -163,9 +163,6 @@ dependencies:
   trpc-playground:
     specifier: ^1.0.4
     version: 1.0.4(@trpc/server@10.18.0)(@types/node@18.15.10)(typescript@4.9.5)(zod@3.21.4)
-  use-omise:
-    specifier: ^1.2.1
-    version: 1.2.1(react@18.2.0)
   yet-another-react-lightbox:
     specifier: ^2.6.2
     version: 2.6.2(react-dom@18.2.0)(react@18.2.0)
@@ -8381,14 +8378,6 @@ packages:
     dependencies:
       punycode: 1.3.2
       querystring: 0.2.0
-    dev: false
-
-  /use-omise@1.2.1(react@18.2.0):
-    resolution: {integrity: sha512-/HUSJSPFJW8I6v01ip6cmI4/Y4qcY0WM7wwAOLVZd/LyJaA/iB+r9gTdB/3PKhqNU8RhVB6C0E+Sf7mSw6BQSQ==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0
-    dependencies:
-      react: 18.2.0
     dev: false
 
   /use-sync-external-store@1.2.0(react@18.2.0):
