@@ -12,10 +12,15 @@ export default async function handler(
     await deleteByUser(ctx.s3, ctx.prisma, ctx.omise, {
       username: "bobby123",
     });
+
+    res.status(200).json({ success: true });
+  } catch (err) {
+    res.status(200).json({ success: false });
+  }
+  try {
     await deleteByUser(ctx.s3, ctx.prisma, ctx.omise, {
       email: "bobby123@hotmail.com",
     });
-    res.status(200).json({ success: true });
   } catch (err) {
     res.status(200).json({ success: false });
   }

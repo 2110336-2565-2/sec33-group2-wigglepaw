@@ -120,8 +120,8 @@ describe("Fields validation", () => {
     cy.request("api/testing/owner/createDummy");
   });
   beforeEach(() => {
-    cy.visit("/register/petowner");
     cy.request("api/testing/owner/removeDummy");
+    cy.visit("/register/petowner");
   });
 
   Object.entries(ownerJSON).forEach(([key, val]) => {
