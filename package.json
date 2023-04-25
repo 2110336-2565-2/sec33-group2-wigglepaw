@@ -78,7 +78,6 @@
     "trpc-openapi": "^1.1.2",
     "trpc-panel": "^1.2.8",
     "trpc-playground": "^1.0.4",
-    "use-omise": "^1.2.1",
     "yet-another-react-lightbox": "^2.6.2",
     "zod": "^3.21.4"
   },

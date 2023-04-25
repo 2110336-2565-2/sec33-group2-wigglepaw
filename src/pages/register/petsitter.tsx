@@ -28,11 +28,11 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { getServerAuthSession } from "../../server/auth";
 import type { OmiseTokenParameters } from "omise-js-typed/dist/lib/omise";
-import { useOmise } from "use-omise";
 import { env } from "../../env/client.mjs";
 import { banks } from "../../common/constants";
 import { Menu } from "@headlessui/react";
 import { resolve } from "path";
+import { createTokenPromise } from "../../utils/omise";
 
 const validationSchema1 = z.object({
   // like a schema for register in form
@@ -111,9 +111,6 @@ const RegisterPage: NextPage = () => {
   const router = useRouter();
   const createFreelancePetSitter = api.freelancePetSitter.create.useMutation();
   const createPetHotel = api.petHotel.create.useMutation();
-  const { createTokenPromise } = useOmise({
-    publicKey: env.NEXT_PUBLIC_OMISE_PUBLISHABLE_KEY,
-  });
 
   const {
     register,
@@ -190,23 +187,6 @@ const RegisterPage: NextPage = () => {
         }
       | undefined;
     try {
-      // Fix very strange omise bug
-      // Poll omise's createTokenPromise, with a timeout of 2 second
-      console.log(createTokenPromise);
-      await Promise.race([
-        (async () => {
-          while (createTokenPromise === null) {
-            await new Promise((resolve) => setTimeout(resolve, 100));
-          }
-        })(),
-        new Promise((resolve) => setTimeout(resolve, 2000)),
-      ]);
-
-      if (createTokenPromise === null) {
-        alert("OmiseJS is not loaded yet, please wait and try again");
-        return;
-      }
-
       // cardToken = await createTokenPromise("card", {
       //   name: data.holderName,
       //   number: data.cardNo,
@@ -315,6 +295,7 @@ const RegisterPage: NextPage = () => {
     <div className="flex min-h-screen flex-col">
       <Header />
       <div className="-mt-4 flex h-full w-full flex-1 items-center bg-[url('/maxsm-registerpetowner.jpg')] bg-cover bg-center bg-no-repeat sm:bg-[url('/registerpetowner.jpg')]">
+        <Script type="text/javascript" src="https://cdn.omise.co/omise.js" />
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="mx-auto my-[64px] flex h-[600px] w-[85%] rounded-xl text-lg sm:h-[540px] md:mx-[10vw] md:w-[75%] lg:mx-[72px] lg:w-[60%] xl:w-[55%]"
@@ -654,7 +635,9 @@ const RegisterPage: NextPage = () => {
                           validationSchema3.keyof().options,
                           { shouldFocus: true }
                         );
-                        alert(JSON.stringify(formState.errors));
+                        if (formState.errors) {
+                          alert(JSON.stringify(formState.errors));
+                        }
                         // If validation passes, go to the next page
                         if (validationResult) {
                           incPage();
