@@ -67,11 +67,12 @@ export const freelancePetSitterFields = z.object({
 export const bookingFields = z.object({
   petSitterId: z.string().cuid2(),
   totalPrice: z.number().gt(0),
-  startDate: z.date(),
-  endDate: z.date(),
+  startDate: z.coerce.date().min(new Date()),
+  endDate: z.coerce.date(),
   petIdList: z.array(z.string().cuid2()),
   note: z.string().nullable().default(null),
 });
+// .refine(schema => schema.startDate < schema.endDate)
 
 export const searchPetSitterField = z.object({
   searchName: z.string().optional(),
