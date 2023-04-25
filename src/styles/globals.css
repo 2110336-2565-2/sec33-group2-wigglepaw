@@ -117,6 +117,22 @@
   text-decoration: underline;
 }
 
+.blue-focus:focus {
+  @apply border-[#4081FF] bg-gray-50 shadow-[0_0_0_0.2rem_rgba(0,123,255,.25)] outline-none;
+}
+
+.blue-glow {
+  @apply border-[#4081FF] bg-gray-50 shadow-[0_0_0_0.2rem_rgba(0,123,255,.25)] outline-none;
+}
+
+.red-focus:focus {
+  @apply border-[#dc3545] bg-gray-50 shadow-[0_0_0_0.2rem_rgba(220,53,69,.25)] outline-none;
+}
+
+.red-glow {
+  @apply border-[#dc3545] bg-gray-50 shadow-[0_0_0_0.2rem_rgba(220,53,69,.25)] outline-none;
+}
+
 html {
   font-size: 16px;
   /* font-family: 'Ubuntu', sans-serif; */
