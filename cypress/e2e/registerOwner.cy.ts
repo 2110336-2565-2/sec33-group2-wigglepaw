@@ -116,8 +116,12 @@ describe("Can traverse to register owner page", () => {
 });
 
 describe("Fields validation", () => {
+  before(() => {
+    cy.request("api/testing/owner/createDummy");
+  });
   beforeEach(() => {
     cy.visit("/register/petowner");
+    cy.request("api/testing/owner/removeDummy");
   });
 
   Object.entries(ownerJSON).forEach(([key, val]) => {
