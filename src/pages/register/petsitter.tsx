@@ -192,6 +192,7 @@ const RegisterPage: NextPage = () => {
     try {
       // Fix very strange omise bug
       // Poll omise's createTokenPromise, with a timeout of 2 second
+      console.log(createTokenPromise);
       await Promise.race([
         (async () => {
           while (createTokenPromise === null) {
