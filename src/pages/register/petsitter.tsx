@@ -190,6 +190,17 @@ const RegisterPage: NextPage = () => {
         }
       | undefined;
     try {
+      // Fix very strange omise bug
+      // Poll omise's createTokenPromise, with a timeout of 2 second
+      await Promise.race([
+        (async () => {
+          while (createTokenPromise === null) {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+          }
+        })(),
+        new Promise((resolve) => setTimeout(resolve, 2000)),
+      ]);
+
       if (createTokenPromise === null) {
         alert("OmiseJS is not loaded yet, please wait and try again");
         return;
