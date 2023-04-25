@@ -41,7 +41,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ["Ubuntu", "Sarabun", "sans-serif"],
-        mono: ['"Ubuntu Condensed"', "ui-monospace"],
+        mono: ['"Ubuntu Mono"', "ui-monospace"],
         card: ["Goldman", "cursive"],
       },
     },
