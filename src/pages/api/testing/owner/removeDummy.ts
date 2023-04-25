@@ -13,7 +13,7 @@ export default async function handler(
       username: "bobby123",
     });
     await deleteByUser(ctx.s3, ctx.prisma, ctx.omise, {
-      email: "boddy123@hotmail.com",
+      email: "bobby123@hotmail.com",
     });
     res.status(200).json({ success: true });
   } catch (err) {
