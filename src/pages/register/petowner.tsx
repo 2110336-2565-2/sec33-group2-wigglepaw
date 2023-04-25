@@ -121,6 +121,7 @@ const RegisterPage: NextPage = () => {
 
     let cardToken;
     try {
+      console.log(createTokenPromise);
       if (createTokenPromise === null) {
         alert("OmiseJS is not loaded yet, please wait and try again");
         return;
@@ -163,7 +164,7 @@ const RegisterPage: NextPage = () => {
       alert(`Failed to register: ${JSON.stringify(e)}`);
     }
 
-    console.log(`Try signin with ${data.username} and ${data.password}`);
+    console.log(`Try signin with username ${data.username}`);
     const result = await signIn("credentials", {
       redirect: false,
       username: data.username,
