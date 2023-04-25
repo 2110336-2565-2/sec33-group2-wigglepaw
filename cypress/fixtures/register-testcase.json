@@ -1,0 +1,347 @@
+{
+    "TC1-1": {
+        "username": "bobby123",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Valid"
+    },
+    "TC1-2": {
+        "username": "bobby123",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing",
+        "phoneNumber": "0818118111",
+        "address": "",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Valid"
+    },
+    "TC1-3": {
+        "username": "bobby123",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            ""
+        ],
+        "expectedOutput": "Valid"
+    },
+    "TC1-5 username is shorter than 5 characters": {
+        "username": "A123",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-6 username exceeds 20 characters": {
+        "username": "a1b2c3d4e5f6g7h8i91011",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-7 username is not alphanumeric": {
+        "username": "bobby@",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-8 username is in the database": {
+        "username": "uOwner123",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-9 password is shorter than 8 characters": {
+        "username": "bobby123",
+        "password": "Bobby",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-9 password exceeds 30 characters": {
+        "username": "bobby123",
+        "password": "a1b2c3d4e5f6g7h8i910111213126366",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-10 email exceeds 35 characters": {
+        "username": "bobby123",
+        "password": "Bobby123_",
+        "email": "a1b2c3d4e5f6g7h8i9a1b2c3d4e5f6g7h8i9a1b2c3d4@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-11 email is not in a valid email format (XXX@XXX.XXX without special symbols)": {
+        "username": "bobby123",
+        "password": "Bobby123_",
+        "email": "bobby123hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-12 email is in the database": {
+        "username": "bobby123",
+        "password": "Bobby123_",
+        "email": "uOwner123@gmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-13 phone number is shorter than 9 digits": {
+        "username": "bobby123",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing",
+        "phoneNumber": "081811",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-14 phone number exceeds 10 digits": {
+        "username": "bobby123",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing",
+        "phoneNumber": "08181181111234",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-15 phone number does not only consist of numbers": {
+        "username": "bobby123",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing",
+        "phoneNumber": "081811811A",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-16 address exceeds 255 characters": {
+        "username": "bobby123",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing",
+        "phoneNumber": "0818118111",
+        "address": "BangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkokBangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-17 firstname is shorter than 1 character": {
+        "username": "bobby123",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "",
+        "lastname": "Testing",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-18 firstname exceeds 30 characters": {
+        "username": "bobby123",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "BobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobby",
+        "lastname": "Testing",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-19 firstname is not alphabetic": {
+        "username": "bobby123",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby123",
+        "lastname": "Testing",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-20 lastname is shorter than 1 character": {
+        "username": "bobby123",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-21 lastname exceeds 30 characters": {
+        "username": "bobby123",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "TestingTestingTestingTestingTestingTesting",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-22 lastname is not alphabetic": {
+        "username": "bobby123",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing123",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-23 petType is not a chosen enumeration from the system": {
+        "username": "bobby123",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat",
+            "Mango"
+        ],
+        "expectedOutput": "Invalid"
+    },
+    "TC1-24 user has more than 10 pet types": {
+        "username": "bobby123",
+        "password": "Bobby123_",
+        "email": "bobby123@hotmail.com",
+        "firstname": "Bobby",
+        "lastname": "Testing",
+        "phoneNumber": "0818118111",
+        "address": "Bangkok",
+        "pettype": [
+            "Dog",
+            "Cat",
+            "Goldfish",
+            "Lizard",
+            "Snake",
+            "Panda",
+            "Bear",
+            "Goldfish",
+            "Hamster",
+            "Wolf",
+            "Rabbit"
+        ],
+        "expectedOutput": "Invalid"
+    }
+}
