@@ -9,11 +9,18 @@ export const userFields = z.object({
   //userId: z.string().cuid().optional(),
   //   petOwner: petOwnerFields.optional(),
   //   petSitter: petSitterFields.optional(),
-  username: z.string(),
-  password: z.string(),
-  email: z.string().email(),
-  phoneNumber: z.string().optional(),
-  address: z.string().optional(),
+  username: z
+    .string()
+    .min(5)
+    .max(20)
+    .regex(/^[a-zA-Z0-9_]*$/),
+  password: z.string().min(8).max(30),
+  email: z.string().email().max(35),
+  phoneNumber: z
+    .string()
+    .regex(/^\d{9,10}$/)
+    .optional(),
+  address: z.string().min(0).max(255).optional(),
   imageUri: z.string().optional(),
   // accounts: Account
 });
@@ -38,9 +45,17 @@ export const petSitterFields = z.object({
 
 export const petOwnerFields = z.object({
   // user: userFields,
-  petTypes: z.array(z.string()),
-  firstName: z.string(),
-  lastName: z.string(),
+  petTypes: z.array(z.string()).max(10),
+  firstName: z
+    .string()
+    .min(1)
+    .max(30)
+    .regex(/^[a-zA-Z]+$/),
+  lastName: z
+    .string()
+    .min(1)
+    .max(30)
+    .regex(/^[a-zA-Z]+$/),
   customerId: z.string(),
 });
 
@@ -60,13 +75,21 @@ export const petHotelFields = z.object({
 
 export const freelancePetSitterFields = z.object({
   //petSitter: petSitterFields,
-  firstName: z.string(),
-  lastName: z.string(),
+  firstName: z
+    .string()
+    .min(1)
+    .max(30)
+    .regex(/^[a-zA-Z]+$/),
+  lastName: z
+    .string()
+    .min(1)
+    .max(30)
+    .regex(/^[a-zA-Z]+$/),
 });
 
 export const bookingFields = z.object({
   petSitterId: z.string().cuid2(),
-  totalPrice: z.number().gt(0),
+  totalPrice: z.number().gt(0).lte(100000),
   startDate: z.coerce.date().min(new Date()),
   endDate: z.coerce.date(),
   petIdList: z.array(z.string().cuid2()),

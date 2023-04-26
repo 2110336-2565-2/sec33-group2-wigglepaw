@@ -249,7 +249,7 @@ export const userRouter = createTRPCRouter({
   }),
 });
 
-async function deleteByUser(
+export async function deleteByUser(
   s3: S3Client,
   prisma: PrismaClient,
   omise: IOmise,

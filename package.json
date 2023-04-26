@@ -10,6 +10,7 @@
     "start": "next start",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
+    "test:coverage:request":"vitest bookingRequest.test --coverage.enabled --coverage.include=src/server/api/routers/bookingRouter.ts",
     "test:e2e": "cypress open",
     "prepare": "husky install",
     "db-seed": "set NODE_ENV=development&& prisma db seed"

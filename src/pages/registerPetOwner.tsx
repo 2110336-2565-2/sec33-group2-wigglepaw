@@ -152,6 +152,9 @@ const RegisterPage: NextPage = () => {
       alert(`Login failed: ${result?.error ?? "unknown error"}`);
     }
   };
+  const onErrors = async () => {
+    console.log(errors);
+  };
 
   const handleSpace = (e) => {
     if (e.keyCode === 32) {
@@ -357,7 +360,10 @@ const RegisterPage: NextPage = () => {
             <h1 className=" ml-[15%] text-2xl font-bold">Payment</h1>
           </div>
           <div className="flex justify-center">
-            <form onSubmit={handleSubmit(onSubmit)} className=" h-full w-2/3 ">
+            <form
+              onSubmit={handleSubmit(onSubmit, onErrors)}
+              className=" h-full w-2/3 "
+            >
               <div className="mx-auto grid w-full grid-cols-2 grid-rows-6 gap-5 md:grid-cols-4 md:gap-2">
                 <div className="col-span-4 flex items-center">
                   {/* <input className="mr-2" type="checkbox"></input>
