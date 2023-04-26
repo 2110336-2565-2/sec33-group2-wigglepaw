@@ -14,6 +14,6 @@ export const omise =
     secretKey: process.env.OMISE_SECRET_KET,
   });
 
-if (env.NODE_ENV !== "production") {
-  global.omise = omise;
-}
+// if (env.NODE_ENV !== "production") {
+global.omise = omise;
+// }
