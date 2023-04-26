@@ -6,42 +6,31 @@ import { useEffect, useState } from "react";
 import { UserType } from "../../../types/user";
 import { api } from "../../../utils/api";
 import Header from "../../../components/Header";
-import { useSession } from "next-auth/react";
-import SideTab from "../../../components/SideTab";
 
 export default function VerifyPetSitter() {
   // ctx
   const utils = api.useContext();
 
-  // session
-  const session = useSession();
-
   // router
   const router = useRouter();
 
   // query
-  const approvalRequest: any = api.approvalRequest.getByPetSitterId.useQuery({
-    petSitterId: typeof router.query.id === "string" ? router.query.id : "",
+  const petSitter = api.user.getForProfilePage.useQuery({
+    username:
+      typeof router.query.username === "string" ? router.query.username : "",
   });
-  const approvePetSitter = api.approvalRequest.approve.useMutation({
+  const verifyPetSitter = api.petSitter.verifyMany.useMutation({
     async onSettled() {
-      utils.approvalRequest.getAll.invalidate();
-    },
-  });
-  const declinePetSitter = api.approvalRequest.decline.useMutation({
-    async onSettled() {
-      utils.approvalRequest.getAll.invalidate();
+      utils.user.getForProfilePage.invalidate();
     },
   });
 
-  const petSitter: any = approvalRequest.data?.petSitter;
-
-  if (session.data?.user?.userType !== UserType.Admin)
-    return <Error statusCode={404} />;
-  if (approvalRequest.isLoading) return <Header />;
+  if (petSitter.isLoading) return <Header />;
   if (
-    !approvalRequest.data ||
-    (!petSitter.freelancePetSitter && !petSitter.petHotel)
+    !petSitter.data ||
+    (petSitter.data.userType !== UserType.FreelancePetSitter &&
+      petSitter.data.userType !== UserType.PetHotel) ||
+    petSitter.data.verifyStatus
   )
     return <Error statusCode={404} />;
   return (
@@ -50,7 +39,7 @@ export default function VerifyPetSitter() {
       <div className="flex flex-grow">
         {/* SIDE TAB */}
         <div className="flex h-full w-[200px] border-2">
-          <SideTab admin />
+          Please connect sidetab given I am done with my life.
         </div>
         <div className="w-full overflow-scroll sm:px-[40px] sm:pb-[40px] sm:pt-[20px] xl:px-[80px] xl:pb-[60px] xl:pt-[40px]">
           <div className="flex h-full flex-col gap-5">
@@ -66,21 +55,23 @@ export default function VerifyPetSitter() {
                   <div className="flex w-full items-end leading-none">
                     <div className="w-[30%] font-semibold">Type</div>
                     <div className="w-[70%] text-[30px]">
-                      {petSitter.freelancePetSitter ? "Freelance" : "Hotel"}
+                      {petSitter.data.userType === UserType.FreelancePetSitter
+                        ? "Freelance"
+                        : "Hotel"}
                     </div>
                   </div>
                   <div className="flex flex-col">
                     <div className="flex w-full items-end leading-none">
                       <div className="w-[30%] font-semibold">Name</div>
                       <div className="flex w-[70%] flex-col">
-                        {petSitter.freelancePetSitter ? (
+                        {petSitter.data.userType ===
+                        UserType.FreelancePetSitter ? (
                           <div className="text-[30px]">
-                            {petSitter.freelancePetSitter.firstName}{" "}
-                            {petSitter.freelancePetSitter.lastName}
+                            {petSitter.data.firstName} {petSitter.data.lastName}
                           </div>
                         ) : (
                           <div className="text-[30px]">
-                            {petSitter.petHotel.hotelName}
+                            {petSitter.data.hotelName}
                           </div>
                         )}
                       </div>
@@ -88,14 +79,14 @@ export default function VerifyPetSitter() {
                     <div className="flex w-full items-end leading-none">
                       <div className="w-[30%]"></div>
                       <div className="flex w-[70%] flex-col text-[22.5px] text-wp-blue">
-                        #{petSitter.user.username}
+                        #{petSitter.data.username}
                       </div>
                     </div>
                   </div>
                   <div className="flex w-full items-center leading-none">
                     <div className="w-[30%] font-semibold">Pet Types</div>
                     <div className="flex w-[70%] gap-2">
-                      <PetTypes petTypes={petSitter.petTypes} />
+                      <PetTypes petTypes={petSitter.data.petTypes} />
                     </div>
                   </div>
                   <div className="flex w-full items-end leading-none">
@@ -103,17 +94,17 @@ export default function VerifyPetSitter() {
                       Price Range
                     </div>
                     <div className="w-[70%]r">
-                      ฿{petSitter.startPrice} - ฿{petSitter.endPrice}
+                      ฿{petSitter.data.startPrice} - ฿{petSitter.data.endPrice}
                     </div>
                   </div>
                   <div className="flex w-full items-end leading-none">
                     <div className="w-[30%] font-semibold">Certification</div>
                     <div className="w-[70%] overflow-hidden text-ellipsis whitespace-nowrap">
                       <Link
-                        href={petSitter.certificationUri || ""}
+                        href={petSitter.data.certificationUri || ""}
                         className="link"
                       >
-                        {petSitter.certificationUri}
+                        {petSitter.data.certificationUri}
                       </Link>
                     </div>
                   </div>
@@ -125,14 +116,14 @@ export default function VerifyPetSitter() {
                         rows={4}
                         readOnly
                       >
-                        I will eat your pets.
+                        I will eat your pets.\n.\n.
                       </textarea>
                     </div>
                   </div>
                   <div className="flex w-full">
                     <div className="w-[30%] font-semibold">Register Date</div>
                     <div className="w-[70%] text-wp-blue">
-                      {approvalRequest.data?.createdAt.toLocaleString()}
+                      {petSitter.data.createdAt.toLocaleString()}
                     </div>
                   </div>
                 </div>
@@ -140,7 +131,7 @@ export default function VerifyPetSitter() {
                 <div className="flex w-[304px] flex-col gap-5 px-8 text-[24px]">
                   <div className="relative aspect-square w-full rounded-lg drop-shadow-lg">
                     <Image
-                      src={petSitter.user.imageUri || "/profiledummy.png"}
+                      src={petSitter.data.imageUri || "/profiledummy.png"}
                       alt=""
                       fill
                       className="rounded-lg object-cover"
@@ -149,28 +140,24 @@ export default function VerifyPetSitter() {
                   <div className="flex flex-col gap-[10px]">
                     <div className="font-semibold">Address</div>
                     <div className="text-[20px] text-[#434D54]">
-                      {petSitter.user.address}
+                      {petSitter.data.address}
                     </div>
                   </div>
                   <div className="flex flex-col gap-[10px]">
                     <div className="font-semibold">Phone Number</div>
                     <div className="text-wp-blue">
-                      {petSitter.user.phoneNumber}
+                      {petSitter.data.phoneNumber}
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="flex justify-evenly">
+              <div className="flex justify-center">
                 <button
                   className="h-[60px] w-[200px] rounded-md bg-good text-[30px] font-semibold text-white drop-shadow-md hover:bg-[#3BAD5A]"
                   onClick={async () => {
-                    if (
-                      session.data?.user?.userType === UserType.Admin &&
-                      approvalRequest.data
-                    ) {
-                      await approvePetSitter.mutateAsync({
-                        requestId: approvalRequest.data.requestId,
-                        adminId: session.data?.user?.userId ?? "",
+                    if (petSitter.data) {
+                      await verifyPetSitter.mutateAsync({
+                        userIds: [petSitter.data.userId],
                       });
                       router.replace(
                         {
@@ -178,10 +165,11 @@ export default function VerifyPetSitter() {
                           query: {
                             code: 6901,
                             notice: `${
-                              petSitter.userType === UserType.FreelancePetSitter
+                              petSitter.data.userType ===
+                              UserType.FreelancePetSitter
                                 ? "Freelance pet sitter"
                                 : "Pet hotel"
-                            } #${petSitter.user.username} has been approved.`,
+                            } #${petSitter.data.username} has been verified.`,
                           },
                         },
                         "/admin/verification"
@@ -189,37 +177,7 @@ export default function VerifyPetSitter() {
                     }
                   }}
                 >
-                  Approve
-                </button>
-                <button
-                  className="h-[60px] w-[200px] rounded-md bg-bad text-[30px] font-semibold text-white drop-shadow-md hover:bg-[#ee2D2a]"
-                  onClick={async () => {
-                    if (
-                      session.data?.user?.userType === UserType.Admin &&
-                      approvalRequest.data
-                    ) {
-                      await declinePetSitter.mutateAsync({
-                        requestId: approvalRequest.data.requestId,
-                        adminId: session.data?.user?.userId ?? "",
-                      });
-                      router.replace(
-                        {
-                          pathname: "/admin/verification",
-                          query: {
-                            code: 6899,
-                            notice: `${
-                              petSitter.userType === UserType.FreelancePetSitter
-                                ? "Freelance pet sitter"
-                                : "Pet hotel"
-                            } #${petSitter.user.username} has been declined.`,
-                          },
-                        },
-                        "/admin/verification"
-                      );
-                    }
-                  }}
-                >
-                  Decline
+                  Verify
                 </button>
               </div>
             </div>
