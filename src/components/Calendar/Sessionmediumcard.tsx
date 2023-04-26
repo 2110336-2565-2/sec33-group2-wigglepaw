@@ -155,9 +155,7 @@ export const SessionMediumCard = ({ data }) => {
 
                   alert("Payment successful!");
 
-                  await router.push(
-                    `/user/${session?.user.userId}/transaction`
-                  );
+                  await router.push(`/transaction`);
                 }}
               >
                 Confirm and Pay
