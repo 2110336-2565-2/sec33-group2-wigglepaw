@@ -37,39 +37,66 @@ import Script from "next/script";
 
 const validationSchema1 = z.object({
   // like a schema for register in form
-  username: z.string().min(2, { message: "come on! longer than that!" }),
+  username: z
+    .string()
+    .min(5, { message: "Must be at least  5 characters" })
+    .max(20, { message: "Cannot exceed 20 characters" })
+    .regex(/^[a-zA-Z0-9_]*$/, { message: "Must be alphanumeric" }),
   email: z
     .string()
-    .min(2, { message: "longer" })
-    .max(30, { message: "shorter" })
-    .email(),
-  password: z.string().min(1, { message: "Don't leave it blank" }),
+    .email({ message: "Must be a valid email" })
+    .min(1, { message: "Required" })
+    .max(35, { message: "Cannot exceed 35 characters" }),
+  password: z
+    .string()
+    .min(8, { message: "Must be at least 8 characters" })
+    .max(30, { message: "Cannot exceed 30 characters" }),
   confirmPassword: z.string().min(1, { message: "Don't leave it blank" }),
 });
 
 const validationSchema2 = z.object({
   // like a schema for register in form
   type: z.literal("Freelance Pet Sitter"),
-  firstName: z.string().min(1, { message: "please provide details" }),
-  lastName: z.string().min(1, { message: "please provide details" }),
+  firstName: z
+    .string()
+    .min(1, { message: "Required" })
+    .max(30, { message: "Cannot exceed 30 characters" })
+    .regex(/^[a-zA-Z]+$/, { message: "Must be alphabetical" }),
+  lastName: z
+    .string()
+    .min(1, { message: "Required" })
+    .max(30, { message: "Cannot exceed 30 characters" })
+    .regex(/^[a-zA-Z]+$/, { message: "Must be alphabetical" }),
   phoneNumber: z
     .string()
     .min(1, { message: "Required" })
     .regex(/^\d{10}$/, { message: "Invalid phone number" }),
   // .length(10, { message: "phoenumber must have a fix length of 10" }),   For the sake of the tester, for real case don't forget to remove comment
-  address: z.string().min(1, { message: "Required" }),
+  address: z
+    .string()
+    .min(0)
+    .max(255, { message: "Must not exceed 255 characters" })
+    .optional(),
 });
 
 const validationSchema3 = z.object({
   // like a schema for register in form
   type: z.literal("Pet Hotel"),
-  hotelName: z.string().min(1, { message: "please provide details" }),
-  businessLicenseUri: z.string().min(1, { message: "please provide details" }),
+  hotelName: z
+    .string()
+    .min(1, { message: "Required" })
+    .max(40, { message: "Cannot exceed 30 characters" })
+    .regex(/^[a-zA-Z]+$/, { message: "Must be alphabetical" }),
+  businessLicenseUri: z.string().min(1, { message: "Please provide details" }),
   phoneNumber: z
     .string()
     .min(1, { message: "Required" })
     .regex(/^\d{10}$/, { message: "Invalid phone number" }),
-  address: z.string().min(1, { message: "Required" }),
+  address: z
+    .string()
+    .min(0)
+    .max(255, { message: "Must not exceed 255 characters" })
+    .optional(),
 });
 
 // Schema for third page of form

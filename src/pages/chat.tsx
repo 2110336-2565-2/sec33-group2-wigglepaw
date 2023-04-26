@@ -111,7 +111,7 @@ const ChatRoomPage: NextPage = () => {
     <>
       <Header></Header>
 
-      <div className=" flex h-[89vh]   ">
+      <div className=" flex h-[89vh] overflow-x-hidden ">
         <div
           className={
             !mode

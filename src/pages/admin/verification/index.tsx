@@ -1,34 +1,27 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import Header from "../../../components/Header";
 import { UserType } from "../../../types/user";
 import { api } from "../../../utils/api";
 import Notification from "../../../components/Admin/Notification";
 import SideTab from "../../../components/SideTab";
-import { ApprovalRequestStatus } from "@prisma/client";
-import { useSession } from "next-auth/react";
-import Error from "next/error";
 
 export default function Verification() {
-  const session = useSession();
-
   const router = useRouter();
 
-  if (session.data?.user?.userType !== UserType.Admin)
-    return <Error statusCode={404} />;
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="min-h-screen">
       <Header />
-      <div className="flex flex-grow">
+      <div className="flex">
         <SideTab admin />
-        <div className="my-5 flex w-full flex-col gap-5">
+        <div className="my-5 w-full gap-5">
           <Notification
             code={parseInt(router.query.code as string)}
             notice={router.query.notice as string}
-            className="mx-9"
+            className="mx-4"
           />
           <div className="overflow-scroll px-6 text-base">
             <PetSitterVerifyTable />
@@ -50,7 +43,7 @@ interface DataRow {
   certificationUri: string | null;
   lastUpdate: string | null;
   lastUpdateTime: number;
-  status: "Pending" | "Declined" | "Approved";
+  status: "Pending" | "Verified" | null;
 }
 
 function PetSitterVerifyTable() {
@@ -61,7 +54,7 @@ function PetSitterVerifyTable() {
   const router = useRouter();
 
   // query
-  const approvalRequests = api.approvalRequest.getAll.useQuery();
+  const users = api.user.getAllForProfile.useQuery();
   const verifyPetSitters = api.petSitter.verifyMany.useMutation({
     async onSettled() {
       utils.user.getAllForProfile.invalidate();
@@ -80,33 +73,44 @@ function PetSitterVerifyTable() {
   );
 
   // available data
-  const data: DataRow[] = approvalRequests.data
-    ? approvalRequests.data.map((approvalRequest: any) => {
-        const petSitter = approvalRequest.petSitter;
-        const lastUpdate = new Date(approvalRequest.latestStatusUpdateAt);
-        return {
-          userId: petSitter.user.userId as string,
-          username: petSitter.user.username as string,
-          imageUri: petSitter.user.imageUri as string,
-          fullName: petSitter.freelancePetSitter
-            ? `${petSitter.freelancePetSitter.firstName} ${petSitter.freelancePetSitter.lastName}`
-            : null,
-          hotelName: petSitter.petHotel ? petSitter.petHotel.hotelName : null,
-          type: petSitter.freelancePetSitter ? "Freelance" : "Hotel",
+  const data: DataRow[] = users.data
+    ? users.data
+        .filter(
+          (user) =>
+            user &&
+            (user.userType === UserType.FreelancePetSitter ||
+              user.userType === UserType.PetHotel)
+        )
+        .map((petSitter) => ({
+          userId: petSitter.userId,
+          username: petSitter.username,
+          imageUri: petSitter.imageUri,
+          fullName:
+            petSitter.userType === UserType.FreelancePetSitter
+              ? `${petSitter.firstName} ${petSitter.lastName}`
+              : null,
+          hotelName:
+            petSitter.userType === UserType.PetHotel
+              ? petSitter.hotelName
+              : null,
+          type:
+            petSitter.userType === UserType.FreelancePetSitter
+              ? "Freelance"
+              : "Hotel",
           certificationUri:
-            petSitter.freelancePetSitter || petSitter.petHotel
+            petSitter.userType === UserType.FreelancePetSitter ||
+            petSitter.userType === UserType.PetHotel
               ? petSitter.certificationUri
               : null,
-          lastUpdate: formatTime(lastUpdate),
-          lastUpdateTime: lastUpdate.getTime(),
+          lastUpdate: formatTime(new Date(Date.now() - 86400100)), // dummy
+          lastUpdateTime: Date.now() - 86400100, // dummy
           status:
-            approvalRequest.status === ApprovalRequestStatus.approved
-              ? "Approved"
-              : approvalRequest.status === ApprovalRequestStatus.declined
-              ? "Declined"
+            (petSitter.userType === UserType.FreelancePetSitter ||
+              petSitter.userType === UserType.PetHotel) &&
+            petSitter.verifyStatus
+              ? "Verified"
               : "Pending",
-        };
-      })
+        }))
     : [];
 
   // filter data
@@ -138,10 +142,9 @@ function PetSitterVerifyTable() {
       <input
         className="peer w-[200px] rounded-md border-2 p-1.5 px-2 text-[16px] text-[#434D54] focus:border-[#80bdff] focus:shadow-[0_0_0_0.2rem_rgba(0,123,255,.25)] focus:outline-none"
         value={filterText}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          setResetPaginationToggle((prev) => !prev);
-          setFilterText(e.target.value);
-        }}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setFilterText(e.target.value)
+        }
       />
       <div className="absolute right-[2px] z-10 hidden h-[80%] bg-white pr-1 hover:flex hover:items-center first:hover:flex first:hover:items-center peer-hover:flex peer-hover:items-center">
         <button
@@ -247,12 +250,8 @@ function PetSitterVerifyTable() {
       cell: (row) => (
         <RecursivePropsProvider data-tag="allowRowEvents">
           <div
-            className={`flex h-[28px] w-[108px] items-center justify-center rounded-lg text-[18px] font-semibold text-white drop-shadow-md ${
-              row.status === "Approved"
-                ? "bg-good"
-                : row.status === "Declined"
-                ? "bg-bad"
-                : "bg-neutral"
+            className={`flex h-[28px] w-[100px] items-center justify-center rounded-lg text-[18px] font-semibold text-white drop-shadow-md ${
+              row.status === "Verified" ? "bg-good" : "bg-neutral"
             }`}
           >
             {row.status}
@@ -300,11 +299,11 @@ function PetSitterVerifyTable() {
     setSelectedRows(selectedRows);
   };
 
-  const rowDisabledCriteria = (row: DataRow) => row.status !== "Pending";
+  const rowDisabledCriteria = (row: DataRow) => row.status === "Verified";
 
   const onRowClicked = (row: DataRow) => {
     if (row.status === "Pending")
-      router.push(`/admin/verification/${row.userId}`);
+      router.push(`/admin/verification/${row.username}`);
   };
 
   // manage selected rows
@@ -331,8 +330,6 @@ function PetSitterVerifyTable() {
       subHeader
       subHeaderComponent={SubHeaderComponent}
       columns={columns}
-      defaultSortFieldId={4}
-      defaultSortAsc={false}
       customStyles={customStyles}
       conditionalRowStyles={conditionalRowStyles}
       onRowClicked={onRowClicked}
@@ -348,12 +345,11 @@ function PetSitterVerifyTable() {
       contextActions={ContextActions}
       // contextComponent={}
       // selectableRowsComponent={}
-      progressPending={approvalRequests.isLoading}
+      progressPending={users.isLoading}
       progressComponent={<>DOG DOG DOG DOG is loading bro...</>}
       striped
       highlightOnHover
       pagination
-      paginationResetDefaultPage={resetPaginationToggle}
       responsive
     />
   );
