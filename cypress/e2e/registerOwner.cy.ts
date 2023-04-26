@@ -43,21 +43,23 @@ function validInput(fields: {
   address: string;
   type: string;
 }) {
-  cy.get("#firstName").type(fields.firstname);
-  cy.get("#lastName").type(fields.lastname);
-  cy.get("#email").type(fields.email);
-  cy.get("#address").type(fields.address);
-  cy.get("#phone").type(fields.phone);
-  cy.get("#username").type(fields.username);
-  cy.get("#password").type(fields.password);
-  cy.get("#confirmPassword").type(fields.password);
-  cy.get("#type").type(fields.type);
+  cy.get("#firstName").type(fields.firstname, { delay: 10 });
+  cy.get("#lastName").type(fields.lastname, { delay: 10 });
+  cy.get("#email").type(fields.email, { delay: 10 });
+  cy.get("#address").type(fields.address, { delay: 10 });
+  cy.get("#phone").type(fields.phone, { delay: 10 });
+  cy.get("#username").type(fields.username, { delay: 10 });
+  cy.get("#password").type(fields.password, { delay: 10 });
+  cy.get("#confirmPassword").type(fields.password, { delay: 10 });
+  cy.get("#type").type(fields.type, { delay: 10 });
   cy.contains("Next").click();
   cy.contains("2/2").should("exist");
-  cy.get("#holderName").type(fields.firstname + " " + fields.lastname);
-  cy.get("#cardNo").type("4242424242424242");
-  cy.get("#expDate").type("2025-01-01");
-  cy.get("#cvv").type("666");
+  cy.get("#holderName").type(fields.firstname + " " + fields.lastname, {
+    delay: 1,
+  });
+  cy.get("#cardNo").type("4242424242424242", { delay: 10 });
+  cy.get("#expDate").type("2025-01-01", { delay: 10 });
+  cy.get("#cvv").type("666", { delay: 10 });
   cy.get(".col-span-2.items-center > .mr-2").check();
   cy.get("#register-button").click();
 }

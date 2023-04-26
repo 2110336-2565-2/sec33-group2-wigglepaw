@@ -42,7 +42,7 @@ const formDataSchema1 = z.object({
     .string()
     .min(8, { message: "Must be at least 8 characters" })
     .max(30, { message: "Cannot exceed 30 characters" }),
-  confirmPassword: z.string().min(1, { message: "Required" }),
+  confirmPassword: z.string().min(1, { message: "Don't leave it blank" }),
 });
 
 // Schema for second page of form

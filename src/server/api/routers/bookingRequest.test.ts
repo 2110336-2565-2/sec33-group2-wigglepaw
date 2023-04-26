@@ -18,6 +18,27 @@ Must seed at least 10 users and 10 pets from seedRouter
 
 // clgxpy7i9000cu52cn9ixcc6g is a pet sitter from seed (invoker)
 // clgxpy80o000gu52cw3y3y25g is another pet sitter
+test("User without UserType", async () => {
+  const ctx = createInnerTRPCContext({
+    session: {
+      user: { id: "clgxpy7i9000cu52cn9ixcc6g" },
+    },
+  });
+  const caller = appRouter.createCaller(ctx);
+
+  const fields = {
+    petSitterId: "clgxpy80o000gu52cw3y3y25g",
+    totalPrice: 696,
+    startDate: new Date(Date.now() + dayToMs * 7),
+    endDate: new Date(Date.now() + dayToMs * 14),
+    petIdList: [],
+  };
+
+  expect(await caller.booking.request(fields)).toEqual(USER_TYPE_MISMATCH);
+});
+
+// clgxpy7i9000cu52cn9ixcc6g is a pet sitter from seed (invoker)
+// clgxpy80o000gu52cw3y3y25g is another pet sitter
 test("Not Pet Owner", async () => {
   const ctx = createInnerTRPCContext({
     session: {
