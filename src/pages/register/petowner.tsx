@@ -28,21 +28,44 @@ import { createTokenPromise } from "../../utils/omise";
 
 // Schema for first page of form
 const formDataSchema1 = z.object({
-  email: z.string().min(1, { message: "Required" }).email(),
-  username: z.string().min(1, { message: "Required" }),
-  password: z.string().min(1, { message: "Required" }),
+  email: z
+    .string()
+    .email({ message: "Must be a valid email" })
+    .min(1, { message: "Required" })
+    .max(35, { message: "Cannot exceed 35 characters" }),
+  username: z
+    .string()
+    .min(5, { message: "Must be at least  5 characters" })
+    .max(20, { message: "Cannot exceed 20 characters" })
+    .regex(/^[a-zA-Z0-9_]*$/, { message: "Must be alphanumeric" }),
+  password: z
+    .string()
+    .min(8, { message: "Must be at least 8 characters" })
+    .max(30, { message: "Cannot exceed 30 characters" }),
   confirmPassword: z.string().min(1, { message: "Required" }),
 });
 
 // Schema for second page of form
 const formDataSchema2 = z.object({
-  firstName: z.string().min(1, { message: "Required" }),
-  lastName: z.string().min(1, { message: "Required" }),
-  address: z.string().min(1, { message: "Required" }),
+  firstName: z
+    .string()
+    .min(1, { message: "Required" })
+    .max(30, { message: "Cannot exceed 30 characters" })
+    .regex(/^[a-zA-Z]+$/, { message: "Must be alphabetical" }),
+  lastName: z
+    .string()
+    .min(1, { message: "Required" })
+    .max(30, { message: "Cannot exceed 30 characters" })
+    .regex(/^[a-zA-Z]+$/, { message: "Must be alphabetical" }),
+  address: z
+    .string()
+    .min(0)
+    .max(255, { message: "Must not exceed 255 characters" })
+    .optional(),
   phoneNumber: z
     .string()
     .min(1, { message: "Required" })
-    .regex(/^\d{10}$/, { message: "Invalid phone number" }),
+    .regex(/^\d{9,10}$/, { message: "Invalid phone number" }),
   // type: z.string().min(1, { message: "Required" }),
   // breed: z.string().min(1, { message: "Required" }),
   // weight: z
@@ -188,17 +211,10 @@ const RegisterPage: NextPage = () => {
 
   const { page, incPage, decPage, Pagination } = usePage();
 
-  // const userByUsername = api.user.getByUsername.useQuery({
-  //   username,
-  // });
+  const userByUsername = api.user.getByUsername.useQuery({
+    username,
+  });
 
-  // THERE IS OPENAPI BUG IN GETBYUSERNAME
-  const userByUsername = {
-    data: undefined,
-    refetch() {
-      console.log("Dummy refetch");
-    },
-  };
   const userByEmail = api.user.getByEmail.useQuery({
     email,
   });
@@ -348,7 +364,7 @@ const RegisterPage: NextPage = () => {
                       placeholder="xxxxxxxxxxxxxxxxx"
                       register={register}
                       formState={formState}
-                      validationRules={{ required: true }}
+                      // validationRules={{ required: true }}
                     />
                     <Input
                       id="phoneNumber"
