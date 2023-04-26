@@ -243,7 +243,12 @@ export const SessionMediumCard = ({ data }) => {
                   : data.petSitter.petHotel.hotelName}
               </div>
               <div className="center-thing col-span-2">
-                <button className="center-thing drop-s rounded-md bg-[#357CC2] px-4 py-1 text-white  shadow-lg drop-shadow-lg">
+                <button
+                  onClick={() => {
+                    router.push("/chat");
+                  }}
+                  className="center-thing drop-s rounded-md bg-[#357CC2] px-4 py-1 text-white  shadow-lg drop-shadow-lg"
+                >
                   Chat
                   <FontAwesomeIcon
                     className="ml-3 scale-x-110 scale-y-75"
