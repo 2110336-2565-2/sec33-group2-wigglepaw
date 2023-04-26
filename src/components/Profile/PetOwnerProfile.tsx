@@ -22,7 +22,12 @@ type PetOwnerProfileProps = {
 };
 
 const formDataSchema = z.object({
-  firstNameLastName: z.string().min(1),
+  firstNameLastName: z
+    .string()
+    .min(1)
+    .regex(/^\w+ \w+$/, {
+      message: "Invalid name, should be in format: `<firstname> <lastname>`",
+    }),
   phoneNumber: z
     .string()
     .regex(/^\d{10}$/, { message: "Invalid phone number" }),
