@@ -205,7 +205,7 @@ export const reportTicketRouter = createTRPCRouter({
         throwErr(err);
       }
     }),
-  getByTicketId: adminProcedure
+  getByTicketId: protectedProcedure
     .input(
       z.object({
         ticketId: z.string().cuid(),

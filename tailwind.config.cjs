@@ -3,13 +3,25 @@ module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      backgroundSize: {
+        "for-flow": "200% 100%",
+      },
       keyframes: {
         show: {
           "100%": { opacity: 1.0 },
         },
+        flow: {
+          "0%": {
+            backgroundPosition: "0 0",
+          },
+          "100%": {
+            backgroundPosition: "-100% 0",
+          },
+        },
       },
       animation: {
         showing: "show 0.8s forwards",
+        flow: "flow 0.8s linear",
       },
       colors: {
         "bg-box-main": "#CCB0A4",
@@ -29,7 +41,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ["Ubuntu", "Sarabun", "sans-serif"],
-        mono: ['"Ubuntu Condensed"', "ui-monospace"],
+        mono: ['"Ubuntu Mono"', "ui-monospace"],
         card: ["Goldman", "cursive"],
       },
     },

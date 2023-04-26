@@ -215,7 +215,7 @@ export const freelancePetSitterRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const update = await prisma?.freelancePetSitter.update({
+      const update = await ctx.prisma.freelancePetSitter.update({
         where: {
           userId: ctx.session.user.userId,
         },

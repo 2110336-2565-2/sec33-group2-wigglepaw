@@ -18,32 +18,25 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { getServerAuthSession } from "../server/auth";
 import type { OmiseTokenParameters } from "omise-js-typed/dist/lib/omise";
-import { useOmise } from "use-omise";
 import { env } from "../env/client.mjs";
 
 // Schema for first page of form
 const formDataSchema1 = z.object({
-  firstname: z.string().min(1, { message: "Required" }),
-  lastname: z.string().min(1, { message: "Required" }),
+  firstName: z.string().min(1, { message: "Required" }),
+  lastName: z.string().min(1, { message: "Required" }),
   email: z.string().email(),
   address: z.string().min(1, { message: "Required" }),
   phone: z.string().regex(/^\d{10}$/, { message: "Invalid phone number" }),
   username: z.string().min(1, { message: "Required" }),
   password: z.string().min(1, { message: "Required" }),
-  confirmpassword: z.string().min(1, { message: "Required" }),
+  confirmPassword: z.string().min(1, { message: "Required" }),
   type: z.string().min(1, { message: "Required" }),
-  breed: z.string().min(1, { message: "Required" }),
-  weight: z
-    .string()
-    .trim()
-    .regex(/^\d+/, { message: "Invalid number" })
-    .transform((val) => parseInt(val)),
 });
 // Schema for second page of form
 const formDataSchema2 = z.object({
-  holdername: z.string().min(1, { message: "Required" }),
-  cardno: z.string(), //.regex(/^\d{16}$/),
-  expdate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  holderName: z.string().min(1, { message: "Required" }),
+  cardNo: z.string(), //.regex(/^\d{16}$/),
+  expDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   cvv: z.string().regex(/^\d{3}$/),
   // bankno: z.string(), //.regex(/^\d{12}$/),
   // bankname: z.string(),
@@ -51,7 +44,7 @@ const formDataSchema2 = z.object({
 // Schema for entire form, includes validation for password confirmation
 const formDataSchema = formDataSchema1.merge(formDataSchema2).refine(
   (data) => {
-    return data.password === data.confirmpassword;
+    return data.password === data.confirmPassword;
   },
   {
     message: "Passwords do not match",
@@ -83,8 +76,8 @@ const RegisterPage: NextPage = () => {
 
     // Collect card into omise
     // follow the offical guide: https://www.omise.co/collecting-card-information
-    const exp_month = +data.expdate.slice(5, 7);
-    const exp_year = +data.expdate.slice(0, 4);
+    const exp_month = +data.expDate.slice(5, 7);
+    const exp_year = +data.expDate.slice(0, 4);
     if (exp_month < 1 || exp_month > 12) {
       throw new Error("Invalid expiration month");
     }
@@ -94,14 +87,25 @@ const RegisterPage: NextPage = () => {
 
     let cardToken;
     try {
+      // Fix very strange omise bug
+      // Poll omise's createTokenPromise, with a timeout of 2 second
+      await Promise.race([
+        (async () => {
+          while (createTokenPromise === null) {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+          }
+        })(),
+        new Promise((resolve) => setTimeout(resolve, 2000)),
+      ]);
+
       if (createTokenPromise === null) {
         alert("OmiseJS is not loaded yet, please wait and try again");
         return;
       }
 
       cardToken = await createTokenPromise("card", {
-        name: data.holdername,
-        number: data.cardno,
+        name: data.holderName,
+        number: data.cardNo,
         expiration_month: exp_month,
         expiration_year: exp_year,
         security_code: +data.cvv,
@@ -113,19 +117,19 @@ const RegisterPage: NextPage = () => {
     }
 
     //when send Pet type  send tag instead of data.type !!
-    console.assert(data.password === data.confirmpassword);
+    console.assert(data.password === data.confirmPassword);
     try {
       await mutation.mutateAsync({
         user: {
           username: data.username,
-          password: data.confirmpassword,
+          password: data.confirmPassword,
           email: data.email,
           phoneNumber: data.phone,
           address: data.address,
         },
         petOwner: {
-          firstName: data.firstname,
-          lastName: data.lastname,
+          firstName: data.firstName,
+          lastName: data.lastName,
           petTypes: [data.type], // TODO: Please correct this, it's currently just a placeholder
         },
         cardToken,
@@ -148,6 +152,9 @@ const RegisterPage: NextPage = () => {
       alert(`Login failed: ${result?.error ?? "unknown error"}`);
     }
   };
+  const onErrors = async () => {
+    console.log(errors);
+  };
 
   const handleSpace = (e) => {
     if (e.keyCode === 32) {
@@ -163,14 +170,14 @@ const RegisterPage: NextPage = () => {
   const [pettype, setPettype] = useState([]);
   if (page === 0)
     return (
-      <div className="flex h-screen flex-col">
+      <div className="flex flex-col">
         <div className="absolute top-[-4rem] -z-10 ">
           <img src="/Ipage1-1.png" width={468} height={315} alt="cat" />
         </div>
         <div className="absolute right-0 -z-10 ">
           <img src="/Ipage1-2.png" width={468} height={315} alt="cat" />
         </div>
-        <Header></Header>
+        <Header />
         <div className="mt-4 flex h-full flex-col items-center">
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -305,32 +312,11 @@ const RegisterPage: NextPage = () => {
                   {errors["type"]?.message}
                 </span>
               </div>
-              <div className="flex gap-6">
-                <div className="flex w-full flex-col">
-                  <Input
-                    id="breed"
-                    label="Breed of pet* :"
-                    placeholder="Corgi"
-                    register={register}
-                    errors={errors}
-                    validationRules={{ required: true }}
-                  />
-                </div>
-                <div className="flex w-full flex-col">
-                  <Input
-                    id="weight"
-                    label="Weight of pet* :"
-                    placeholder="5-10 kg"
-                    register={register}
-                    errors={errors}
-                    validationRules={{ required: true }}
-                    type="number"
-                  />
-                </div>
-              </div>
             </div>
             <div className="my-5 mb-10 flex w-full justify-evenly">
-              <Button id="back-button">Back</Button>
+              <Button disabled id="back-button">
+                Back
+              </Button>
               <Button
                 id="next-button"
                 type="button"
@@ -374,7 +360,10 @@ const RegisterPage: NextPage = () => {
             <h1 className=" ml-[15%] text-2xl font-bold">Payment</h1>
           </div>
           <div className="flex justify-center">
-            <form onSubmit={handleSubmit(onSubmit)} className=" h-full w-2/3 ">
+            <form
+              onSubmit={handleSubmit(onSubmit, onErrors)}
+              className=" h-full w-2/3 "
+            >
               <div className="mx-auto grid w-full grid-cols-2 grid-rows-6 gap-5 md:grid-cols-4 md:gap-2">
                 <div className="col-span-4 flex items-center">
                   {/* <input className="mr-2" type="checkbox"></input>
@@ -429,36 +418,6 @@ const RegisterPage: NextPage = () => {
                   />
                 </div>
                 <div className="col-span-2"></div>
-                {/* <div className="col-span-4 flex w-full items-center">
-                  <input className="mr-2" type="checkbox"></input>
-                  <label>Mobile banking</label>
-                  <div className="ml-4 h-7 w-7 rounded-full bg-blue-300"></div>
-                  <div className="ml-2 h-7 w-7 rounded-full bg-blue-300"></div>
-                  <div className="ml-2 h-7 w-7 rounded-full bg-blue-300"></div>
-                  <div className="ml-2 h-7 w-7 rounded-full bg-blue-300"></div>
-                </div>
-                <div className="flex w-full flex-col">
-                  <Input
-                    id="bankno"
-                    label="Bank No.*"
-                    placeholder="xxx-x-xxxxx-x"
-                    register={register}
-                    errors={errors}
-                    type="number"
-                    validationRules={{ required: true }}
-                  />
-                </div>
-                <div className=" flex w-full flex-col">
-                  <Input
-                    id="bankname"
-                    label="Bank Name*"
-                    register={register}
-                    errors={errors}
-                    validationRules={{ required: true }}
-                    placeholder="ABC"
-                  />
-                </div>
-                <div className="col-span-2"></div> */}
                 <div className="col-span-2 flex items-center">
                   <input className="mr-2" type="checkbox"></input>
                   <div>

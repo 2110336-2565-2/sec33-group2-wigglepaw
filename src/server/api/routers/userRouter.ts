@@ -39,7 +39,6 @@ export const userRouter = createTRPCRouter({
       },
     })
     .input(z.object({ username: z.string() }))
-    .output(userFields.passthrough().nullable())
     .query(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findFirst({
         where: {
@@ -250,7 +249,7 @@ export const userRouter = createTRPCRouter({
   }),
 });
 
-async function deleteByUser(
+export async function deleteByUser(
   s3: S3Client,
   prisma: PrismaClient,
   omise: IOmise,

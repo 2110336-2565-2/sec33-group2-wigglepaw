@@ -53,7 +53,7 @@ export default function SideTab(props: SideTabProps) {
             {props.user?.username}
           </div>
           <div className="my-16">
-            <div className="flex flex-col border ">
+            <div className="flex flex-col border">
               {/*Profile Tab*/}
               <Link
                 id="profile-sidetab-link"
@@ -128,7 +128,16 @@ export default function SideTab(props: SideTabProps) {
             Help Center
           </div>
           <div className="my-16">
-            <div className="flex flex-col  ">
+            <div className="flex flex-col">
+              {/*Report problem Tab*/}
+              <Link
+                id="report-problem-sidetab-link"
+                href={`/help/`}
+                className="flex h-[58px] w-[219px] items-center justify-center border bg-[#D9D9D9] text-lg font-medium hover:bg-[#A3A3A3]"
+              >
+                Help Page
+              </Link>
+
               {/*Report problem Tab*/}
               <Link
                 id="report-problem-sidetab-link"
@@ -137,6 +146,7 @@ export default function SideTab(props: SideTabProps) {
               >
                 Report a Problem
               </Link>
+
               {/*View My Report Tab*/}
               <Link
                 id="view-problem-sidetab-link"
@@ -180,7 +190,7 @@ export default function SideTab(props: SideTabProps) {
             Welcome Admin
           </div>
           <div className="my-16">
-            <div className="flex flex-col  ">
+            <div className="flex flex-col">
               {/*Dashboard Tab*/}
               <Link
                 id="admin-dashboard-sidetab-link"

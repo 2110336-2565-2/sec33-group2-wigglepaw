@@ -2,6 +2,8 @@
 @import url("https://fonts.googleapis.com/css?family=Ubuntu+Condensed");
 @import url("https://fonts.googleapis.com/css2?family=Sarabun&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Goldman&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -113,6 +115,22 @@
 .link {
   color: #004cff;
   text-decoration: underline;
+}
+
+.blue-focus:focus {
+  @apply border-[#4081FF] bg-gray-50 shadow-[0_0_0_0.2rem_rgba(0,123,255,.25)] outline-none;
+}
+
+.blue-glow {
+  @apply border-[#4081FF] bg-gray-50 shadow-[0_0_0_0.2rem_rgba(0,123,255,.25)] outline-none;
+}
+
+.red-focus:focus {
+  @apply border-[#dc3545] bg-gray-50 shadow-[0_0_0_0.2rem_rgba(220,53,69,.25)] outline-none;
+}
+
+.red-glow {
+  @apply border-[#dc3545] bg-gray-50 shadow-[0_0_0_0.2rem_rgba(220,53,69,.25)] outline-none;
 }
 
 html {

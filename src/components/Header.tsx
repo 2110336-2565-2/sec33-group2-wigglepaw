@@ -100,11 +100,11 @@ const Header = (props: any) => {
                     <div className="px-1 py-[0.1rem]">
                       <Menu.Item>
                         <Link
-                          href="/registerPetOwner"
+                          href="/register/petowner"
                           className={`
                           register-pet-owner-button header-dropdown group
                           ${
-                            asPath.includes("/registerPetOwner")
+                            asPath.includes("/register/petowner")
                               ? "header-at-page border-green-700 text-green-700"
                               : "bg-green-700 hover:bg-green-500"
                           }`}
@@ -114,11 +114,11 @@ const Header = (props: any) => {
                       </Menu.Item>
                       <Menu.Item>
                         <Link
-                          href="/registerPetSitter"
+                          href="/register/petsitter"
                           className={`
                           register-pet-sitter-button header-dropdown group
                           ${
-                            asPath.includes("/registerPetSitter")
+                            asPath.includes("/register/petsitter")
                               ? "header-at-page border-green-700 text-green-700"
                               : "bg-green-700 hover:bg-green-500"
                           }`}
@@ -300,11 +300,11 @@ const Header = (props: any) => {
                       <div className="px-1 py-[0.1rem]">
                         <Menu.Item>
                           <Link
-                            href="/registerPetOwner"
+                            href="/register/petowner"
                             className={`
                             register-pet-owner-button header-dropdown group
                             ${
-                              asPath.includes("/registerPetOwner")
+                              asPath.includes("/register/petowner")
                                 ? "header-at-page border-green-700 text-green-700"
                                 : "bg-green-700 hover:bg-green-500"
                             }`}
@@ -314,11 +314,11 @@ const Header = (props: any) => {
                         </Menu.Item>
                         <Menu.Item>
                           <Link
-                            href="/registerPetSitter"
+                            href="/register/petsitter"
                             className={`
                             register-pet-sitter-button header-dropdown group
                             ${
-                              asPath.includes("/registerPetSitter")
+                              asPath.includes("/register/petsitter")
                                 ? "header-at-page border-green-700 text-green-700"
                                 : "bg-green-700 hover:bg-green-500"
                             }`}
@@ -412,7 +412,7 @@ const Header = (props: any) => {
         )}
       </nav>
 
-      {/* <ReminderBar /> */}
+      {isLoggedIn && <ReminderBar />}
     </span>
   );
 };

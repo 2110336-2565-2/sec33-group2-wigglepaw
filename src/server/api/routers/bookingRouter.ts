@@ -23,7 +23,7 @@ import { TRPCError } from "@trpc/server";
 
 type returnFieldType = z.TypeOf<typeof returnField>;
 
-const USER_TYPE_MISMATCH: returnFieldType = {
+export const USER_TYPE_MISMATCH: returnFieldType = {
   status: "ERROR",
   reason: "this user type can not perform this operation",
 };
@@ -36,11 +36,11 @@ const BOOKING_STATUS_UNAVAILABLE: returnFieldType = {
   reason:
     "booking status can not be changed ( it may already be either canceled or accepted )",
 };
-const END_DATE_BEFORE_START_DATE: returnFieldType = {
+export const END_DATE_BEFORE_START_DATE: returnFieldType = {
   status: "ERROR",
   reason: "Start Date should be before End Date.",
 };
-const START_DATE_BEFORE_NOW: returnFieldType = {
+export const START_DATE_BEFORE_NOW: returnFieldType = {
   status: "ERROR",
   reason: "Start Date should be after current time.",
 };
@@ -135,9 +135,9 @@ export const bookingRouter = createTRPCRouter({
       const petOwnerId = ctx.session.user.id;
       const uniquePetIdList = [...new Set(input.petIdList)];
 
-      if (input.startDate < new Date()) {
-        return START_DATE_BEFORE_NOW;
-      }
+      // if (input.startDate < new Date()) {
+      //   return START_DATE_BEFORE_NOW;
+      // }
       if (input.endDate <= input.startDate) {
         return END_DATE_BEFORE_START_DATE;
       }
