@@ -55,7 +55,8 @@ const SortAndFilterPanel = () => {
         </p>
         <div className="text-center">
           <select
-            className="font-regular w-full rounded-sm border border-[#633c015d] bg-[#f7f7f7] py-2 px-1 text-[15px]  text-[#633c01] duration-150 hover:bg-[#dbdbdb]
+            id="searchSortBy-input"
+            className="font-regular w-full rounded-sm border border-[#633c015d] bg-[#f7f7f7] px-1 py-2 text-[15px]  text-[#633c01] duration-150 hover:bg-[#dbdbdb]
               focus:border-[#633c01] focus:outline-none focus:ring-1 focus:ring-[#633c01]"
             {...register("searchSortBy")}
           >
@@ -72,7 +73,7 @@ const SortAndFilterPanel = () => {
       </div>
       <div
         id="separator"
-        className="mt-2 mb-4 h-2 border-b border-[#633c015d]"
+        className="mb-4 mt-2 h-2 border-b border-[#633c015d]"
       ></div>
       <div id="filter-panel" className="px-7">
         <p className="my-2 text-[18px] font-bold text-[#633C01] max-md:text-[14px]">
@@ -104,7 +105,11 @@ const SortAndFilterPanel = () => {
               </div>
             </Fragment>
           ))}
-          <input hidden {...register("searchIncludePetSitterType")}></input>
+          <input
+            hidden
+            {...register("searchIncludePetSitterType")}
+            id="searchIncludePetSitterType-input"
+          ></input>
         </div>
       </div>
     </div>

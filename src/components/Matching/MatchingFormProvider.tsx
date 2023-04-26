@@ -43,20 +43,24 @@ const MatchingFormProvider: React.FunctionComponent<{
 }> = ({ children, setMatchedPetSitters, num }) => {
   const useFormReturn = useForm({
     resolver: zodResolver(
-      z.object({
-        searchName: z.string().optional(),
-        searchRating: z.number().optional(),
-        searchPriceMin: z.number().optional(),
-        searchPriceMax: z.number().optional(),
-        searchLocation: z.string().optional(),
-        searchPetTypes: z.array(z.string()).optional(),
-        searchStartSchedule: z.string().optional(),
-        searchEndSchedule: z.string().optional(),
-        searchIncludePetSitterType: z.string().optional(),
-        searhcIncludePetHotel: z.boolean().default(true),
-        searhcIncludeFreelancePetSitter: z.boolean().default(true),
-        searchSortBy: z.string().default(""),
-      })
+      z
+        .object({
+          searchName: z.string().optional(),
+          searchRating: z.number().optional(),
+          searchPriceMin: z.number().min(1).optional().default(250),
+          searchPriceMax: z.number().max(9999).optional().default(7000),
+          searchLocation: z.string().optional(),
+          searchPetTypes: z.array(z.string()).optional(),
+          searchStartSchedule: z.string().optional(),
+          searchEndSchedule: z.string().optional(),
+          searchIncludePetSitterType: z.string().optional(),
+          searhcIncludePetHotel: z.boolean().default(true),
+          searhcIncludeFreelancePetSitter: z.boolean().default(true),
+          searchSortBy: z.string().default(""),
+        })
+        .refine((obj) => obj.searchPriceMin <= obj.searchPriceMax, {
+          path: ["searchPriceMax"],
+        })
     ),
   });
 

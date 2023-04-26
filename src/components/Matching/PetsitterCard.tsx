@@ -71,7 +71,7 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
     <Link href={profile_link}>
       <div
         id="card"
-        className="relative flex h-[189px] animate-showing flex-row border border-t-[#ecececc2] border-l-[#ecececc2] border-b-[#cbcbcbc2] border-r-[#cbcbcbc2] bg-[#f6f6f6] opacity-0 shadow-xl drop-shadow-sm transition-all duration-150 hover:border-[1.5px] hover:border-[#2094D6] hover:bg-[#eeeeee] max-md:h-[115px] max-md:drop-shadow-md md:hover:scale-[1.01]"
+        className="relative flex h-[189px] animate-showing flex-row border border-b-[#cbcbcbc2] border-l-[#ecececc2] border-r-[#cbcbcbc2] border-t-[#ecececc2] bg-[#f6f6f6] opacity-0 shadow-xl drop-shadow-sm transition-all duration-150 hover:border-[1.5px] hover:border-[#2094D6] hover:bg-[#eeeeee] max-md:h-[115px] max-md:drop-shadow-md md:hover:scale-[1.01]"
       >
         <div
           className="absolute -left-4 top-3 z-10 px-2 py-1 text-xs font-bold text-white max-md:py-0.5 max-md:text-[10px]"
@@ -127,31 +127,45 @@ const PetsitterCard: React.FunctionComponent<PetSitterCardProps> = ({
           {/* mobile */}
           <div className="flex flex-col border-b-2 pb-2 pt-3 md:hidden">
             <div className="text-[14px] font-medium leading-3 text-[#213951]">
-              Flash Coffee - Bangkok
+              {name}
             </div>
             <div className="flex flex-row justify-end">
               <div className="flex grow flex-col  gap-2">
                 <div className="text-[10px] font-normal text-[#8e8e8e]">
-                  Pattaya, Chonburi
+                  Laem Thong Rd, Thung Sukhla, Si Racha, Chon Buri 20110
                 </div>
 
                 <div className="flex flex-row gap-1 ">
-                  <div className="rounded-md bg-[#a3a3a3] px-2 text-[10px] font-normal text-white">
-                    Hippopotamus
-                  </div>
-                  <div className="rounded-md bg-[#a3a3a3] px-2 text-[10px] font-normal text-white">
-                    ...
-                  </div>
+                  {petTypes.map((petType) => (
+                    <div
+                      key={petType}
+                      className="rounded-md bg-[#a3a3a3] px-2 text-[10px] font-normal text-white shadow-sm"
+                    >
+                      {petType}
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className=" flex flex-col justify-end">
-                <p className="text-[16px] font-normal text-[#bfbfbf]">฿฿฿฿</p>
+                <p className="text-[16px] font-normal text-[#bfbfbf]">{`${startPriceSign}-${endPriceSign}`}</p>
               </div>
             </div>
           </div>
           <div className="flex flex-row gap-0.5 pt-1 md:hidden">
-            <p className="text-[10px] font-normal text-[#8e8e8e]">No Reviews</p>
-            <p className="text-[10px] font-normal text-[#8e8e8e]">(0)</p>
+            <p
+              className="text-[10px] font-normal text-[#8e8e8e]"
+              style={{ color: reviewColors[getReviewStatus(avgRating)] }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                void router.push(review_link);
+              }}
+            >
+              {getReviewStatus(avgRating)}
+            </p>
+            <p className="text-[10px] font-normal text-[#8e8e8e]">
+              ({reviewCount})
+            </p>
           </div>
           {/* end of mobile */}
         </div>

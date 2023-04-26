@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Fragment, useContext, useState } from "react";
+import { FocusEvent, Fragment, useContext, useState } from "react";
 import { Range, getTrackBackground } from "react-range";
 import { MatchingFormContext } from "./MatchingFormProvider";
 
@@ -13,7 +13,11 @@ const PriceRangeInput = () => {
   const [values, setValues] = useState([BEGIN_MIN, BEGIN_MAX]);
 
   const {
-    useFormReturn: { register, setValue },
+    useFormReturn: {
+      register,
+      setValue,
+      formState: { errors },
+    },
   } = useContext(MatchingFormContext);
 
   return (
@@ -34,8 +38,8 @@ const PriceRangeInput = () => {
           rtl={false}
           onChange={(values) => {
             if (values[0] && values[1]) {
-              setValue("searchPriceMin", values[0]);
-              setValue("searchPriceMax", values[1]);
+              setValue("searchPriceMin", values[0], { shouldValidate: true });
+              setValue("searchPriceMax", values[1], { shouldValidate: true });
               setValues(values);
             }
           }}
@@ -84,13 +88,14 @@ const PriceRangeInput = () => {
         />
 
         <div id="min-max-label" className="flex flex-row justify-center gap-1">
-          <div id="" className="flex flex-col">
+          <div id="searchPriceMin-input-wrapper" className="flex flex-col">
             <label>
               <p className="text-[15px] font-medium text-[#8a5534] max-md:text-[13px]">
                 Min
               </p>
             </label>
             <input
+              id="searchPriceMin-input"
               className="w-[90px] rounded-md border border-[#633c015d] px-2 py-1 text-center font-extrabold text-[#633c01] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663] max-md:text-[14px]"
               {...register("searchPriceMin", {
                 value: values[0],
@@ -110,7 +115,23 @@ const PriceRangeInput = () => {
                   ]);
                 }
               }}
+              onBlur={(e: FocusEvent<HTMLInputElement>) => {
+                if (
+                  ((e.target as HTMLInputElement).value as unknown as number) >
+                    0 &&
+                  ((e.target as HTMLInputElement).value as unknown as number) <
+                    (values[1] ?? MAX)
+                ) {
+                  setValues([
+                    (e.target as HTMLInputElement).value as unknown as number,
+                    values[1] as number,
+                  ]);
+                }
+              }}
             />
+            {errors.searchPriceMin && (
+              <span className="text-[10px] text-red-500">invalid input</span>
+            )}
           </div>
           <div id="separator-container" className="flex flex-col pt-[38px]">
             <div
@@ -118,13 +139,14 @@ const PriceRangeInput = () => {
               className="h-1 w-12 rounded-[50%] bg-[#c89d48]"
             ></div>
           </div>
-          <div id="" className="flex flex-col">
+          <div id="searchPriceMax-input-wrapper" className="flex flex-col">
             <label>
               <p className="text-[15px] font-medium text-[#8a5534] max-md:text-[13px] ">
                 Max
               </p>
             </label>
             <input
+              id="searchPriceMax-input"
               className="w-[90px] rounded-md border border-[#633c015d] px-2 py-1 text-center font-extrabold text-[#633c01] focus:border-[#E99548] focus:outline-none focus:ring-2 focus:ring-[#eea663] max-md:text-[14px]"
               {...register("searchPriceMax", {
                 value: values[1],
@@ -144,7 +166,23 @@ const PriceRangeInput = () => {
                   ]);
                 }
               }}
+              onBlur={(e: FocusEvent<HTMLInputElement>) => {
+                if (
+                  ((e.target as HTMLInputElement).value as unknown as number) <
+                    MAX &&
+                  ((e.target as HTMLInputElement).value as unknown as number) >
+                    (values[0] ?? MIN)
+                ) {
+                  setValues([
+                    values[0] as number,
+                    (e.target as HTMLInputElement).value as unknown as number,
+                  ]);
+                }
+              }}
             ></input>
+            {errors.searchPriceMax && (
+              <span className="text-[10px] text-red-500">invalid input</span>
+            )}
           </div>
         </div>
       </div>
