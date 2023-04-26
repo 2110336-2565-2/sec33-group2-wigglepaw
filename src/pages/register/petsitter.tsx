@@ -33,6 +33,7 @@ import { banks } from "../../common/constants";
 import { Menu } from "@headlessui/react";
 import { resolve } from "path";
 import { createTokenPromise } from "../../utils/omise";
+import Script from "next/script";
 
 const validationSchema1 = z.object({
   // like a schema for register in form
