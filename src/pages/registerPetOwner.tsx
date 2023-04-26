@@ -18,7 +18,6 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { getServerAuthSession } from "../server/auth";
 import type { OmiseTokenParameters } from "omise-js-typed/dist/lib/omise";
-import { useOmise } from "use-omise";
 import { env } from "../env/client.mjs";
 
 // Schema for first page of form
