@@ -89,7 +89,7 @@ export const freelancePetSitterFields = z.object({
 
 export const bookingFields = z.object({
   petSitterId: z.string().cuid2(),
-  totalPrice: z.number().gt(0),
+  totalPrice: z.number().gt(0).lte(100000),
   startDate: z.coerce.date().min(new Date()),
   endDate: z.coerce.date(),
   petIdList: z.array(z.string().cuid2()),

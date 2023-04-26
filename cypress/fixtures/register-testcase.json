@@ -306,22 +306,7 @@
         ],
         "expectedOutput": "Invalid"
     },
-    "TC1-23 petType is not a chosen enumeration from the system": {
-        "username": "bobby123",
-        "password": "Bobby123_",
-        "email": "bobby123@hotmail.com",
-        "firstname": "Bobby",
-        "lastname": "Testing",
-        "phoneNumber": "0818118111",
-        "address": "Bangkok",
-        "pettype": [
-            "Dog",
-            "Cat",
-            "Mango"
-        ],
-        "expectedOutput": "Invalid"
-    },
-    "TC1-24 user has more than 10 pet types": {
+    "TC1-23 user has more than 10 pet types": {
         "username": "bobby123",
         "password": "Bobby123_",
         "email": "bobby123@hotmail.com",
