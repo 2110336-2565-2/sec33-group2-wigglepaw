@@ -81,13 +81,13 @@ const LoginPage: NextPage = () => {
         </form>
         <div className="mx-auto mt-3">
           <Link
-            href="/registerPetOwner"
+            href="/register/petowner"
             className="register-pet-owner-button mx-auto my-1 flex h-fit w-[13rem] justify-center whitespace-nowrap rounded-lg bg-green-700 p-2 text-base font-semibold text-white transition-all hover:bg-green-600"
           >
             Register Pet Owner
           </Link>
           <Link
-            href="/registerPetSitter"
+            href="/register/petsitter"
             className="register-pet-sitter-button mx-auto my-1 flex h-fit w-[13rem] justify-center whitespace-nowrap rounded-lg bg-green-700 p-2 text-base font-semibold text-white transition-all hover:bg-green-600"
           >
             Register Pet Sitter
